@@ -8,6 +8,13 @@
 # IntelliJ
 out/
 
+apache-maven-3.9.6
+BuildData
+Bukkit
+CraftBukkit
+Spigot
+work
+
 # Compiled class file
 *.class
 
