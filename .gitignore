@@ -8,6 +8,7 @@
 # IntelliJ
 out/
 
+# My stupidly stupid stuff
 apache-maven-3.9.6
 BuildData
 Bukkit
