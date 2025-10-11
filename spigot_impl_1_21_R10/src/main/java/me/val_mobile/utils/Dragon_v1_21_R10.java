@@ -32,7 +32,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Dragon_v1_21_R11 extends EnderDragon implements Dragon {
+public abstract class Dragon_v1_21_R10 extends EnderDragon implements Dragon {
 
     private final DragonBreed breed;
     private int stage;
@@ -40,7 +40,7 @@ public abstract class Dragon_v1_21_R11 extends EnderDragon implements Dragon {
     private final DragonGender gender;
     private final DragonVariant variant;
 
-    public Dragon_v1_21_R11(EntityType<? extends EnderDragon> entityType, Level world, DragonBreed breed) {
+    public Dragon_v1_21_R10(EntityType<? extends EnderDragon> entityType, Level world, DragonBreed breed) {
         super(entityType, world);
 
         List<DragonVariant> enabledVariants = DragonVariant.getEnabledVariants(breed);
@@ -55,7 +55,7 @@ public abstract class Dragon_v1_21_R11 extends EnderDragon implements Dragon {
         setup();
     }
 
-    public Dragon_v1_21_R11(Location loc, DragonBreed breed) {
+    public Dragon_v1_21_R10(Location loc, DragonBreed breed) {
         super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
@@ -71,7 +71,7 @@ public abstract class Dragon_v1_21_R11 extends EnderDragon implements Dragon {
         setup();
     }
 
-    public Dragon_v1_21_R11(Location loc, DragonBreed breed, DragonVariant variant) {
+    public Dragon_v1_21_R10(Location loc, DragonBreed breed, DragonVariant variant) {
         super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
@@ -85,7 +85,7 @@ public abstract class Dragon_v1_21_R11 extends EnderDragon implements Dragon {
         setup();
     }
 
-    public Dragon_v1_21_R11(Location loc, DragonBreed breed, int stage) {
+    public Dragon_v1_21_R10(Location loc, DragonBreed breed, int stage) {
         super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
@@ -101,7 +101,7 @@ public abstract class Dragon_v1_21_R11 extends EnderDragon implements Dragon {
         setup();
     }
 
-    public Dragon_v1_21_R11(Location loc, DragonBreed breed, DragonVariant variant, int stage) {
+    public Dragon_v1_21_R10(Location loc, DragonBreed breed, DragonVariant variant, int stage) {
         super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
