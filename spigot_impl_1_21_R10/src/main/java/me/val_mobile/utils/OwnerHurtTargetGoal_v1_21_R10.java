@@ -26,33 +26,34 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 import java.util.EnumSet;
 
-public class OwnerHurtByTargetGoal_v1_21_R11 extends TargetGoal {
+public class OwnerHurtTargetGoal_v1_21_R10 extends TargetGoal {
     private final RSVPet pet;
-    private LivingEntity ownerLastHurtBy;
+    private LivingEntity ownerLastHurt;
     private int timestamp;
 
-    public OwnerHurtByTargetGoal_v1_21_R11(RSVPet pet) {
+    public OwnerHurtTargetGoal_v1_21_R10(RSVPet pet) {
         super((Mob) ((CraftEntity) pet.getEntity()).getHandle(), false);
         this.pet = pet;
         this.setFlags(EnumSet.of(Flag.TARGET));
     }
 
     public boolean canUse() {
+
         LivingEntity owner = ((CraftPlayer) pet.getOwner()).getHandle();
         if (owner == null) {
             return false;
         } else {
-            this.ownerLastHurtBy = owner.getLastHurtByMob();
-            int i = owner.getLastHurtByMobTimestamp();
-            return i != timestamp && canAttack(ownerLastHurtBy, TargetingConditions.DEFAULT);
+            ownerLastHurt = owner.getLastHurtMob();
+            int i = owner.getLastHurtMobTimestamp();
+            return i != timestamp && canAttack(ownerLastHurt, TargetingConditions.DEFAULT);
         }
     }
 
     public void start() {
-        mob.setTarget(ownerLastHurtBy, EntityTargetEvent.TargetReason.TARGET_ATTACKED_OWNER, true);
-        LivingEntity entityliving = ((CraftPlayer) pet.getOwner()).getHandle();
-        if (entityliving != null) {
-            timestamp = entityliving.getLastHurtByMobTimestamp();
+        mob.setTarget(ownerLastHurt, EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET, true);
+        LivingEntity owner = ((CraftPlayer) pet.getOwner()).getHandle();
+        if (owner != null) {
+            timestamp = owner.getLastHurtMobTimestamp();
         }
 
         super.start();

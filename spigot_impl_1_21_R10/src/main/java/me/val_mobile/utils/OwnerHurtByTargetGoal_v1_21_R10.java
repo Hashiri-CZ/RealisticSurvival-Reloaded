@@ -26,12 +26,12 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 import java.util.EnumSet;
 
-public class OwnerHurtByTargetGoal_v1_21_R11 extends TargetGoal {
+public class OwnerHurtByTargetGoal_v1_21_R10 extends TargetGoal {
     private final RSVPet pet;
     private LivingEntity ownerLastHurtBy;
     private int timestamp;
 
-    public OwnerHurtByTargetGoal_v1_21_R11(RSVPet pet) {
+    public OwnerHurtByTargetGoal_v1_21_R10(RSVPet pet) {
         super((Mob) ((CraftEntity) pet.getEntity()).getHandle(), false);
         this.pet = pet;
         this.setFlags(EnumSet.of(Flag.TARGET));

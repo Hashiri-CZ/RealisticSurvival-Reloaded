@@ -24,12 +24,12 @@ import net.minecraft.world.entity.player.Player;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class EndermanFreezeWhenLookedAtGoal_v1_21_R11 extends Goal {
+public class EndermanFreezeWhenLookedAtGoal_v1_21_R10 extends Goal {
     private final EnderMan enderman;
     @Nullable
     private LivingEntity target;
 
-    public EndermanFreezeWhenLookedAtGoal_v1_21_R11(EnderMan enderman) {
+    public EndermanFreezeWhenLookedAtGoal_v1_21_R10(EnderMan enderman) {
         this.enderman = enderman;
         this.setFlags(EnumSet.of(Flag.JUMP, Flag.MOVE));
     }
@@ -40,7 +40,7 @@ public class EndermanFreezeWhenLookedAtGoal_v1_21_R11 extends Goal {
             return false;
         } else {
             double d0 = target.distanceToSqr(enderman);
-            return !(d0 > 256.0) && v1_21_R11.isLookingAtMe(enderman, (Player) target);
+            return !(d0 > 256.0) && v1_21_R10.isLookingAtMe(enderman, (Player) target);
         }
     }
 

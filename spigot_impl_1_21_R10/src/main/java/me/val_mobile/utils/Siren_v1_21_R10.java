@@ -25,15 +25,15 @@ import org.bukkit.craftbukkit.v1_21_R6.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-public class Siren_v1_21_R11 extends Guardian implements Siren {
+public class Siren_v1_21_R10 extends Guardian implements Siren {
 
-    public Siren_v1_21_R11(EntityType<? extends Guardian> entitytype, Level world) {
+    public Siren_v1_21_R10(EntityType<? extends Guardian> entitytype, Level world) {
         super(entitytype, world);
 
         setup();
     }
 
-    public Siren_v1_21_R11(Location loc) {
+    public Siren_v1_21_R10(Location loc) {
         super(EntityType.GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 

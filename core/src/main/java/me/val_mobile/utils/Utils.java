@@ -69,19 +69,28 @@ public class Utils {
 
     public static final double ATTACK_DAMAGE_CONSTANT = -1.0;
     public static final double ATTACK_SPEED_CONSTANT = -4.0;
-    private static final Pattern VERSION_PATTERN = Pattern.compile("([1-9])\\.([1-9][0-9]|[1-9])(\\.([0-9]))?");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("([1-9])\\.([1-9][0-9]|[1-9])(\\.([0-9]+))?");
 
     private final RSVPlugin plugin;
 
     private static InternalsProvider internals;
 
     static {
+        String className = null;
         try {
             String packageName = Utils.class.getPackage().getName();
-//            String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-            internals = (InternalsProvider) Class.forName(packageName + "." + getMinecraftVersion(true)).getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException | NoSuchMethodException | InvocationTargetException exception) {
-            Bukkit.getLogger().log(Level.SEVERE, "NMS Util could not find a valid implementation for this server version.");
+            className = packageName + "." + getMinecraftVersion(true);
+
+            Bukkit.getLogger().info("[RealisticSurvival] Trying to load NMS class: " + className);
+
+            internals = (InternalsProvider) Class.forName(className)
+                            .getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                ClassCastException | NoSuchMethodException | InvocationTargetException exception) {
+
+            Bukkit.getLogger().log(Level.SEVERE,
+                    "Oopsie! NMS Util could not find a valid implementation for this server version: " + className);
+            exception.printStackTrace();
         }
     }
 
@@ -172,10 +181,21 @@ public class Utils {
             String prefix = m.group(1);
             String major = m.group(2);
             String minor = m.group(4) == null ? "0" : m.group(4);
-            return impl ? "v" + prefix + "_" + major + "_R" + (Integer.parseInt(minor) + 1) : prefix + "." + major + (minor.equals("0") ? "" : "." + minor);
+
+            // Bukkit.getLogger().info("[E-Debug] Searching for: " + Bukkit.getVersion());
+            // Bukkit.getLogger().info("[E-Debug] PREFIX: " + prefix);
+            // Bukkit.getLogger().info("[E-Debug] MAJOR: " + major);
+            // Bukkit.getLogger().info("[E-Debug] MINOR: " + minor);
+
+            String result = impl ? "v" + prefix + "_" + major + "_R" + (Integer.parseInt(minor) + 1)
+                                : prefix + "." + major + (minor.equals("0") ? "" : "." + minor);
+
+            Bukkit.getLogger().info("[Debug] Used NMS: " + result);
+            return result;
         }
         return "";
     }
+
 
     public static boolean isServerRunningPaper() {
         try {

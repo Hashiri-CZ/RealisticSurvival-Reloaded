@@ -30,11 +30,11 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.List;
 
-public class SeaSerpent_v1_21_R11 extends ElderGuardian implements SeaSerpent {
+public class SeaSerpent_v1_21_R10 extends ElderGuardian implements SeaSerpent {
 
     private final SeaSerpentVariant variant;
     
-    public SeaSerpent_v1_21_R11(EntityType<? extends ElderGuardian> entitytype, Level world) {
+    public SeaSerpent_v1_21_R10(EntityType<? extends ElderGuardian> entitytype, Level world) {
         super(entitytype, world);
 
         List<SeaSerpentVariant> enabledVariants = SeaSerpentVariant.getEnabledVariants();
@@ -42,7 +42,7 @@ public class SeaSerpent_v1_21_R11 extends ElderGuardian implements SeaSerpent {
         setup();
     }
 
-    public SeaSerpent_v1_21_R11(Location loc) {
+    public SeaSerpent_v1_21_R10(Location loc) {
         super(EntityType.ELDER_GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
@@ -52,7 +52,7 @@ public class SeaSerpent_v1_21_R11 extends ElderGuardian implements SeaSerpent {
         setup();
     }
 
-    public SeaSerpent_v1_21_R11(Location loc, SeaSerpentVariant variant) {
+    public SeaSerpent_v1_21_R10(Location loc, SeaSerpentVariant variant) {
         super(EntityType.ELDER_GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
