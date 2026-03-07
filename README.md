@@ -1,12 +1,13 @@
-# Realistic Survival – Updated
+# Realistic Survival – Reloaded
 
-This is an **unofficial fork** of the *Realistic Survival* plugin.  
-The goal of this fork is to **patch and update** the plugin to remain compatible with the **latest Minecraft versions** (e.g., **1.21.4** and **1.21.5**).
+This is fork of Nik0-0 version of [Realistic Survival - Updated (GitHub)](https://github.com/Nikos-Stuff/RealisticSurvival-Updated) which extended work of original author
+ValMobile and his plugin [Realistic Survival (GitHub)](https://github.com/ValMobile/RealisticSurvival)
+
+This version will be updated and also extended for new features. The reason for using own fork is drop of all previous versions, which are supported in other forks. 
+Also, this fork might drop other functions and features, which previous devs implemented.
 
 > [!NOTE] 
-> This is a **temporary solution** primarily intended for server owners who want to run the plugin on newer Minecraft versions while the original author is unavailable or hasn't released updates yet.  
-> Only **minor compatibility patches** and basic testing are done to ensure it works, with no major changes to the original plugin’s functionality.
-
+> This version will ONLY SUPPORT NEWEST VERSIONS. Will not keep support for older version of mc. 
 ---
 
 ### Original Project
@@ -16,7 +17,13 @@ You can find the original project by ValMobile here:
 
 ---
 
+### Forked Project
+
+You can find the original project by ValMobile here:  
+[Realistic Survival - Updated (GitHub)](https://github.com/Nikos-Stuff/RealisticSurvival-Updated)
+
+---
+
 > [!CAUTION] 
 > - This fork is **unofficial** and **maintained independently** from the original developer. Any issues specific to this version should be directed here, not to the original project.
-> - Focus is **only on version support** and **basic compatibility testing**.  
 > - For full updates or major feature changes, please refer to the [original repository](https://github.com/ValMobile/RealisticSurvival).
