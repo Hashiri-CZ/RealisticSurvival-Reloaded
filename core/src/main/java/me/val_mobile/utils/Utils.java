@@ -20,6 +20,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.val_mobile.baubles.EndermanAlly;
 import me.val_mobile.data.RSVModule;
 import me.val_mobile.iceandfire.*;
+import me.val_mobile.integrations.AuraSkills;
 import me.val_mobile.integrations.CompatiblePlugin;
 import me.val_mobile.integrations.PAPI;
 import me.val_mobile.rsv.RSVPlugin;
@@ -220,6 +221,32 @@ public class Utils {
             return true;
         } catch (ClassNotFoundException ignored) {}
         return false;
+    }
+
+    public static int getAuraSkillLevel(@Nonnull Player player, @Nonnull String skillName) {
+        if (!CompatiblePlugin.isIntegrated(AuraSkills.NAME)) {
+            return 0;
+        }
+
+        CompatiblePlugin plugin = CompatiblePlugin.getPlugin(AuraSkills.NAME);
+        if (plugin instanceof AuraSkills auraSkills) {
+            return auraSkills.getSkillLevel(player, skillName);
+        }
+
+        return 0;
+    }
+
+    public static boolean hasAuraSkillLevel(@Nonnull Player player, @Nonnull String skillName, int requiredLevel) {
+        if (!CompatiblePlugin.isIntegrated(AuraSkills.NAME)) {
+            return true;
+        }
+
+        CompatiblePlugin plugin = CompatiblePlugin.getPlugin(AuraSkills.NAME);
+        if (plugin instanceof AuraSkills auraSkills) {
+            return auraSkills.hasRequiredLevel(player, skillName, requiredLevel);
+        }
+
+        return true;
     }
 
     @Nonnull

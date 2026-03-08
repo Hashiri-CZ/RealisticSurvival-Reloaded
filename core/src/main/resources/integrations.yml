@@ -39,4 +39,6 @@ PlaceholderAPI:
   Error:
     Enabled: true
     Message: "&cThe placeholder, %PLACEHOLDER%, does not exist or is being used incorrectly" # All internal placeholders: %PLACEHOLDER%
+AuraSkills:
+  Enabled: true
 

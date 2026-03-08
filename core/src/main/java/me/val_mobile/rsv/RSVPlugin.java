@@ -22,6 +22,7 @@ import me.val_mobile.commands.Tab;
 import me.val_mobile.data.*;
 import me.val_mobile.iceandfire.IceFireModule;
 import me.val_mobile.integrations.PAPI;
+import me.val_mobile.integrations.AuraSkills;
 import me.val_mobile.integrations.RealisticSeasons;
 import me.val_mobile.misc.*;
 import me.val_mobile.ntp.NtpModule;
@@ -56,6 +57,7 @@ public class RSVPlugin extends JavaPlugin {
     private MiscItems miscItems;
     private RSVConfig integrationsConfig;
     private RSVConfig commandsConfig;
+    private RSVConfig auraSkillsRequirementsConfig;
 
 //    private static RSVConfig langConfig;
 
@@ -69,6 +71,7 @@ public class RSVPlugin extends JavaPlugin {
         this.miscRecipesConfig = new RSVConfig(this, "resources/misc_recipes.yml");
         this.integrationsConfig = new RSVConfig(this, "integrations.yml");
         this.commandsConfig = new RSVConfig(this, "commands.yml");
+        this.auraSkillsRequirementsConfig = new RSVConfig(this, "auraskills_requirements.yml");
 
         util = new Utils(this);
 
@@ -122,6 +125,7 @@ public class RSVPlugin extends JavaPlugin {
             public void run() {
                 RealisticSeasons rs = new RealisticSeasons(getPlugin());
                 PAPI papi = new PAPI(getPlugin());
+                AuraSkills auraSkills = new AuraSkills(getPlugin());
             }
         }.runTaskLater(this, 1L);
 
@@ -203,6 +207,11 @@ public class RSVPlugin extends JavaPlugin {
     @Nonnull
     public FileConfiguration getCommandsConfig() {
         return commandsConfig.getConfig();
+    }
+
+    @Nonnull
+    public FileConfiguration getAuraSkillsRequirementsConfig() {
+        return auraSkillsRequirementsConfig.getConfig();
     }
 
     @Nonnull
