@@ -5,7 +5,7 @@ author: Val_Mobile
 description: ${project.parent.description}
 website: ${project.parent.url}
 api-version: 1.17
-softdepend: [PlaceholderAPI, RealisticSeasons, WorldGuard]
+softdepend: [PlaceholderAPI, RealisticSeasons, WorldGuard, AuraSkills]
 load: STARTUP
 
 commands:

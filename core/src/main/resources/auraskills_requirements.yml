@@ -1,0 +1,2564 @@
+#######################################
+#        AuraSkills Requirements      #
+#######################################
+
+ConfigId: "1.2.11-RELEASE" # Used for config syncing purposes, do NOT edit
+
+# For each item, configure requirements under both crafting and using.
+# Example:
+#   diamond_helmet:
+#     crafting:
+#       FARMING: 5
+#     using:
+#       FARMING: 0
+
+ankh_shield:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+bow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+brush:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+carrot_on_a_stick:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+cestus:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+chainmail_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+chainmail_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+chainmail_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+chainmail_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+clay_tool:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+cobalt_shield:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_mattock:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+copper_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_mattock:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_saw:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+diamond_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_bow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_flamed_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_iced_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_lightning_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonbone_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_amethyst:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_black:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_copper:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_electric:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_emerald:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_gray:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_sapphire:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_silver:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_boots_white:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_amethyst:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_black:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_copper:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_electric:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_emerald:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_gray:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_sapphire:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_silver:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_chestplate_white:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_amethyst:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_black:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_copper:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_electric:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_emerald:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_gray:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_sapphire:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_silver:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_helmet_white:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_amethyst:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_black:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_copper:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_electric:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_emerald:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_gray:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_sapphire:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_silver:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonscale_leggings_white:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_fire_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_ice_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+dragonsteel_lightning_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+fire_starter:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+fishing_rod:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+flint_and_steel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+flint_hatchet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+flint_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+flint_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+flint_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+flint_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+gold_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_crown:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_mattock:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_saw:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+golden_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_mattock:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_saw:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+iron_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+jelled_slime_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+jelled_slime_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+jelled_slime_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+jelled_slime_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_horse_armor:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+leather_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+macuahuitl:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+matchbox:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_chestplate:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_leggings:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+netherite_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+obsidian_shield:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+shears:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+shield:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+stone_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+studded_cestus:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+studded_club:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+sunglasses:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_deepblue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_green:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_purple:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_boots_teal:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_deepblue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_green:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_purple:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_chestplate_teal:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_deepblue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_green:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_purple:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_helmet_teal:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_blue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_bronze:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_deepblue:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_green:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_purple:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_red:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+tide_guardian_leggings_teal:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+turtle_helmet:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+warped_fungus_on_a_stick:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wolf_armor:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_axe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_battleaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_boomerang:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_club:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_crossbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_dagger:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_glaive:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_greatsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_halberd:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_hammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_hoe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_javelin:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_katana:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_lance:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_longbow:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_longsword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_mace:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_pickaxe:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_pike:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_quarterstaff:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_rapier:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_saber:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_shovel:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_spear:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_sword:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_throwing_knife:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_tomahawk:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wooden_warhammer:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wool_boots:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wool_hood:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wool_jacket:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
+wool_pants:
+  crafting:
+    FARMING: 0
+  using:
+    FARMING: 0
