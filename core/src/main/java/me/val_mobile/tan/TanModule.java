@@ -20,12 +20,17 @@ import me.val_mobile.data.ModuleItems;
 import me.val_mobile.data.ModuleRecipes;
 import me.val_mobile.data.RSVConfig;
 import me.val_mobile.data.RSVModule;
+import me.val_mobile.data.RSVPlayer;
+import me.val_mobile.data.toughasnails.DataModule;
 import me.val_mobile.rsv.RSVPlugin;
 import me.val_mobile.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -34,7 +39,6 @@ public class TanModule extends RSVModule {
 
     private final RSVPlugin plugin;
 
-    private final RSVConfig config;
     private TanEvents events;
 
     public static final String NAME = "ToughAsNails";
@@ -50,7 +54,6 @@ public class TanModule extends RSVModule {
     public TanModule(RSVPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
         this.plugin = plugin;
-        this.config = new RSVConfig(plugin, "resources/toughasnails/playerdata.yml");
         this.tempManager = new TempManager(this);
     }
 
@@ -79,6 +82,17 @@ public class TanModule extends RSVModule {
         getModuleItems().initialize();
         getModuleRecipes().initialize();
         events.initialize();
+
+        // Periodic auto-save every 5 minutes (6000 ticks) for dirty player data
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+            List<RSVPlayer> snapshot = new ArrayList<>(RSVPlayer.getPlayers().values());
+            for (RSVPlayer rsvPlayer : snapshot) {
+                DataModule dm = rsvPlayer.getTanDataModule();
+                if (dm != null && dm.isDirty()) {
+                    dm.saveData();
+                }
+            }
+        }, 6000L, 6000L);
     }
 
     @Override
@@ -102,11 +116,6 @@ public class TanModule extends RSVModule {
     }
 
     @Nonnull
-    public RSVConfig getPlayerDataConfig() {
-        return config;
-    }
-
-    @Nonnull
     public TanEvents getEvents() {
         return events;
     }
@@ -122,7 +131,6 @@ public class TanModule extends RSVModule {
     }
 
     @Nonnull
-
     public Set<UUID> getHypothermiaDeath() {
         return hypothermiaDeath;
     }
@@ -140,4 +148,3 @@ public class TanModule extends RSVModule {
         return thirstGloballyEnabled;
     }
 }
-

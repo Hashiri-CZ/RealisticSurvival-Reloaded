@@ -91,6 +91,24 @@ Fear:
 #          Miscellaneous           #
 ####################################
 
+Database:
+  Type: "SQLITE"       # SQLITE or MYSQL
+  MySQL:
+    Host: "localhost"
+    Port: 3306
+    Database: "realisticsurvival"
+    Username: "root"
+    Password: ""
+    Pool:
+      MaximumPoolSize: 10
+      MinimumIdle: 2
+      ConnectionTimeout: 30000
+      IdleTimeout: 600000
+      MaxLifetime: 1800000
+
+Performance:
+  AsyncThreadPoolSize: 2    # Threads for DB I/O and heavy computation
+
 BStats: true # Do you want non-confidential server data to be recorded for my use?
 ConfigId: "1.2.10-RELEASE" # Used for config syncing purposes, do NOT edit
 
