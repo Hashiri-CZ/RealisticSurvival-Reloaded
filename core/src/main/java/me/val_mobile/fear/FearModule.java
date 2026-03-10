@@ -20,20 +20,22 @@ import me.val_mobile.data.ModuleItems;
 import me.val_mobile.data.ModuleRecipes;
 import me.val_mobile.data.RSVConfig;
 import me.val_mobile.data.RSVModule;
+import me.val_mobile.data.db.RSVDatabase;
 import me.val_mobile.rsv.RSVPlugin;
 import me.val_mobile.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FearModule extends RSVModule {
 
@@ -107,54 +109,69 @@ public class FearModule extends RSVModule {
     }
 
     private void saveTorchBurnData() {
-        if (torchDataConfig == null || torchManager == null || unlitTorchService == null) {
+        if (torchManager == null) {
             return;
         }
 
-        FileConfiguration data = torchDataConfig.getConfig();
-        data.set("LitTorches", null);
-        data.set("UnlitTorches", null);
-
+        // Save lit torches to DB (blocking wait to ensure completion on shutdown)
         Map<String, Long> snapshot = torchManager.snapshotRemainingLitDurations();
-        for (Map.Entry<String, Long> entry : snapshot.entrySet()) {
-            data.set("LitTorches." + entry.getKey(), entry.getValue());
+        RSVDatabase db = plugin.getDatabase();
+        if (db != null) {
+            CompletableFuture<Void> future = db.saveLitTorches(snapshot);
+            try {
+                future.get(5, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                plugin.getLogger().warning("[Fear] Timed out waiting for lit torch data to save to DB.");
+            } catch (Exception e) {
+                plugin.getLogger().warning("[Fear] Failed to save lit torch data to DB: " + e.getMessage());
+            }
         }
-        data.set("UnlitTorches", new ArrayList<>(unlitTorchService.snapshotManagedUnlitTorches()));
 
-        try {
-            data.save(torchDataConfig.getFile());
-        } catch (IOException exception) {
-            plugin.getLogger().warning("Failed to save fear torch burn data: " + exception.getMessage());
+        // Save unlit torches to YAML (kept as-is)
+        if (torchDataConfig != null && unlitTorchService != null) {
+            FileConfiguration data = torchDataConfig.getConfig();
+            data.set("UnlitTorches", new ArrayList<>(unlitTorchService.snapshotManagedUnlitTorches()));
+            try {
+                data.save(torchDataConfig.getFile());
+            } catch (IOException exception) {
+                plugin.getLogger().warning("Failed to save fear unlit torch data: " + exception.getMessage());
+            }
         }
     }
 
     private void restoreTorchBurnData() {
-        if (torchDataConfig == null || torchManager == null || unlitTorchService == null) {
+        if (torchManager == null) {
             return;
         }
 
-        FileConfiguration data = torchDataConfig.getConfig();
-        ConfigurationSection section = data.getConfigurationSection("LitTorches");
-        Map<String, Long> persisted = new HashMap<>();
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                persisted.put(key, section.getLong(key));
+        // Restore lit torches from DB
+        RSVDatabase db = plugin.getDatabase();
+        if (db != null) {
+            try {
+                Map<String, Long> persisted = db.loadLitTorches().get(5, TimeUnit.SECONDS);
+                torchManager.restoreLitTorches(persisted);
+            } catch (TimeoutException e) {
+                plugin.getLogger().warning("[Fear] Timed out loading lit torch data from DB.");
+            } catch (Exception e) {
+                plugin.getLogger().warning("[Fear] Failed to load lit torch data from DB: " + e.getMessage());
             }
         }
 
-        torchManager.restoreLitTorches(persisted);
-        List<String> unlitRaw = data.getStringList("UnlitTorches");
-        if (!unlitRaw.isEmpty()) {
-            Set<String> unlit = new LinkedHashSet<>(unlitRaw);
-            unlitTorchService.restoreManagedUnlitTorches(unlit);
-        }
+        // Restore unlit torches from YAML
+        if (torchDataConfig != null && unlitTorchService != null) {
+            FileConfiguration data = torchDataConfig.getConfig();
+            List<String> unlitRaw = data.getStringList("UnlitTorches");
+            if (!unlitRaw.isEmpty()) {
+                Set<String> unlit = new LinkedHashSet<>(unlitRaw);
+                unlitTorchService.restoreManagedUnlitTorches(unlit);
+            }
 
-        data.set("LitTorches", null);
-        data.set("UnlitTorches", null);
-        try {
-            data.save(torchDataConfig.getFile());
-        } catch (IOException exception) {
-            plugin.getLogger().warning("Failed to clear restored fear torch burn data: " + exception.getMessage());
+            data.set("UnlitTorches", null);
+            try {
+                data.save(torchDataConfig.getFile());
+            } catch (IOException exception) {
+                plugin.getLogger().warning("Failed to clear restored unlit torch data: " + exception.getMessage());
+            }
         }
     }
 
@@ -215,4 +232,3 @@ public class FearModule extends RSVModule {
     }
 
 }
-

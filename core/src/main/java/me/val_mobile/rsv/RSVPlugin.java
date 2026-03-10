@@ -20,6 +20,7 @@ import me.val_mobile.baubles.BaubleModule;
 import me.val_mobile.commands.Commands;
 import me.val_mobile.commands.Tab;
 import me.val_mobile.data.*;
+import me.val_mobile.data.db.RSVDatabase;
 import me.val_mobile.fear.FearModule;
 import me.val_mobile.iceandfire.IceFireModule;
 import me.val_mobile.integrations.PAPI;
@@ -40,6 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -61,6 +63,8 @@ public class RSVPlugin extends JavaPlugin {
     private RSVConfig integrationsConfig;
     private RSVConfig commandsConfig;
     private RSVConfig auraSkillsRequirementsConfig;
+    private RSVScheduler scheduler;
+    private RSVDatabase database;
 
 //    private static RSVConfig langConfig;
 
@@ -79,6 +83,19 @@ public class RSVPlugin extends JavaPlugin {
         ensureIntegrationDefaults();
 
         util = new Utils(this);
+
+        // Initialize async scheduler and database before modules
+        int poolSize = getConfig().getInt("Performance.AsyncThreadPoolSize", 2);
+        this.scheduler = new RSVScheduler(poolSize);
+        this.database = new RSVDatabase(this, scheduler);
+        try {
+            this.database.connect();
+            this.database.createTables();
+        } catch (RuntimeException e) {
+            getLogger().severe(e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         new UpdateChecker(this, 93795).checkUpdate();
 
@@ -155,7 +172,7 @@ public class RSVPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        // Save all online player data (submits async DB writes)
         Collection<RSVPlayer> players = RSVPlayer.getPlayers().values();
         Collection<RSVModule> modules = RSVModule.getModules().values();
 
@@ -167,6 +184,14 @@ public class RSVPlugin extends JavaPlugin {
             if (module.isGloballyEnabled()) {
                 module.shutdown();
             }
+        }
+
+        // Wait for all pending async DB writes (up to 10s), then close pool
+        if (scheduler != null) {
+            scheduler.shutdown();
+        }
+        if (database != null) {
+            database.close();
         }
     }
 
@@ -243,6 +268,16 @@ public class RSVPlugin extends JavaPlugin {
     @Nonnull
     public ToolUtils getToolUtils() {
         return toolUtils;
+    }
+
+    @Nullable
+    public RSVDatabase getDatabase() {
+        return database;
+    }
+
+    @Nullable
+    public RSVScheduler getScheduler() {
+        return scheduler;
     }
 
     private void ensureFearDefaults() {
@@ -413,4 +448,3 @@ public class RSVPlugin extends JavaPlugin {
     }
 
 }
-

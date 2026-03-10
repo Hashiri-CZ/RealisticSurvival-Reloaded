@@ -39,8 +39,20 @@
                                 <includes>
                                     <include>me.Val_Mobile:realisticsurvival-core</include>
                                     <include>me.Val_Mobile:realisticsurvival-spigot_impl_1_21_R11</include>
+                                    <include>com.zaxxer:HikariCP</include>
+                                    <include>org.xerial:sqlite-jdbc</include>
                                 </includes>
                             </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>me.val_mobile.libs.hikari</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.sqlite</pattern>
+                                    <shadedPattern>me.val_mobile.libs.sqlite</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
