@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.fear;
 
+import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.ModuleItems;
 import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.data.HLConfig;
@@ -26,6 +27,7 @@ import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class FearModule extends HLModule {
     private FearTorchManager torchManager;
     private FearUnlitTorchService unlitTorchService;
     private HLConfig torchDataConfig;
+    private NightmareManager nightmareManager;
 
     public FearModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
@@ -75,6 +78,45 @@ public class FearModule extends HLModule {
             Bukkit.removeRecipe(new NamespacedKey(NamespacedKey.MINECRAFT, "torch"));
         }
 
+        boolean fearMeterEnabled = config.getBoolean("FearMeter.Enabled", true);
+        if (fearMeterEnabled) {
+            long checkInterval = config.getLong("FearMeter.CheckIntervalTicks", 100L);
+            FearConditionEvaluator evaluator = new FearConditionEvaluator(plugin, config);
+            FearMeterEvents fearMeterEvents = new FearMeterEvents(plugin, config);
+            fearMeterEvents.initialize();
+
+            nightmareManager = new NightmareManager(plugin, config);
+            nightmareManager.initialize();
+
+            // Periodic fear check — evaluates all conditions and applies fear delta
+            Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+                for (HLPlayer hlPlayer : new ArrayList<>(HLPlayer.getPlayers().values())) {
+                    Player p = hlPlayer.getPlayer();
+                    if (p == null || !p.isOnline()) continue;
+                    if (!isEnabled(p.getWorld())) continue;
+                    cz.hashiri.harshlands.data.fear.DataModule dm = hlPlayer.getFearDataModule();
+                    if (dm == null) continue;
+                    evaluator.evaluate(p, dm);
+                    nightmareManager.checkSpawnOrDespawn(p, dm.getFearLevel());
+                }
+            }, checkInterval, checkInterval);
+
+            Bukkit.getScheduler().runTaskTimer(plugin, nightmareManager::tickAll, 20L, 20L);
+
+            // Periodic auto-save every 5 min (6000 ticks), dirty players only
+            Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+                for (HLPlayer hlPlayer : new ArrayList<>(HLPlayer.getPlayers().values())) {
+                    cz.hashiri.harshlands.data.fear.DataModule dm = hlPlayer.getFearDataModule();
+                    if (dm != null && dm.isDirty()) dm.saveData();
+                }
+            }, 6000L, 6000L);
+
+            // Periodic fear effects (shaking, fake sounds, heartbeat)
+            long effectsInterval = config.getLong("FearMeter.EffectsIntervalTicks", 20L);
+            FearEffectsTask effectsTask = new FearEffectsTask(plugin, config, this);
+            Bukkit.getScheduler().runTaskTimer(plugin, effectsTask, effectsInterval, effectsInterval);
+        }
+
         if (config.getBoolean("TorchSystem.Enabled")) {
             long burnMinutes = config.getLong("TorchSystem.BurnDurationMinutes", 60L);
             unlitTorchService = new FearUnlitTorchService(plugin, getUserConfig());
@@ -94,6 +136,11 @@ public class FearModule extends HLModule {
         if (config.getBoolean("Shutdown.Enabled")) {
             String message = Utils.translateMsg(config.getString("Shutdown.Message"), null, Map.of("NAME", NAME));
             plugin.getLogger().info(message);
+        }
+
+        if (nightmareManager != null) {
+            nightmareManager.removeAllNightmares();
+            nightmareManager = null;
         }
 
         if (torchManager != null) {

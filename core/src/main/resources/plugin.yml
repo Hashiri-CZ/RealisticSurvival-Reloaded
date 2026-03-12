@@ -140,6 +140,12 @@ permissions:
   harshlands.command.version:
     description: Allows users to access the plugin version
     default: op
+  harshlands.command.fear:
+    description: Allows checking your own fear level
+    default: op
+  harshlands.command.fear.others:
+    description: Allows checking other players' fear levels
+    default: op
   harshlands.command.*:
     description: Wildcard permission
     default: op
@@ -154,4 +160,6 @@ permissions:
       harshlands.command.updateitem: true
       harshlands.command.help: true
       harshlands.command.version: true
+      harshlands.command.fear: true
+      harshlands.command.fear.others: true
 
