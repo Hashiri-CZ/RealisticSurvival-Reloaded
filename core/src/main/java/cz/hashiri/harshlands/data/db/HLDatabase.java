@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 
 public class HLDatabase {
 
+    public record FearDataRow(double fearLevel) {}
+
     public record TanDataRow(
         double temperature,
         int thirst,
@@ -182,11 +184,17 @@ public class HLDatabase {
             + "expires_at BIGINT NOT NULL"
             + ")";
 
+        String fearTable = "CREATE TABLE IF NOT EXISTS hl_fear_data ("
+            + "uuid VARCHAR(36) NOT NULL PRIMARY KEY,"
+            + "fear_level DOUBLE NOT NULL"
+            + ")";
+
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(tanTable);
             stmt.execute(baublesTable);
             stmt.execute(torchTable);
+            stmt.execute(fearTable);
             logger.info("[HLDatabase] Tables created/verified.");
         } catch (SQLException e) {
             throw new RuntimeException("[HLDatabase] Failed to create tables: " + e.getMessage(), e);
@@ -436,6 +444,43 @@ public class HLDatabase {
                 ps.executeUpdate();
             } catch (SQLException e) {
                 logger.warning("[HLDatabase] Failed to save baubles data for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    // ── Fear Data ─────────────────────────────────────────────────────────────
+
+    public CompletableFuture<Optional<FearDataRow>> loadFearData(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            String sql = "SELECT fear_level FROM hl_fear_data WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return Optional.of(new FearDataRow(rs.getDouble("fear_level")));
+                    }
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load fear data for " + uuid + ": " + e.getMessage());
+            }
+            return Optional.empty();
+        });
+    }
+
+    public CompletableFuture<Void> saveFearData(UUID uuid, FearDataRow row) {
+        return scheduler.runAsync(() -> {
+            String sql = isMysql
+                ? "INSERT INTO hl_fear_data (uuid, fear_level) VALUES (?, ?)"
+                    + " ON DUPLICATE KEY UPDATE fear_level=VALUES(fear_level)"
+                : "MERGE INTO hl_fear_data (uuid, fear_level) KEY(uuid) VALUES (?, ?)";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setDouble(2, row.fearLevel());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save fear data for " + uuid + ": " + e.getMessage());
             }
         });
     }

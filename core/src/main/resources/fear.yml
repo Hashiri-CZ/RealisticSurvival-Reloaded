@@ -25,3 +25,162 @@ TorchSystem:
   UnlitTorchEnforcement:
     TargetFullScanTicks: 20
     MinScanBatchSize: 32
+
+FearMeter:
+  Enabled: true
+  DefaultFear: 0.0
+  CheckIntervalTicks: 100
+  Debug: false   # Set to true to log fear condition breakdown every check interval
+
+  PassiveDecay:
+    Enabled: true
+    Rate: 0.5     # fear units removed per check interval when no net gain
+
+  Conditions:
+    Darkness:
+      Enabled: true
+      MaxLightLevel: 4   # 0-15: trigger when block light at feet is this or lower
+      Rate: 1.0          # fear added per check interval
+
+    Cave:
+      Enabled: true
+      Rate: 0.4          # underground (no sky light at eye level)
+
+    AloneUnderground:
+      Enabled: true
+      SearchRadius: 20.0 # blocks radius to look for other players
+      Rate: 0.5
+
+    LowHealth:
+      Enabled: true
+      HealthFraction: 0.35  # trigger below this fraction of max health (0.35 = 35%)
+      RequiredTicks: 3      # consecutive check intervals at low health before fear starts
+      Rate: 1.0
+
+    NearbyEnemies:
+      Enabled: true
+      SearchRadius: 16.0
+      Rate: 0.5            # fear per mob per check interval
+      MaxMobBonus: 3.0     # cap on total fear from this condition
+
+    Cold:
+      Enabled: true
+      TemperatureThreshold: 5.0  # TAN temperature value (range 0.0-25.0)
+      Rate: 0.8
+
+    Storm:
+      Enabled: true
+      RequireOutdoors: true      # only when exposed to sky
+      Rate: 0.3
+
+    Night:
+      Enabled: true
+      StartTime: 13000           # world time (0-24000)
+      EndTime: 23000
+      Rate: 0.5
+
+  Reductions:
+    BrightLight:
+      Enabled: true
+      MinLightLevel: 12  # 0-15: trigger when block light at feet is this or higher
+      Rate: 0.8          # fear removed per check interval
+
+    NearFireSource:
+      Enabled: true
+      SearchRadius: 5    # block radius (cube) to scan for fire sources
+      Rate: 1.0          # fear removed per check interval if any fire source found
+
+    NearCompanions:
+      Enabled: true
+      SearchRadius: 12.0 # blocks radius to search for other players / tamed wolves & cats
+      Rate: 0.6          # fear removed per companion per check interval
+      MaxBonus: 3.0      # cap on total fear reduction from companions
+
+    EatCookedFood:
+      Enabled: true
+      Amount: 5.0        # fear removed immediately on eating
+      Foods:
+        - COOKED_BEEF
+        - COOKED_CHICKEN
+        - COOKED_COD
+        - COOKED_MUTTON
+        - COOKED_PORKCHOP
+        - COOKED_RABBIT
+        - COOKED_SALMON
+        - BAKED_POTATO
+        - BREAD
+
+    Sleep:
+      Enabled: true
+      Amount: 10.0       # fear removed when player successfully enters a bed
+
+    OnDeath:
+      Enabled: true
+      ResetTo: 0.0       # fear level set to this value on death
+
+  EffectsIntervalTicks: 20  # how often (ticks) the effects task runs; 20 = once per second
+
+  Increases:
+    MonsterHit:
+      Enabled: true
+      Amount: 3.0          # fear added when hit by a monster or monster-fired projectile
+
+    Burning:
+      Enabled: true
+      Amount: 2.0          # fear added per fire/lava damage event (FIRE, FIRE_TICK, LAVA)
+
+  Effects:
+    Shaking:
+      Enabled: true
+      MinFear: 60.0        # fear level (0-100) required to trigger
+      Chance: 0.08         # probability per effects tick (0.0 = never, 1.0 = always)
+      Duration: 60         # ticks of Nausea (60 = 3 seconds)
+
+    ProjectileInaccuracy:
+      Enabled: true
+      MinFear: 40.0        # fear level below which there is no spread
+      SpreadScale: 0.3     # max random velocity offset per axis at 100 fear (scales linearly)
+
+    FakeMobSounds:
+      Enabled: true
+      MinFear: 50.0
+      Chance: 0.05         # probability per effects tick
+      MaxDistance: 20.0    # max blocks from player for the fake sound origin
+      Volume: 1.0
+      Pitch: 1.0
+      Sounds:              # sound name: relative weight (higher = more common)
+        ENTITY_CREEPER_PRIMED: 35
+        ENTITY_CREEPER_HURT: 15
+        ENTITY_SPIDER_AMBIENT: 10
+        ENTITY_CAVE_SPIDER_AMBIENT: 8
+        ENTITY_SKELETON_AMBIENT: 8
+        ENTITY_ZOMBIE_AMBIENT: 8
+        ENTITY_ENDERMAN_STARE: 5
+        ENTITY_GHAST_AMBIENT: 4
+        ENTITY_PHANTOM_AMBIENT: 4
+        ENTITY_WITHER_AMBIENT: 3
+
+    Heartbeat:
+      Enabled: true
+      MinFear: 85.0        # plays every effects tick above this threshold
+      Volume: 0.6
+      Pitch: 1.0
+
+Nightmare:
+  Enabled: true
+  SpawnFearThreshold: 100.0    # fear level that triggers a spawn
+  DespawnFearThreshold: 80.0   # fear level at or below which the Nightmare despawns
+  SpawnRadius: 10.0            # blocks from player to spawn the Enderman
+  MaxFollowDistance: 30.0      # blocks; Enderman teleports to player beyond this distance
+  TeleportRadius: 4.0          # blocks from player to teleport to when catching up
+  Scaling:
+    Stage1:                    # from spawn until Stage2 threshold
+      SpeedAmplifier: 0        # Speed I
+    Stage2:
+      AfterSeconds: 60
+      SpeedAmplifier: 1        # Speed II
+      StrengthAmplifier: 0     # Strength I
+    Stage3:
+      AfterSeconds: 120
+      SpeedAmplifier: 2        # Speed III
+      StrengthAmplifier: 1     # Strength II

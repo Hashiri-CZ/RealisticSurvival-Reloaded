@@ -18,6 +18,7 @@ package cz.hashiri.harshlands.data;
 
 import cz.hashiri.harshlands.baubles.BaubleModule;
 import cz.hashiri.harshlands.data.toughasnails.DataModule;
+import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.tan.TanModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,13 +34,14 @@ public class HLPlayer {
     private final UUID uuid;
     private final DataModule tanDataModule;
     private final cz.hashiri.harshlands.data.baubles.DataModule baubleDataModule;
+    private final cz.hashiri.harshlands.data.fear.DataModule fearDataModule;
     private static final Map<UUID, HLPlayer> players = new HashMap<>();
 
     public HLPlayer(Player player) {
         this.uuid = player.getUniqueId();
         baubleDataModule = HLModule.getModule(BaubleModule.NAME).isGloballyEnabled() ? new cz.hashiri.harshlands.data.baubles.DataModule(player) : null;
-
         tanDataModule = HLModule.getModule(TanModule.NAME).isGloballyEnabled() ? new DataModule(player) : null;
+        fearDataModule = HLModule.getModule(FearModule.NAME).isGloballyEnabled() ? new cz.hashiri.harshlands.data.fear.DataModule(player) : null;
 
         players.put(uuid, this);
     }
@@ -61,6 +63,9 @@ public class HLPlayer {
         if (baubleDataModule != null) {
             baubleDataModule.retrieveData();
         }
+        if (fearDataModule != null) {
+            fearDataModule.retrieveData();
+        }
     }
 
     public void saveData() {
@@ -69,6 +74,9 @@ public class HLPlayer {
         }
         if (baubleDataModule != null) {
             baubleDataModule.saveData();
+        }
+        if (fearDataModule != null) {
+            fearDataModule.saveData();
         }
     }
 
@@ -80,6 +88,11 @@ public class HLPlayer {
     @Nullable
     public cz.hashiri.harshlands.data.baubles.DataModule getBaubleDataModule() {
         return baubleDataModule;
+    }
+
+    @Nullable
+    public cz.hashiri.harshlands.data.fear.DataModule getFearDataModule() {
+        return fearDataModule;
     }
 
     public static boolean isValidPlayer(@Nullable Player player) {

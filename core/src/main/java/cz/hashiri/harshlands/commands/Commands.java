@@ -18,6 +18,8 @@ package cz.hashiri.harshlands.commands;
 
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
+import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
 import cz.hashiri.harshlands.rsv.HLPlugin;
 import cz.hashiri.harshlands.tan.*;
@@ -81,7 +83,7 @@ public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args) {
         // check if the user typed /harshlands, case-insensitive
-        if (label.equalsIgnoreCase(NAME) || label.equalsIgnoreCase("rsv")) {
+        if (cmd.getName().equalsIgnoreCase(NAME)) {
             if (sender instanceof BlockCommandSender) {
                 if (!config.getBoolean("EnableCommandBlockUsage")) {
                     sendNoPermissionMessage(sender);
@@ -827,6 +829,61 @@ public class Commands implements CommandExecutor {
                     if (config.getBoolean("UpdateItem." + execution + ".Enabled")) {
                         sender.sendMessage(Utils.translateMsg(config.getString("UpdateItem." + execution + "." + mainHand + "." + single), sender, null));
                     }
+                    return true;
+                }
+                case "fear" -> {
+                    if (!sender.hasPermission("harshlands.command.fear")) {
+                        sendNoPermissionMessage(sender);
+                        return true;
+                    }
+
+                    HLModule fearMod = HLModule.getModule(FearModule.NAME);
+                    if (fearMod == null || !fearMod.isGloballyEnabled()) {
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            config.getString("Fear.ModuleDisabled", "&c[Harshlands] Fear module is not enabled.")));
+                        return true;
+                    }
+
+                    Player target;
+                    if (args.length >= 2) {
+                        if (!sender.hasPermission("harshlands.command.fear.others")) {
+                            sendNoPermissionMessage(sender);
+                            return true;
+                        }
+                        target = Bukkit.getPlayer(args[1]);
+                        if (target == null) {
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                config.getString("Fear.PlayerNotFound", "&cPlayer not found.")));
+                            return true;
+                        }
+                    } else {
+                        if (!(sender instanceof Player)) {
+                            sendIncompleteCommandMsg(sender);
+                            return true;
+                        }
+                        target = (Player) sender;
+                    }
+
+                    HLPlayer hlTarget = HLPlayer.getPlayers().get(target.getUniqueId());
+                    if (hlTarget == null) {
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            config.getString("Fear.PlayerNotFound", "&cPlayer not found.")));
+                        return true;
+                    }
+
+                    cz.hashiri.harshlands.data.fear.DataModule dm = hlTarget.getFearDataModule();
+                    if (dm == null) {
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            config.getString("Fear.ModuleDisabled", "&c[Harshlands] Fear module is not enabled.")));
+                        return true;
+                    }
+
+                    String msg = Utils.translateMsg(
+                        config.getString("Fear.FearLevel", "&6[Harshlands] &f%PLAYER%'s fear: &e%FEAR_LEVEL%"),
+                        null,
+                        Map.of("PLAYER", target.getName(), "FEAR_LEVEL", String.format("%.2f", dm.getFearLevel()))
+                    );
+                    sender.sendMessage(msg);
                     return true;
                 }
                 case "help" -> {
