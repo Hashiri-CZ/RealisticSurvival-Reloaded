@@ -90,6 +90,14 @@ Fear:
     world: true
     world_nether: true
     world_the_end: true
+DynamicSurroundings:
+  Enabled: false   # optional module — admin must explicitly opt in
+  ResourcePack:
+    Url: ""  # URL of the Dynamic Surroundings sounds resource pack. Leave empty to disable.
+  Worlds:
+    world: true
+    world_nether: true
+    world_the_end: true
 
 ####################################
 #          Miscellaneous           #

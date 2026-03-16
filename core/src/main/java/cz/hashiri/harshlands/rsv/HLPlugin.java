@@ -21,6 +21,7 @@ import cz.hashiri.harshlands.commands.Commands;
 import cz.hashiri.harshlands.commands.Tab;
 import cz.hashiri.harshlands.data.*;
 import cz.hashiri.harshlands.data.db.HLDatabase;
+import cz.hashiri.harshlands.dynamicsurroundings.DynamicSurroundingsModule;
 import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
 import cz.hashiri.harshlands.integrations.PAPI;
@@ -110,6 +111,7 @@ public class HLPlugin extends JavaPlugin {
         this.toolUtils = new ToolUtils(this);
         this.toolUtils.initMap();
         ensureFearDefaults();
+        ensureDynamicSurroundingsDefaults();
 
         this.miscItems = new MiscItems(this);
         this.miscRecipes = new MiscRecipes(this);
@@ -144,6 +146,10 @@ public class HLPlugin extends JavaPlugin {
         if (fearModule.isGloballyEnabled()) {
             fearModule.initialize();
         }
+
+        DynamicSurroundingsModule dynamicSurroundingsModule = new DynamicSurroundingsModule(this);
+        if (dynamicSurroundingsModule.isGloballyEnabled())
+            dynamicSurroundingsModule.initialize();
 
 //        FaModule faModule = new FaModule(this);
 //        if (faModule.isGloballyEnabled())
@@ -314,6 +320,44 @@ public class HLPlugin extends JavaPlugin {
                 cfg.save(getConfigFile());
             } catch (IOException exception) {
                 getLogger().warning("Failed to write Fear defaults to config.yml: " + exception.getMessage());
+            }
+        }
+    }
+
+    private void ensureDynamicSurroundingsDefaults() {
+        FileConfiguration cfg = getConfig();
+        boolean changed = false;
+
+        if (!cfg.contains("DynamicSurroundings.Enabled")) {
+            cfg.set("DynamicSurroundings.Enabled", false);
+            changed = true;
+        }
+
+        if (!cfg.contains("DynamicSurroundings.ResourcePack.Url")) {
+            cfg.set("DynamicSurroundings.ResourcePack.Url", "");
+            changed = true;
+        }
+
+        String worldsPath = "DynamicSurroundings.Worlds";
+        if (!cfg.contains(worldsPath)) {
+            cfg.createSection(worldsPath);
+            changed = true;
+        }
+
+        boolean autoEnableWorlds = cfg.getBoolean("AutomaticallyEnableWorlds");
+        for (String world : Utils.getAllWorldNames()) {
+            String path = worldsPath + "." + world;
+            if (!cfg.contains(path)) {
+                cfg.set(path, autoEnableWorlds);
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            try {
+                cfg.save(getConfigFile());
+            } catch (IOException exception) {
+                getLogger().warning("Failed to write DynamicSurroundings defaults to config.yml: " + exception.getMessage());
             }
         }
     }
