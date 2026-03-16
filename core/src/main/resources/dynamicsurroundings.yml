@@ -1,0 +1,6 @@
+ConfigId: "1.2.15-RELEASE"
+
+Initialize:
+  Enabled: true
+Shutdown:
+  Enabled: true

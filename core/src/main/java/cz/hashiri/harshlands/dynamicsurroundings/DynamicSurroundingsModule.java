@@ -1,0 +1,61 @@
+/*
+    Copyright (C) 2026  Hashiri_
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package cz.hashiri.harshlands.dynamicsurroundings;
+
+import cz.hashiri.harshlands.data.HLConfig;
+import cz.hashiri.harshlands.data.HLModule;
+import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.utils.Utils;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.Map;
+
+public class DynamicSurroundingsModule extends HLModule {
+
+    public static final String NAME = "DynamicSurroundings";
+
+    private final HLPlugin plugin;
+
+    public DynamicSurroundingsModule(HLPlugin plugin) {
+        super(NAME, plugin, Map.of(), Map.of());
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void initialize() {
+        setUserConfig(new HLConfig(plugin, "dynamicsurroundings.yml"));
+
+        FileConfiguration config = getUserConfig().getConfig();
+        if (config.getBoolean("Initialize.Enabled")) {
+            Utils.logModuleLifecycle("Initializing", NAME);
+        }
+
+        plugin.getServer().getPluginManager().registerEvents(new DynamicSurroundingsEvents(this, plugin), plugin);
+    }
+
+    @Override
+    public void shutdown() {
+        FileConfiguration config = getUserConfig().getConfig();
+        if (config.getBoolean("Shutdown.Enabled")) {
+            Utils.logModuleLifecycle("Shutting down", NAME);
+        }
+    }
+
+    public String getPackUrl() {
+        return plugin.getConfig().getString("DynamicSurroundings.ResourcePack.Url");
+    }
+}
