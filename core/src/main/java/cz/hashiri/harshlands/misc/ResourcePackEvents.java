@@ -21,9 +21,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ResourcePackEvents implements Listener {
+
+    // Stable UUID for the main Harshlands resource pack slot
+    private static final UUID MAIN_PACK_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
 
     private final HLPlugin plugin;
 
@@ -36,15 +40,15 @@ public class ResourcePackEvents implements Listener {
         Player player = event.getPlayer();
         Logger logger = plugin.getLogger();
 
-        // 1.21.11-only support: always use a single resource pack URL.
         String packUrl = plugin.getConfig().getString("ResourcePack.Url");
         if (packUrl == null || packUrl.isBlank()) {
             logger.warning("ResourcePack.Enabled is true but ResourcePack.Url is empty. Skipping resource pack send.");
             return;
         }
 
-        // Apply pack to player
-        player.setResourcePack(packUrl);
+        // Use addResourcePack so multiple packs (e.g. DynamicSurroundings) can coexist.
+        // setResourcePack() removes all previously queued packs before adding the new one.
+        player.addResourcePack(MAIN_PACK_UUID, packUrl, null, null, false);
         logger.info("Sent resource pack URL to player " + player.getName() + ".");
     }
 }

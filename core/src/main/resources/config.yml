@@ -30,10 +30,10 @@ DeveloperBuildVersion:
 # Resource pack is disabled by default to allow for integration of it into
 # your own custom server pack if needed
 # NOTE: You must restart the server after enabling or disabling any feature
-# NOTE: This plugin supports Minecraft version 1.21.11 only and uses a single resource pack URL.
+# NOTE: This plugin supports Minecraft version 1.21.11 only and supports multiple resource pack URLs (main + optional DynamicSurroundings pack).
 ResourcePack:
   Enabled: true
-  Url: "https://www.dropbox.com/scl/fi/o75nrucjpm61tee6tlg07/Harshlands_RP_1.21.11.zip?rlkey=jn1tgfopdr2zudwbu5lw119ty&st=8w9f74uf&dl=1"
+  Url: "https://www.dropbox.com/scl/fi/i5tq0rym0osearzftbd6f/Harshlands_RP_1.2.16.zip?rlkey=bs50lb24e0gkp6zl3bval6287&st=v36ugilz&dl=1"
   # Namespace used for minecraft:item_model keys on plugin items.
   # Use "realisticsurvival" for Realistic Survival RP and "harshlands" for Harshlands RP.
   # Change only if you have your own custom RP from Realistic Survival. If not, leave default.
@@ -93,7 +93,7 @@ Fear:
 DynamicSurroundings:
   Enabled: false   # optional module — admin must explicitly opt in
   ResourcePack:
-    Url: ""  # URL of the Dynamic Surroundings sounds resource pack. Leave empty to disable.
+    Url: "https://www.dropbox.com/scl/fi/lidu0c909jvlxgre3botm/HarshlandsSounds_RP_1.2.16.zip?rlkey=e1i2wcsevwswvclv9wehf1gth&st=uqzir0ds&dl=1"  # URL of the Dynamic Surroundings sounds resource pack. Leave empty to disable.
   Worlds:
     world: true
     world_nether: true

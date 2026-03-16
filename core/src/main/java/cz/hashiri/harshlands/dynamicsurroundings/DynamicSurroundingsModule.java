@@ -44,7 +44,20 @@ public class DynamicSurroundingsModule extends HLModule {
             Utils.logModuleLifecycle("Initializing", NAME);
         }
 
-        plugin.getServer().getPluginManager().registerEvents(new DynamicSurroundingsEvents(this, plugin), plugin);
+        FootstepHandler footstepHandler = config.getBoolean("Footsteps.Enabled", true)
+                ? new FootstepHandler(this, config) : null;
+        ItemSoundHandler itemSoundHandler = config.getBoolean("ItemSounds.Enabled", true)
+                ? new ItemSoundHandler(this, config) : null;
+        AmbientSoundHandler ambientHandler = config.getBoolean("Ambient.Enabled", true)
+                ? new AmbientSoundHandler(this, config) : null;
+
+        plugin.getServer().getPluginManager().registerEvents(
+                new DynamicSurroundingsEvents(this, plugin, footstepHandler, itemSoundHandler), plugin);
+
+        if (ambientHandler != null) {
+            new AmbientTask(this, ambientHandler)
+                    .runTaskTimer(plugin, 100L, config.getLong("Ambient.CheckIntervalTicks", 100L));
+        }
     }
 
     @Override
