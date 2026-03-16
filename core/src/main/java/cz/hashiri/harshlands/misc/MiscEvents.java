@@ -18,6 +18,7 @@ package cz.hashiri.harshlands.misc;
 
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.rsv.HLPlugin;
 import cz.hashiri.harshlands.utils.PlayerJumpEvent;
 import cz.hashiri.harshlands.utils.HLItem;
@@ -78,7 +79,9 @@ public class MiscEvents implements Listener {
         for (HLModule module : rsvModules) {
             if (module.isGloballyEnabled()) {
                 if (module.getAllowedWorlds().contains(player.getWorld().getName())) {
-                    Collection<NamespacedKey> keys = module.getModuleRecipes().getRecipeKeys();
+                    ModuleRecipes recipes = module.getModuleRecipes();
+                    if (recipes == null) continue;
+                    Collection<NamespacedKey> keys = recipes.getRecipeKeys();
                     FileConfiguration config = module.getUserConfig().getConfig();
                     for (NamespacedKey key : keys) {
                         if (config.getBoolean("Recipes." + key.getKey() + ".Unlock")) {

@@ -17,10 +17,20 @@
 package cz.hashiri.harshlands.dynamicsurroundings;
 
 import cz.hashiri.harshlands.rsv.HLPlugin;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerAnimationType;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
@@ -31,11 +41,20 @@ public class DynamicSurroundingsEvents implements Listener {
 
     private final DynamicSurroundingsModule module;
     private final HLPlugin plugin;
+    private final FootstepHandler footstepHandler;
+    private final ItemSoundHandler itemSoundHandler;
 
-    public DynamicSurroundingsEvents(DynamicSurroundingsModule module, HLPlugin plugin) {
+    public DynamicSurroundingsEvents(DynamicSurroundingsModule module, HLPlugin plugin,
+                                     FootstepHandler footstepHandler, ItemSoundHandler itemSoundHandler) {
         this.module = module;
         this.plugin = plugin;
+        this.footstepHandler = footstepHandler;
+        this.itemSoundHandler = itemSoundHandler;
     }
+
+    // -----------------------------------------------------------------------
+    // Resource pack delivery
+    // -----------------------------------------------------------------------
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -50,7 +69,68 @@ public class DynamicSurroundingsEvents implements Listener {
             return;
         }
 
-        player.addResourcePack(PACK_UUID, url, new byte[0], "", false);
+        player.addResourcePack(PACK_UUID, url, null, null, false);
         plugin.getLogger().info("Sent Dynamic Surroundings resource pack to player " + player.getName() + ".");
+    }
+
+    // -----------------------------------------------------------------------
+    // Footstep sounds
+    // -----------------------------------------------------------------------
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (footstepHandler == null) return;
+        Player player = event.getPlayer();
+        if (!module.isEnabled(player.getWorld())) return;
+        if (player.getGameMode() == GameMode.SPECTATOR) return;
+        footstepHandler.handleMove(player, event.getFrom(), event.getTo());
+    }
+
+    // -----------------------------------------------------------------------
+    // Item sounds
+    // -----------------------------------------------------------------------
+
+    @EventHandler(ignoreCancelled = true)
+    public void onItemHeld(PlayerItemHeldEvent event) {
+        if (itemSoundHandler == null) return;
+        Player player = event.getPlayer();
+        if (!module.isEnabled(player.getWorld())) return;
+        itemSoundHandler.handleEquip(player, event.getNewSlot());
+    }
+
+    @EventHandler
+    public void onArmSwing(PlayerAnimationEvent event) {
+        if (itemSoundHandler == null) return;
+        Player player = event.getPlayer();
+        if (!module.isEnabled(player.getWorld())) return;
+        if (player.getGameMode() == GameMode.SPECTATOR) return;
+        if (event.getAnimationType() != PlayerAnimationType.ARM_SWING) return;
+        itemSoundHandler.handleSwing(player);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBowShoot(EntityShootBowEvent event) {
+        if (itemSoundHandler == null) return;
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!module.isEnabled(player.getWorld())) return;
+        itemSoundHandler.handleBowLoose(player);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (itemSoundHandler == null) return;
+        Player player = event.getPlayer();
+        if (!module.isEnabled(player.getWorld())) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        itemSoundHandler.handleInteract(player, event);
+    }
+
+    // -----------------------------------------------------------------------
+    // Cleanup
+    // -----------------------------------------------------------------------
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        DSPlayerState.remove(event.getPlayer().getUniqueId());
     }
 }

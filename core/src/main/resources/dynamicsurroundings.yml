@@ -4,3 +4,189 @@ Initialize:
   Enabled: true
 Shutdown:
   Enabled: true
+
+# ── Footstep Sounds ──────────────────────────────────────────────────────────
+Footsteps:
+  Enabled: true
+  # Master volume for all footstep sounds (0.0–1.0)
+  Volume: 0.8
+  # Horizontal distance (blocks) a player must walk to trigger one footstep sound
+  Threshold: 1.5
+  # Random pitch offset applied each step: pitch = 1.0 ± (variance / 2)
+  PitchVariance: 0.1
+  ArmorOverlay:
+    # Volume for the armor layer sounds (played on top of surface sound)
+    Volume: 0.3
+
+# ── Item Sounds ───────────────────────────────────────────────────────────────
+ItemSounds:
+  Enabled: true
+  # Master volume for all item sounds
+  Volume: 0.8
+  # Minimum ms between equip sounds for the same item type
+  EquipCooldownMs: 250
+  # Minimum ms between swing sounds
+  SwingCooldownMs: 150
+  # Minimum ms between bow-pull sounds
+  BowPullCooldownMs: 500
+  # Minimum ms between page-flip sounds
+  PageflipCooldownMs: 300
+
+# ── Ambient Sounds ────────────────────────────────────────────────────────────
+Ambient:
+  Enabled: true
+  # How often to evaluate ambient sounds (ticks; 100 = 5 seconds)
+  CheckIntervalTicks: 100
+
+  # Per-category settings.
+  # Chance: probability of firing each evaluation cycle (0.0–1.0)
+  # MinCooldownMs: minimum milliseconds between consecutive plays of this category
+  # Sound: resource-pack sound event (harshlands: namespace is added automatically)
+  Categories:
+
+    birds:
+      Enabled: true
+      Chance: 0.3
+      Volume: 0.8
+      MinCooldownMs: 15000
+      Sound: "dynamicsurroundings.ambient.birds"
+
+    owl:
+      Enabled: true
+      Chance: 0.2
+      Volume: 0.7
+      MinCooldownMs: 20000
+      Sound: "dynamicsurroundings.ambient.owl"
+
+    coyote:
+      Enabled: true
+      Chance: 0.15
+      Volume: 0.8
+      MinCooldownMs: 25000
+      Sound: "dynamicsurroundings.ambient.coyote"
+
+    wolf:
+      Enabled: true
+      Chance: 0.15
+      Volume: 0.8
+      MinCooldownMs: 25000
+      Sound: "dynamicsurroundings.ambient.wolf"
+
+    insects:
+      Enabled: true
+      Chance: 0.4
+      Volume: 0.6
+      MinCooldownMs: 10000
+      Sound: "dynamicsurroundings.ambient.insects"
+
+    seagulls:
+      Enabled: true
+      Chance: 0.3
+      Volume: 0.8
+      MinCooldownMs: 15000
+      Sound: "dynamicsurroundings.ambient.seagulls"
+
+    whale:
+      Enabled: true
+      Chance: 0.08
+      Volume: 0.9
+      MinCooldownMs: 60000
+      Sound: "dynamicsurroundings.ambient.whale"
+
+    underground:
+      Enabled: true
+      Chance: 0.25
+      Volume: 0.7
+      MinCooldownMs: 20000
+      Sound: "dynamicsurroundings.ambient.underground"
+
+    droplets:
+      Enabled: true
+      Chance: 0.3
+      Volume: 0.6
+      MinCooldownMs: 15000
+      Sound: "dynamicsurroundings.ambient.droplets"
+
+    stream:
+      Enabled: true
+      Chance: 0.35
+      Volume: 0.7
+      MinCooldownMs: 12000
+      Sound: "dynamicsurroundings.ambient.stream"
+
+    ice:
+      Enabled: true
+      Chance: 0.25
+      Volume: 0.7
+      MinCooldownMs: 20000
+      Sound: "dynamicsurroundings.ambient.ice"
+
+    dimension:
+      Enabled: true
+      Chance: 0.3
+      Volume: 0.8
+      MinCooldownMs: 15000
+      Sound: "dynamicsurroundings.ambient.dimension"
+
+    soulsand:
+      Enabled: true
+      Chance: 0.2
+      Volume: 0.8
+      MinCooldownMs: 20000
+      Sound: "dynamicsurroundings.ambient.soulsand"
+
+    end:
+      Enabled: true
+      Chance: 0.25
+      Volume: 0.8
+      MinCooldownMs: 20000
+      Sound: "dynamicsurroundings.ambient.end"
+
+    underwater:
+      Enabled: true
+      Chance: 0.35
+      Volume: 0.7
+      MinCooldownMs: 10000
+      Sound: "dynamicsurroundings.ambient.underwater"
+
+    weather:
+      Enabled: true
+      Chance: 0.4
+      Volume: 0.8
+      MinCooldownMs: 10000
+      Sound: "dynamicsurroundings.ambient.weather"
+
+    village:
+      Enabled: true
+      Chance: 0.25
+      Volume: 0.7
+      MinCooldownMs: 20000
+      Sound: "dynamicsurroundings.ambient.village"
+
+    miscblocks:
+      Enabled: true
+      Chance: 0.2
+      Volume: 0.6
+      MinCooldownMs: 25000
+      Sound: "dynamicsurroundings.ambient.miscblocks"
+
+    steve:
+      Enabled: true
+      Chance: 0.02
+      Volume: 0.8
+      MinCooldownMs: 30000
+      Sound: "dynamicsurroundings.ambient.steve"
+
+    outside:
+      Enabled: true
+      Chance: 0.2
+      Volume: 0.7
+      MinCooldownMs: 15000
+      Sound: "dynamicsurroundings.ambient.outside"
+
+    book:
+      Enabled: true
+      Chance: 0.3
+      Volume: 0.6
+      MinCooldownMs: 12000
+      Sound: "dynamicsurroundings.ambient.book"
