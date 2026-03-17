@@ -183,8 +183,8 @@ public class AmbientSoundHandler {
             tryAmbient(player, state, "ice", loc);
         }
 
-        // Stream: Y > 50, water in 3×3 horizontal column
-        if (loc.getY() > 50 && hasWaterColumnNearby(player, 1)) {
+        // Stream: Y > 50, water in 3×3 horizontal column, NOT in ocean/beach biomes
+        if (loc.getY() > 50 && hasWaterColumnNearby(player, 1) && !SEAGULL_BIOMES.contains(biome)) {
             tryAmbient(player, state, "stream", loc);
         }
 
