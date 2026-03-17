@@ -81,7 +81,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_rapier:
     Enabled:
       Enabled_1_21_11: true
@@ -93,7 +93,7 @@ Items:
       PercentAbsorbed: 0.25
       DamageDurability: 2
     Sweep: false
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
     FreezeAbility:
       Slowness:
         Amplifier: 4
@@ -126,12 +126,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_rapier:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       AttackSpeed: 2.4
     UnarmoredDamageMultiplier: 3.0
     Protection:
@@ -139,13 +139,13 @@ Items:
       DamageDurability: 2
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_rapier:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       AttackSpeed: 2.4
     UnarmoredDamageMultiplier: 3.0
     Protection:
@@ -155,8 +155,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -169,7 +169,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       AttackSpeed: 2.4
     UnarmoredDamageMultiplier: 3.0
     Protection:
@@ -181,7 +181,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Katanas
@@ -213,7 +213,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_katana:
     Enabled:
       Enabled_1_21_11: true
@@ -258,12 +258,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_katana:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.0
+      AttackDamage: 7.0
       AttackSpeed: 2.0
     MiningFatigue:
       TickPeriod: 20
@@ -272,13 +272,13 @@ Items:
     ChestDamageMultiplier: 2.0
     Sweep: true
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_katana:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.0
+      AttackDamage: 7.0
       AttackSpeed: 2.0
     MiningFatigue:
       TickPeriod: 20
@@ -289,8 +289,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -303,7 +303,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.0
+      AttackDamage: 7.0
       AttackSpeed: 2.0
     MiningFatigue:
       TickPeriod: 20
@@ -316,7 +316,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Greatswords
@@ -325,7 +325,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.0
+      AttackDamage: 12.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -338,7 +338,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 17.0
+      AttackDamage: 14.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -350,12 +350,12 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_greatsword:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 17.0
+      AttackDamage: 14.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -397,12 +397,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_greatsword:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 48.0
+      AttackDamage: 16.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -412,13 +412,13 @@ Items:
     SweepingDamageMultiplier: 1.0
     Sweep: true
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_greatsword:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 48.0
+      AttackDamage: 16.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -430,8 +430,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -444,7 +444,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 48.0
+      AttackDamage: 16.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -458,7 +458,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Longswords
@@ -490,7 +490,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_longsword:
     Enabled:
       Enabled_1_21_11: true
@@ -507,7 +507,7 @@ Items:
     SweepingDamageMultiplier: 0.25
     Sweep: true
     FrozenDuration: 10
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
     Block: "ICE"
   dragonbone_lightning_longsword:
     Enabled:
@@ -528,12 +528,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_longsword:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 36.0
+      AttackDamage: 13.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -542,13 +542,13 @@ Items:
     SweepingDamageMultiplier: 0.25
     Sweep: true
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_longsword:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 36.0
+      AttackDamage: 13.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -559,8 +559,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -573,7 +573,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 36.0
+      AttackDamage: 13.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -586,7 +586,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Spears
@@ -608,7 +608,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
     Reach: 7.0
   dragonbone_iced_spear:
     Enabled:
@@ -646,31 +646,31 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_spear:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 15.0
+      AttackDamage: 8.5
       AttackSpeed: 1.4
     Reach: 7.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_spear:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 15.0
+      AttackDamage: 8.5
       AttackSpeed: 1.4
     Reach: 7.0
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -683,7 +683,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 15.0
+      AttackDamage: 8.5
       AttackSpeed: 1.4
     Reach: 7.0
     Sweep: false
@@ -692,7 +692,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Sabers
@@ -722,7 +722,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_saber:
     Enabled:
       Enabled_1_21_11: true
@@ -765,12 +765,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_saber:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 15.0
+      AttackDamage: 8.5
       AttackSpeed: 1.6
     Protection:
       PercentAbsorbed: 0.25
@@ -778,13 +778,13 @@ Items:
     ChestDamageMultiplier: 2.0
     Sweep: true
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_saber:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 15.0
+      AttackDamage: 8.5
       AttackSpeed: 1.6
     Protection:
       PercentAbsorbed: 0.25
@@ -794,8 +794,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -808,7 +808,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 15.0
+      AttackDamage: 8.5
       AttackSpeed: 1.6
     Protection:
       PercentAbsorbed: 0.25
@@ -820,7 +820,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Boomerangs
@@ -902,7 +902,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_boomerang:
     Enabled:
       Enabled_1_21_11: true
@@ -997,7 +997,7 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_boomerang:
     Enabled:
       Enabled_1_21_11: true
@@ -1032,11 +1032,11 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       Velocity: 20.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_boomerang:
     Enabled:
@@ -1072,14 +1072,14 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       Velocity: 20.0
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -1122,7 +1122,7 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       Velocity: 20.0
     Sweep: false
     ElectrocuteAbility:
@@ -1130,7 +1130,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Daggers
@@ -1214,7 +1214,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_dagger:
     Enabled:
       Enabled_1_21_11: true
@@ -1316,12 +1316,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_dagger:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       AttackSpeed: 2.5
     ThrownAttributes:
       Piercing: true
@@ -1351,18 +1351,18 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       Velocity: 20.0
     BackstabDamageMultiplier: 3.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_dagger:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       AttackSpeed: 2.5
     ThrownAttributes:
       Piercing: true
@@ -1392,15 +1392,15 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       Velocity: 20.0
     BackstabDamageMultiplier: 3.0
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -1413,7 +1413,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       AttackSpeed: 2.5
     BackstabDamageMultiplier: 3.0
     ThrownAttributes:
@@ -1444,14 +1444,14 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 13.0
+      AttackDamage: 6.0
       Velocity: 20.0
     ElectrocuteAbility:
       SummonLightning:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Glaives
@@ -1485,7 +1485,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_glaive:
     Enabled:
       Enabled_1_21_11: true
@@ -1532,12 +1532,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_glaive:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.0
     MiningFatigue:
       TickPeriod: 20
@@ -1547,13 +1547,13 @@ Items:
     SweepingDamageMultiplier: 0.5
     Sweep: true
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_glaive:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.0
     MiningFatigue:
       TickPeriod: 20
@@ -1565,8 +1565,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -1579,7 +1579,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.0
     MiningFatigue:
       TickPeriod: 20
@@ -1593,7 +1593,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Halberds
@@ -1631,7 +1631,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_halberd:
     Enabled:
       Enabled_1_21_11: true
@@ -1682,12 +1682,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_halberd:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 59.0
+      AttackDamage: 21.5
       AttackSpeed: 1.2
     MiningFatigue:
       TickPeriod: 20
@@ -1699,13 +1699,13 @@ Items:
       Cooldown: 100
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_halberd:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 59.0
+      AttackDamage: 21.5
       AttackSpeed: 1.2
     MiningFatigue:
       TickPeriod: 20
@@ -1719,8 +1719,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -1733,7 +1733,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 59.0
+      AttackDamage: 21.5
       AttackSpeed: 1.2
     MiningFatigue:
       TickPeriod: 20
@@ -1749,7 +1749,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Hammers
@@ -1779,7 +1779,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_hammer:
     Enabled:
       Enabled_1_21_11: true
@@ -1822,12 +1822,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_hammer:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 27.0
+      AttackDamage: 15.0
       AttackSpeed: 0.8
     KnockbackMultiplier: 2.0
     Nausea:
@@ -1835,13 +1835,13 @@ Items:
       Duration: 170
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_hammer:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 27.0
+      AttackDamage: 15.0
       AttackSpeed: 0.8
     KnockbackMultiplier: 2.0
     Nausea:
@@ -1851,8 +1851,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -1865,7 +1865,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 27.0
+      AttackDamage: 15.0
       AttackSpeed: 0.8
     KnockbackMultiplier: 2.0
     Nausea:
@@ -1877,7 +1877,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Javelins
@@ -1959,7 +1959,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_javelin:
     Enabled:
       Enabled_1_21_11: true
@@ -2054,12 +2054,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_javelin:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 12.0
+      AttackDamage: 4.5
       AttackSpeed: 1.2
     ThrownAttributes:
       Piercing: true
@@ -2089,17 +2089,17 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 36.0
+      AttackDamage: 13.5
       Velocity: 20.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_javelin:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 12.0
+      AttackDamage: 4.5
       AttackSpeed: 1.2
     ThrownAttributes:
       Piercing: true
@@ -2129,14 +2129,14 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 36.0
+      AttackDamage: 13.5
       Velocity: 20.0
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -2149,7 +2149,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 12.0
+      AttackDamage: 4.5
       AttackSpeed: 1.2
     ThrownAttributes:
       Piercing: true
@@ -2179,7 +2179,7 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 36.0
+      AttackDamage: 13.5
       Velocity: 20.0
     Sweep: false
     ElectrocuteAbility:
@@ -2187,7 +2187,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Lances
@@ -2213,7 +2213,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_lance:
     Enabled:
       Enabled_1_21_11: true
@@ -2252,24 +2252,24 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_lance:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.0
     Reach: 7.0
     RidingDamageBonus: 2.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_lance:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.0
     Reach: 7.0
     RidingDamageBonus: 2.0
@@ -2277,8 +2277,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -2291,7 +2291,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.0
     Reach: 7.0
     RidingDamageBonus: 2.0
@@ -2301,7 +2301,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Maces
@@ -2325,7 +2325,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_mace:
     Enabled:
       Enabled_1_21_11: true
@@ -2362,31 +2362,31 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_mace:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.2
     UndeadDamageMultiplier: 1.5
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_mace:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.2
     UndeadDamageMultiplier: 1.5
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -2399,7 +2399,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 10.5
       AttackSpeed: 1.2
     UndeadDamageMultiplier: 1.5
     Sweep: false
@@ -2408,7 +2408,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Pikes
@@ -2440,7 +2440,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_pike:
     Enabled:
       Enabled_1_21_11: true
@@ -2485,12 +2485,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_pike:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.5
+      AttackDamage: 8.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -2499,13 +2499,13 @@ Items:
     Reach: 8.5
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_pike:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.5
+      AttackDamage: 8.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -2516,8 +2516,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -2530,7 +2530,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 14.5
+      AttackDamage: 8.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -2543,7 +2543,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Quarterstaffs
@@ -2575,7 +2575,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_quarterstaff:
     Enabled:
       Enabled_1_21_11: true
@@ -2620,12 +2620,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_quarterstaff:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 22.5
+      AttackDamage: 7.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -2634,13 +2634,13 @@ Items:
     SweepingDamageMultiplier: 0.5
     Sweep: true
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_quarterstaff:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 22.5
+      AttackDamage: 7.0
       AttackSpeed: 1.4
     MiningFatigue:
       TickPeriod: 20
@@ -2651,8 +2651,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -2665,7 +2665,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 22.5
+      AttackDamage: 7.0
       AttackSpeed: 1.4
     MiningFatigue:
       Amplifier: 2
@@ -2677,7 +2677,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Tomahawk
@@ -2759,7 +2759,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_tomahawk:
     Enabled:
       Enabled_1_21_11: true
@@ -2854,12 +2854,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_tomahawk:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 23.0
+      AttackDamage: 8.0
       AttackSpeed: 0.9
     ThrownAttributes:
       Piercing: true
@@ -2889,17 +2889,17 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 46.0
+      AttackDamage: 16.0
       Velocity: 20.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_tomahawk:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 23.0
+      AttackDamage: 8.0
       AttackSpeed: 0.9
     ThrownAttributes:
       Piercing: true
@@ -2929,14 +2929,14 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 46.0
+      AttackDamage: 16.0
       Velocity: 20.0
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -2949,7 +2949,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 23.0
+      AttackDamage: 8.0
       AttackSpeed: 0.9
     ThrownAttributes:
       Piercing: true
@@ -2979,7 +2979,7 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 46.0
+      AttackDamage: 16.0
       Velocity: 20.0
     Sweep: false
     ElectrocuteAbility:
@@ -2987,7 +2987,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Throwing Knives
@@ -3069,7 +3069,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_throwing_knife:
     Enabled:
       Enabled_1_21_11: true
@@ -3164,12 +3164,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_throwing_knife:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 12.0
+      AttackDamage: 4.5
       AttackSpeed: 2.5
     ThrownAttributes:
       Piercing: true
@@ -3199,17 +3199,17 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 24.0
+      AttackDamage: 9.0
       Velocity: 20.0
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_throwing_knife:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 12.0
+      AttackDamage: 4.5
       AttackSpeed: 2.5
     ThrownAttributes:
       Piercing: true
@@ -3239,14 +3239,14 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 24.0
+      AttackDamage: 9.0
       Velocity: 20.0
     Sweep: false
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -3259,7 +3259,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 12.0
+      AttackDamage: 4.5
       AttackSpeed: 2.5
     ThrownAttributes:
       Piercing: true
@@ -3289,7 +3289,7 @@ Items:
         Pitch: 1.0
       MaxDistance: 60.0
       MaxReturnDistance: 150.0
-      AttackDamage: 24.0
+      AttackDamage: 9.0
       Velocity: 20.0
     Sweep: false
     ElectrocuteAbility:
@@ -3297,7 +3297,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Warhammers
@@ -3325,7 +3325,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_warhammer:
     Enabled:
       Enabled_1_21_11: true
@@ -3366,25 +3366,25 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_warhammer:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 12.5
       AttackSpeed: 1.1
     MiningFatigue:
       Amplifier: 2
       Duration: 30
     ArmorPiercing: 0.5
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_warhammer:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 12.5
       AttackSpeed: 1.1
     MiningFatigue:
       Amplifier: 2
@@ -3393,8 +3393,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -3407,7 +3407,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 25.0
+      AttackDamage: 12.5
       AttackSpeed: 1.1
     MiningFatigue:
       Amplifier: 2
@@ -3418,7 +3418,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Battleaxes
@@ -3448,7 +3448,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_battleaxe:
     Enabled:
       Enabled_1_21_11: true
@@ -3491,12 +3491,12 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_battleaxe:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 47.0
+      AttackDamage: 17.0
       AttackSpeed: 1.0
     MiningFatigue:
       TickPeriod: 20
@@ -3504,13 +3504,13 @@ Items:
       Duration: 30
     Sweep: false
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_battleaxe:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 47.0
+      AttackDamage: 17.0
       AttackSpeed: 1.0
     MiningFatigue:
       TickPeriod: 20
@@ -3520,8 +3520,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -3534,7 +3534,7 @@ Items:
     Enabled:
       Enabled_1_21_11: true
     Attributes:
-      AttackDamage: 47.0
+      AttackDamage: 17.0
       AttackSpeed: 1.0
     MiningFatigue:
       TickPeriod: 20
@@ -3546,7 +3546,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Longbows
@@ -3564,7 +3564,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_longbow:
     Enabled:
       Enabled_1_21_11: true
@@ -3595,14 +3595,14 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_longbow:
     Enabled:
       Enabled_1_21_11: true
     AttackDamageMultiplier: 2.0
     ArrowVelocityMultiplier: 1.5
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_longbow:
     Enabled:
@@ -3612,8 +3612,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -3632,7 +3632,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
 
   # Crossbows
@@ -3650,7 +3650,7 @@ Items:
     InfernoAbility:
       FireTicks: 200
       TickPeriod: 1
-    DragonBonusDamage: 8.0
+    DragonBonusDamage: 4.0
   dragonbone_iced_crossbow:
     Enabled:
       Enabled_1_21_11: true
@@ -3681,14 +3681,14 @@ Items:
       ShockDamage: 1.0
       ShockAmount: 10
       TickPeriod: 2
-    DragonBonusDamage: 4.0
+    DragonBonusDamage: 2.0
   dragonsteel_fire_crossbow:
     Enabled:
       Enabled_1_21_11: true
     AttackDamageMultiplier: 2.0
     ArrowVelocityMultiplier: 1.5
     InfernoAbility:
-      FireTicks: 400
+      FireTicks: 120
       TickPeriod: 1
   dragonsteel_ice_crossbow:
     Enabled:
@@ -3698,8 +3698,8 @@ Items:
     FreezeAbility:
       Slowness:
         Amplifier: 4
-        Duration: 60
-      FrozenDuration: 20
+        Duration: 30
+      FrozenDuration: 10
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
@@ -3718,7 +3718,7 @@ Items:
         Enabled: true
         Cosmetic: true
       ShockDamage: 1.0
-      ShockAmount: 20
+      ShockAmount: 10
       TickPeriod: 2
   witherbone_handle:
     Enabled:
