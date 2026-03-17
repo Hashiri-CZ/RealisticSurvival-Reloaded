@@ -1003,8 +1003,11 @@ dragonsteel_fire_ingot:
     Amount: 1
   Ingredients:
     - "dragon_blood_fire"
+    - "NETHERITE_INGOT"
+    - "NETHER_STAR"
     - "IRON_INGOT"
-    - "NETHERITE_SCRAP"
+    - "IRON_INGOT"
+    - "IRON_INGOT"
 dragonsteel_ice_ingot:
   Type: "Shapeless"
   Result:
@@ -1012,8 +1015,11 @@ dragonsteel_ice_ingot:
     Amount: 1
   Ingredients:
     - "dragon_blood_ice"
+    - "NETHERITE_INGOT"
+    - "NETHER_STAR"
     - "IRON_INGOT"
-    - "NETHERITE_SCRAP"
+    - "IRON_INGOT"
+    - "IRON_INGOT"
 dragonsteel_lightning_ingot:
   Type: "Shapeless"
   Result:
@@ -1021,8 +1027,11 @@ dragonsteel_lightning_ingot:
     Amount: 1
   Ingredients:
     - "dragon_blood_lightning"
+    - "NETHERITE_INGOT"
+    - "NETHER_STAR"
     - "IRON_INGOT"
-    - "NETHERITE_SCRAP"
+    - "IRON_INGOT"
+    - "IRON_INGOT"
 dragonsteel_fire_block:
   Type: "Shaped"
   Result:

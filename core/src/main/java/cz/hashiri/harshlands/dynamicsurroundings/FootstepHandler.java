@@ -69,11 +69,14 @@ public class FootstepHandler {
 
         // GRASS
         map(MATERIAL_SURFACE_MAP, SurfaceType.GRASS,
-                Material.GRASS_BLOCK, Material.MYCELIUM, Material.PODZOL, Material.DIRT_PATH);
+                Material.GRASS_BLOCK, Material.MYCELIUM, Material.PODZOL, Material.DIRT_PATH,
+                Material.MOSS_BLOCK, Material.HAY_BLOCK, Material.TARGET,
+                Material.SPONGE, Material.WET_SPONGE);
 
         // DIRT
         map(MATERIAL_SURFACE_MAP, SurfaceType.DIRT,
-                Material.DIRT, Material.ROOTED_DIRT, Material.COARSE_DIRT, Material.FARMLAND);
+                Material.DIRT, Material.ROOTED_DIRT, Material.COARSE_DIRT, Material.FARMLAND,
+                Material.PACKED_MUD, Material.SOUL_SOIL, Material.DRIED_KELP_BLOCK);
 
         // STONE
         map(MATERIAL_SURFACE_MAP, SurfaceType.STONE,
@@ -121,11 +124,20 @@ public class FootstepHandler {
                 Material.PURPUR_BLOCK, Material.PURPUR_SLAB, Material.PURPUR_STAIRS, Material.PURPUR_PILLAR,
                 Material.PRISMARINE, Material.PRISMARINE_SLAB, Material.PRISMARINE_STAIRS, Material.PRISMARINE_WALL,
                 Material.PRISMARINE_BRICKS, Material.PRISMARINE_BRICK_SLAB, Material.PRISMARINE_BRICK_STAIRS,
-                Material.DARK_PRISMARINE, Material.DARK_PRISMARINE_SLAB, Material.DARK_PRISMARINE_STAIRS);
+                Material.DARK_PRISMARINE, Material.DARK_PRISMARINE_SLAB, Material.DARK_PRISMARINE_STAIRS,
+                Material.MUD_BRICKS, Material.MUD_BRICK_SLAB, Material.MUD_BRICK_STAIRS, Material.MUD_BRICK_WALL,
+                Material.OBSIDIAN, Material.CRYING_OBSIDIAN,
+                Material.MAGMA_BLOCK, Material.BONE_BLOCK);
 
         // SAND
         map(MATERIAL_SURFACE_MAP, SurfaceType.SAND,
-                Material.SAND, Material.RED_SAND, Material.SUSPICIOUS_SAND, Material.SOUL_SAND);
+                Material.SAND, Material.RED_SAND, Material.SUSPICIOUS_SAND, Material.SOUL_SAND,
+                Material.WHITE_CONCRETE_POWDER, Material.ORANGE_CONCRETE_POWDER, Material.MAGENTA_CONCRETE_POWDER,
+                Material.LIGHT_BLUE_CONCRETE_POWDER, Material.YELLOW_CONCRETE_POWDER, Material.LIME_CONCRETE_POWDER,
+                Material.PINK_CONCRETE_POWDER, Material.GRAY_CONCRETE_POWDER, Material.LIGHT_GRAY_CONCRETE_POWDER,
+                Material.CYAN_CONCRETE_POWDER, Material.PURPLE_CONCRETE_POWDER, Material.BLUE_CONCRETE_POWDER,
+                Material.BROWN_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER,
+                Material.BLACK_CONCRETE_POWDER);
 
         // GRAVEL
         map(MATERIAL_SURFACE_MAP, SurfaceType.GRAVEL,
@@ -133,7 +145,7 @@ public class FootstepHandler {
 
         // SNOW
         map(MATERIAL_SURFACE_MAP, SurfaceType.SNOW,
-                Material.SNOW_BLOCK, Material.POWDER_SNOW);
+                Material.SNOW_BLOCK, Material.POWDER_SNOW, Material.SNOW);
 
         // WOOD planks, slabs, stairs
         map(MATERIAL_SURFACE_MAP, SurfaceType.WOOD,
@@ -179,7 +191,8 @@ public class FootstepHandler {
                 Material.PINK_CONCRETE, Material.GRAY_CONCRETE, Material.LIGHT_GRAY_CONCRETE,
                 Material.CYAN_CONCRETE, Material.PURPLE_CONCRETE, Material.BLUE_CONCRETE,
                 Material.BROWN_CONCRETE, Material.GREEN_CONCRETE, Material.RED_CONCRETE, Material.BLACK_CONCRETE,
-                Material.SCULK, Material.SCULK_CATALYST, Material.SCULK_SENSOR, Material.CALIBRATED_SCULK_SENSOR);
+                Material.SCULK, Material.SCULK_CATALYST, Material.SCULK_SENSOR, Material.CALIBRATED_SCULK_SENSOR,
+                Material.SCULK_VEIN, Material.SCULK_SHRIEKER);
 
         // GLASS
         map(MATERIAL_SURFACE_MAP, SurfaceType.GLASS,
@@ -197,8 +210,7 @@ public class FootstepHandler {
 
         // MUD
         map(MATERIAL_SURFACE_MAP, SurfaceType.MUD,
-                Material.MUD, Material.MUDDY_MANGROVE_ROOTS, Material.PACKED_MUD,
-                Material.MUD_BRICKS, Material.MUD_BRICK_SLAB, Material.MUD_BRICK_STAIRS, Material.MUD_BRICK_WALL);
+                Material.MUD, Material.MUDDY_MANGROVE_ROOTS);
 
         // METALBAR
         map(MATERIAL_SURFACE_MAP, SurfaceType.METALBAR,

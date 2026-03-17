@@ -38,6 +38,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -462,6 +463,17 @@ public class IceFireEvents extends ModuleEvents implements Listener {
         if (hasSeaSerpentNearby && !hasVanillaElderGuardianNearby) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityTarget(EntityTargetLivingEntityEvent event) {
+        Entity entity = event.getEntity();
+
+        if (!(SeaSerpentUtils.isSeaSerpent(entity) || SirenUtils.isSiren(entity)))
+            return;
+
+        if (!(event.getTarget() instanceof Player))
+            event.setCancelled(true);
     }
 
     /**
