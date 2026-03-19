@@ -52,6 +52,8 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
     private final CharacterValues characterValues;
     private boolean underSirenEffect = false;
     private boolean parasitesActive = false;
+    private final BossbarHUD bossbarHud;
+    private final AboveActionBarHUD aboveActionBarHud;
     private final TanModule tanModule;
     private final IceFireModule ifModule;
     private final FearModule fearModule;
@@ -79,8 +81,8 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
         this.tanModule = (TanModule) HLModule.getModule(TanModule.NAME);
         this.ifModule = (IceFireModule) HLModule.getModule(IceFireModule.NAME);
 
-        this.tanConfig = tanModule.isGloballyEnabled() ? tanModule.getUserConfig().getConfig() : null;
-        this.ifConfig = ifModule.isGloballyEnabled() ? ifModule.getUserConfig().getConfig() : null;
+        this.tanConfig = (tanModule != null && tanModule.isGloballyEnabled()) ? tanModule.getUserConfig().getConfig() : null;
+        this.ifConfig  = (ifModule  != null && ifModule.isGloballyEnabled())  ? ifModule.getUserConfig().getConfig()  : null;
         this.player = player;
         this.characterValues = new CharacterValues();
         this.id = player.getPlayer().getUniqueId();
@@ -90,6 +92,10 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
         this.fearConfig = (fearModule != null && fearModule.isGloballyEnabled())
                 ? fearModule.getUserConfig().getConfig()
                 : null;
+
+        this.bossbarHud = new BossbarHUD((net.kyori.adventure.audience.Audience) player.getPlayer());
+        bossbarHud.show();
+        this.aboveActionBarHud = new AboveActionBarHUD(bossbarHud);
 
         sirenChangeScreenEnabled       = ifConfig  != null && ifConfig.getBoolean("Siren.ChangeScreen.Enabled");
         hypothermiaScreenEnabled       = tanConfig != null && tanConfig.getBoolean("Temperature.Hypothermia.ScreenTinting.Enabled");
@@ -102,6 +108,11 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
     @Override
     public void run() {
         Player player = this.player.getPlayer();
+
+        if (player == null || !player.isOnline()) {
+            stop();
+            return;
+        }
 
         if (globalConditionsMet(player)) {
             if (permCacheCountdown <= 0) {
@@ -203,9 +214,7 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
                     Title.Times.times(Duration.ZERO, Duration.ofMillis(70 * 50L), Duration.ZERO)));
             }
         }
-        else {
-            stop();
-        }
+        // Non-survival/adventure mode: skip gameplay content but keep bossbars visible
     }
 
     @Override
@@ -215,12 +224,13 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void start() {
-        int tickPeriod = tanConfig.getInt("VisualTickPeriod");
+        int tickPeriod = tanConfig != null ? tanConfig.getInt("VisualTickPeriod") : 20;
         this.runTaskTimer(plugin, 0L, tickPeriod);
     }
 
     @Override
     public void stop() {
+        bossbarHud.hide();
         tasks.remove(id);
         cancel();
     }
@@ -231,6 +241,14 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
 
     public void setParasitesActive(boolean parasitesActive) {
         this.parasitesActive = parasitesActive;
+    }
+
+    public BossbarHUD getBossbarHud() {
+        return bossbarHud;
+    }
+
+    public AboveActionBarHUD getAboveActionBarHud() {
+        return aboveActionBarHud;
     }
 
     public static boolean hasTask(UUID id) {
