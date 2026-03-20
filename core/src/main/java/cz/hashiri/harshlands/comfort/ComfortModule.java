@@ -44,6 +44,12 @@ public class ComfortModule extends HLModule {
     @Nullable
     private ComfortEvents events;
 
+    @Nullable
+    private CabinFeverSubsystem cabinFeverSubsystem;
+
+    @Nullable
+    private CabinFeverEvents cabinFeverEvents;
+
     private final Map<UUID, CachedComfortResult> papiCache = new ConcurrentHashMap<>();
 
     public ComfortModule(@Nonnull HLPlugin plugin) {
@@ -63,6 +69,13 @@ public class ComfortModule extends HLModule {
         calculator = new ComfortScoreCalculator(config, plugin.getLogger());
         events = new ComfortEvents(this, plugin, calculator, config);
         Bukkit.getPluginManager().registerEvents(events, plugin);
+
+        if (config.getBoolean("CabinFever.Enabled", false)) {
+            cabinFeverSubsystem = new CabinFeverSubsystem(plugin, config);
+            cabinFeverSubsystem.initialize();
+            cabinFeverEvents = new CabinFeverEvents(cabinFeverSubsystem, this, config);
+            Bukkit.getPluginManager().registerEvents(cabinFeverEvents, plugin);
+        }
     }
 
     @Override
@@ -70,6 +83,16 @@ public class ComfortModule extends HLModule {
         FileConfiguration config = getUserConfig() != null ? getUserConfig().getConfig() : null;
         if (config != null && config.getBoolean("Shutdown.Enabled")) {
             Utils.logModuleLifecycle("Shutting down", NAME);
+        }
+
+        if (cabinFeverSubsystem != null) {
+            cabinFeverSubsystem.shutdown();
+            cabinFeverSubsystem = null;
+        }
+
+        if (cabinFeverEvents != null) {
+            HandlerList.unregisterAll(cabinFeverEvents);
+            cabinFeverEvents = null;
         }
 
         if (events != null) {
@@ -125,6 +148,11 @@ public class ComfortModule extends HLModule {
 
     public void clearCacheFor(@Nonnull UUID uuid) {
         papiCache.remove(uuid);
+    }
+
+    @Nullable
+    public CabinFeverSubsystem getCabinFeverSubsystem() {
+        return cabinFeverSubsystem;
     }
 
     private static class CachedComfortResult {

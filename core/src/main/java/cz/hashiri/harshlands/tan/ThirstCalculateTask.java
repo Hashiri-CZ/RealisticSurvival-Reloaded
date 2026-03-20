@@ -16,6 +16,8 @@
  */
 package cz.hashiri.harshlands.tan;
 
+import cz.hashiri.harshlands.comfort.ComfortModule;
+import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.rsv.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
@@ -49,7 +51,9 @@ public class ThirstCalculateTask extends BukkitRunnable implements HLTask {
     private double exhaustionLvl;
     private final int tickPeriod;
     private boolean parasitesActive = false;
+    private boolean cabinFeverActive = false;
     private final double peMultiplier;
+    private final double cfMultiplier;
     private final double sprintingIncrease;
     private final double swimmingIncrease;
     private final double passiveIncrease;
@@ -80,6 +84,14 @@ public class ThirstCalculateTask extends BukkitRunnable implements HLTask {
         this.hyperthermiaIncrease = config.getDouble("Thirst.ExhaustionLevelIncrease.Hyperthermia.MaxValue");
 
         this.tickPeriod = config.getInt("Thirst.CalculateTickPeriod"); // get the tick period
+
+        double cfMul = 1.3;
+        HLModule cm = HLModule.getModule(ComfortModule.NAME);
+        if (cm != null && cm.getUserConfig() != null) {
+            cfMul = cm.getUserConfig().getConfig().getDouble("CabinFever.Effects.ThirstExhaustionMultiplier", 1.3);
+        }
+        this.cfMultiplier = cfMul;
+
         tasks.put(id, this);
     }
 
@@ -110,7 +122,7 @@ public class ThirstCalculateTask extends BukkitRunnable implements HLTask {
             }
 
             addition += passiveIncrease;
-            addition *= tickPeriod * (parasitesActive ? peMultiplier : 1);
+            addition *= tickPeriod * (parasitesActive ? peMultiplier : 1) * (cabinFeverActive ? cfMultiplier : 1);
 
             exhaustionLvl = Utils.clamp(exhaustionLvl + addition, 0, 4);
 
@@ -163,6 +175,14 @@ public class ThirstCalculateTask extends BukkitRunnable implements HLTask {
 
     public boolean isParasitesActive() {
         return parasitesActive;
+    }
+
+    public void setCabinFeverActive(boolean cabinFeverActive) {
+        this.cabinFeverActive = cabinFeverActive;
+    }
+
+    public boolean isCabinFeverActive() {
+        return cabinFeverActive;
     }
 
     public int getSaturationLvl() {

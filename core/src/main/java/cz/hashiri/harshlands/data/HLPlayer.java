@@ -17,6 +17,7 @@
 package cz.hashiri.harshlands.data;
 
 import cz.hashiri.harshlands.baubles.BaubleModule;
+import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.data.toughasnails.DataModule;
 import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.tan.TanModule;
@@ -35,6 +36,7 @@ public class HLPlayer {
     private final DataModule tanDataModule;
     private final cz.hashiri.harshlands.data.baubles.DataModule baubleDataModule;
     private final cz.hashiri.harshlands.data.fear.DataModule fearDataModule;
+    private final cz.hashiri.harshlands.data.cabinfever.DataModule cabinFeverDataModule;
     private static final Map<UUID, HLPlayer> players = new HashMap<>();
 
     public HLPlayer(Player player) {
@@ -45,6 +47,13 @@ public class HLPlayer {
         tanDataModule = (tm != null && tm.isGloballyEnabled()) ? new DataModule(player) : null;
         HLModule fm = HLModule.getModule(FearModule.NAME);
         fearDataModule = (fm != null && fm.isGloballyEnabled()) ? new cz.hashiri.harshlands.data.fear.DataModule(player) : null;
+
+        HLModule cm = HLModule.getModule(ComfortModule.NAME);
+        boolean cabinFeverEnabled = false;
+        if (cm != null && cm.isGloballyEnabled() && cm.getUserConfig() != null) {
+            cabinFeverEnabled = cm.getUserConfig().getConfig().getBoolean("CabinFever.Enabled", false);
+        }
+        cabinFeverDataModule = cabinFeverEnabled ? new cz.hashiri.harshlands.data.cabinfever.DataModule(player.getUniqueId()) : null;
 
         players.put(uuid, this);
     }
@@ -69,6 +78,9 @@ public class HLPlayer {
         if (fearDataModule != null) {
             fearDataModule.retrieveData();
         }
+        if (cabinFeverDataModule != null) {
+            cabinFeverDataModule.retrieveData();
+        }
     }
 
     public void saveData() {
@@ -80,6 +92,9 @@ public class HLPlayer {
         }
         if (fearDataModule != null) {
             fearDataModule.saveData();
+        }
+        if (cabinFeverDataModule != null) {
+            cabinFeverDataModule.saveData();
         }
     }
 
@@ -96,6 +111,11 @@ public class HLPlayer {
     @Nullable
     public cz.hashiri.harshlands.data.fear.DataModule getFearDataModule() {
         return fearDataModule;
+    }
+
+    @Nullable
+    public cz.hashiri.harshlands.data.cabinfever.DataModule getCabinFeverDataModule() {
+        return cabinFeverDataModule;
     }
 
     public static boolean isValidPlayer(@Nullable Player player) {
