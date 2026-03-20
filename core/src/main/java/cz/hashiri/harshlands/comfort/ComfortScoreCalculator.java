@@ -30,6 +30,7 @@ import org.bukkit.entity.EntityType;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class ComfortScoreCalculator {
 
@@ -37,18 +38,20 @@ public class ComfortScoreCalculator {
     private final Map<String, Integer> categoryPoints = new HashMap<>();
     private final Set<String> requireLitCategories = new HashSet<>();
     private final Map<EntityType, String> entityToCategory = new HashMap<>();
-    private final List<String> prefixMatchCategories = new ArrayList<>();
-    private final Map<String, String> prefixToCategory = new HashMap<>();
     private final int searchRadius;
+    private final int totalCategories;
     private final FileConfiguration config;
 
-    public ComfortScoreCalculator(@Nonnull FileConfiguration config) {
+    private static final Set<Material> AIR_TYPES = Set.of(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR);
+
+    public ComfortScoreCalculator(@Nonnull FileConfiguration config, @Nonnull Logger logger) {
         this.config = config;
-        this.searchRadius = config.getInt("SearchRadius", 10);
-        loadCategories();
+        this.searchRadius = config.getInt("SearchRadius", 8);
+        loadCategories(logger);
+        this.totalCategories = categoryPoints.size();
     }
 
-    private void loadCategories() {
+    private void loadCategories(@Nonnull Logger logger) {
         ConfigurationSection categoriesSection = config.getConfigurationSection("Categories");
         if (categoriesSection == null) {
             return;
@@ -67,12 +70,15 @@ public class ComfortScoreCalculator {
                 requireLitCategories.add(categoryName);
             }
 
-            // Prefix match (e.g. FlowerPot -> POTTED_)
+            // Prefix match (e.g. FlowerPot -> POTTED_): pre-compute all matching materials
             if (cat.contains("PrefixMatch")) {
                 String prefix = cat.getString("PrefixMatch");
                 if (prefix != null && !prefix.isEmpty()) {
-                    prefixMatchCategories.add(prefix);
-                    prefixToCategory.put(prefix, categoryName);
+                    for (Material mat : Material.values()) {
+                        if (mat.name().startsWith(prefix)) {
+                            materialToCategory.put(mat, categoryName);
+                        }
+                    }
                 }
             }
 
@@ -82,6 +88,8 @@ public class ComfortScoreCalculator {
                 Material mat = Material.matchMaterial(matName);
                 if (mat != null) {
                     materialToCategory.put(mat, categoryName);
+                } else {
+                    logger.warning("[Comfort] Unknown material in config: " + matName);
                 }
             }
 
@@ -91,19 +99,13 @@ public class ComfortScoreCalculator {
                 try {
                     EntityType et = EntityType.valueOf(etName);
                     entityToCategory.put(et, categoryName);
-                } catch (IllegalArgumentException ignored) {
-                    // Unknown entity type — skip
+                } catch (IllegalArgumentException e) {
+                    logger.warning("[Comfort] Unknown entity type in config: " + etName);
                 }
             }
         }
     }
 
-    /**
-     * Calculate the comfort score at a given center location.
-     *
-     * @param center the center location (typically a bed)
-     * @return the computed comfort result
-     */
     @Nonnull
     public ComfortResult calculate(@Nonnull Location center) {
         World world = center.getWorld();
@@ -123,35 +125,41 @@ public class ComfortScoreCalculator {
                     Block block = world.getBlockAt(x, y, z);
                     Material mat = block.getType();
 
-                    // Check prefix matches (e.g. POTTED_*)
-                    for (String prefix : prefixMatchCategories) {
-                        if (mat.name().startsWith(prefix)) {
-                            foundCategories.add(prefixToCategory.get(prefix));
-                            break;
-                        }
+                    // Skip air blocks (majority of scan volume)
+                    if (AIR_TYPES.contains(mat)) {
+                        continue;
                     }
 
-                    // Check direct material mapping
+                    // Check direct material mapping (includes pre-computed POTTED_* materials)
                     String category = materialToCategory.get(mat);
-                    if (category != null) {
+                    if (category != null && !foundCategories.contains(category)) {
                         if (requireLitCategories.contains(category)) {
                             if (!isBlockLit(block)) {
                                 continue;
                             }
                         }
                         foundCategories.add(category);
+
+                        // Early termination: all block-based categories found
+                        if (foundCategories.size() >= totalCategories) {
+                            break;
+                        }
                     }
                 }
+                if (foundCategories.size() >= totalCategories) break;
             }
+            if (foundCategories.size() >= totalCategories) break;
         }
 
-        // Scan nearby entities
-        double radius = searchRadius;
-        Collection<Entity> entities = world.getNearbyEntities(center, radius, radius, radius);
-        for (Entity entity : entities) {
-            String category = entityToCategory.get(entity.getType());
-            if (category != null) {
-                foundCategories.add(category);
+        // Scan nearby entities (only if entity categories not yet found)
+        if (!entityToCategory.isEmpty() && foundCategories.size() < totalCategories) {
+            double radius = searchRadius;
+            Collection<Entity> entities = world.getNearbyEntities(center, radius, radius, radius);
+            for (Entity entity : entities) {
+                String category = entityToCategory.get(entity.getType());
+                if (category != null) {
+                    foundCategories.add(category);
+                }
             }
         }
 
@@ -161,10 +169,8 @@ public class ComfortScoreCalculator {
             score += categoryPoints.getOrDefault(cat, 0);
         }
 
-        // Determine tier
         ComfortTier tier = resolveTier(score);
-
-        return new ComfortResult(score, tier, foundCategories);
+        return new ComfortResult(score, tier, Collections.unmodifiableSet(foundCategories));
     }
 
     private boolean isBlockLit(@Nonnull Block block) {
@@ -208,9 +214,6 @@ public class ComfortScoreCalculator {
         return ComfortTier.NONE;
     }
 
-    /**
-     * Result of a comfort score calculation.
-     */
     public static class ComfortResult {
         private final int score;
         @Nonnull
