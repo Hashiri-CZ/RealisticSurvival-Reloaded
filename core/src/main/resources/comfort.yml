@@ -229,3 +229,39 @@ Messages:
   BuffApplied: "§aComfort: §f{score} §7({tier}) §a- Resting buff for {minutes}min"
   ComfortCheck: "§7Comfort Score: §f{score} §7({tier})"
   ComfortBreakdown: "§7Nearby: §f{categories}"
+
+# ── Cabin Fever ─────────────────────────────────────────────
+# Players who stay indoors too long suffer escalating debuffs.
+# Inspired by The Long Dark's cabin fever mechanic.
+CabinFever:
+  Enabled: true
+  CheckIntervalTicks: 600
+  RoofCheckHeight: 4
+  ExemptEnvironments:
+    - NETHER
+    - THE_END
+  OutdoorResetTicks: 6000
+  Thresholds:
+    Restless: 48000
+    Risk: 72000
+    Full: 96000
+  ComfortDelayTicks: 24000
+  CureTicks: 24000
+  Effects:
+    SpeedPenalty: -0.05
+    Nausea:
+      RiskIntervalTicks: 6000
+      FullIntervalTicks: 2400
+      DurationTicks: 40
+    FullEffects:
+      weakness: 0
+      mining_fatigue: 0
+    ThirstExhaustionMultiplier: 1.3
+  ResetOnDeath: false
+  Messages:
+    Restless: "&eYou feel restless from being indoors too long..."
+    Risk: "&6Cabin fever is setting in. Go outside!"
+    Full: "&cYou have cabin fever! Get outdoors to recover."
+    SleepDenied: "&cYou're too restless to sleep. Go outside first."
+    Cured: "&aThe fresh air clears your mind. Cabin fever cured!"
+  Debug: false

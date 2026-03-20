@@ -30,6 +30,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.data.cabinfever.DataModule;
+
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
@@ -121,6 +124,15 @@ public class ComfortEvents implements Listener {
 
         // Populate PAPI cache from this sync context (avoids unsafe async calculation)
         module.updateCache(player, result);
+
+        // Update cabin fever data with last comfort tier
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        if (hlPlayer != null) {
+            DataModule cfDm = hlPlayer.getCabinFeverDataModule();
+            if (cfDm != null) {
+                cfDm.setLastComfortTier(tier.name());
+            }
+        }
 
         String msg = config.getString("Messages.BuffApplied",
                 "§aComfort: §f{score} §7({tier}) §a- Resting buff for {minutes}min");

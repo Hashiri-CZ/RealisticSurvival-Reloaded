@@ -44,6 +44,13 @@ public class HLDatabase {
         int thirstTickTimer
     ) {}
 
+    public record CabinFeverDataRow(
+        long indoorTicks,
+        long outdoorTicks,
+        boolean cabinFeverActive,
+        String lastComfortTier
+    ) {}
+
     private HikariDataSource dataSource;
     private final HLPlugin plugin;
     private final HLScheduler scheduler;
@@ -251,6 +258,14 @@ public class HLDatabase {
             + "location_key VARCHAR(120) PRIMARY KEY"
             + ")";
 
+        String cabinFeverTable = "CREATE TABLE IF NOT EXISTS hl_cabin_fever_data ("
+            + "uuid VARCHAR(36) PRIMARY KEY,"
+            + "indoor_ticks BIGINT NOT NULL,"
+            + "outdoor_ticks BIGINT NOT NULL,"
+            + "cabin_fever_active BOOLEAN NOT NULL,"
+            + "last_comfort_tier VARCHAR(20) NOT NULL"
+            + ")";
+
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(tanTable);
@@ -258,6 +273,7 @@ public class HLDatabase {
             stmt.execute(torchTable);
             stmt.execute(fearTable);
             stmt.execute(unlitTorchTable);
+            stmt.execute(cabinFeverTable);
             startupInfo("Schema is ready.");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create tables: " + e.getMessage(), e);
@@ -588,6 +604,56 @@ public class HLDatabase {
                 ps.executeUpdate();
             } catch (SQLException e) {
                 logger.warning("[HLDatabase] Failed to save fear data for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    // ── Cabin Fever Data ────────────────────────────────────────────────────────
+
+    public CompletableFuture<Optional<CabinFeverDataRow>> loadCabinFeverData(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            String sql = "SELECT indoor_ticks, outdoor_ticks, cabin_fever_active, last_comfort_tier"
+                + " FROM hl_cabin_fever_data WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return Optional.of(new CabinFeverDataRow(
+                            rs.getLong("indoor_ticks"),
+                            rs.getLong("outdoor_ticks"),
+                            rs.getBoolean("cabin_fever_active"),
+                            rs.getString("last_comfort_tier")
+                        ));
+                    }
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load cabin fever data for " + uuid + ": " + e.getMessage());
+            }
+            return Optional.empty();
+        });
+    }
+
+    public CompletableFuture<Void> saveCabinFeverData(UUID uuid, CabinFeverDataRow row) {
+        return scheduler.runAsync(() -> {
+            String sql = isMysql
+                ? "INSERT INTO hl_cabin_fever_data (uuid, indoor_ticks, outdoor_ticks, cabin_fever_active, last_comfort_tier)"
+                    + " VALUES (?, ?, ?, ?, ?)"
+                    + " ON DUPLICATE KEY UPDATE indoor_ticks=VALUES(indoor_ticks), outdoor_ticks=VALUES(outdoor_ticks),"
+                    + " cabin_fever_active=VALUES(cabin_fever_active), last_comfort_tier=VALUES(last_comfort_tier)"
+                : "MERGE INTO hl_cabin_fever_data (uuid, indoor_ticks, outdoor_ticks, cabin_fever_active, last_comfort_tier)"
+                    + " KEY(uuid)"
+                    + " VALUES (?, ?, ?, ?, ?)";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setLong(2, row.indoorTicks());
+                ps.setLong(3, row.outdoorTicks());
+                ps.setBoolean(4, row.cabinFeverActive());
+                ps.setString(5, row.lastComfortTier());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save cabin fever data for " + uuid + ": " + e.getMessage());
             }
         });
     }
