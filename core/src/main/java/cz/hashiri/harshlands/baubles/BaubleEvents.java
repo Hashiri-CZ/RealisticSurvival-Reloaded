@@ -204,6 +204,15 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         if (!HLPlayer.isValidPlayer(id))
             return;
 
+        // Debug instrumentation
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+        if (debugMgr.isActive("Baubles", "Inventory", id)) {
+            String action = event.getChange() == BaubleChange.ADDITION ? "EQUIP" : "UNEQUIP";
+            String chatLine = "§d[Baubles] §f" + action + " §e" + itemName;
+            String consoleLine = "action=" + action + " item=" + itemName + " player=" + event.getPlayer().getName();
+            debugMgr.send("Baubles", "Inventory", id, chatLine, consoleLine);
+        }
+
         HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
 
         if (event.getChange() == BaubleChange.ADDITION) {

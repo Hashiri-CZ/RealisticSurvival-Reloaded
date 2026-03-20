@@ -264,4 +264,5 @@ CabinFever:
     Full: "&cYou have cabin fever! Get outdoors to recover."
     SleepDenied: "&cYou're too restless to sleep. Go outside first."
     Cured: "&aThe fresh air clears your mind. Cabin fever cured!"
+  # Deprecated: Use /hl debug Comfort.CabinFever instead. This flag is ignored.
   Debug: false

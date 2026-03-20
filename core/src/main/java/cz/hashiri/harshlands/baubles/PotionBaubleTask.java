@@ -91,6 +91,14 @@ public class PotionBaubleTask extends BukkitRunnable implements HLTask {
                 else {
                     potionBauble.ability(player, amount);
                 }
+
+                // Debug instrumentation
+                cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+                if (debugMgr.isActive("Baubles", "Ticking", id)) {
+                    String consoleLine = "bauble=" + potionBauble.getName() + " amount=" + amount
+                            + " player=" + player.getName();
+                    debugMgr.send("Baubles", "Ticking", id, "", consoleLine);
+                }
             }
             else {
                 // update static hashmap values and cancel the runnable

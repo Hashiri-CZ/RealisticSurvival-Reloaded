@@ -72,7 +72,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug"));
             }
 
             if (mobs.isEmpty()) {
@@ -125,6 +125,20 @@ public class Tab implements TabCompleter {
                                 result.add(mob);
                         }
                     }
+                    case "debug" -> {
+                        cz.hashiri.harshlands.debug.DebugManager dm = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+                        if (dm != null) {
+                            result.add("Everything");
+                            result.add("off");
+                            for (java.util.Map.Entry<String, cz.hashiri.harshlands.debug.DebugProvider> entry : dm.getProviders().entrySet()) {
+                                String modName = entry.getKey();
+                                result.add(modName);
+                                for (String sub : entry.getValue().getSubsystems()) {
+                                    result.add(modName + "." + sub);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 return result;
@@ -138,6 +152,15 @@ public class Tab implements TabCompleter {
                     case "thirst" -> thirst.stream().filter(th -> th.toLowerCase().startsWith(args[2].toLowerCase())).forEach(result::add);
                     case "spawnitem" -> result.add(Utils.translateMsg(config.getString("Count"), sender, null));
                     case "resetitem", "updateitem" -> result.add("all");
+                    case "debug" -> {
+                        if (sender.hasPermission("harshlands.command.debug.others")) {
+                            for (Player online : Bukkit.getOnlinePlayers()) {
+                                if (online.getName().toLowerCase().startsWith(args[2].toLowerCase())) {
+                                    result.add(online.getName());
+                                }
+                            }
+                        }
+                    }
                 }
 
                 return result;

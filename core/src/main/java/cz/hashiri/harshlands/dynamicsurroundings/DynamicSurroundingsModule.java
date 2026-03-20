@@ -39,6 +39,11 @@ public class DynamicSurroundingsModule extends HLModule {
     public void initialize() {
         setUserConfig(new HLConfig(plugin, "dynamicsurroundings.yml"));
 
+        HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
+            @Override public String getModuleName() { return NAME; }
+            @Override public java.util.Collection<String> getSubsystems() { return java.util.List.of("Ambient", "Footsteps"); }
+        });
+
         FileConfiguration config = getUserConfig().getConfig();
         if (config.getBoolean("Initialize.Enabled")) {
             Utils.logModuleLifecycle("Initializing", NAME);

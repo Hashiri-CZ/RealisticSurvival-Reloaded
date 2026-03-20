@@ -70,8 +70,26 @@ public class FearEvents extends ModuleEvents {
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         if (isLitTorchItem(item)) {
             torchManager.registerPlacedLitTorch(event.getBlockPlaced());
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("Fear", "Torches", player.getUniqueId())) {
+                org.bukkit.Location loc = event.getBlockPlaced().getLocation();
+                debugMgr.send("Fear", "Torches", player.getUniqueId(),
+                        "§e[Torch] §fPLACE_LIT §7" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(),
+                        "action=PLACE_LIT loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+            }
         } else if (isUnlitTorchItem(item)) {
             unlitTorchService.convertPlacedUnlitTorch(event.getBlockPlaced());
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("Fear", "Torches", player.getUniqueId())) {
+                org.bukkit.Location loc = event.getBlockPlaced().getLocation();
+                debugMgr.send("Fear", "Torches", player.getUniqueId(),
+                        "§e[Torch] §fPLACE_UNLIT §7" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(),
+                        "action=PLACE_UNLIT loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+            }
         }
     }
 
@@ -146,6 +164,15 @@ public class FearEvents extends ModuleEvents {
         }
 
         torchManager.unregisterTorch(block);
+
+        // Debug instrumentation
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+        if (debugMgr.isActive("Fear", "Torches", event.getPlayer().getUniqueId())) {
+            org.bukkit.Location loc = block.getLocation();
+            debugMgr.send("Fear", "Torches", event.getPlayer().getUniqueId(),
+                    "§e[Torch] §fBREAK §7" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(),
+                    "action=BREAK loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+        }
 
         if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
             event.setDropItems(false);

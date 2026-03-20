@@ -339,6 +339,17 @@ public class FootstepHandler {
         SurfaceType surface = getSurface(player, to);
         playFootstepSound(player, to, surface);
         playArmorOverlay(player, to, surface, state);
+
+        // Debug instrumentation
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+        if (debugMgr.isActive("DynamicSurroundings", "Footsteps", player.getUniqueId())) {
+            SoundSet sounds = SOUNDS.getOrDefault(surface, SOUNDS.get(SurfaceType.DEFAULT));
+            String key = sounds.getVariant(player.isSprinting(), player.isSneaking());
+            String consoleLine = "surface=" + surface + " sound=" + key
+                    + " sprint=" + player.isSprinting() + " sneak=" + player.isSneaking()
+                    + " armor=" + getArmorTier(player) + " step=" + state.stepCount;
+            debugMgr.send("DynamicSurroundings", "Footsteps", player.getUniqueId(), "", consoleLine);
+        }
     }
 
     // -----------------------------------------------------------------------

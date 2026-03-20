@@ -143,6 +143,16 @@ public class NightmareManager {
 
         activeNightmares.put(player.getUniqueId(), new NightmareEntry(enderman.getUniqueId()));
         plugin.getLogger().info("[Fear] Nightmare Enderman spawned for player " + player.getName() + ".");
+
+        // Debug instrumentation
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+        if (debugMgr.isActive("Fear", "Nightmares", player.getUniqueId())) {
+            String chatLine = "§4[Nightmare] §fSpawned at " + spawnLoc.getBlockX() + "," + spawnLoc.getBlockY() + "," + spawnLoc.getBlockZ();
+            String consoleLine = "action=SPAWN player=" + player.getName()
+                    + " entity=ENDERMAN loc=" + spawnLoc.getBlockX() + "," + spawnLoc.getBlockY() + "," + spawnLoc.getBlockZ()
+                    + " dist=" + String.format("%.1f", spawnLoc.distance(player.getLocation()));
+            debugMgr.send("Fear", "Nightmares", player.getUniqueId(), chatLine, consoleLine);
+        }
     }
 
     /** Removes the active Nightmare Enderman for the given player (if any). */
@@ -177,6 +187,14 @@ public class NightmareManager {
             spawnNightmare(player);
         } else if (fearLevel <= despawnThreshold && hasActiveNightmare(player.getUniqueId())) {
             despawnNightmare(player.getUniqueId());
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("Fear", "Nightmares", player.getUniqueId())) {
+                String chatLine = "§4[Nightmare] §fDespawned (fear=" + String.format("%.0f", fearLevel) + ")";
+                String consoleLine = "action=DESPAWN fear=" + String.format("%.1f", fearLevel) + " threshold=" + despawnThreshold;
+                debugMgr.send("Fear", "Nightmares", player.getUniqueId(), chatLine, consoleLine);
+            }
         }
     }
 

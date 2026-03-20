@@ -55,8 +55,6 @@ public class CabinFeverSubsystem {
     private final HLPlugin plugin;
     private final FileConfiguration config;
     private final Logger logger;
-    private final boolean debug;
-
     private final int checkInterval;
     private final int roofCheckHeight;
     private final Set<World.Environment> exemptEnvironments = new HashSet<>();
@@ -81,7 +79,6 @@ public class CabinFeverSubsystem {
         this.plugin = plugin;
         this.config = config;
         this.logger = plugin.getLogger();
-        this.debug = config.getBoolean("CabinFever.Debug", false);
 
         this.checkInterval = config.getInt("CabinFever.CheckIntervalTicks", 600);
         this.roofCheckHeight = config.getInt("CabinFever.RoofCheckHeight", 4);
@@ -130,9 +127,6 @@ public class CabinFeverSubsystem {
             }
         }.runTaskTimerAsynchronously(plugin, 6000, 6000);
 
-        if (debug) {
-            logger.info("[CabinFever] Initialized. Check interval: " + checkInterval + " ticks");
-        }
     }
 
     private void processPlayer(@Nonnull Player player) {
@@ -169,13 +163,13 @@ public class CabinFeverSubsystem {
         long effectiveIndoor = dm.getIndoorTicks() - comfortDelay;
         CabinFeverStage stage = evaluateStage(effectiveIndoor);
 
-        if (debug) {
-            logger.info("[CabinFever] " + player.getName()
-                + " indoor=" + dm.getIndoorTicks()
-                + " outdoor=" + dm.getOutdoorTicks()
-                + " effective=" + effectiveIndoor
-                + " stage=" + stage
-                + " indoors=" + indoors);
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+        if (debugMgr.isActive("Comfort", "CabinFever", player.getUniqueId())) {
+            String chatLine = String.format("\u00a76[Comfort.CF] \u00a7f%s: %s indoor=%d outdoor=%d comfortDelay=%d",
+                player.getName(), stage, dm.getIndoorTicks(), dm.getOutdoorTicks(), comfortDelay);
+            String consoleLine = String.format("indoor=%d outdoor=%d effective=%d stage=%s indoors=%s comfortDelay=%d lastTier=%s feverActive=%s",
+                dm.getIndoorTicks(), dm.getOutdoorTicks(), effectiveIndoor, stage, indoors, comfortDelay, dm.getLastComfortTier(), dm.isCabinFeverActive());
+            debugMgr.send("Comfort", "CabinFever", player.getUniqueId(), chatLine, consoleLine);
         }
 
         // Cure check
@@ -328,8 +322,11 @@ public class CabinFeverSubsystem {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         }
 
-        if (debug) {
-            logger.info("[CabinFever] " + player.getName() + " cured!");
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+        if (debugMgr.isActive("Comfort", "CabinFever", player.getUniqueId())) {
+            debugMgr.send("Comfort", "CabinFever", player.getUniqueId(),
+                "\u00a76[Comfort.CF] \u00a7f" + player.getName() + ": CURED",
+                "action=CURE outdoor=" + dm.getOutdoorTicks());
         }
     }
 
@@ -389,10 +386,6 @@ public class CabinFeverSubsystem {
         }
 
         lastNauseaTick.clear();
-
-        if (debug) {
-            logger.info("[CabinFever] Shut down.");
-        }
     }
 
     public enum CabinFeverStage {

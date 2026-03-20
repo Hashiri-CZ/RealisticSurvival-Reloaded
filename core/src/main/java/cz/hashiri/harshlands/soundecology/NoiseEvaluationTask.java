@@ -35,13 +35,22 @@ public class NoiseEvaluationTask implements Runnable {
     private static final double MAX_SCAN_RADIUS = 48.0;
 
     private final NoiseManager noiseManager;
-    private final ConfigurationSection config;
     private final Map<UUID, Long> recentlyAssigned = new HashMap<>();
     private final Map<UUID, Long> recentlyTargeted = new HashMap<>();
 
+    private final double baseChance;
+    private final int maxPerEvent;
+    private final int maxPerCycle;
+    private final int cooldownTicks;
+    private final double verticalRadius;
+
     public NoiseEvaluationTask(NoiseManager noiseManager, ConfigurationSection config) {
         this.noiseManager = noiseManager;
-        this.config = config;
+        this.baseChance = config.getDouble("MobResponse.BaseChance", 0.3);
+        this.maxPerEvent = config.getInt("MobResponse.MaxMobsPerEvent", 3);
+        this.maxPerCycle = config.getInt("MobResponse.MaxMobsPerCycle", 20);
+        this.cooldownTicks = config.getInt("MobResponse.CooldownTicks", 100);
+        this.verticalRadius = config.getDouble("MobResponse.MaxVerticalScanRadius", 24.0);
     }
 
     @Override
@@ -61,12 +70,6 @@ public class NoiseEvaluationTask implements Runnable {
         // Prune expired cooldowns
         recentlyAssigned.entrySet().removeIf(e -> e.getValue() <= currentTick);
         recentlyTargeted.entrySet().removeIf(e -> e.getValue() <= currentTick);
-
-        double baseChance = config.getDouble("MobResponse.BaseChance", 0.3);
-        int maxPerEvent = config.getInt("MobResponse.MaxMobsPerEvent", 3);
-        int maxPerCycle = config.getInt("MobResponse.MaxMobsPerCycle", 20);
-        int cooldownTicks = config.getInt("MobResponse.CooldownTicks", 100);
-        double verticalRadius = config.getDouble("MobResponse.MaxVerticalScanRadius", 24.0);
 
         int totalAssigned = 0;
 
@@ -94,9 +97,11 @@ public class NoiseEvaluationTask implements Runnable {
                 if (recentlyTargeted.containsKey(mob.getUniqueId())) continue;
                 if (recentlyAssigned.containsKey(mob.getUniqueId())) continue;
 
-                double distance = mob.getLocation().distance(loc);
-                if (distance > radius) continue;
+                double distanceSq = mob.getLocation().distanceSquared(loc);
+                double radiusSq = radius * radius;
+                if (distanceSq > radiusSq) continue;
 
+                double distance = Math.sqrt(distanceSq);
                 double probability = baseChance * (1.0 - distance / radius);
                 if (ThreadLocalRandom.current().nextDouble() >= probability) continue;
 
@@ -112,6 +117,16 @@ public class NoiseEvaluationTask implements Runnable {
                 Player source = Bukkit.getPlayer(event.getSourcePlayer());
                 if (source != null && source.isOnline()) {
                     source.spawnParticle(Particle.NOTE, loc.getX(), loc.getY() + 1.5, loc.getZ(), 2, 0.3, 0.2, 0.3);
+                }
+
+                // Debug instrumentation
+                cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+                if (debugMgr.isActive("Fear", "SoundEcology", event.getSourcePlayer())) {
+                    String chatLine = "§d[Noise] §f" + assignedForEvent + " mobs attracted to noise";
+                    String consoleLine = "mobsAssigned=" + assignedForEvent + " radius=" + String.format("%.0f", radius)
+                            + " loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ()
+                            + " hostileNearby=" + nearby.stream().filter(e -> e instanceof Monster).count();
+                    debugMgr.send("Fear", "SoundEcology", event.getSourcePlayer(), chatLine, consoleLine);
                 }
             }
         }

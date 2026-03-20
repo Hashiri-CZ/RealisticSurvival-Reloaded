@@ -220,6 +220,17 @@ public class IceFireEvents extends ModuleEvents implements Listener {
             damage = IceFireModule.applyDragonItemBonusDamage(defender, itemMainHand, damage, module);
         }
 
+        // Debug instrumentation
+        if (attacker instanceof Player p) {
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("IceandFire", "Dragons", p.getUniqueId())) {
+                String consoleLine = "action=ATTACK target=" + defender.getType()
+                        + " origDmg=" + String.format("%.1f", event.getDamage())
+                        + " newDmg=" + String.format("%.1f", damage);
+                debugMgr.send("IceandFire", "Dragons", p.getUniqueId(), "", consoleLine);
+            }
+        }
+
         event.setDamage(damage);
     }
 
@@ -258,6 +269,18 @@ public class IceFireEvents extends ModuleEvents implements Listener {
                     && Utils.roll(config.getDouble("SeaSerpent.SpawnChance"))
                     && canSpawnSeaSerpent(entity.getLocation())) {
                 Utils.spawnSeaSerpent(entity.getLocation()).addEntityToWorld(entity.getWorld());
+
+                // Debug: find nearest player for context
+                Player nearest = getNearestPlayer(entity.getLocation(), 128);
+                if (nearest != null) {
+                    cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+                    if (debugMgr.isActive("IceandFire", "SeaCreatures", nearest.getUniqueId())) {
+                        org.bukkit.Location sLoc = entity.getLocation();
+                        debugMgr.send("IceandFire", "SeaCreatures", nearest.getUniqueId(),
+                                "§3[SeaCreature] §fSea Serpent spawned",
+                                "action=SPAWN type=SEA_SERPENT loc=" + sLoc.getBlockX() + "," + sLoc.getBlockY() + "," + sLoc.getBlockZ());
+                    }
+                }
             }
 
             if (config.getBoolean("Siren.Enabled") && Utils.roll(config.getDouble("Siren.SpawnChance"))) {

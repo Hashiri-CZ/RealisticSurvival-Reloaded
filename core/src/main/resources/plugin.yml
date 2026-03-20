@@ -152,6 +152,15 @@ permissions:
   harshlands.command.fear.set:
     description: Allows setting another player's fear level
     default: op
+  harshlands.command.debug:
+    description: Allows using /hl debug on yourself
+    default: op
+  harshlands.command.debug.others:
+    description: Allows using /hl debug targeting other players
+    default: op
+  harshlands.comfort.cabinfever.bypass:
+    description: Exempts a player from cabin fever accumulation
+    default: false
   harshlands.command.*:
     description: Wildcard permission
     default: op
@@ -170,4 +179,6 @@ permissions:
       harshlands.command.fear: true
       harshlands.command.fear.others: true
       harshlands.command.fear.set: true
+      harshlands.command.debug: true
+      harshlands.command.debug.others: true
 

@@ -78,6 +78,15 @@ public class NtpEvents extends ModuleEvents implements Listener {
 
         if (config.getBoolean("PreventPunchingWood.Enabled") && Utils.matchMaterial(material, config.getStringList("PreventPunchingWood.WoodBlocks"), false) && !Utils.isHoldingAxe(player)) {
             event.setDropItems(false);
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("NoTreePunching", "Tools", player.getUniqueId())) {
+                String heldTool = Utils.isItemReal(itemMainHand) ? itemMainHand.getType().toString() : "EMPTY";
+                String chatLine = "§c[NTP] §fNo drops: §e" + material + " §7needs axe, held=" + heldTool;
+                String consoleLine = "block=" + material + " requiredTool=AXE heldTool=" + heldTool;
+                debugMgr.send("NoTreePunching", "Tools", player.getUniqueId(), chatLine, consoleLine);
+            }
         }
 
         if (config.getBoolean("PlantFiberGathering.Enabled") && HLItem.isHLItem(itemMainHand)) {

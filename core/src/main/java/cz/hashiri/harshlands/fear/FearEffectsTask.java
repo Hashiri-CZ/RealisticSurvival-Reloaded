@@ -71,6 +71,19 @@ public class FearEffectsTask implements Runnable {
             applyShaking(player, fear);
             applyFakeMobSounds(player, fear);
             applyHeartbeat(player, fear);
+
+            // Debug instrumentation
+            java.util.UUID pUuid = player.getUniqueId();
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("Fear", "Effects", pUuid)) {
+                double shakeMin = config.getDouble("FearMeter.Effects.Shaking.MinFear", 60.0);
+                double fakeMin = config.getDouble("FearMeter.Effects.FakeMobSounds.MinFear", 50.0);
+                double heartMin = config.getDouble("FearMeter.Effects.Heartbeat.MinFear", 85.0);
+                String consoleLine = "fear=" + String.format("%.1f", fear)
+                        + " shaking=" + (fear >= shakeMin) + " fakeSounds=" + (fear >= fakeMin)
+                        + " heartbeat=" + (fear >= heartMin);
+                debugMgr.send("Fear", "Effects", pUuid, "", consoleLine);
+            }
         }
     }
 

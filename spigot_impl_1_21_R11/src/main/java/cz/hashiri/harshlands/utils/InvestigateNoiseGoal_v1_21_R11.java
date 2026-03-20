@@ -47,6 +47,8 @@ public class InvestigateNoiseGoal_v1_21_R11 extends Goal {
     private static final int TRAVEL_TIMEOUT = 200;
     private static final double ARRIVAL_DISTANCE_SQ = 4.0; // 2 blocks squared
     private static final double PLAYER_SCAN_RANGE = 8.0;
+    private static final double FAR_FROM_TARGET_SQ = 256.0; // 16 blocks squared
+    private static final int PLAYER_SCAN_INTERVAL = 5;
 
     public InvestigateNoiseGoal_v1_21_R11(Mob mob, double x, double y, double z, double speed) {
         this.mob = mob;
@@ -94,8 +96,13 @@ public class InvestigateNoiseGoal_v1_21_R11 extends Goal {
         double distSq = dx * dx + dy * dy + dz * dz;
 
         if (distSq <= ARRIVAL_DISTANCE_SQ || travelTicks >= TRAVEL_TIMEOUT || navigation.isDone()) {
-            state = State.LINGERING;
-            lingerTicks = 0;
+            // If mob never got close to the noise source, skip lingering
+            if (distSq > FAR_FROM_TARGET_SQ) {
+                state = State.COMPLETED;
+            } else {
+                state = State.LINGERING;
+                lingerTicks = 0;
+            }
             navigation.stop();
         }
     }
@@ -114,14 +121,17 @@ public class InvestigateNoiseGoal_v1_21_R11 extends Goal {
             nextLookChangeTick = lingerTicks + 20 + ThreadLocalRandom.current().nextInt(21); // 20-40
         }
 
-        // Scan for players
-        AABB scanBox = mob.getBoundingBox().inflate(PLAYER_SCAN_RANGE);
-        List<Player> players = mob.level().getEntitiesOfClass(Player.class, scanBox,
-                p -> !p.isSpectator() && !p.isCreative() && mob.hasLineOfSight(p));
-        if (!players.isEmpty()) {
-            mob.setTarget(players.getFirst());
-            state = State.COMPLETED;
-            return;
+        // Scan for players every few ticks (hasLineOfSight is expensive)
+        if (lingerTicks % PLAYER_SCAN_INTERVAL == 0) {
+            AABB scanBox = mob.getBoundingBox().inflate(PLAYER_SCAN_RANGE);
+            List<Player> players = mob.level().getEntitiesOfClass(Player.class, scanBox,
+                    p -> !p.isSpectator() && !p.isCreative() && mob.hasLineOfSight(p));
+            if (!players.isEmpty()) {
+                mob.setTarget(players.getFirst(),
+                        org.bukkit.event.entity.EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true);
+                state = State.COMPLETED;
+                return;
+            }
         }
 
         if (lingerTicks >= lingerDuration) {

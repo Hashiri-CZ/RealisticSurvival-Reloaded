@@ -125,6 +125,18 @@ public class ComfortEvents implements Listener {
         // Populate PAPI cache from this sync context (avoids unsafe async calculation)
         module.updateCache(player, result);
 
+        // Debug instrumentation
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+        if (debugMgr.isActive("Comfort", "Score", player.getUniqueId())) {
+            org.bukkit.Location bedLoc = event.getBed().getLocation();
+            String chatLine = "§a[Comfort] §fScore=" + result.getScore() + " §7Tier=" + tier.getDisplayName();
+            String consoleLine = "score=" + result.getScore() + " tier=" + tier.name()
+                    + " categories=" + result.getFoundCategories()
+                    + " bed=" + bedLoc.getBlockX() + "," + bedLoc.getBlockY() + "," + bedLoc.getBlockZ()
+                    + " duration=" + durationTicks + "t";
+            debugMgr.send("Comfort", "Score", player.getUniqueId(), chatLine, consoleLine);
+        }
+
         // Update cabin fever data with last comfort tier
         HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
         if (hlPlayer != null) {

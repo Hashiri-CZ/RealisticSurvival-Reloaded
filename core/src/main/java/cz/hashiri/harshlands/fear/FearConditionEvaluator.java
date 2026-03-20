@@ -114,12 +114,17 @@ public class FearConditionEvaluator {
             dm.decreaseFear(-netDelta);
         }
 
-        if (config.getBoolean("FearMeter.Debug", false)) {
-            plugin.getLogger().info(String.format(
-                "[Fear][DEBUG] %s | dark=%.2f cave=%.2f ugnd=%.2f lhp=%.2f mob=%.2f cold=%.2f storm=%.2f night=%.2f | -light=%.2f -fire=%.2f -comp=%.2f | net=%.2f | total=%.2f",
-                player.getName(), darkness, cave, underground, lowHealth, enemies, cold, storm, night,
-                brightLight, nearFire, companions, netDelta, dm.getFearLevel()
-            ));
+        cz.hashiri.harshlands.debug.DebugManager debugManager = plugin.getDebugManager();
+        if (debugManager.isActive("Fear", "FearMeter", player.getUniqueId())) {
+            double prevFear = dm.getFearLevel() - netDelta;
+            String chatLine = String.format("\u00a75[Fear.Meter] \u00a7f%s: %.1f \u2192 %.1f (%+.1f) dark=%+.1f mob=%+.1f light=%+.1f",
+                player.getName(), prevFear, dm.getFearLevel(), netDelta, darkness, enemies, -brightLight);
+            String consoleLine = String.format(
+                "dark=%.2f cave=%.2f ugnd=%.2f lhp=%.2f mob=%.2f cold=%.2f storm=%.2f night=%.2f | -light=%.2f -fire=%.2f -comp=%.2f | net=%.2f | total=%.2f dir=%s",
+                darkness, cave, underground, lowHealth, enemies, cold, storm, night,
+                brightLight, nearFire, companions, netDelta, dm.getFearLevel(),
+                netDelta > 0 ? "UP" : netDelta < 0 ? "DOWN" : "STABLE");
+            debugManager.send("Fear", "FearMeter", player.getUniqueId(), chatLine, consoleLine);
         }
     }
 

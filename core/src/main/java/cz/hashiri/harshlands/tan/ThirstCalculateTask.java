@@ -163,6 +163,21 @@ public class ThirstCalculateTask extends BukkitRunnable implements HLTask {
             thirstManager.setExhaustion(player, exhaustionLvl);
             thirstManager.setSaturation(player, saturationLvl);
             thirstManager.setTickTimer(player, tickTimer);
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("ToughAsNails", "Thirst", id)) {
+                String chatLine = !Utils.doublesEquals(currentLvl, thirstLvl)
+                        ? "§b[Thirst] §f" + (int) currentLvl + " §7-> §f" + thirstLvl
+                        : "";
+                String consoleLine = "thirst=" + thirstLvl + " sat=" + saturationLvl
+                        + " exh=" + String.format("%.2f", exhaustionLvl) + " tick=" + tickTimer
+                        + " sprint=" + player.isSprinting() + " swim=" + player.isSwimming()
+                        + " passive=" + passiveIncrease
+                        + " parasites=" + parasitesActive + " peMul=" + peMultiplier
+                        + " cabinFever=" + cabinFeverActive + " cfMul=" + cfMultiplier;
+                debugMgr.send("ToughAsNails", "Thirst", id, chatLine, consoleLine);
+            }
         }
         else {
             stop();
