@@ -60,7 +60,7 @@ public class ComfortModule extends HLModule {
             Utils.logModuleLifecycle("Initializing", NAME);
         }
 
-        calculator = new ComfortScoreCalculator(config);
+        calculator = new ComfortScoreCalculator(config, plugin.getLogger());
         events = new ComfortEvents(this, plugin, calculator, config);
         Bukkit.getPluginManager().registerEvents(events, plugin);
     }
@@ -81,9 +81,6 @@ public class ComfortModule extends HLModule {
         calculator = null;
     }
 
-    /**
-     * Returns the score calculator for use by commands and PAPI.
-     */
     @Nullable
     public ComfortScoreCalculator getCalculator() {
         return calculator;
@@ -91,11 +88,9 @@ public class ComfortModule extends HLModule {
 
     /**
      * Returns a cached comfort result for PAPI performance.
-     * If the cache is stale or missing, a fresh calculation is performed.
-     *
-     * @param player       the player whose location to scan
-     * @param cacheSeconds maximum cache age in seconds
-     * @return the comfort result, or null if calculator is unavailable
+     * If called from an async thread, only returns the cached value (never calculates,
+     * since World.getBlockAt() is not thread-safe). The cache is populated from sync
+     * context in onBedEnter and /hl comfort command.
      */
     @Nullable
     public ComfortScoreCalculator.ComfortResult getCachedResult(@Nonnull Player player, int cacheSeconds) {
@@ -111,21 +106,27 @@ public class ComfortModule extends HLModule {
             return cached.result;
         }
 
+        // Only calculate on the main thread — block reads are not thread-safe
+        if (!Bukkit.isPrimaryThread()) {
+            return cached != null ? cached.result : null;
+        }
+
         ComfortScoreCalculator.ComfortResult result = calculator.calculate(player.getLocation());
         papiCache.put(uuid, new CachedComfortResult(result, now));
         return result;
     }
 
     /**
-     * Removes the PAPI cache entry for a player (called on quit).
+     * Updates the PAPI cache from sync context (called from onBedEnter).
      */
+    public void updateCache(@Nonnull Player player, @Nonnull ComfortScoreCalculator.ComfortResult result) {
+        papiCache.put(player.getUniqueId(), new CachedComfortResult(result, System.currentTimeMillis()));
+    }
+
     public void clearCacheFor(@Nonnull UUID uuid) {
         papiCache.remove(uuid);
     }
 
-    /**
-     * Simple holder for a cached comfort result with a timestamp.
-     */
     private static class CachedComfortResult {
         final ComfortScoreCalculator.ComfortResult result;
         final long timestampMillis;

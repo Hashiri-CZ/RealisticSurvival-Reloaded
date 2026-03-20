@@ -31,7 +31,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ComfortEvents implements Listener {
 
@@ -44,10 +45,8 @@ public class ComfortEvents implements Listener {
     @Nonnull
     private final FileConfiguration config;
 
-    // Cached effect types for removal on death
-    private static final PotionEffectType REGENERATION = Registry.EFFECT.get(NamespacedKey.minecraft("regeneration"));
-    private static final PotionEffectType RESISTANCE = Registry.EFFECT.get(NamespacedKey.minecraft("resistance"));
-    private static final PotionEffectType SATURATION = Registry.EFFECT.get(NamespacedKey.minecraft("saturation"));
+    // All effect types used by any comfort tier — built from config for accurate death cleanup
+    private final Set<PotionEffectType> comfortEffectTypes = new HashSet<>();
 
     public ComfortEvents(@Nonnull ComfortModule module, @Nonnull HLPlugin plugin,
                          @Nonnull ComfortScoreCalculator calculator, @Nonnull FileConfiguration config) {
@@ -55,6 +54,28 @@ public class ComfortEvents implements Listener {
         this.plugin = plugin;
         this.calculator = calculator;
         this.config = config;
+        buildComfortEffectTypes();
+    }
+
+    private void buildComfortEffectTypes() {
+        ConfigurationSection tiersSection = config.getConfigurationSection("Tiers");
+        if (tiersSection == null) {
+            return;
+        }
+        for (String tierKey : tiersSection.getKeys(false)) {
+            ConfigurationSection tierSec = tiersSection.getConfigurationSection(tierKey);
+            if (tierSec == null) continue;
+            ConfigurationSection effectsSec = tierSec.getConfigurationSection("Effects");
+            if (effectsSec == null) continue;
+            for (String effectKey : effectsSec.getKeys(false)) {
+                PotionEffectType type = Registry.EFFECT.get(NamespacedKey.minecraft(effectKey.toLowerCase()));
+                if (type != null) {
+                    comfortEffectTypes.add(type);
+                } else {
+                    plugin.getLogger().warning("[Comfort] Unknown potion effect in tier config: " + effectKey);
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -78,17 +99,13 @@ public class ComfortEvents implements Listener {
 
         ComfortTier tier = result.getTier();
 
-        // Remove existing comfort-related effects before applying new ones
-        removeComfortEffects(player);
-
-        // Look up tier config for duration and effects
         ConfigurationSection tierSection = config.getConfigurationSection("Tiers." + tier.name());
         if (tierSection == null) {
             return;
         }
 
         int durationTicks = tierSection.getInt("Duration", 6000);
-        int durationMinutes = durationTicks / 1200; // 1200 ticks = 1 minute
+        int durationMinutes = durationTicks / 1200;
 
         ConfigurationSection effectsSection = tierSection.getConfigurationSection("Effects");
         if (effectsSection != null) {
@@ -96,12 +113,15 @@ public class ComfortEvents implements Listener {
                 int amplifier = effectsSection.getInt(effectKey, 0);
                 PotionEffectType type = Registry.EFFECT.get(NamespacedKey.minecraft(effectKey.toLowerCase()));
                 if (type != null) {
+                    // addPotionEffect replaces existing effects of the same type automatically
                     player.addPotionEffect(new PotionEffect(type, durationTicks, amplifier, true, true, true));
                 }
             }
         }
 
-        // Send buff applied message
+        // Populate PAPI cache from this sync context (avoids unsafe async calculation)
+        module.updateCache(player, result);
+
         String msg = config.getString("Messages.BuffApplied",
                 "§aComfort: §f{score} §7({tier}) §a- Resting buff for {minutes}min");
         msg = msg.replace("{score}", String.valueOf(result.getScore()));
@@ -117,23 +137,14 @@ public class ComfortEvents implements Listener {
             return;
         }
 
-        removeComfortEffects(player);
+        // Remove only effects that the comfort system can grant (config-driven)
+        for (PotionEffectType type : comfortEffectTypes) {
+            player.removePotionEffect(type);
+        }
     }
 
     @EventHandler
     public void onQuit(@Nonnull PlayerQuitEvent event) {
         module.clearCacheFor(event.getPlayer().getUniqueId());
-    }
-
-    private void removeComfortEffects(@Nonnull Player player) {
-        if (REGENERATION != null) {
-            player.removePotionEffect(REGENERATION);
-        }
-        if (RESISTANCE != null) {
-            player.removePotionEffect(RESISTANCE);
-        }
-        if (SATURATION != null) {
-            player.removePotionEffect(SATURATION);
-        }
     }
 }

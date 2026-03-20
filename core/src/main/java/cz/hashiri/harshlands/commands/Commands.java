@@ -969,7 +969,7 @@ public class Commands implements CommandExecutor {
                     }
 
                     HLModule comfortMod = HLModule.getModule(ComfortModule.NAME);
-                    if (comfortMod == null || !comfortMod.isGloballyEnabled()) {
+                    if (comfortMod == null || !comfortMod.isEnabled(player.getWorld())) {
                         sender.sendMessage(Utils.translateMsg(
                             config.getString("Comfort.ModuleDisabled", "&c[Harshlands] Comfort module is not enabled."), sender, null));
                         return true;
@@ -984,6 +984,7 @@ public class Commands implements CommandExecutor {
                     }
 
                     ComfortScoreCalculator.ComfortResult result = calc.calculate(player.getLocation());
+                    comfortModule.updateCache(player, result);
                     FileConfiguration comfortConfig = comfortModule.getUserConfig().getConfig();
 
                     String checkMsg = comfortConfig.getString("Messages.ComfortCheck", "\u00a77Comfort Score: \u00a7f{score} \u00a77({tier})");

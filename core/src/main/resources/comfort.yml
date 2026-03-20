@@ -15,7 +15,7 @@ Shutdown:
   Enabled: true
 
 # Radius (in blocks) around the bed to scan for comfort items.
-SearchRadius: 10
+SearchRadius: 8
 
 # PAPI cache duration in seconds (per-player).
 CacheSeconds: 5
@@ -33,7 +33,7 @@ CacheSeconds: 5
 #                  (used for flower pots: POTTED_*)
 Categories:
   Bed:
-    Points: 1
+    Points: 3
     Materials:
       - WHITE_BED
       - ORANGE_BED
@@ -106,7 +106,7 @@ Categories:
       - RED_WALL_BANNER
       - BLACK_WALL_BANNER
   Campfire:
-    Points: 1
+    Points: 3
     RequireLit: true
     Materials:
       - CAMPFIRE
@@ -133,48 +133,14 @@ Categories:
       - RED_CANDLE
       - BLACK_CANDLE
   Crafting:
-    Points: 1
+    Points: 2
     Materials:
       - CRAFTING_TABLE
-  Furnace:
-    Points: 1
-    Materials:
-      - FURNACE
-      - BLAST_FURNACE
-      - SMOKER
   Bookshelf:
-    Points: 1
+    Points: 2
     Materials:
       - BOOKSHELF
       - CHISELED_BOOKSHELF
-  Table:
-    Points: 1
-    Materials:
-      - OAK_FENCE
-      - SPRUCE_FENCE
-      - BIRCH_FENCE
-      - JUNGLE_FENCE
-      - ACACIA_FENCE
-      - DARK_OAK_FENCE
-      - CRIMSON_FENCE
-      - WARPED_FENCE
-      - MANGROVE_FENCE
-      - CHERRY_FENCE
-      - BAMBOO_FENCE
-  Chair:
-    Points: 1
-    Materials:
-      - OAK_STAIRS
-      - SPRUCE_STAIRS
-      - BIRCH_STAIRS
-      - JUNGLE_STAIRS
-      - ACACIA_STAIRS
-      - DARK_OAK_STAIRS
-      - CRIMSON_STAIRS
-      - WARPED_STAIRS
-      - MANGROVE_STAIRS
-      - CHERRY_STAIRS
-      - BAMBOO_STAIRS
   FlowerPot:
     Points: 1
     PrefixMatch: "POTTED_"
@@ -182,10 +148,14 @@ Categories:
     Points: 2
     Materials:
       - JUKEBOX
-  EnchantingTable:
+  BrewingStand:
     Points: 1
     Materials:
-      - ENCHANTING_TABLE
+      - BREWING_STAND
+  DecoratedPot:
+    Points: 1
+    Materials:
+      - DECORATED_POT
   Anvil:
     Points: 1
     Materials:
@@ -210,13 +180,10 @@ Categories:
     EntityTypes:
       - ITEM_FRAME
       - GLOW_ITEM_FRAME
-  Cauldron:
+  Loom:
     Points: 1
     Materials:
-      - CAULDRON
-      - WATER_CAULDRON
-      - LAVA_CAULDRON
-      - POWDER_SNOW_CAULDRON
+      - LOOM
   Barrel:
     Points: 1
     Materials:
