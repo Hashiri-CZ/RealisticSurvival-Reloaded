@@ -210,6 +210,30 @@ public class v1_21_R11 extends InternalsProvider {
         meta.setEquippable(component);
     }
 
+    @Override
+    public boolean assignInvestigateNoiseGoal(org.bukkit.entity.Mob mob, org.bukkit.Location target) {
+        try {
+            net.minecraft.world.entity.Mob nmsMob = ((org.bukkit.craftbukkit.v1_21_R7.entity.CraftMob) mob).getHandle();
+
+            // Remove any existing InvestigateNoiseGoal, stopping running ones to release AI flags
+            nmsMob.goalSelector.getAvailableGoals().removeIf(wrappedGoal -> {
+                if (wrappedGoal.getGoal() instanceof InvestigateNoiseGoal_v1_21_R11) {
+                    if (wrappedGoal.isRunning()) {
+                        wrappedGoal.stop();
+                    }
+                    return true;
+                }
+                return false;
+            });
+
+            nmsMob.goalSelector.addGoal(3,
+                    new InvestigateNoiseGoal_v1_21_R11(nmsMob, target.getX(), target.getY(), target.getZ(), 1.0));
+            return true;
+        } catch (ClassCastException e) {
+            return false;
+        }
+    }
+
     public static boolean isLookingAtMe(EnderMan enderman, net.minecraft.world.entity.player.Player entityhuman) {
         ItemStack itemstack = entityhuman.getInventory().getArmorContents().get(3);
         if (itemstack.is(Blocks.CARVED_PUMPKIN.asItem())) {

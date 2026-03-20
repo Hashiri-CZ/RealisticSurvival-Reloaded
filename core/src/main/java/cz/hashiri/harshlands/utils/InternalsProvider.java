@@ -75,6 +75,8 @@ public abstract class InternalsProvider {
     public abstract NamespacedKey getEquippableComponentModel(ItemMeta meta); // for 1.21.11
 
     public abstract void setEquippableComponentModel(ItemMeta meta, NamespacedKey key, EquipmentSlot slot); // for 1.21.11
+
+    public abstract boolean assignInvestigateNoiseGoal(org.bukkit.entity.Mob mob, Location target);
 }
 
 

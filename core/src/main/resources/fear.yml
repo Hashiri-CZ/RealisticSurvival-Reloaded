@@ -209,6 +209,56 @@ CharacterOverrides:
   FearArrowDown:   "\uE84A"  # fear decreasing
   FearArrowStable: ""  # fear unchanged / first tick
 
+SoundEcology:
+  Enabled: true
+
+  # Noise Attraction System — makes player actions attract nearby hostile mobs
+  NoiseLevels:
+    Mining: 32
+    Sprinting: 16
+    Walking: 8
+    Sneaking: 2
+    Combat: 48
+    Bow: 40
+    Placing: 12
+    ChestDoor: 20
+    Explosion: 80
+    Shivering: 6
+
+  MobResponse:
+    BaseChance: 0.3
+    MaxMobsPerEvent: 3
+    MaxMobsPerCycle: 20
+    CooldownTicks: 100
+    MaxVerticalScanRadius: 24
+
+  Decay:
+    Seconds: 4
+
+  Environment:
+    CaveBonusMultiplier: 1.25
+    WoolDampeningFactor: 0.5
+    WoolThreshold: 3
+
+  Integration:
+    FearAmplification:
+      Enabled: true
+      MinFear: 50
+      MaxMultiplier: 1.5
+    ColdShivering:
+      Enabled: true
+      TemperatureThreshold: 4.0
+      Chance: 0.3
+
+  Feedback:
+    Particles:
+      Enabled: true
+      MinRadiusToShow: 16
+      ScanRadius: 20
+
+  EvaluationIntervalTicks: 10
+  MaxActiveNoiseEvents: 500
+
 Recipes:
   glowstone_crystal:
     Enabled:

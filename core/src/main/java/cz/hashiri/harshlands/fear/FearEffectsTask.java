@@ -37,11 +37,25 @@ public class FearEffectsTask implements Runnable {
     private final HLPlugin plugin;
     private final FileConfiguration config;
     private final FearModule fearModule;
+    private final List<String> cachedSoundPool;
 
     public FearEffectsTask(HLPlugin plugin, FileConfiguration config, FearModule fearModule) {
         this.plugin = plugin;
         this.config = config;
         this.fearModule = fearModule;
+        this.cachedSoundPool = buildSoundPool(config);
+    }
+
+    private static List<String> buildSoundPool(FileConfiguration config) {
+        org.bukkit.configuration.ConfigurationSection soundsSection =
+            config.getConfigurationSection("FearMeter.Effects.FakeMobSounds.Sounds");
+        if (soundsSection == null) return List.of();
+        List<String> pool = new ArrayList<>();
+        for (String soundName : soundsSection.getKeys(false)) {
+            int weight = soundsSection.getInt(soundName, 1);
+            for (int i = 0; i < weight; i++) pool.add(soundName);
+        }
+        return List.copyOf(pool);
     }
 
     @Override
@@ -72,17 +86,9 @@ public class FearEffectsTask implements Runnable {
         if (!config.getBoolean("FearMeter.Effects.FakeMobSounds.Enabled", true)) return;
         if (fear < config.getDouble("FearMeter.Effects.FakeMobSounds.MinFear", 50.0)) return;
         if (ThreadLocalRandom.current().nextDouble() >= config.getDouble("FearMeter.Effects.FakeMobSounds.Chance", 0.05)) return;
-        org.bukkit.configuration.ConfigurationSection soundsSection =
-            config.getConfigurationSection("FearMeter.Effects.FakeMobSounds.Sounds");
-        if (soundsSection == null) return;
-        List<String> pool = new ArrayList<>();
-        for (String soundName : soundsSection.getKeys(false)) {
-            int weight = soundsSection.getInt(soundName, 1);
-            for (int i = 0; i < weight; i++) pool.add(soundName);
-        }
-        if (pool.isEmpty()) return;
+        if (cachedSoundPool.isEmpty()) return;
         ThreadLocalRandom rng = ThreadLocalRandom.current();
-        String soundName = pool.get(rng.nextInt(pool.size()));
+        String soundName = cachedSoundPool.get(rng.nextInt(cachedSoundPool.size()));
         Sound sound = Utils.resolveSound(soundName);
         if (sound == null) {
             plugin.getLogger().warning("[Fear] Unknown sound in FakeMobSounds: " + soundName);

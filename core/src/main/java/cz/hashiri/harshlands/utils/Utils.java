@@ -1882,6 +1882,10 @@ public class Utils {
         return clone;
     }
 
+    public static boolean assignInvestigateNoiseGoal(@Nonnull org.bukkit.entity.Mob mob, @Nonnull Location target) {
+        return internals != null && internals.assignInvestigateNoiseGoal(mob, target);
+    }
+
     @Nonnull
     public Tool getInternalBestTool(@Nonnull Material mat) {
         return plugin.getToolHandler().getBestToolType(mat);

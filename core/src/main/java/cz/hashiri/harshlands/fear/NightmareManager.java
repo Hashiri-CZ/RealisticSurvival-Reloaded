@@ -80,14 +80,16 @@ public class NightmareManager {
      * Scans all loaded worlds and removes any Nightmare Endermen left over from a previous crash.
      */
     public void initialize() {
-        for (World world : Bukkit.getWorlds()) {
-            for (Entity entity : new ArrayList<>(world.getEntities())) {
-                if (entity instanceof Enderman && isNightmare(entity)) {
-                    entity.remove();
-                    plugin.getLogger().info("[Fear] Removed orphan Nightmare Enderman in world '" + world.getName() + "'.");
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (World world : Bukkit.getWorlds()) {
+                for (Entity entity : new ArrayList<>(world.getEntities())) {
+                    if (entity instanceof Enderman && isNightmare(entity)) {
+                        entity.remove();
+                        plugin.getLogger().info("[Fear] Removed orphan Nightmare Enderman in world '" + world.getName() + "'.");
+                    }
                 }
             }
-        }
+        }, 1L);
     }
 
     public boolean hasActiveNightmare(UUID playerUUID) {
