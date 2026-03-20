@@ -33,6 +33,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import cz.hashiri.harshlands.rsv.HLPlugin;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -63,6 +65,7 @@ public class SoundEcologyEvents implements Listener {
         Location loc = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
         noiseManager.createNoise(loc, radius, player.getUniqueId(), "MINING");
         emitFeedback(player, loc, radius);
+        debugNoise(player, "MINING", radius, loc);
     }
 
     // -----------------------------------------------------------------------
@@ -78,6 +81,7 @@ public class SoundEcologyEvents implements Listener {
         Location loc = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
         noiseManager.createNoise(loc, radius, player.getUniqueId(), "PLACING");
         emitFeedback(player, loc, radius);
+        debugNoise(player, "PLACING", radius, loc);
     }
 
     // -----------------------------------------------------------------------
@@ -110,6 +114,7 @@ public class SoundEcologyEvents implements Listener {
         Location loc = event.getEntity().getLocation();
         noiseManager.createNoise(loc, radius, player.getUniqueId(), type);
         emitFeedback(player, loc, radius);
+        debugNoise(player, type, radius, loc);
     }
 
     // -----------------------------------------------------------------------
@@ -136,6 +141,7 @@ public class SoundEcologyEvents implements Listener {
         Location loc = event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5);
         noiseManager.createNoise(loc, radius, player.getUniqueId(), "CHEST_DOOR");
         emitFeedback(player, loc, radius);
+        debugNoise(player, "CHEST_DOOR", radius, loc);
     }
 
     // -----------------------------------------------------------------------
@@ -190,6 +196,7 @@ public class SoundEcologyEvents implements Listener {
 
         noiseManager.createNoise(to, radius, player.getUniqueId(), type);
         emitFeedback(player, to, radius);
+        debugNoise(player, type, radius, to);
     }
 
     // -----------------------------------------------------------------------
@@ -205,6 +212,17 @@ public class SoundEcologyEvents implements Listener {
     // Particle feedback
     // -----------------------------------------------------------------------
 
+    private void debugNoise(Player player, String type, double radius, Location loc) {
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = HLPlugin.getPlugin().getDebugManager();
+        if (debugMgr.isActive("Fear", "SoundEcology", player.getUniqueId())) {
+            String consoleLine = "noise=" + type + " radius=" + String.format("%.0f", radius)
+                    + " loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ()
+                    + " biome=" + loc.getWorld().getBiome(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
+                    + " light=" + loc.getBlock().getLightLevel();
+            debugMgr.send("Fear", "SoundEcology", player.getUniqueId(), "", consoleLine);
+        }
+    }
+
     private void emitFeedback(Player source, Location loc, double radius) {
         if (!config.getBoolean("Feedback.Particles.Enabled", true)) return;
         double minRadius = config.getDouble("Feedback.Particles.MinRadiusToShow", 16);
@@ -212,8 +230,9 @@ public class SoundEcologyEvents implements Listener {
 
         double scanRadius = config.getDouble("Feedback.Particles.ScanRadius", 20);
         Location particleLoc = loc.clone().add(0, 1.5, 0);
-        for (Entity entity : loc.getWorld().getNearbyEntities(loc, scanRadius, scanRadius, scanRadius)) {
-            if (!(entity instanceof Player nearby)) continue;
+        for (Entity entity : loc.getWorld().getNearbyEntities(loc, scanRadius, scanRadius, scanRadius,
+                e -> e instanceof Player)) {
+            Player nearby = (Player) entity;
             if (nearby.getUniqueId().equals(source.getUniqueId())) continue;
             nearby.spawnParticle(Particle.NOTE, particleLoc, 3, 0.5, 0.3, 0.5, 0);
         }

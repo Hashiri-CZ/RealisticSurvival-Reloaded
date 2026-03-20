@@ -83,6 +83,20 @@ public class SfEvents extends ModuleEvents implements Listener {
             damage = IceFireModule.applyDragonItemBonusDamage(defender, itemMainHand, damage, module);
         }
 
+        // Debug instrumentation
+        if (attacker instanceof org.bukkit.entity.Player p) {
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("SpartanandFire", "StatusEffects", p.getUniqueId())) {
+                String weaponName = "unknown";
+                if (p.getEquipment() != null && HLItem.isHLItem(p.getEquipment().getItemInMainHand())) {
+                    weaponName = HLItem.getNameFromItem(p.getEquipment().getItemInMainHand());
+                }
+                String consoleLine = "weapon=" + weaponName + " target=" + defender.getType()
+                        + " dmg=" + String.format("%.1f", damage);
+                debugMgr.send("SpartanandFire", "StatusEffects", p.getUniqueId(), "", consoleLine);
+            }
+        }
+
         event.setDamage(damage);
     }
 

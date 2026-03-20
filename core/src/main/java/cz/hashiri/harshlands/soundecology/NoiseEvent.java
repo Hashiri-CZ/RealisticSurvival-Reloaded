@@ -32,7 +32,7 @@ public class NoiseEvent {
 
     public NoiseEvent(Location location, double baseRadius, double effectiveRadius,
                       long expirationTick, @Nullable UUID sourcePlayer, String noiseType) {
-        this.location = location;
+        this.location = location.clone();
         this.baseRadius = baseRadius;
         this.effectiveRadius = effectiveRadius;
         this.expirationTick = expirationTick;

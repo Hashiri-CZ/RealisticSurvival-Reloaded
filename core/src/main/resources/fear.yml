@@ -32,7 +32,8 @@ FearMeter:
   Enabled: true
   DefaultFear: 0.0
   CheckIntervalTicks: 100
-  Debug: false   # Set to true to log fear condition breakdown every check interval
+  # Deprecated: Use /hl debug Fear.FearMeter instead. This flag is ignored.
+  Debug: false
 
   PassiveDecay:
     Enabled: true

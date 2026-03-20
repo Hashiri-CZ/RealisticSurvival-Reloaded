@@ -232,6 +232,16 @@ public class AmbientSoundHandler {
         float pitch  = 0.9f + random.nextFloat() * 0.2f;
 
         player.playSound(loc, "harshlands:" + soundKey, SoundCategory.AMBIENT, volume, pitch);
+
+        // Debug instrumentation
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+        if (debugMgr.isActive("DynamicSurroundings", "Ambient", player.getUniqueId())) {
+            String consoleLine = "category=" + category + " sound=" + soundKey
+                    + " vol=" + String.format("%.1f", volume) + " pitch=" + String.format("%.2f", pitch)
+                    + " biome=" + loc.getWorld().getBiome(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            debugMgr.send("DynamicSurroundings", "Ambient", player.getUniqueId(), "", consoleLine);
+        }
+
         return true;
     }
 

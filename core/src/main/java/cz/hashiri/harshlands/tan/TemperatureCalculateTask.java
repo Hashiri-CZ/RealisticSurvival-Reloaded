@@ -293,6 +293,20 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
                 Bukkit.getServer().getPluginManager().callEvent(new TemperatureChangeEvent(player, oldTemp, temp));
             }
             manager.setTemperature(player, temp);
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("ToughAsNails", "Temperature", id)) {
+                String chatLine = Math.abs(temp - oldTemp) >= 0.5
+                        ? "§6[Temp] §f" + String.format("%.1f", oldTemp) + " §7-> §f" + String.format("%.1f", temp)
+                        : "";
+                String consoleLine = "temp=" + String.format("%.2f", temp)
+                        + " eq=" + String.format("%.2f", equilibriumTemp)
+                        + " change=" + String.format("%.2f", change) + " regulate=" + String.format("%.2f", regulate)
+                        + " changeEnv=" + String.format("%.2f", changeEnv) + " regulateEnv=" + String.format("%.2f", regulateEnv)
+                        + " inWater=" + player.isInWater() + " burning=" + (player.getFireTicks() > 0);
+                debugMgr.send("ToughAsNails", "Temperature", id, chatLine, consoleLine);
+            }
         }
         else {
             stop();

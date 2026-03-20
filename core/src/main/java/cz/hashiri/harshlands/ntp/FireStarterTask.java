@@ -127,6 +127,16 @@ public class FireStarterTask extends BukkitRunnable {
                     loc.getWorld().getBlockAt(loc).setType(isSoulCampfire ? Material.SOUL_CAMPFIRE : Material.CAMPFIRE);
                     ingredients.forEach(Entity::remove);
 
+                    // Debug instrumentation
+                    cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+                    if (debugMgr.isActive("NoTreePunching", "FireStarter", id)) {
+                        String chatLine = "§6[FireStarter] §fCampfire lit at " + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+                        String consoleLine = "action=COMPLETE progress=" + ticks + "/" + duration
+                                + " loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ()
+                                + " soul=" + isSoulCampfire;
+                        debugMgr.send("NoTreePunching", "FireStarter", id, chatLine, consoleLine);
+                    }
+
                     stop();
                 }
                 else {

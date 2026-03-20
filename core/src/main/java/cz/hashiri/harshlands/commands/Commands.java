@@ -51,6 +51,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static cz.hashiri.harshlands.rsv.HLPlugin.NAME;
 
@@ -1017,6 +1018,94 @@ public class Commands implements CommandExecutor {
                     Map<String, Object> placeholders = Map.of("PLUGIN_VERSION", plugin.getDescription().getVersion());
                     sender.sendMessage(Utils.translateMsg(config.getString("Version"), sender, placeholders));
                     Bukkit.getServer().dispatchCommand(sender, "version");
+                    return true;
+                }
+                case "debug" -> {
+                    if (!sender.hasPermission("harshlands.command.debug")) {
+                        sendNoPermissionMessage(sender);
+                        return true;
+                    }
+                    if (!(sender instanceof Player observer)) {
+                        sender.sendMessage("\u00a7c[Debug] \u00a7fThis command can only be used by players.");
+                        return true;
+                    }
+
+                    cz.hashiri.harshlands.debug.DebugManager dm = plugin.getDebugManager();
+
+                    // /hl debug — show status
+                    if (args.length == 1) {
+                        for (String line : dm.getStatus(observer.getUniqueId())) {
+                            observer.sendMessage(line);
+                        }
+                        return true;
+                    }
+
+                    String moduleArg = args[1];
+
+                    // /hl debug off — clear all
+                    if (moduleArg.equalsIgnoreCase("off")) {
+                        dm.clearAll(observer.getUniqueId());
+                        observer.sendMessage("\u00a7c[Debug] \u00a7fDisabled all debug subscriptions");
+                        return true;
+                    }
+
+                    // Resolve target player (arg 3 if present)
+                    UUID targetUuid = null;
+                    String targetName = "yourself";
+                    if (args.length >= 3) {
+                        if (!observer.hasPermission("harshlands.command.debug.others")) {
+                            sendNoPermissionMessage(sender);
+                            return true;
+                        }
+                        Player target = Bukkit.getPlayer(args[2]);
+                        if (target == null || !target.isOnline()) {
+                            observer.sendMessage("\u00a7c[Debug] \u00a7fPlayer '" + args[2] + "' is not online.");
+                            return true;
+                        }
+                        targetUuid = target.getUniqueId();
+                        targetName = target.getName();
+                    }
+
+                    // /hl debug Everything [player]
+                    if (moduleArg.equalsIgnoreCase("Everything")) {
+                        boolean enabled = dm.toggleAll(observer.getUniqueId(), targetUuid);
+                        if (enabled) {
+                            observer.sendMessage("\u00a7a[Debug] \u00a7fEnabled Everything for " + targetName);
+                        } else {
+                            observer.sendMessage("\u00a7c[Debug] \u00a7fDisabled all debug subscriptions");
+                        }
+                        return true;
+                    }
+
+                    // /hl debug Module[.Subsystem] [player]
+                    String moduleName;
+                    String subsystem = null;
+                    int dotIndex = moduleArg.indexOf('.');
+                    if (dotIndex >= 0) {
+                        moduleName = moduleArg.substring(0, dotIndex);
+                        subsystem = moduleArg.substring(dotIndex + 1);
+                    } else {
+                        moduleName = moduleArg;
+                    }
+
+                    if (!dm.hasProvider(moduleName)) {
+                        observer.sendMessage("\u00a7c[Debug] \u00a7fModule '" + moduleName + "' is not enabled or does not exist.");
+                        return true;
+                    }
+
+                    if (subsystem != null && !dm.getProviders().get(moduleName).getSubsystems().contains(subsystem)) {
+                        observer.sendMessage("\u00a7c[Debug] \u00a7fSubsystem '" + subsystem + "' does not exist in module '" + moduleName + "'.");
+                        observer.sendMessage("\u00a77Available: " + String.join(", ", dm.getProviders().get(moduleName).getSubsystems()));
+                        return true;
+                    }
+
+                    boolean enabled = dm.toggle(observer.getUniqueId(), moduleName, subsystem, targetUuid);
+                    String debugLabel = subsystem != null ? moduleName + "." + subsystem : moduleName + ".*";
+                    if (enabled) {
+                        observer.sendMessage("\u00a7a[Debug] \u00a7fEnabled " + debugLabel + " for " + targetName);
+                    } else {
+                        observer.sendMessage("\u00a7c[Debug] \u00a7fDisabled " + debugLabel + " for " + targetName);
+                    }
                     return true;
                 }
                 default -> {

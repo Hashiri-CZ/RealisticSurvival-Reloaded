@@ -47,6 +47,11 @@ public class SwModule extends HLModule {
         setModuleItems(new ModuleItems(this));
         setModuleRecipes(new ModuleRecipes(this, plugin));
 
+        HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
+            @Override public String getModuleName() { return NAME; }
+            @Override public java.util.Collection<String> getSubsystems() { return java.util.List.of("Attacks", "Throwing"); }
+        });
+
         FileConfiguration config = getUserConfig().getConfig();
         if (config.getBoolean("Initialize.Enabled")) {
             Utils.logModuleLifecycle("Initializing", NAME);

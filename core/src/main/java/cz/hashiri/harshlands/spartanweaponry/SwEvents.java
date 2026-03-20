@@ -340,6 +340,21 @@ public class SwEvents extends ModuleEvents implements Listener {
                 }
             }
         }
+
+        // Debug instrumentation
+        if (attacker instanceof Player p) {
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("SpartanWeaponry", "Attacks", p.getUniqueId())) {
+                String weaponName = "unknown";
+                if (p.getEquipment() != null && HLItem.isHLItem(p.getEquipment().getItemInMainHand())) {
+                    weaponName = HLItem.getNameFromItem(p.getEquipment().getItemInMainHand());
+                }
+                String consoleLine = "weapon=" + weaponName + " target=" + defender.getType()
+                        + " dmg=" + String.format("%.1f", damage) + " origDmg=" + String.format("%.1f", event.getDamage());
+                debugMgr.send("SpartanWeaponry", "Attacks", p.getUniqueId(), "", consoleLine);
+            }
+        }
+
         event.setDamage(damage);
     }
 
@@ -443,6 +458,15 @@ public class SwEvents extends ModuleEvents implements Listener {
 
         if (Utils.isItemReal(itemMainHand) && Utils.getDurability(itemMainHand) >= 0) {
             new ThrowWeaponTask(module, plugin, player, itemMainHand, maxDistance, rotateWeapon, piercing, returnWeaponCollideBlocks, returnWeaponCollideEntities, returnWeaponTooFar, velocity).start();
+
+            // Debug instrumentation
+            cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+            if (debugMgr.isActive("SpartanWeaponry", "Throwing", player.getUniqueId())) {
+                String chatLine = "§b[Throw] §f" + name + " §7maxDist=" + String.format("%.0f", maxDistance);
+                String consoleLine = "weapon=" + name + " maxDist=" + maxDistance
+                        + " piercing=" + piercing + " velocity=" + String.format("%.1f", velocity.length());
+                debugMgr.send("SpartanWeaponry", "Throwing", player.getUniqueId(), chatLine, consoleLine);
+            }
         }
         player.getInventory().setItemInMainHand(null);
     }

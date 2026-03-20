@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.rsv;
 
+import cz.hashiri.harshlands.debug.DebugManager;
 import cz.hashiri.harshlands.baubles.BaubleModule;
 import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.commands.Commands;
@@ -37,6 +38,7 @@ import cz.hashiri.harshlands.utils.ToolHandler;
 import cz.hashiri.harshlands.utils.ToolUtils;
 import cz.hashiri.harshlands.utils.StartupLog;
 import cz.hashiri.harshlands.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -68,6 +70,7 @@ public class HLPlugin extends JavaPlugin {
     private HLConfig auraSkillsRequirementsConfig;
     private HLScheduler scheduler;
     private HLDatabase database;
+    private DebugManager debugManager;
 
     @Override
     public void onEnable() {
@@ -114,6 +117,9 @@ public class HLPlugin extends JavaPlugin {
 
         this.miscItems = new MiscItems(this);
         this.miscRecipes = new MiscRecipes(this);
+
+        debugManager = new DebugManager(this);
+        Bukkit.getPluginManager().registerEvents(debugManager, this);
 
         IceFireModule ifModule = new IceFireModule(this);
         if (ifModule.isGloballyEnabled())
@@ -191,6 +197,10 @@ public class HLPlugin extends JavaPlugin {
             if (module.isGloballyEnabled()) {
                 module.shutdown();
             }
+        }
+
+        if (debugManager != null) {
+            debugManager.shutdown();
         }
 
         // Wait for all pending async DB writes (up to 10s), then close pool
@@ -284,6 +294,10 @@ public class HLPlugin extends JavaPlugin {
     @Nullable
     public HLScheduler getScheduler() {
         return scheduler;
+    }
+
+    public DebugManager getDebugManager() {
+        return debugManager;
     }
 
     private void ensureFearDefaults() {

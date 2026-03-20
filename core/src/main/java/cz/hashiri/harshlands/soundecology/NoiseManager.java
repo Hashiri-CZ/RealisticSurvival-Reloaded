@@ -28,6 +28,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,22 +61,26 @@ public class NoiseManager {
             effectiveRadius *= config.getDouble("Environment.CaveBonusMultiplier", 1.25);
         }
 
-        // Wool dampening: scan 7x7x7 cube around source
-        int woolCount = 0;
-        int threshold = config.getInt("Environment.WoolThreshold", 3);
-        Block center = location.getBlock();
-        for (int dx = -3; dx <= 3 && woolCount < threshold; dx++) {
-            for (int dy = -3; dy <= 3 && woolCount < threshold; dy++) {
-                for (int dz = -3; dz <= 3 && woolCount < threshold; dz++) {
-                    Material mat = center.getRelative(dx, dy, dz).getType();
-                    if (isDampeningMaterial(mat)) {
-                        woolCount++;
+        // Wool dampening: scan 7x7x7 cube around source (skip for quiet noises)
+        double woolDampeningFactor = config.getDouble("Environment.WoolDampeningFactor", 0.5);
+        double woolMinRadius = config.getDouble("Environment.WoolMinRadius", 16);
+        if (baseRadius >= woolMinRadius) {
+            int woolCount = 0;
+            int threshold = config.getInt("Environment.WoolThreshold", 3);
+            Block center = location.getBlock();
+            for (int dx = -3; dx <= 3 && woolCount < threshold; dx++) {
+                for (int dy = -3; dy <= 3 && woolCount < threshold; dy++) {
+                    for (int dz = -3; dz <= 3 && woolCount < threshold; dz++) {
+                        Material mat = center.getRelative(dx, dy, dz).getType();
+                        if (isDampeningMaterial(mat)) {
+                            woolCount++;
+                        }
                     }
                 }
             }
-        }
-        if (woolCount >= threshold) {
-            effectiveRadius *= config.getDouble("Environment.WoolDampeningFactor", 0.5);
+            if (woolCount >= threshold) {
+                effectiveRadius *= woolDampeningFactor;
+            }
         }
 
         // Fear amplification
@@ -102,11 +107,11 @@ public class NoiseManager {
     }
 
     public void pruneExpired(long currentTick) {
-        activeEvents.removeIf(e -> e.isExpired(currentTick));
+        activeEvents.removeIf(e -> e.isExpired(currentTick) || e.getLocation().getWorld() == null);
     }
 
     public List<NoiseEvent> getActiveEvents() {
-        return List.copyOf(activeEvents);
+        return Collections.unmodifiableList(activeEvents);
     }
 
     public void clear() {

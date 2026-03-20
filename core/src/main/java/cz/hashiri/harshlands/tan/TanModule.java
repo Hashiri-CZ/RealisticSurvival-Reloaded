@@ -62,6 +62,12 @@ public class TanModule extends HLModule {
         setUserConfig(new HLConfig(plugin, "toughasnails.yml"));
         setItemConfig(new HLConfig(plugin, "resources/toughasnails/items.yml"));
         setRecipeConfig(new HLConfig(plugin, "resources/toughasnails/recipes.yml"));
+
+        HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
+            @Override public String getModuleName() { return NAME; }
+            @Override public java.util.Collection<String> getSubsystems() { return java.util.List.of("Temperature", "Thirst", "Parasites"); }
+        });
+
         this.thirstManager = new ThirstManager(this);
 
         setModuleItems(new ModuleItems(this));

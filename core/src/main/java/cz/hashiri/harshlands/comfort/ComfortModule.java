@@ -60,6 +60,12 @@ public class ComfortModule extends HLModule {
     @Override
     public void initialize() {
         setUserConfig(new HLConfig(plugin, "comfort.yml"));
+
+        HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
+            @Override public String getModuleName() { return NAME; }
+            @Override public java.util.Collection<String> getSubsystems() { return java.util.List.of("Score", "CabinFever"); }
+        });
+
         FileConfiguration config = getUserConfig().getConfig();
 
         if (config.getBoolean("Initialize.Enabled")) {

@@ -94,6 +94,15 @@ public class ParasiteTask extends BukkitRunnable implements HLTask {
                             module.getParasiteDeath().add(id);
                         }
                         player.damage(damage);
+
+                        // Debug instrumentation
+                        cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
+                        if (debugMgr.isActive("ToughAsNails", "Parasites", id)) {
+                            String chatLine = "§c[Parasites] §fDmg §e" + String.format("%.1f", damage) + " §7hp=" + String.format("%.1f", player.getHealth());
+                            String consoleLine = "tick=" + ticks + "/" + duration + " dmg=" + damage
+                                    + " health=" + String.format("%.1f", player.getHealth()) + " cutoff=" + damageCutoff;
+                            debugMgr.send("ToughAsNails", "Parasites", id, chatLine, consoleLine);
+                        }
                     }
                 }
             }
