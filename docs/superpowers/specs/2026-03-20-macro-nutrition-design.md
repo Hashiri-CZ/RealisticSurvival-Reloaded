@@ -42,7 +42,7 @@ Loaded from config per food item. No hydration field — hydration is TAN's thir
 Fields:
 - `double protein, carbs, fats` — 0.0–100.0
 - `double proteinExhaustion, carbsExhaustion, fatsExhaustion` — activity-based exhaustion accumulators
-- `volatile boolean dirty`
+- `volatile boolean dirty` — note: `saveData()` snapshots all fields into an immutable `NutritionDataRow` on the main thread before submitting the async DB write, avoiding races between decay-tick modifications and the async save
 - `boolean miningFlag, fightingFlag` — activity detection flags, reset each decay tick
 
 Methods:
@@ -55,14 +55,16 @@ Methods:
 
 | Tier | Condition |
 |------|-----------|
+| `STARVING` | Any nutrient at 0 |
+| `SEVERELY_MALNOURISHED` | Any nutrient below 15 |
+| `MALNOURISHED` | Any nutrient below 30 |
 | `PEAK_NUTRITION` | All 3 nutrients > 80 AND hydration > 80% |
 | `WELL_NOURISHED` | All 3 nutrients > 60 AND hydration > 60% |
-| `NORMAL` | All 3 nutrients between 30–60 |
-| `MALNOURISHED` | Any nutrient below 30 |
-| `SEVERELY_MALNOURISHED` | Any nutrient below 15 |
-| `STARVING` | Any nutrient at 0 |
+| `NORMAL` | Default fallthrough — none of the above matched |
 
-Tier evaluation checks from worst to best and returns the first match. Hydration is queried from TanModule (thirst 0–20 scaled to 0–100). If TAN is not loaded, hydration check is skipped (always satisfied).
+Tier evaluation checks **worst to best**: STARVING → SEVERELY_MALNOURISHED → MALNOURISHED → then best to good: PEAK → WELL_NOURISHED → NORMAL (fallthrough). This eliminates gaps — a player with nutrients at 65 but low hydration correctly falls to NORMAL, not MALNOURISHED.
+
+Hydration is queried from TanModule (thirst 0–20 scaled to 0–100). Hydration thresholds are configurable (see Effects config section). If TAN is not loaded, hydration check is skipped (always satisfied).
 
 ## Database
 
@@ -98,9 +100,11 @@ Upsert:
 - H2: `MERGE INTO hl_nutrition_data KEY(uuid) VALUES (...)`
 - MySQL: `INSERT INTO hl_nutrition_data ... ON DUPLICATE KEY UPDATE ...`
 
-### `NutritionDataModule` implements `HLDataModule`
+### `DataModule` implements `HLDataModule` (package `cz.hashiri.harshlands.data.foodexpansion`)
 
-- `retrieveData()` — async load from DB, populate `PlayerNutritionData`, defaults if not found
+Follows naming convention of existing data modules (`cz.hashiri.harshlands.data.toughasnails.DataModule`, etc.).
+
+- `retrieveData()` — async load from DB, populate `PlayerNutritionData`, defaults if not found. Snapshots fields on main thread before async write.
 - `saveData()` — async save if dirty, clear dirty flag
 - Registered in `HLPlayer` alongside TAN, Baubles, Fear, CabinFever data modules
 
@@ -158,14 +162,22 @@ Starvation (any nutrient at 0): direct `player.damage()` every 80 ticks (configu
 
 ### `FoodExpansionEvents` extends `ModuleEvents`
 
-**`PlayerItemConsumeEvent` (priority MONITOR):**
+**`PlayerItemConsumeEvent` (priority HIGH, ignoreCancelled = true):**
 1. Look up `NutrientProfile` for consumed item from config map. If not found → ignore.
-2. Comfort check: query `ComfortModule` for cached comfort result. If tier ≥ configured minimum → multiply nutrients by `1.0 + absorptionBonus`.
+2. Comfort check: query `ComfortModule` for last-known comfort result via `getLastComfortTier(player)` (reads cached tier without triggering recalculation — this returns the comfort tier from the player's last bed interaction or periodic comfort check, NOT a scan at the eating location). If tier ≥ configured minimum → multiply nutrients by `1.0 + absorptionBonus`.
 3. Call `playerNutritionData.addNutrients(profile, multiplier)`, mark dirty.
 
 **`FoodLevelChangeEvent` — vanilla hunger slowdown:**
-1. If food level would decrease (natural hunger drain): multiply change by `DrainMultiplier` (default 0.5).
-2. If food level would increase (eating): allow normally.
+
+Uses a per-player `double hungerDebtAccumulator` to handle fractional drain correctly (since `setFoodLevel()` takes int). When food level decreases:
+1. Calculate `debt = (oldLevel - newLevel) * DrainMultiplier` (e.g., -1 × 0.5 = 0.5)
+2. Add to `hungerDebtAccumulator`
+3. If accumulator ≥ 1.0: apply `floor(accumulator)` as the actual food level decrease, subtract applied amount from accumulator
+4. If accumulator < 1.0: cancel the event (debt accumulates for next tick)
+
+If food level would increase (eating): allow normally, do not touch accumulator.
+
+This prevents the integer truncation pitfall where `(int)(1 * 0.5) = 0` would block all hunger drain.
 
 **`PlayerDeathEvent`:**
 1. Call `applyDeathPenalty(percentLoss)` on `PlayerNutritionData`, mark dirty.
@@ -203,25 +215,23 @@ Updated every 40 ticks (2 seconds) by `NutritionEffectTask`. Only updates if val
 
 Text uses Adventure `Component` with `NamedTextColor`. Color thresholds match effect tiers.
 
-X/Y positioning configurable in `foodexpansion.yml`:
+X positioning configurable in `foodexpansion.yml`. Y positioning is determined by the resource pack font provider's `ascent` field (encoded in the shader), not at runtime — changing Y requires regenerating the font provider JSON.
+
 ```yaml
 HUD:
   Protein:
     X: -120
-    Y: 0
   Carbs:
     X: -80
-    Y: 0
   Fats:
     X: -40
-    Y: 0
 ```
 
 When icons are added later, the text `Component` is swapped for a font-character `Component` — the HUD element API doesn't change.
 
 ## Command
 
-### `/hl nutrition [player]`
+### `/hl nutrition [player]` — view status
 
 **Permission:** `harshlands.command.nutrition` (default: true)
 **Other-player permission:** `harshlands.command.nutrition.others` (default: op)
@@ -237,7 +247,19 @@ Status:   Well-Nourished
 
 Uses Adventure `Component` with colored progress bars matching HUD color thresholds.
 
-Added to `Commands.java` switch block and `Tab.java` for tab completion (suggests online player names for second argument).
+### `/hl nutrition set <player> <protein> <carbs> <fats>` — admin set
+
+**Permission:** `harshlands.command.nutrition.set` (default: op)
+
+Sets exact nutrient values for a player. Useful for testing and player support.
+
+### `/hl nutrition reset <player>` — admin reset
+
+**Permission:** `harshlands.command.nutrition.reset` (default: op)
+
+Resets player's nutrients to configured defaults.
+
+Added to `Commands.java` switch block and `Tab.java` for tab completion (suggests online player names, then subcommands `set`/`reset`).
 
 ### plugin.yml additions
 
@@ -249,9 +271,15 @@ permissions:
   harshlands.command.nutrition.others:
     description: "View other players' nutrition status"
     default: op
+  harshlands.command.nutrition.set:
+    description: "Set a player's nutrition values"
+    default: op
+  harshlands.command.nutrition.reset:
+    description: "Reset a player's nutrition to defaults"
+    default: op
 ```
 
-Both added as children of `harshlands.command.*`.
+All added as children of `harshlands.command.*`.
 
 ## Cross-Module Integration
 
@@ -296,13 +324,14 @@ Malnourished:
 
 ## Shutdown Order
 
-1. `FoodExpansionModule.shutdown()` — cancel all per-player tasks, remove all attribute modifiers
-2. All online players' `NutritionDataModule.saveData()` fires async (via `HLPlayer.saveData()` in `HLPlugin.onDisable`)
+1. `FoodExpansionModule.shutdown()` — cancel all per-player tasks, remove all attribute modifiers, unregister event listeners via `HandlerList.unregisterAll(events)`
+2. All online players' `DataModule.saveData()` fires async (via `HLPlayer.saveData()` in `HLPlugin.onDisable`)
 3. `HLScheduler` drains remaining writes (10s timeout)
 4. No blocking wait needed in module shutdown
 
 ## Performance
 
+- **Debug provider:** Registers with `HLPlugin.getPlugin().getDebugManager().registerProvider(...)` during `initialize()`. Subsystems: "Decay" (current rates, exhaustion values), "Effects" (active tier, applied modifiers), "Tiers" (threshold evaluation details). Accessible via `/hl debug`.
 - **2 tasks per player** (decay 100t + effects/HUD 40t). Lightweight, main thread.
 - **Config map:** `Map<String, NutrientProfile>` — O(1) lookup on eat events.
 - **Attribute modifier churn:** Only on tier transitions (infrequent).
@@ -344,10 +373,12 @@ FoodExpansion:
   Effects:
     WellNourished:
       Threshold: 60
+      HydrationThreshold: 60
       MaxHealthBonus: 2.0
       SpeedMultiplier: 0.10
     PeakNutrition:
       Threshold: 80
+      HydrationThreshold: 80
       MaxHealthBonus: 4.0
       SpeedMultiplier: 0.10
       AttackDamageBonus: 0.10
@@ -362,16 +393,19 @@ FoodExpansion:
       DamagePerTick: 1.0
       DamageInterval: 80
 
+  # Default nutrient profile for unlisted food items (set all to 0 to ignore them)
+  DefaultFood:
+    Protein: 2.0
+    Carbs: 2.0
+    Fats: 1.0
+
   HUD:
     Protein:
       X: -120
-      Y: 0
     Carbs:
       X: -80
-      Y: 0
     Fats:
       X: -40
-      Y: 0
 
   Foods:
     COOKED_BEEF:
@@ -494,6 +528,44 @@ FoodExpansion:
       Protein: 8.0
       Carbs: 0.0
       Fats: 5.0
+    # Raw meats (lower values, early-game relevant)
+    BEEF:
+      Protein: 12.0
+      Carbs: 0.0
+      Fats: 8.0
+    CHICKEN:
+      Protein: 10.0
+      Carbs: 0.0
+      Fats: 5.0
+    PORKCHOP:
+      Protein: 11.0
+      Carbs: 0.0
+      Fats: 12.0
+    MUTTON:
+      Protein: 10.0
+      Carbs: 0.0
+      Fats: 10.0
+    RABBIT:
+      Protein: 9.0
+      Carbs: 0.0
+      Fats: 4.0
+    COD:
+      Protein: 9.0
+      Carbs: 0.0
+      Fats: 7.0
+    SALMON:
+      Protein: 10.0
+      Carbs: 0.0
+      Fats: 10.0
+    # Toxic/special items
+    PUFFERFISH:
+      Protein: 3.0
+      Carbs: 0.0
+      Fats: 2.0
+    POISONOUS_POTATO:
+      Protein: 1.0
+      Carbs: 5.0
+      Fats: 0.0
 ```
 
 ## File Summary
@@ -506,7 +578,7 @@ New files:
 - `core/src/main/java/cz/hashiri/harshlands/foodexpansion/NutritionDecayTask.java`
 - `core/src/main/java/cz/hashiri/harshlands/foodexpansion/NutritionEffectTask.java`
 - `core/src/main/java/cz/hashiri/harshlands/foodexpansion/FoodExpansionEvents.java`
-- `core/src/main/java/cz/hashiri/harshlands/data/foodexpansion/NutritionDataModule.java`
+- `core/src/main/java/cz/hashiri/harshlands/data/foodexpansion/DataModule.java`
 - `core/src/main/resources/foodexpansion.yml`
 
 Modified files:
