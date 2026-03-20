@@ -35,7 +35,9 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class FearConditionEvaluator {
 
@@ -47,19 +49,57 @@ public class FearConditionEvaluator {
         this.config = config;
     }
 
+    private record NearbySnapshot(List<Player> players, List<Monster> monsters, List<Entity> companions) {}
+
+    private NearbySnapshot scanNearby(Player player) {
+        double maxRadius = config.getDouble("FearMeter.Conditions.AloneUnderground.SearchRadius", 20.0);
+        double enemyRadius = config.getDouble("FearMeter.Conditions.NearbyEnemies.SearchRadius", 16.0);
+        double companionRadius = config.getDouble("FearMeter.Reductions.NearCompanions.SearchRadius", 12.0);
+        double enemyRadiusSq = enemyRadius * enemyRadius;
+        double companionRadiusSq = companionRadius * companionRadius;
+
+        Collection<Entity> allNearby = player.getWorld().getNearbyEntities(
+            player.getLocation(), maxRadius, maxRadius, maxRadius);
+
+        List<Player> players = new ArrayList<>();
+        List<Monster> monsters = new ArrayList<>();
+        List<Entity> companions = new ArrayList<>();
+        Location playerLoc = player.getLocation();
+
+        for (Entity e : allNearby) {
+            if (e.equals(player)) continue;
+            double distSq = e.getLocation().distanceSquared(playerLoc);
+
+            if (e instanceof Player p) {
+                players.add(p);
+                if (distSq <= companionRadiusSq) companions.add(p);
+            } else if (e instanceof Monster m) {
+                if (distSq <= enemyRadiusSq) monsters.add(m);
+            } else if (e instanceof Wolf wolf && wolf.isTamed()) {
+                if (distSq <= companionRadiusSq) companions.add(wolf);
+            } else if (e instanceof Cat cat && cat.isTamed()) {
+                if (distSq <= companionRadiusSq) companions.add(cat);
+            }
+        }
+
+        return new NearbySnapshot(players, monsters, companions);
+    }
+
     public void evaluate(Player player, DataModule dm) {
+        NearbySnapshot snapshot = scanNearby(player);
+
         double darkness     = config.getBoolean("FearMeter.Conditions.Darkness.Enabled", true)         ? evalDarkness(player)            : 0.0;
         double cave         = config.getBoolean("FearMeter.Conditions.Cave.Enabled", true)             ? evalCave(player)                : 0.0;
-        double underground  = config.getBoolean("FearMeter.Conditions.AloneUnderground.Enabled", true) ? evalAloneUnderground(player)    : 0.0;
+        double underground  = config.getBoolean("FearMeter.Conditions.AloneUnderground.Enabled", true) ? evalAloneUnderground(player, snapshot) : 0.0;
         double lowHealth    = config.getBoolean("FearMeter.Conditions.LowHealth.Enabled", true)        ? evalLowHealth(player, dm)       : 0.0;
-        double enemies      = config.getBoolean("FearMeter.Conditions.NearbyEnemies.Enabled", true)    ? evalNearbyEnemies(player)       : 0.0;
+        double enemies      = config.getBoolean("FearMeter.Conditions.NearbyEnemies.Enabled", true)    ? evalNearbyEnemies(snapshot)     : 0.0;
         double cold         = config.getBoolean("FearMeter.Conditions.Cold.Enabled", true)             ? evalCold(player)                : 0.0;
         double storm        = config.getBoolean("FearMeter.Conditions.Storm.Enabled", true)            ? evalStorm(player)               : 0.0;
         double night        = config.getBoolean("FearMeter.Conditions.Night.Enabled", true)            ? evalNight(player)               : 0.0;
 
         double brightLight = config.getBoolean("FearMeter.Reductions.BrightLight.Enabled", true)   ? evalBrightLight(player)    : 0.0;
         double nearFire    = config.getBoolean("FearMeter.Reductions.NearFireSource.Enabled", true) ? evalNearFireSource(player) : 0.0;
-        double companions  = config.getBoolean("FearMeter.Reductions.NearCompanions.Enabled", true) ? evalNearCompanions(player) : 0.0;
+        double companions  = config.getBoolean("FearMeter.Reductions.NearCompanions.Enabled", true) ? evalNearCompanions(snapshot) : 0.0;
 
         double netDelta = darkness + cave + underground + lowHealth + enemies + cold + storm + night
                         - brightLight - nearFire - companions;
@@ -99,14 +139,10 @@ public class FearConditionEvaluator {
         return 0.0;
     }
 
-    private double evalAloneUnderground(Player player) {
+    private double evalAloneUnderground(Player player, NearbySnapshot snapshot) {
         int skyLight = player.getEyeLocation().getBlock().getLightFromSky();
         if (skyLight != 0) return 0.0;
-        double radius = config.getDouble("FearMeter.Conditions.AloneUnderground.SearchRadius", 20.0);
-        Collection<Entity> nearby = player.getWorld().getNearbyEntities(
-            player.getLocation(), radius, radius, radius,
-            e -> e instanceof Player && !e.equals(player));
-        if (nearby.isEmpty()) {
+        if (snapshot.players().isEmpty()) {
             return config.getDouble("FearMeter.Conditions.AloneUnderground.Rate", 0.5);
         }
         return 0.0;
@@ -129,15 +165,11 @@ public class FearConditionEvaluator {
         return 0.0;
     }
 
-    private double evalNearbyEnemies(Player player) {
-        double radius = config.getDouble("FearMeter.Conditions.NearbyEnemies.SearchRadius", 16.0);
-        Collection<Entity> mobs = player.getWorld().getNearbyEntities(
-            player.getLocation(), radius, radius, radius,
-            e -> e instanceof Monster);
-        if (!mobs.isEmpty()) {
+    private double evalNearbyEnemies(NearbySnapshot snapshot) {
+        if (!snapshot.monsters().isEmpty()) {
             double ratePerMob = config.getDouble("FearMeter.Conditions.NearbyEnemies.Rate", 0.5);
             double maxBonus = config.getDouble("FearMeter.Conditions.NearbyEnemies.MaxMobBonus", 3.0);
-            return Math.min(mobs.size() * ratePerMob, maxBonus);
+            return Math.min(snapshot.monsters().size() * ratePerMob, maxBonus);
         }
         return 0.0;
     }
@@ -206,17 +238,11 @@ public class FearConditionEvaluator {
         };
     }
 
-    private double evalNearCompanions(Player player) {
-        double radius = config.getDouble("FearMeter.Reductions.NearCompanions.SearchRadius", 12.0);
-        Collection<Entity> companions = player.getWorld().getNearbyEntities(
-            player.getLocation(), radius, radius, radius,
-            e -> (!e.equals(player) && e instanceof Player) ||
-                 (e instanceof Wolf wolf && wolf.isTamed()) ||
-                 (e instanceof Cat cat && cat.isTamed()));
-        if (!companions.isEmpty()) {
+    private double evalNearCompanions(NearbySnapshot snapshot) {
+        if (!snapshot.companions().isEmpty()) {
             double rateEach = config.getDouble("FearMeter.Reductions.NearCompanions.Rate", 0.6);
             double maxBonus = config.getDouble("FearMeter.Reductions.NearCompanions.MaxBonus", 3.0);
-            return Math.min(companions.size() * rateEach, maxBonus);
+            return Math.min(snapshot.companions().size() * rateEach, maxBonus);
         }
         return 0.0;
     }

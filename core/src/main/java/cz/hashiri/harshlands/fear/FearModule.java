@@ -23,9 +23,11 @@ import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
 import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.soundecology.SoundEcologySubsystem;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -45,6 +47,7 @@ public class FearModule extends HLModule {
     private FearTorchManager torchManager;
     private FearUnlitTorchService unlitTorchService;
     private NightmareManager nightmareManager;
+    private SoundEcologySubsystem soundEcologySubsystem;
 
     public FearModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
@@ -125,6 +128,13 @@ public class FearModule extends HLModule {
             events = new FearEvents(this, plugin, torchManager, unlitTorchService);
             events.initialize();
         }
+
+        // SoundEcology subsystem
+        ConfigurationSection seSection = config.getConfigurationSection("SoundEcology");
+        if (seSection != null && seSection.getBoolean("Enabled", true)) {
+            soundEcologySubsystem = new SoundEcologySubsystem(this, plugin);
+            soundEcologySubsystem.initialize(seSection);
+        }
     }
 
     @Override
@@ -132,6 +142,11 @@ public class FearModule extends HLModule {
         FileConfiguration config = getUserConfig().getConfig();
         if (config.getBoolean("Shutdown.Enabled")) {
             Utils.logModuleLifecycle("Shutting down", NAME);
+        }
+
+        if (soundEcologySubsystem != null) {
+            soundEcologySubsystem.shutdown();
+            soundEcologySubsystem = null;
         }
 
         if (nightmareManager != null) {
@@ -299,6 +314,41 @@ public class FearModule extends HLModule {
 
         if (!config.contains(root + ".MinScanBatchSize")) {
             config.set(root + ".MinScanBatchSize", 5);
+            changed = true;
+        }
+
+        // SoundEcology subsystem defaults
+        if (!config.contains("SoundEcology")) {
+            config.set("SoundEcology.Enabled", true);
+            config.set("SoundEcology.NoiseLevels.Mining", 32);
+            config.set("SoundEcology.NoiseLevels.Sprinting", 16);
+            config.set("SoundEcology.NoiseLevels.Walking", 8);
+            config.set("SoundEcology.NoiseLevels.Sneaking", 2);
+            config.set("SoundEcology.NoiseLevels.Combat", 48);
+            config.set("SoundEcology.NoiseLevels.Bow", 40);
+            config.set("SoundEcology.NoiseLevels.Placing", 12);
+            config.set("SoundEcology.NoiseLevels.ChestDoor", 20);
+            config.set("SoundEcology.NoiseLevels.Explosion", 80);
+            config.set("SoundEcology.NoiseLevels.Shivering", 6);
+            config.set("SoundEcology.MobResponse.BaseChance", 0.3);
+            config.set("SoundEcology.MobResponse.MaxMobsPerEvent", 3);
+            config.set("SoundEcology.MobResponse.MaxMobsPerCycle", 20);
+            config.set("SoundEcology.MobResponse.CooldownTicks", 100);
+            config.set("SoundEcology.Decay.Seconds", 4);
+            config.set("SoundEcology.Environment.CaveBonusMultiplier", 1.25);
+            config.set("SoundEcology.Environment.WoolDampeningFactor", 0.5);
+            config.set("SoundEcology.Environment.WoolThreshold", 3);
+            config.set("SoundEcology.Integration.FearAmplification.Enabled", true);
+            config.set("SoundEcology.Integration.FearAmplification.MinFear", 50);
+            config.set("SoundEcology.Integration.FearAmplification.MaxMultiplier", 1.5);
+            config.set("SoundEcology.Integration.ColdShivering.Enabled", true);
+            config.set("SoundEcology.Integration.ColdShivering.TemperatureThreshold", 4.0);
+            config.set("SoundEcology.Integration.ColdShivering.Chance", 0.3);
+            config.set("SoundEcology.Feedback.Particles.Enabled", true);
+            config.set("SoundEcology.Feedback.Particles.MinRadiusToShow", 16);
+            config.set("SoundEcology.Feedback.Particles.ScanRadius", 20);
+            config.set("SoundEcology.EvaluationIntervalTicks", 10);
+            config.set("SoundEcology.MaxActiveNoiseEvents", 500);
             changed = true;
         }
 

@@ -203,12 +203,7 @@ public abstract class ModuleEvents implements Listener {
                 pluginConfig.createSection(path);
                 pluginConfig.set(path, true);
                 module.getAllowedWorlds().add(name);
-
-                try {
-                    pluginConfig.save(plugin.getConfigFile());
-                } catch (IOException e) {
-                    plugin.getLogger().log(Level.SEVERE, "[" + module.getName() + "] Failed to save config on world init: " + name, e);
-                }
+                saveConfigAsync(pluginConfig, "world init: " + name);
             }
         }
     }
@@ -225,14 +220,21 @@ public abstract class ModuleEvents implements Listener {
                 pluginConfig.createSection(path);
                 pluginConfig.set(path, true);
                 module.getAllowedWorlds().add(name);
-
-                try {
-                    pluginConfig.save(plugin.getConfigFile());
-                } catch (IOException e) {
-                    plugin.getLogger().log(Level.SEVERE, "[" + module.getName() + "] Failed to save config on world load: " + name, e);
-                }
+                saveConfigAsync(pluginConfig, "world load: " + name);
             }
         }
+    }
+
+    private void saveConfigAsync(FileConfiguration pluginConfig, String context) {
+        String yaml = pluginConfig.saveToString();
+        java.nio.file.Path configPath = plugin.getConfigFile().toPath();
+        HLPlugin.getPlugin().getScheduler().runAsync(() -> {
+            try {
+                java.nio.file.Files.writeString(configPath, yaml);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "[" + module.getName() + "] Failed to save config on " + context, e);
+            }
+        });
     }
 
     @EventHandler
