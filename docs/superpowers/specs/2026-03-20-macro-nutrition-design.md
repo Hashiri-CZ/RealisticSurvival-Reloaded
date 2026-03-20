@@ -104,7 +104,7 @@ Upsert:
 
 Follows naming convention of existing data modules (`cz.hashiri.harshlands.data.toughasnails.DataModule`, etc.).
 
-- `retrieveData()` — async load from DB, populate `PlayerNutritionData`, defaults if not found. Snapshots fields on main thread before async write.
+- `retrieveData()` — async load from DB, populate `PlayerNutritionData`, defaults if not found.
 - `saveData()` — async save if dirty, clear dirty flag
 - Registered in `HLPlayer` alongside TAN, Baubles, Fear, CabinFever data modules
 
