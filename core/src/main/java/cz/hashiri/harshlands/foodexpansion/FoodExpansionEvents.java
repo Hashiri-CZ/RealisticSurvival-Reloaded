@@ -146,7 +146,78 @@ public class FoodExpansionEvents implements Listener {
             }
         }
 
+        // Overeating: apply satiation multiplier for force-eats
+        UUID uuid = player.getUniqueId();
+        if (overeatingEnabled && forceEatingPlayers.remove(uuid)) {
+            forceEatingPreNudgeLevel.remove(uuid);
+            String foodKey = mat.name();
+            int satiation = data.getSatiation(foodKey);
+            double overeatMultiplier = getOvereatMultiplier(satiation);
+            multiplier *= overeatMultiplier;
+            data.incrementSatiation(foodKey);
+            sendOvereatMessage(player, foodKey, satiation + 1);
+        }
+
         data.addNutrients(profile, multiplier);
+    }
+
+    // --- Overeating: Hunger Nudge ---
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!overeatingEnabled) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getHand() == null) return;
+
+        Player player = event.getPlayer();
+        if (!module.isEnabled(player)) return;
+
+        // Get the food item from the hand that triggered the event
+        ItemStack item = player.getInventory().getItem(event.getHand());
+        if (item == null || !item.getType().isEdible()) return;
+
+        // Only nudge if hunger is at or above threshold (player can't eat normally)
+        if (player.getFoodLevel() < hungerThreshold) return;
+
+        UUID uuid = player.getUniqueId();
+
+        // Cooldown check
+        long now = System.currentTimeMillis();
+        Long lastNudge = forceEatCooldowns.get(uuid);
+        if (lastNudge != null && now - lastNudge < cooldownMs) return;
+
+        // Check satiation — if at hard cap, block eating entirely
+        PlayerNutritionData data = getNutritionData(player);
+        if (data == null) return;
+
+        String foodKey = item.getType().name();
+        int satiation = data.getSatiation(foodKey);
+        double multiplier = getOvereatMultiplier(satiation);
+
+        if (multiplier <= 0.0) {
+            sendOvereatMessage(player, foodKey, satiation);
+            return;
+        }
+
+        // Nudge hunger down by 1 so vanilla allows eating
+        int preNudgeLevel = player.getFoodLevel();
+        player.setFoodLevel(preNudgeLevel - 1);
+
+        // Track this force-eat
+        forceEatingPlayers.add(uuid);
+        forceEatingPreNudgeLevel.put(uuid, preNudgeLevel);
+        forceEatCooldowns.put(uuid, now);
+
+        // Timeout cleanup: if PlayerItemConsumeEvent never fires (player cancelled eating),
+        // restore hunger and clear flags after 5 seconds
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (forceEatingPlayers.remove(uuid)) {
+                Integer preLevel = forceEatingPreNudgeLevel.remove(uuid);
+                if (preLevel != null && player.isOnline() && player.getFoodLevel() == preLevel - 1) {
+                    player.setFoodLevel(preLevel);
+                }
+            }
+        }, 100L);
     }
 
     // --- Vanilla Hunger Slowdown ---
@@ -155,6 +226,8 @@ public class FoodExpansionEvents implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (!module.isEnabled(player)) return;
+        // Skip drain-slowing for force-eat hunger nudges
+        if (forceEatingPlayers.contains(player.getUniqueId())) return;
 
         int oldLevel = player.getFoodLevel();
         int newLevel = event.getFoodLevel();
@@ -189,6 +262,7 @@ public class FoodExpansionEvents implements Listener {
         if (data == null) return;
 
         data.applyDeathPenalty(deathPenaltyPercent);
+        data.clearSatiationCounters();
     }
 
     @EventHandler
@@ -244,6 +318,10 @@ public class FoodExpansionEvents implements Listener {
         UUID uuid = player.getUniqueId();
 
         stopTasks(uuid);
+        // Clean up overeating state
+        forceEatingPlayers.remove(uuid);
+        forceEatingPreNudgeLevel.remove(uuid);
+        forceEatCooldowns.remove(uuid);
 
         // Save if dirty (handled by HLPlayer.saveData() in main quit flow)
     }
