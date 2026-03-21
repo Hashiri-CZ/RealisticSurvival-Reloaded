@@ -1497,6 +1497,8 @@ public class FoodExpansionEvents implements Listener {
 
         BukkitTask effectBukkit = effectBukkitTasks.remove(uuid);
         if (effectBukkit != null) effectBukkit.cancel();
+
+        module.removeHud(uuid);
     }
 
     public void stopAllTasks() {
