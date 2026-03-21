@@ -1,0 +1,222 @@
+FoodExpansion:
+  Defaults:
+    Protein: 50.0
+    Carbs: 50.0
+    Fats: 50.0
+
+  DeathPenalty:
+    PercentLoss: 25.0
+
+  VanillaHunger:
+    DrainMultiplier: 0.5
+
+  Decay:
+    Protein: 1.0
+    Carbs: 1.5
+    Fats: 0.5
+
+  Activity:
+    ExhaustionThreshold: 4.0
+    Sprinting: 1.5
+    Mining: 1.2
+    Fighting: 1.3
+    Swimming: 1.4
+
+  Comfort:
+    Enabled: true
+    MinTier: "HOME"
+    AbsorptionBonus: 0.10
+
+  Effects:
+    WellNourished:
+      Threshold: 60
+      HydrationThreshold: 60
+      MaxHealthBonus: 2.0
+      SpeedMultiplier: 0.10
+    PeakNutrition:
+      Threshold: 80
+      HydrationThreshold: 80
+      MaxHealthBonus: 4.0
+      SpeedMultiplier: 0.10
+      AttackDamageBonus: 0.10
+    Malnourished:
+      Threshold: 30
+      MiningSpeedReduction: 0.30
+    SeverelyMalnourished:
+      Threshold: 15
+      AttackDamageReduction: 0.20
+      SpeedReduction: 0.20
+    Starving:
+      DamagePerTick: 1.0
+      DamageInterval: 80
+
+  DefaultFood:
+    Protein: 2.0
+    Carbs: 2.0
+    Fats: 1.0
+
+  HUD:
+    Protein:
+      X: -120
+    Carbs:
+      X: -80
+    Fats:
+      X: -40
+
+  Foods:
+    COOKED_BEEF:
+      Protein: 25.0
+      Carbs: 5.0
+      Fats: 15.0
+    BREAD:
+      Protein: 5.0
+      Carbs: 30.0
+      Fats: 5.0
+    BAKED_POTATO:
+      Protein: 5.0
+      Carbs: 20.0
+      Fats: 2.0
+    COOKED_SALMON:
+      Protein: 20.0
+      Carbs: 0.0
+      Fats: 20.0
+    GOLDEN_APPLE:
+      Protein: 0.0
+      Carbs: 30.0
+      Fats: 5.0
+    MUSHROOM_STEW:
+      Protein: 10.0
+      Carbs: 15.0
+      Fats: 10.0
+    RABBIT_STEW:
+      Protein: 20.0
+      Carbs: 15.0
+      Fats: 10.0
+    COOKIE:
+      Protein: 0.0
+      Carbs: 15.0
+      Fats: 10.0
+    SWEET_BERRIES:
+      Protein: 0.0
+      Carbs: 10.0
+      Fats: 0.0
+    DRIED_KELP:
+      Protein: 5.0
+      Carbs: 5.0
+      Fats: 0.0
+    COOKED_CHICKEN:
+      Protein: 20.0
+      Carbs: 0.0
+      Fats: 10.0
+    COOKED_MUTTON:
+      Protein: 20.0
+      Carbs: 0.0
+      Fats: 20.0
+    COOKED_PORKCHOP:
+      Protein: 22.0
+      Carbs: 0.0
+      Fats: 25.0
+    COOKED_COD:
+      Protein: 18.0
+      Carbs: 0.0
+      Fats: 15.0
+    COOKED_RABBIT:
+      Protein: 18.0
+      Carbs: 0.0
+      Fats: 8.0
+    APPLE:
+      Protein: 0.0
+      Carbs: 15.0
+      Fats: 0.0
+    MELON_SLICE:
+      Protein: 0.0
+      Carbs: 8.0
+      Fats: 0.0
+    BEETROOT:
+      Protein: 2.0
+      Carbs: 12.0
+      Fats: 0.0
+    CARROT:
+      Protein: 2.0
+      Carbs: 10.0
+      Fats: 0.0
+    POTATO:
+      Protein: 3.0
+      Carbs: 15.0
+      Fats: 0.0
+    BEETROOT_SOUP:
+      Protein: 5.0
+      Carbs: 18.0
+      Fats: 5.0
+    PUMPKIN_PIE:
+      Protein: 3.0
+      Carbs: 20.0
+      Fats: 12.0
+    HONEY_BOTTLE:
+      Protein: 0.0
+      Carbs: 20.0
+      Fats: 0.0
+    GLOW_BERRIES:
+      Protein: 0.0
+      Carbs: 8.0
+      Fats: 0.0
+    ENCHANTED_GOLDEN_APPLE:
+      Protein: 0.0
+      Carbs: 40.0
+      Fats: 10.0
+    CHORUS_FRUIT:
+      Protein: 5.0
+      Carbs: 8.0
+      Fats: 2.0
+    ROTTEN_FLESH:
+      Protein: 5.0
+      Carbs: 0.0
+      Fats: 3.0
+    SPIDER_EYE:
+      Protein: 3.0
+      Carbs: 0.0
+      Fats: 2.0
+    SUSPICIOUS_STEW:
+      Protein: 5.0
+      Carbs: 10.0
+      Fats: 5.0
+    TROPICAL_FISH:
+      Protein: 8.0
+      Carbs: 0.0
+      Fats: 5.0
+    BEEF:
+      Protein: 12.0
+      Carbs: 0.0
+      Fats: 8.0
+    CHICKEN:
+      Protein: 10.0
+      Carbs: 0.0
+      Fats: 5.0
+    PORKCHOP:
+      Protein: 11.0
+      Carbs: 0.0
+      Fats: 12.0
+    MUTTON:
+      Protein: 10.0
+      Carbs: 0.0
+      Fats: 10.0
+    RABBIT:
+      Protein: 9.0
+      Carbs: 0.0
+      Fats: 4.0
+    COD:
+      Protein: 9.0
+      Carbs: 0.0
+      Fats: 7.0
+    SALMON:
+      Protein: 10.0
+      Carbs: 0.0
+      Fats: 10.0
+    PUFFERFISH:
+      Protein: 3.0
+      Carbs: 0.0
+      Fats: 2.0
+    POISONOUS_POTATO:
+      Protein: 1.0
+      Carbs: 5.0
+      Fats: 0.0
