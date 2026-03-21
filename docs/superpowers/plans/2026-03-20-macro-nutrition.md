@@ -1040,11 +1040,12 @@ public class NutritionEffectTask extends BukkitRunnable {
     private final int hudCarbsX;
     private final int hudFatsX;
 
-    // NamespacedKeys for attribute modifiers (use plugin instance to avoid deprecation)
-    private static final NamespacedKey KEY_MAX_HEALTH = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_max_health");
-    private static final NamespacedKey KEY_SPEED = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_speed");
-    private static final NamespacedKey KEY_ATTACK = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_attack");
-    private static final NamespacedKey KEY_MINING = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_mining");
+    // NamespacedKeys for attribute modifiers — instance fields, initialized in constructor
+    // (cannot be static final with HLPlugin.getPlugin() as it may be null at class-load time)
+    private final NamespacedKey keyMaxHealth;
+    private final NamespacedKey keySpeed;
+    private final NamespacedKey keyAttack;
+    private final NamespacedKey keyMining;
 
     public NutritionEffectTask(Player player, PlayerNutritionData data, BossbarHUD hud, FileConfiguration config) {
         this.player = player;
@@ -1073,6 +1074,12 @@ public class NutritionEffectTask extends BukkitRunnable {
         this.hudProteinX = config.getInt("FoodExpansion.HUD.Protein.X", -120);
         this.hudCarbsX = config.getInt("FoodExpansion.HUD.Carbs.X", -80);
         this.hudFatsX = config.getInt("FoodExpansion.HUD.Fats.X", -40);
+
+        // Initialize NamespacedKeys (safe here — plugin is fully enabled by task creation time)
+        this.keyMaxHealth = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_max_health");
+        this.keySpeed = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_speed");
+        this.keyAttack = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_attack");
+        this.keyMining = new NamespacedKey(HLPlugin.getPlugin(), "nutrition_mining");
     }
 
     @Override
@@ -1128,10 +1135,10 @@ public class NutritionEffectTask extends BukkitRunnable {
     // --- Attribute Modifiers ---
 
     public void removeAllModifiers() {
-        removeModifier(Attribute.MAX_HEALTH, KEY_MAX_HEALTH);
-        removeModifier(Attribute.MOVEMENT_SPEED, KEY_SPEED);
-        removeModifier(Attribute.ATTACK_DAMAGE, KEY_ATTACK);
-        removeModifier(Attribute.BLOCK_BREAK_SPEED, KEY_MINING);
+        removeModifier(Attribute.MAX_HEALTH, keyMaxHealth);
+        removeModifier(Attribute.MOVEMENT_SPEED, keySpeed);
+        removeModifier(Attribute.ATTACK_DAMAGE, keyAttack);
+        removeModifier(Attribute.BLOCK_BREAK_SPEED, keyMining);
     }
 
     private void removeModifier(Attribute attribute, NamespacedKey key) {
@@ -1144,20 +1151,20 @@ public class NutritionEffectTask extends BukkitRunnable {
     public void applyModifiers(NutrientTier tier) {
         switch (tier) {
             case PEAK_NUTRITION -> {
-                addModifier(Attribute.MAX_HEALTH, KEY_MAX_HEALTH, peakMaxHealth, AttributeModifier.Operation.ADD_NUMBER);
-                addModifier(Attribute.MOVEMENT_SPEED, KEY_SPEED, peakSpeed, AttributeModifier.Operation.ADD_SCALAR);
-                addModifier(Attribute.ATTACK_DAMAGE, KEY_ATTACK, peakAttackDamage, AttributeModifier.Operation.ADD_SCALAR);
+                addModifier(Attribute.MAX_HEALTH, keyMaxHealth, peakMaxHealth, AttributeModifier.Operation.ADD_NUMBER);
+                addModifier(Attribute.MOVEMENT_SPEED, keySpeed, peakSpeed, AttributeModifier.Operation.ADD_SCALAR);
+                addModifier(Attribute.ATTACK_DAMAGE, keyAttack, peakAttackDamage, AttributeModifier.Operation.ADD_SCALAR);
             }
             case WELL_NOURISHED -> {
-                addModifier(Attribute.MAX_HEALTH, KEY_MAX_HEALTH, wellNourishedMaxHealth, AttributeModifier.Operation.ADD_NUMBER);
-                addModifier(Attribute.MOVEMENT_SPEED, KEY_SPEED, wellNourishedSpeed, AttributeModifier.Operation.ADD_SCALAR);
+                addModifier(Attribute.MAX_HEALTH, keyMaxHealth, wellNourishedMaxHealth, AttributeModifier.Operation.ADD_NUMBER);
+                addModifier(Attribute.MOVEMENT_SPEED, keySpeed, wellNourishedSpeed, AttributeModifier.Operation.ADD_SCALAR);
             }
             case MALNOURISHED -> {
-                addModifier(Attribute.BLOCK_BREAK_SPEED, KEY_MINING, -malnourishedMiningSpeed, AttributeModifier.Operation.ADD_SCALAR);
+                addModifier(Attribute.BLOCK_BREAK_SPEED, keyMining, -malnourishedMiningSpeed, AttributeModifier.Operation.ADD_SCALAR);
             }
             case SEVERELY_MALNOURISHED -> {
-                addModifier(Attribute.ATTACK_DAMAGE, KEY_ATTACK, -severeAttackDamage, AttributeModifier.Operation.ADD_SCALAR);
-                addModifier(Attribute.MOVEMENT_SPEED, KEY_SPEED, -severeSpeed, AttributeModifier.Operation.ADD_SCALAR);
+                addModifier(Attribute.ATTACK_DAMAGE, keyAttack, -severeAttackDamage, AttributeModifier.Operation.ADD_SCALAR);
+                addModifier(Attribute.MOVEMENT_SPEED, keySpeed, -severeSpeed, AttributeModifier.Operation.ADD_SCALAR);
             }
             // NORMAL, STARVING — no attribute modifiers (starving uses direct damage instead)
             default -> {}
@@ -1607,17 +1614,9 @@ public class FoodExpansionModule extends HLModule {
     @Override
     public void shutdown() {
         if (events != null) {
-            events.stopAllTasks();
+            events.stopAllTasks(); // This removes modifiers and HUD elements for all players
             HandlerList.unregisterAll(events);
         }
-
-        // Remove all attribute modifiers from online players
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!isEnabled(player)) continue;
-            NutritionEffectTask dummyForRemoval = null;
-            // Modifiers are already removed in stopAllTasks via stopTasks()
-        }
-
         playerHuds.clear();
     }
 
@@ -1658,19 +1657,36 @@ public class FoodExpansionModule extends HLModule {
         return defaultFood;
     }
 
+    /**
+     * Retrieves the BossbarHUD for a player. Prefers reusing TAN's DisplayTask HUD
+     * to avoid showing duplicate boss bars. Only creates a new HUD if TAN is not active.
+     */
     public BossbarHUD getOrCreateHud(Player player) {
-        // Check if TAN's DisplayTask already created a HUD for this player
-        // For now, create our own. Integration with shared HUD can be refined later.
         return playerHuds.computeIfAbsent(player.getUniqueId(), uuid -> {
+            // Try to reuse TAN's existing BossbarHUD
+            cz.hashiri.harshlands.tan.DisplayTask dt =
+                cz.hashiri.harshlands.tan.DisplayTask.getTasks().get(uuid);
+            if (dt != null) {
+                return dt.getBossbarHud();
+            }
+            // No existing HUD — create a new one (TAN disabled)
             BossbarHUD hud = new BossbarHUD(player);
             hud.show();
             return hud;
         });
     }
 
+    /**
+     * Tracks whether we created a HUD (vs borrowed from DisplayTask).
+     * Only hide HUDs that FoodExpansion created — borrowed ones belong to TAN.
+     */
     public void removeHud(UUID uuid) {
         BossbarHUD hud = playerHuds.remove(uuid);
-        if (hud != null) {
+        if (hud == null) return;
+        // Only hide if this HUD is NOT owned by DisplayTask
+        cz.hashiri.harshlands.tan.DisplayTask dt =
+            cz.hashiri.harshlands.tan.DisplayTask.getTasks().get(uuid);
+        if (dt == null || dt.getBossbarHud() != hud) {
             hud.hide();
         }
     }
@@ -1681,7 +1697,7 @@ public class FoodExpansionModule extends HLModule {
 }
 ```
 
-**IMPORTANT:** The `BossbarHUD` constructor takes `Audience` (which `Player` implements on Paper). However, TAN's `DisplayTask` already manages a `BossbarHUD` per player. The implementor MUST check if there's a way to access the existing HUD (e.g., via a static map in `DisplayTask` or player metadata). If a shared HUD exists, change `getOrCreateHud()` to retrieve it instead of creating a duplicate boss bar. If no shared access exists, a second BossbarHUD is acceptable as a temporary solution.
+**NOTE:** `getOrCreateHud()` reuses TAN's `DisplayTask` BossbarHUD when available via `DisplayTask.getTasks().get(uuid).getBossbarHud()`. Only creates a new HUD if TAN is disabled. `removeHud()` only hides HUDs that FoodExpansion created (not borrowed from DisplayTask). Verify `DisplayTask.getTasks()` and `getBossbarHud()` exist and are accessible.
 
 **NOTE:** Verify `DebugProvider` interface at `cz.hashiri.harshlands.debug.DebugProvider` and `Utils.logModuleLifecycle()` exist with expected signatures. Adjust if they differ.
 
