@@ -8,6 +8,7 @@ import cz.hashiri.harshlands.utils.DisplayTask;
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -29,6 +30,8 @@ public class FoodExpansionModule extends HLModule {
 
     // Per-player BossbarHUD references (may be shared with DisplayTask from TAN)
     private final Map<UUID, BossbarHUD> playerHuds = new HashMap<>();
+    private BukkitTask autoSaveTask;
+    private BukkitTask satiationDecayTask;
 
     public FoodExpansionModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of()); // No hard deps, soft deps handled at runtime
@@ -51,12 +54,15 @@ public class FoodExpansionModule extends HLModule {
 
         Utils.logModuleLifecycle("Initializing", NAME);
 
+        // NOTE: Decay and effect tasks cache config values at construction.
+        // A server reload (/hl reload) will NOT update values for currently online players.
+        // Players must rejoin for new config values to take effect.
         events = new FoodExpansionEvents(this, plugin);
         Bukkit.getPluginManager().registerEvents(events, plugin);
 
         // Auto-save every 5 minutes (6000 ticks), SYNC timer so saveData() snapshots on main thread
         // (the actual DB write inside saveData() is already async via HLScheduler)
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        autoSaveTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (HLPlayer hlPlayer : new java.util.ArrayList<>(HLPlayer.getPlayers().values())) {
                 cz.hashiri.harshlands.data.foodexpansion.DataModule dm = hlPlayer.getNutritionDataModule();
                 if (dm != null && dm.isDirty()) {
@@ -64,10 +70,24 @@ public class FoodExpansionModule extends HLModule {
                 }
             }
         }, 6000L, 6000L);
+
+        // Satiation decay timer — decrements all per-food satiation counters every N minutes
+        FileConfiguration feConfig = getUserConfig().getConfig();
+        long decayIntervalTicks = feConfig.getLong("FoodExpansion.Overeating.DecayIntervalMinutes", 3) * 60 * 20;
+        satiationDecayTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for (HLPlayer hlPlayer : new java.util.ArrayList<>(HLPlayer.getPlayers().values())) {
+                cz.hashiri.harshlands.data.foodexpansion.DataModule dm = hlPlayer.getNutritionDataModule();
+                if (dm != null) {
+                    dm.getData().decaySatiationCounters();
+                }
+            }
+        }, decayIntervalTicks, decayIntervalTicks);
     }
 
     @Override
     public void shutdown() {
+        if (autoSaveTask != null) { autoSaveTask.cancel(); autoSaveTask = null; }
+        if (satiationDecayTask != null) { satiationDecayTask.cancel(); satiationDecayTask = null; }
         if (events != null) {
             events.stopAllTasks(); // This removes modifiers and HUD elements for all players
             HandlerList.unregisterAll(events);
@@ -105,7 +125,7 @@ public class FoodExpansionModule extends HLModule {
         NutrientProfile profile = foodMap.get(itemKey.toUpperCase());
         if (profile != null) return profile;
 
-        // Return default for unlisted foods (the consume event already filters non-food items)
+        // Return default for unlisted foods
         if (defaultFood.protein() == 0.0 && defaultFood.carbs() == 0.0 && defaultFood.fats() == 0.0) {
             return null; // Default is all zeros — treat as "no nutrition data"
         }
