@@ -82,6 +82,11 @@ FearMeter:
       EndTime: 23000
       Rate: 0.5
 
+    Malnourished:
+      Enabled: true
+      Threshold: 30.0
+      Amount: 3.0
+
   Reductions:
     BrightLight:
       Enabled: true

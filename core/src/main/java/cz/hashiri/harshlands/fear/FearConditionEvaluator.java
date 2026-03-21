@@ -96,12 +96,13 @@ public class FearConditionEvaluator {
         double cold         = config.getBoolean("FearMeter.Conditions.Cold.Enabled", true)             ? evalCold(player)                : 0.0;
         double storm        = config.getBoolean("FearMeter.Conditions.Storm.Enabled", true)            ? evalStorm(player)               : 0.0;
         double night        = config.getBoolean("FearMeter.Conditions.Night.Enabled", true)            ? evalNight(player)               : 0.0;
+        double malnourished = config.getBoolean("FearMeter.Conditions.Malnourished.Enabled", true)  ? evalMalnourished(player)        : 0.0;
 
         double brightLight = config.getBoolean("FearMeter.Reductions.BrightLight.Enabled", true)   ? evalBrightLight(player)    : 0.0;
         double nearFire    = config.getBoolean("FearMeter.Reductions.NearFireSource.Enabled", true) ? evalNearFireSource(player) : 0.0;
         double companions  = config.getBoolean("FearMeter.Reductions.NearCompanions.Enabled", true) ? evalNearCompanions(snapshot) : 0.0;
 
-        double netDelta = darkness + cave + underground + lowHealth + enemies + cold + storm + night
+        double netDelta = darkness + cave + underground + lowHealth + enemies + cold + storm + night + malnourished
                         - brightLight - nearFire - companions;
 
         if (config.getBoolean("FearMeter.PassiveDecay.Enabled", true)) {
@@ -250,5 +251,23 @@ public class FearConditionEvaluator {
             return Math.min(snapshot.companions().size() * rateEach, maxBonus);
         }
         return 0.0;
+    }
+
+    private double evalMalnourished(Player player) {
+        cz.hashiri.harshlands.data.HLModule feModule = cz.hashiri.harshlands.data.HLModule.getModule(
+            cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
+        if (feModule == null || !feModule.isGloballyEnabled()) return 0.0;
+
+        cz.hashiri.harshlands.data.HLPlayer hlPlayer = cz.hashiri.harshlands.data.HLPlayer.getPlayers()
+            .get(player.getUniqueId());
+        if (hlPlayer == null) return 0.0;
+
+        cz.hashiri.harshlands.data.foodexpansion.DataModule dm = hlPlayer.getNutritionDataModule();
+        if (dm == null) return 0.0;
+
+        double threshold = config.getDouble("FearMeter.Conditions.Malnourished.Threshold", 30.0);
+        double rate = config.getDouble("FearMeter.Conditions.Malnourished.Amount", 3.0);
+        int count = dm.getData().countBelowThreshold(threshold);
+        return count * rate;
     }
 }
