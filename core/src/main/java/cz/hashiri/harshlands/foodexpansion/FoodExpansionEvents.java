@@ -29,10 +29,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import java.util.HashSet;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
+
+import cz.hashiri.harshlands.foodexpansion.items.CustomFoodRegistry;
+import cz.hashiri.harshlands.foodexpansion.items.CustomFoodDefinition;
+import cz.hashiri.harshlands.foodexpansion.items.FoodFlag;
+import cz.hashiri.harshlands.foodexpansion.items.FoodEffect;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +66,8 @@ public class FoodExpansionEvents implements Listener {
     private final String msgSevereText;
     private final int msgBlockedThreshold;
     private final String msgBlockedText;
+    private final int nauseaThreshold;
+    private final int nauseaDurationTicks;
 
     // Per-player tasks for cleanup on quit
     private final Map<UUID, BukkitTask> decayTasks = new HashMap<>();
@@ -103,11 +112,13 @@ public class FoodExpansionEvents implements Listener {
         }
 
         this.msgWarningThreshold = config.getInt("FoodExpansion.Overeating.Messages.Warning", 2);
-        this.msgWarningText = config.getString("FoodExpansion.Overeating.Messages.WarningText", "&7You're getting tired of &f{food}&7...");
+        this.msgWarningText = config.getString("FoodExpansion.Overeating.Messages.WarningText", "&7You're getting tired of &f%food%&7...");
         this.msgSevereThreshold = config.getInt("FoodExpansion.Overeating.Messages.Severe", 3);
-        this.msgSevereText = config.getString("FoodExpansion.Overeating.Messages.SevereText", "&7You can barely stomach more &f{food}&7.");
+        this.msgSevereText = config.getString("FoodExpansion.Overeating.Messages.SevereText", "&7You can barely stomach more &f%food%&7.");
         this.msgBlockedThreshold = config.getInt("FoodExpansion.Overeating.Messages.Blocked", 4);
-        this.msgBlockedText = config.getString("FoodExpansion.Overeating.Messages.BlockedText", "&cYou can't eat any more &f{food}&c right now.");
+        this.msgBlockedText = config.getString("FoodExpansion.Overeating.Messages.BlockedText", "&cYou can't eat any more &f%food%&c right now.");
+        this.nauseaThreshold = config.getInt("FoodExpansion.Overeating.Nausea.Threshold", 3);
+        this.nauseaDurationTicks = config.getInt("FoodExpansion.Overeating.Nausea.DurationTicks", 160);
     }
 
     // --- Food Consumption ---
@@ -120,7 +131,17 @@ public class FoodExpansionEvents implements Listener {
         Material mat = event.getItem().getType();
         if (!mat.isEdible()) return; // Skip potions, milk, ominous bottles
 
-        String itemKey = mat.name();
+        // Resolve food identity: check PDC first (custom food), fall back to Material (vanilla)
+        CustomFoodRegistry cfRegistry = module.getCustomFoodRegistry();
+        String itemKey;
+        CustomFoodDefinition customDef = null;
+        if (cfRegistry != null && cfRegistry.isCustomFood(event.getItem())) {
+            itemKey = cfRegistry.getFoodId(event.getItem());
+            customDef = cfRegistry.getDefinition(itemKey);
+        } else {
+            itemKey = mat.name();
+        }
+
         NutrientProfile profile = module.getNutrientProfile(itemKey);
         if (profile == null) return;
 
@@ -150,15 +171,41 @@ public class FoodExpansionEvents implements Listener {
         UUID uuid = player.getUniqueId();
         if (overeatingEnabled && forceEatingPlayers.remove(uuid)) {
             forceEatingPreNudgeLevel.remove(uuid);
-            String foodKey = mat.name();
+            String foodKey = itemKey; // Use PDC-resolved key for custom foods
             int satiation = data.getSatiation(foodKey);
             double overeatMultiplier = getOvereatMultiplier(satiation);
             multiplier *= overeatMultiplier;
             data.incrementSatiation(foodKey);
             sendOvereatMessage(player, foodKey, satiation + 1);
+            // Apply nausea at high satiation
+            if (satiation + 1 >= nauseaThreshold) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, nauseaDurationTicks, 0, false, true, true));
+            }
         }
 
         data.addNutrients(profile, multiplier);
+
+        // Apply custom food effects (potion effects)
+        if (customDef != null && customDef.getEffects() != null) {
+            for (FoodEffect effect : customDef.getEffects()) {
+                if (effect.chance() >= 1.0 || Math.random() < effect.chance()) {
+                    player.addPotionEffect(new PotionEffect(
+                        effect.type(), effect.durationTicks(), effect.amplifier(), false, true, true));
+                }
+            }
+        }
+
+        // BOWL flag safety: return bowl if base material didn't already
+        if (customDef != null && customDef.hasFlag(FoodFlag.BOWL)) {
+            Material baseMat = customDef.getBaseMaterial();
+            if (baseMat != Material.MUSHROOM_STEW && baseMat != Material.BEETROOT_SOUP
+                    && baseMat != Material.RABBIT_STEW && baseMat != Material.SUSPICIOUS_STEW) {
+                ItemStack bowl = new ItemStack(Material.BOWL);
+                if (!player.getInventory().addItem(bowl).isEmpty()) {
+                    player.getWorld().dropItem(player.getLocation(), bowl);
+                }
+            }
+        }
     }
 
     // --- Overeating: Hunger Nudge ---
@@ -176,8 +223,21 @@ public class FoodExpansionEvents implements Listener {
         ItemStack item = player.getInventory().getItem(event.getHand());
         if (item == null || !item.getType().isEdible()) return;
 
+        // Resolve food key via PDC for custom foods
+        CustomFoodRegistry cfRegistry = module.getCustomFoodRegistry();
+        String foodKey;
+        boolean isAlwaysEat = false;
+        if (cfRegistry != null && cfRegistry.isCustomFood(item)) {
+            foodKey = cfRegistry.getFoodId(item);
+            CustomFoodDefinition def = cfRegistry.getDefinition(foodKey);
+            isAlwaysEat = def != null && def.hasFlag(FoodFlag.ALWAYS_EAT);
+        } else {
+            foodKey = item.getType().name();
+        }
+
         // Only nudge if hunger is at or above threshold (player can't eat normally)
-        if (player.getFoodLevel() < hungerThreshold) return;
+        // Exception: ALWAYS_EAT foods always get the nudge
+        if (player.getFoodLevel() < hungerThreshold && !isAlwaysEat) return;
 
         UUID uuid = player.getUniqueId();
 
@@ -190,7 +250,6 @@ public class FoodExpansionEvents implements Listener {
         PlayerNutritionData data = getNutritionData(player);
         if (data == null) return;
 
-        String foodKey = item.getType().name();
         int satiation = data.getSatiation(foodKey);
         double multiplier = getOvereatMultiplier(satiation);
 
@@ -426,7 +485,20 @@ public class FoodExpansionEvents implements Listener {
     }
 
     private void sendOvereatMessage(Player player, String foodKey, int satiationCount) {
-        String foodName = formatFoodName(foodKey);
+        String foodName;
+        CustomFoodRegistry cfRegistry = module.getCustomFoodRegistry();
+        if (cfRegistry != null) {
+            CustomFoodDefinition def = cfRegistry.getDefinition(foodKey);
+            if (def != null) {
+                foodName = org.bukkit.ChatColor.stripColor(
+                    cz.hashiri.harshlands.utils.Utils.translateMsg(def.getDisplayName(), null, null));
+            } else {
+                foodName = formatFoodName(foodKey);
+            }
+        } else {
+            foodName = formatFoodName(foodKey);
+        }
+
         String msg = null;
         if (satiationCount >= msgBlockedThreshold) {
             msg = msgBlockedText;
