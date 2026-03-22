@@ -67,7 +67,7 @@ public class CustomFoodRecipes implements Listener {
 
     private void registerShapeless(String foodId, ConfigurationSection recipeSec) {
         NamespacedKey key = new NamespacedKey(plugin, "food_" + foodId.toLowerCase());
-        int resultCount = recipeSec.getInt("Result.Count", 1);
+        int resultCount = recipeSec.getInt("Count", recipeSec.getInt("Result.Count", 1));
         ItemStack result = registry.createItemStack(foodId, resultCount);
 
         ShapelessRecipe recipe = new ShapelessRecipe(key, result);
@@ -84,7 +84,7 @@ public class CustomFoodRecipes implements Listener {
 
     private void registerShaped(String foodId, ConfigurationSection recipeSec) {
         NamespacedKey key = new NamespacedKey(plugin, "food_" + foodId.toLowerCase());
-        int resultCount = recipeSec.getInt("Result.Count", 1);
+        int resultCount = recipeSec.getInt("Count", recipeSec.getInt("Result.Count", 1));
         ItemStack result = registry.createItemStack(foodId, resultCount);
 
         ShapedRecipe recipe = new ShapedRecipe(key, result);

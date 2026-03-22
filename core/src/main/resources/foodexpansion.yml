@@ -288,7 +288,7 @@ FoodExpansion:
         CookingTime: 200
     horse_meat:
       DisplayName: "&fHorse Meat"
-      BaseMaterial: RAW_BEEF
+      BaseMaterial: BEEF
       CustomModelData: 10014
       Nutrition:
         Hunger: 3
@@ -319,7 +319,7 @@ FoodExpansion:
         CookingTime: 200
     wolf_meat:
       DisplayName: "&fWolf Meat"
-      BaseMaterial: RAW_BEEF
+      BaseMaterial: BEEF
       CustomModelData: 10023
       Nutrition:
         Hunger: 2
@@ -350,7 +350,7 @@ FoodExpansion:
         CookingTime: 200
     ocelot_meat:
       DisplayName: "&fOcelot Meat"
-      BaseMaterial: RAW_BEEF
+      BaseMaterial: BEEF
       CustomModelData: 10025
       Nutrition:
         Hunger: 2
@@ -381,7 +381,7 @@ FoodExpansion:
         CookingTime: 200
     parrot_meat:
       DisplayName: "&fRaw Parrot"
-      BaseMaterial: RAW_CHICKEN
+      BaseMaterial: CHICKEN
       CustomModelData: 10029
       Nutrition:
         Hunger: 2
@@ -412,7 +412,7 @@ FoodExpansion:
         CookingTime: 200
     llama_meat:
       DisplayName: "&fRaw Llama"
-      BaseMaterial: RAW_BEEF
+      BaseMaterial: BEEF
       CustomModelData: 10031
       Nutrition:
         Hunger: 2
@@ -443,7 +443,7 @@ FoodExpansion:
         CookingTime: 200
     polar_bear_meat:
       DisplayName: "&fRaw Polar Bear"
-      BaseMaterial: RAW_BEEF
+      BaseMaterial: BEEF
       CustomModelData: 10033
       Nutrition:
         Hunger: 3
@@ -474,7 +474,7 @@ FoodExpansion:
         CookingTime: 200
     bat_wing:
       DisplayName: "&fBat Wing"
-      BaseMaterial: RAW_CHICKEN
+      BaseMaterial: CHICKEN
       CustomModelData: 10018
       Nutrition:
         Hunger: 1
@@ -515,7 +515,7 @@ FoodExpansion:
         CookingTime: 200
     squid:
       DisplayName: "&fRaw Squid"
-      BaseMaterial: RAW_COD
+      BaseMaterial: COD
       CustomModelData: 10007
       Nutrition:
         Hunger: 1
