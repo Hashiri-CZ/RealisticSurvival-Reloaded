@@ -125,11 +125,21 @@ public class Commands implements CommandExecutor {
                         return true;
                     }
 
-                    HLItem customItem = HLItem.getItem(args[2]); // get the item from its command name
+                    // Try HLItem first, then fall back to custom food registry
+                    ItemStack customItem = HLItem.getItem(args[2]);
 
                     if (!Utils.isItemReal(customItem)) {
-                        sender.sendMessage(Utils.translateMsg(config.getString("MisspelledItemName"), sender, Map.of("MISSPELLED_NAME", args[2])));
-                        return true;
+                        // Check custom food registry
+                        cz.hashiri.harshlands.foodexpansion.FoodExpansionModule feModule =
+                            (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule)
+                            cz.hashiri.harshlands.data.HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
+                        if (feModule != null && feModule.getCustomFoodRegistry() != null
+                                && feModule.getCustomFoodRegistry().getDefinition(args[2]) != null) {
+                            customItem = feModule.getCustomFoodRegistry().createItemStack(args[2], 1);
+                        } else {
+                            sender.sendMessage(Utils.translateMsg(config.getString("MisspelledItemName"), sender, Map.of("MISSPELLED_NAME", args[2])));
+                            return true;
+                        }
                     }
 
                     int amount = 1;
