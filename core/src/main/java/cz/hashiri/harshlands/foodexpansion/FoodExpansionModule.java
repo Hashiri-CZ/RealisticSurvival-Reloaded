@@ -211,4 +211,11 @@ public class FoodExpansionModule extends HLModule {
     public CustomFoodRegistry getCustomFoodRegistry() {
         return customFoodRegistry;
     }
+
+    /**
+     * Returns all registered custom food recipe keys (for recipe book discovery).
+     */
+    public java.util.List<org.bukkit.NamespacedKey> getCustomFoodRecipeKeys() {
+        return customFoodRecipes != null ? customFoodRecipes.getRegisteredKeys() : java.util.List.of();
+    }
 }

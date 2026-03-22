@@ -351,6 +351,9 @@ public class FoodExpansionEvents implements Listener {
         Player player = event.getPlayer();
         if (!module.isEnabled(player)) return;
 
+        // Discover all custom food recipes in the recipe book
+        discoverCustomFoodRecipes(player);
+
         // Poll every 10 ticks (0.5s) up to 100 ticks (5s) for data readiness
         new BukkitRunnable() {
             private int attempts = 0;
@@ -422,12 +425,16 @@ public class FoodExpansionEvents implements Listener {
         if (wasEnabled && !nowEnabled) {
             // Entering disabled world — stopTasks() handles modifier removal and HUD cleanup
             stopTasks(uuid);
+            // Undiscover custom food recipes
+            undiscoverCustomFoodRecipes(player);
         } else if (!wasEnabled && nowEnabled) {
             // Entering enabled world — start tasks
             PlayerNutritionData data = getNutritionData(player);
             if (data != null) {
                 startTasks(player, data);
             }
+            // Discover custom food recipes
+            discoverCustomFoodRecipes(player);
         }
     }
 
@@ -470,6 +477,22 @@ public class FoodExpansionEvents implements Listener {
     public void stopAllTasks() {
         for (UUID uuid : new java.util.ArrayList<>(decayTasks.keySet())) {
             stopTasks(uuid);
+        }
+    }
+
+    // --- Recipe Discovery ---
+
+    private void discoverCustomFoodRecipes(Player player) {
+        java.util.List<org.bukkit.NamespacedKey> keys = module.getCustomFoodRecipeKeys();
+        if (!keys.isEmpty()) {
+            player.discoverRecipes(keys);
+        }
+    }
+
+    private void undiscoverCustomFoodRecipes(Player player) {
+        java.util.List<org.bukkit.NamespacedKey> keys = module.getCustomFoodRecipeKeys();
+        if (!keys.isEmpty()) {
+            player.undiscoverRecipes(keys);
         }
     }
 
