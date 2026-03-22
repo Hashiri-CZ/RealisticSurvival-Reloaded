@@ -1,5 +1,6 @@
 package cz.hashiri.harshlands.foodexpansion;
 
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,6 +44,7 @@ public class NutritionDecayTask extends BukkitRunnable {
             cancel();
             return;
         }
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
         // 1. Accumulate activity exhaustion
         if (player.isSprinting()) {

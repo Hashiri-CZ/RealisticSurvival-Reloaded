@@ -7,6 +7,7 @@ import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.utils.BossbarHUD;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -23,7 +24,8 @@ public class NutritionEffectTask extends BukkitRunnable {
 
     private final Player player;
     private final PlayerNutritionData data;
-    private final BossbarHUD hud;
+    private final FoodExpansionModule module;
+    private BossbarHUD hud;
 
     // Config values
     private final double wellNourishedThreshold;
@@ -56,10 +58,10 @@ public class NutritionEffectTask extends BukkitRunnable {
     private final NamespacedKey keyAttack;
     private final NamespacedKey keyMining;
 
-    public NutritionEffectTask(Player player, PlayerNutritionData data, BossbarHUD hud, FileConfiguration config) {
+    public NutritionEffectTask(Player player, PlayerNutritionData data, FoodExpansionModule module, FileConfiguration config) {
         this.player = player;
         this.data = data;
-        this.hud = hud;
+        this.module = module;
 
         this.wellNourishedThreshold = config.getDouble("FoodExpansion.Effects.WellNourished.Threshold", 60);
         this.wellNourishedHydration = config.getDouble("FoodExpansion.Effects.WellNourished.HydrationThreshold", 60);
@@ -96,6 +98,12 @@ public class NutritionEffectTask extends BukkitRunnable {
         if (!player.isOnline()) {
             cancel();
             return;
+        }
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+
+        // Lazy HUD initialization — by this point TAN's DisplayTask should be registered
+        if (hud == null) {
+            hud = module.getOrCreateHud(player);
         }
 
         // 1. Get hydration from TAN
@@ -194,9 +202,9 @@ public class NutritionEffectTask extends BukkitRunnable {
     // --- HUD ---
 
     private void updateHud() {
-        int p = (int) data.getProtein();
-        int c = (int) data.getCarbs();
-        int f = (int) data.getFats();
+        int p = (int) Math.round(data.getProtein());
+        int c = (int) Math.round(data.getCarbs());
+        int f = (int) Math.round(data.getFats());
 
         // Only update if changed
         if (p == data.getLastHudProtein() && c == data.getLastHudCarbs() && f == data.getLastHudFats()) {
@@ -216,6 +224,7 @@ public class NutritionEffectTask extends BukkitRunnable {
     }
 
     public void removeHudElements() {
+        if (hud == null) return;
         hud.removeElement("nutrition_protein");
         hud.removeElement("nutrition_carbs");
         hud.removeElement("nutrition_fats");

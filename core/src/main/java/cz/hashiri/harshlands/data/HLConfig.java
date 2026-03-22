@@ -136,19 +136,25 @@ public class HLConfig extends FileBuilder {
 
     /** Semantic version comparison helper */
     private boolean isOlderVersion(String current, String latest) {
+        if (current == null || current.isBlank()) return true;
+        if (latest == null || latest.isBlank()) return false;
         String[] currParts = current.replace("-RELEASE", "").split("\\.");
         String[] latestParts = latest.replace("-RELEASE", "").split("\\.");
 
         for (int i = 0; i < Math.max(currParts.length, latestParts.length); i++) {
-            int currNum = i < currParts.length ? Integer.parseInt(currParts[i]) : 0;
-            int latestNum = i < latestParts.length ? Integer.parseInt(latestParts[i]) : 0;
+            int currNum = i < currParts.length ? parseIntSafe(currParts[i]) : 0;
+            int latestNum = i < latestParts.length ? parseIntSafe(latestParts[i]) : 0;
             if (currNum < latestNum) return true;
             if (currNum > latestNum) return false;
         }
         return false;
     }
 
-
+    private static int parseIntSafe(String s) {
+        if (s == null || s.isBlank()) return 0;
+        try { return Integer.parseInt(s.trim()); }
+        catch (NumberFormatException e) { return 0; }
+    }
 
     /**
      * Gets the config

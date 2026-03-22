@@ -6,6 +6,7 @@ import cz.hashiri.harshlands.data.db.HLDatabase;
 import cz.hashiri.harshlands.foodexpansion.FoodExpansionModule;
 import cz.hashiri.harshlands.foodexpansion.PlayerNutritionData;
 import cz.hashiri.harshlands.rsv.HLPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,7 @@ public class DataModule implements HLDataModule {
     private final UUID id;
     private final HLDatabase database;
     private final PlayerNutritionData data;
+    private volatile boolean dataReady = false;
 
     public DataModule(Player player) {
         FoodExpansionModule module = (FoodExpansionModule) HLModule.getModule(FoodExpansionModule.NAME);
@@ -33,16 +35,24 @@ public class DataModule implements HLDataModule {
 
     @Override
     public void retrieveData() {
+        HLPlugin plugin = HLPlugin.getPlugin();
         database.loadNutritionData(id).thenAccept(optional -> {
-            if (optional.isPresent()) {
-                HLDatabase.NutritionDataRow row = optional.get();
-                data.restoreFromRow(
-                    row.protein(), row.carbs(), row.fats(),
-                    row.proteinExhaustion(), row.carbsExhaustion(), row.fatsExhaustion()
-                );
-            } else {
-                saveData();
-            }
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (optional.isPresent()) {
+                    HLDatabase.NutritionDataRow row = optional.get();
+                    data.restoreFromRow(
+                        row.protein(), row.carbs(), row.fats(),
+                        row.proteinExhaustion(), row.carbsExhaustion(), row.fatsExhaustion()
+                    );
+                    dataReady = true;
+                } else {
+                    saveData();
+                    dataReady = true;
+                }
+            });
+        }).exceptionally(ex -> {
+            plugin.getLogger().warning("Failed to load nutrition data for " + id + ": " + ex.getMessage());
+            return null;
         });
     }
 
@@ -52,8 +62,12 @@ public class DataModule implements HLDataModule {
             data.getProtein(), data.getCarbs(), data.getFats(),
             data.getProteinExhaustion(), data.getCarbsExhaustion(), data.getFatsExhaustion()
         );
-        data.clearDirty();
-        database.saveNutritionData(id, snapshot);
+        database.saveNutritionData(id, snapshot).thenRun(() -> {
+            Bukkit.getScheduler().runTask(HLPlugin.getPlugin(), () -> data.clearDirty());
+        }).exceptionally(ex -> {
+            HLPlugin.getPlugin().getLogger().warning("Failed to save nutrition data for " + id + ": " + ex.getMessage());
+            return null;
+        });
     }
 
     public PlayerNutritionData getData() {
@@ -62,5 +76,9 @@ public class DataModule implements HLDataModule {
 
     public boolean isDirty() {
         return data.isDirty();
+    }
+
+    public boolean isDataReady() {
+        return dataReady;
     }
 }
