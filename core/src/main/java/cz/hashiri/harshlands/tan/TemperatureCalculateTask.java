@@ -37,9 +37,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.bukkit.configuration.ConfigurationSection;
 
 public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
 
@@ -55,12 +58,41 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
     private double equilibriumTemp;
     private double regulate = 0D;
     private double change = 0D;
-    private double regulateEnv = 0D;
-    private double changeEnv = 0D;
+    private volatile double regulateEnv = 0D;
+    private volatile double changeEnv = 0D;
     private final double seasonsDefaultTemp;
     private final double seasonsColdMultiplier;
     private final double seasonsHotMultiplier;
     private final double distSqr;
+
+    // --- Cached config values (read once in constructor) ---
+    private final double hotCutoff;
+    private final double hotMultiplier;
+    private final double warmCutoff;
+    private final double warmMultiplier;
+    private final double moderateCutoff;
+    private final double moderateMultiplier;
+    private final double coolCutoff;
+    private final double coolMultiplier;
+    private final double coldCutoff;
+    private final double coldMultiplier;
+    private final double frigidMultiplier;
+    private final double tempMaxChange;
+    private final double daylightCycleMultiplier;
+    private final int cubeLength;
+
+    private final boolean hypothermiaEnabled;
+    private final double hypothermiaTemp;
+    private final boolean coldBreathEnabled;
+    private final double coldBreathMaxTemp;
+    private final boolean hyperthermiaEnabled;
+    private final double hyperthermiaTemp;
+    private final boolean sweatingEnabled;
+    private final double sweatingMinTemp;
+
+    private record AddEntry(double value, boolean isRegulatory, boolean hasEnabledFlag, boolean enabled) {}
+    private final Map<String, AddEntry> addEntries;
+
     private double temp;
     private Location currentLoc;
     public static final double MINIMUM_TEMPERATURE = 0.0;
@@ -78,12 +110,41 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
         this.temp = player.getTanDataModule().getTemperature();
         this.allowedWorlds = module.getAllowedWorlds();
         this.currentLoc = player.getPlayer().getLocation();
-        this.distSqr = config.getDouble("Temperature.Environment.CubeLength") * config.getDouble("Temperature.Environment.CubeLength");
+        this.cubeLength = config.getInt("Temperature.Environment.CubeLength");
+        this.distSqr = (double) cubeLength * cubeLength;
         this.rs = (RealisticSeasons) CompatiblePlugin.getPlugin(RealisticSeasons.NAME);
 
         this.seasonsDefaultTemp = rs.getDefaultTemperature();
         this.seasonsColdMultiplier = rs.getColdMultiplier();
         this.seasonsHotMultiplier = rs.getHotMultiplier();
+
+        // Cache biome temperature thresholds
+        this.hotCutoff = config.getDouble("Temperature.Environment.BiomeTemperature.HotCutoff");
+        this.hotMultiplier = config.getDouble("Temperature.Environment.BiomeTemperature.HotMultiplier");
+        this.warmCutoff = config.getDouble("Temperature.Environment.BiomeTemperature.WarmCutoff");
+        this.warmMultiplier = config.getDouble("Temperature.Environment.BiomeTemperature.WarmMultiplier");
+        this.moderateCutoff = config.getDouble("Temperature.Environment.BiomeTemperature.ModerateCutoff");
+        this.moderateMultiplier = config.getDouble("Temperature.Environment.BiomeTemperature.ModerateMultiplier");
+        this.coolCutoff = config.getDouble("Temperature.Environment.BiomeTemperature.CoolCutoff");
+        this.coolMultiplier = config.getDouble("Temperature.Environment.BiomeTemperature.CoolMultiplier");
+        this.coldCutoff = config.getDouble("Temperature.Environment.BiomeTemperature.ColdCutoff");
+        this.coldMultiplier = config.getDouble("Temperature.Environment.BiomeTemperature.ColdMultiplier");
+        this.frigidMultiplier = config.getDouble("Temperature.Environment.BiomeTemperature.FrigidMultiplier");
+        this.tempMaxChange = config.getDouble("Temperature.MaxChange");
+        this.daylightCycleMultiplier = config.getDouble("Temperature.Environment.DaylightCycleMultiplier");
+
+        this.hypothermiaEnabled = config.getBoolean("Temperature.Hypothermia.Enabled");
+        this.hypothermiaTemp = config.getDouble("Temperature.Hypothermia.Temperature");
+        this.coldBreathEnabled = config.getBoolean("Temperature.ColdBreath.Enabled");
+        this.coldBreathMaxTemp = config.getDouble("Temperature.ColdBreath.MaximumTemperature");
+        this.hyperthermiaEnabled = config.getBoolean("Temperature.Hyperthermia.Enabled");
+        this.hyperthermiaTemp = config.getDouble("Temperature.Hyperthermia.Temperature");
+        this.sweatingEnabled = config.getBoolean("Temperature.Sweating.Enabled");
+        this.sweatingMinTemp = config.getDouble("Temperature.Sweating.MinimumTemperature");
+
+        this.addEntries = buildAddEntries(config);
+
+        // MUST be last — makes task visible to other threads
         tasks.put(id, this);
     }
 
@@ -99,8 +160,6 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
                 temp = (seasonsTemp - seasonsDefaultTemp) * (seasonsTemp > seasonsDefaultTemp ? seasonsHotMultiplier : seasonsColdMultiplier) + MAXIMUM_TEMPERATURE / 2;
             }
             else {
-                double tempMaxChange = config.getDouble("Temperature.MaxChange");
-
                 regulate = 0D;
                 change = 0D;
                 World pWorld = player.getWorld();
@@ -111,32 +170,32 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
 
                 double biomeTemp = pWorld.getTemperature((int) px, (int) py, (int) pz); // create a variable to store the temperature
 
-                if (biomeTemp > config.getDouble("Temperature.Environment.BiomeTemperature.HotCutoff")) {
-                    biomeTemp *= config.getDouble("Temperature.Environment.BiomeTemperature.HotMultiplier");
+                if (biomeTemp > hotCutoff) {
+                    biomeTemp *= hotMultiplier;
                 }
                 else {
                     // less than hot cutoff
-                    if (biomeTemp >= config.getDouble("Temperature.Environment.BiomeTemperature.WarmCutoff")) {
-                        biomeTemp *= config.getDouble("Temperature.Environment.BiomeTemperature.WarmMultiplier");
+                    if (biomeTemp >= warmCutoff) {
+                        biomeTemp *= warmMultiplier;
                     }
                     // less than warm cutoff
-                    else if (biomeTemp >= config.getDouble("Temperature.Environment.BiomeTemperature.ModerateCutoff")) {
-                        biomeTemp *= config.getDouble("Temperature.Environment.BiomeTemperature.ModerateMultiplier");
+                    else if (biomeTemp >= moderateCutoff) {
+                        biomeTemp *= moderateMultiplier;
                     }
                     // less than moderate cutoff
-                    else if (biomeTemp >= config.getDouble("Temperature.Environment.BiomeTemperature.CoolCutoff")) {
-                        biomeTemp *= config.getDouble("Temperature.Environment.BiomeTemperature.CoolMultiplier");
+                    else if (biomeTemp >= coolCutoff) {
+                        biomeTemp *= coolMultiplier;
                     }
                     // less than cool cutoff
-                    else if (biomeTemp >= config.getDouble("Temperature.Environment.BiomeTemperature.ColdCutoff")) {
-                        biomeTemp *= config.getDouble("Temperature.Environment.BiomeTemperature.ColdMultiplier");
+                    else if (biomeTemp >= coldCutoff) {
+                        biomeTemp *= coldMultiplier;
                     }
                     else {
-                        biomeTemp *= config.getDouble("Temperature.Environment.BiomeTemperature.FrigidMultiplier");
+                        biomeTemp *= frigidMultiplier;
                     }
                 }
 
-                double daylightChange = pWorld.getEnvironment() == World.Environment.NORMAL ? Math.sin(2 * Math.PI / 24000 * pWorld.getTime() - 3500) * config.getDouble("Temperature.Environment.DaylightCycleMultiplier") : 0D;
+                double daylightChange = pWorld.getEnvironment() == World.Environment.NORMAL ? Math.sin(2 * Math.PI / 24000 * pWorld.getTime() - 3500) * daylightCycleMultiplier : 0D;
                 double worldChange = biomeTemp + daylightChange;
                 change += worldChange;
 
@@ -244,8 +303,8 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
 
             if (!hasColdImmunity(player)) {
                 if (!rs.disableHypothermiaCompletely()) {
-                    if (config.getBoolean("Temperature.Hypothermia.Enabled")) {
-                        if (temp <= config.getDouble("Temperature.Hypothermia.Temperature")) {
+                    if (hypothermiaEnabled) {
+                        if (temp <= hypothermiaTemp) {
                             if (!HypothermiaTask.hasTask(id)) {
                                 new HypothermiaTask(module, plugin, this.player).start();
                             }
@@ -255,8 +314,8 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
 
                 if (!rs.disableColdBreath()) {
                     if (!player.hasPermission("harshlands.toughasnails.resistance.cold.breath")) {
-                        if (config.getBoolean("Temperature.ColdBreath.Enabled")) {
-                            if (temp <= config.getDouble("Temperature.ColdBreath.MaximumTemperature")) {
+                        if (coldBreathEnabled) {
+                            if (temp <= coldBreathMaxTemp) {
                                 if (!ColdBreathTask.hasTask(id)) {
                                     new ColdBreathTask(module, plugin, this.player).start();
                                 }
@@ -268,8 +327,8 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
 
             if (!hasHotImmunity(player)) {
                 if (!rs.disableHyperthermiaCompletely()) {
-                    if (config.getBoolean("Temperature.Hyperthermia.Enabled")) {
-                        if (temp >= config.getDouble("Temperature.Hyperthermia.Temperature")) {
+                    if (hyperthermiaEnabled) {
+                        if (temp >= hyperthermiaTemp) {
                             if (!HyperthermiaTask.hasTask(id)) {
                                 new HyperthermiaTask(module, plugin, this.player).start();
                             }
@@ -279,8 +338,8 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
 
                 if (!rs.disableSweating()) {
                     if (!player.hasPermission("harshlands.toughasnails.resistance.hot.sweat")) {
-                        if (config.getBoolean("Temperature.Sweating.Enabled")) {
-                            if (temp >= config.getDouble("Temperature.Sweating.MinimumTemperature")) {
+                        if (sweatingEnabled) {
+                            if (temp >= sweatingMinTemp) {
                                 if (!SweatTask.hasTask(id)) {
                                     new SweatTask(module, plugin, this.player).start();
                                 }
@@ -315,26 +374,30 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
     }
 
     public void add(String configPath) {
-        double amount = config.getDouble(configPath + ".Value");
+        AddEntry entry = addEntries.get(configPath);
+        if (entry == null) return;
+        if (entry.hasEnabledFlag() && !entry.enabled()) return;
+        if (entry.isRegulatory()) regulate += entry.value();
+        else change += entry.value();
+    }
 
-        if (config.contains(configPath + ".Enabled")) {
-            if (config.getBoolean(configPath + ".Enabled")) {
-                if (config.getBoolean(configPath + ".IsRegulatory")) {
-                    regulate += amount;
-                }
-                else {
-                    change += amount;
-                }
+    private static Map<String, AddEntry> buildAddEntries(FileConfiguration config) {
+        Map<String, AddEntry> map = new HashMap<>();
+        for (String prefix : List.of("Temperature.Environment", "Temperature.Armor", "Temperature.Enchantments")) {
+            ConfigurationSection section = config.getConfigurationSection(prefix);
+            if (section == null) continue;
+            for (String key : section.getKeys(false)) {
+                String path = prefix + "." + key;
+                // Skip sub-sections without Value (BiomeTemperature, Blocks, CubeLength, etc.)
+                if (!config.contains(path + ".Value")) continue;
+                double value = config.getDouble(path + ".Value");
+                boolean isReg = config.getBoolean(path + ".IsRegulatory", false);
+                boolean hasEnabled = config.contains(path + ".Enabled");
+                boolean enabled = config.getBoolean(path + ".Enabled", true);
+                map.put(path, new AddEntry(value, isReg, hasEnabled, enabled));
             }
         }
-        else {
-            if (config.getBoolean(configPath + ".IsRegulatory")) {
-                regulate += amount;
-            }
-            else {
-                change += amount;
-            }
-        }
+        return map;
     }
 
     private boolean hasHotImmunity(@Nonnull Player player) {
