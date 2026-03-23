@@ -72,7 +72,7 @@ private final boolean sweatingEnabled;
 private final double sweatingMinTemp;
 ```
 
-Pre-parse `add()` config paths into a map. Populate by iterating all keys under `Temperature.Environment` and `Temperature.Armor` config sections (including dynamic armor material/item name keys like `Temperature.Armor.IRON_CHESTPLATE`, `Temperature.Armor.wool_hood`):
+Pre-parse `add()` config paths into a map. Populate by iterating top-level keys under `Temperature.Environment`, `Temperature.Armor`, and `Temperature.Enchantments` config sections (including dynamic armor material/item name keys like `Temperature.Armor.IRON_CHESTPLATE`, `Temperature.Armor.wool_hood`). Note: `Temperature.Environment.Blocks` sub-keys are handled separately by Section 1's `blockTempMap` and must NOT be included in `addEntries`:
 
 ```java
 private record AddEntry(double value, boolean isRegulatory, boolean hasEnabledFlag, boolean enabled) {}
@@ -131,7 +131,7 @@ public void add(String configPath) {
 
 **Fix:**
 - Replace `new HashMap<>()` with `new ConcurrentHashMap<>()` in all task registries (static and instance).
-- Replace `hasTask()` / `hasActiveNightmare()` implementations:
+- Replace `hasTask()` double-lookup pattern where it exists:
 
 ```java
 // Before:
@@ -139,6 +139,8 @@ return tasks.containsKey(id) && tasks.get(id) != null;
 // After:
 return tasks.get(id) != null;
 ```
+
+Note: `NightmareManager.hasActiveNightmare()` already uses a single `containsKey()` — it only needs the `ConcurrentHashMap` swap, not the double-lookup refactor.
 
 Mechanical find-and-replace. Grep for `new HashMap<>` in all task classes to ensure full coverage. No behavioral change.
 
@@ -206,15 +208,16 @@ private ComfortTier resolveTier(int score) {
 - `world.getNearbyEntities()` (line 86) returns ALL entity types, then filters to `Monster` in the loop.
 - Debug line (128) re-scans the entire collection via `.stream().filter().count()`.
 
-**Fix:**
-- Use the predicate overload to filter during scan:
+**Fix (apply both changes together — step 2 depends on step 1):**
+
+1. Use the predicate overload to filter during scan:
 
 ```java
 Collection<Entity> nearby = world.getNearbyEntities(loc, scanRadius, yRadius, scanRadius,
         entity -> entity instanceof Monster);
 ```
 
-- Replace the debug stream with `nearby.size()` (already filtered):
+2. After applying the predicate filter above, replace the debug stream with `nearby.size()` (collection is now Monster-only):
 
 ```java
 + " hostileNearby=" + nearby.size();
