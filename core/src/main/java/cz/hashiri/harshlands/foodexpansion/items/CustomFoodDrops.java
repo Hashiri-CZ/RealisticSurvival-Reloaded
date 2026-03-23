@@ -56,7 +56,16 @@ public class CustomFoodDrops implements Listener {
                 continue;
             }
 
-            dropMap.put(entityType, new DropDefinition(rawId, cookedId, min, max));
+            // Validate cookedId — fall back to rawId if missing or invalid
+            String validCookedId = cookedId;
+            if (cookedId.isEmpty() || registry.getDefinition(cookedId) == null) {
+                if (!cookedId.isEmpty()) {
+                    logger.warning("MobDrops: unknown cooked food '" + cookedId + "' for " + entityName + ", falling back to raw");
+                }
+                validCookedId = rawId;
+            }
+
+            dropMap.put(entityType, new DropDefinition(rawId, validCookedId, min, max));
         }
         Utils.logStartup("Loaded " + dropMap.size() + " mob drop definitions");
     }
