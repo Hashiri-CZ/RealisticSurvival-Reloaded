@@ -48,6 +48,7 @@ public class FoodExpansionModule extends HLModule {
     @Override
     public void initialize() {
         setUserConfig(new HLConfig(plugin, "foodexpansion.yml"));
+        Utils.logModuleLifecycle("Initializing", NAME);
 
         // Register debug provider
         HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
@@ -81,8 +82,6 @@ public class FoodExpansionModule extends HLModule {
         ConfigurationSection mobDropsSec = feConfig.getConfigurationSection("FoodExpansion.MobDrops");
         customFoodDrops = new CustomFoodDrops(customFoodRegistry, this, mobDropsSec, plugin.getLogger());
         Bukkit.getPluginManager().registerEvents(customFoodDrops, plugin);
-
-        Utils.logModuleLifecycle("Initializing", NAME);
 
         // NOTE: Decay and effect tasks cache config values at construction.
         // A server reload (/hl reload) will NOT update values for currently online players.
