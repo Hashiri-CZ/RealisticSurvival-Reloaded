@@ -29,6 +29,8 @@ public class PlayerNutritionData {
 
     private final Map<String, Integer> satiationCounters = new HashMap<>();
 
+    private static final double MAX_EXHAUSTION = 8.0; // 2x default drain threshold
+
     public PlayerNutritionData(double protein, double carbs, double fats,
                                double proteinExhaustion, double carbsExhaustion,
                                double fatsExhaustion) {
@@ -90,9 +92,9 @@ public class PlayerNutritionData {
         return NutrientTier.NORMAL;
     }
 
-    public void addProteinExhaustion(double amount) { this.proteinExhaustion += amount; }
-    public void addCarbsExhaustion(double amount) { this.carbsExhaustion += amount; }
-    public void addFatsExhaustion(double amount) { this.fatsExhaustion += amount; }
+    public void addProteinExhaustion(double amount) { this.proteinExhaustion = Math.min(MAX_EXHAUSTION, this.proteinExhaustion + amount); }
+    public void addCarbsExhaustion(double amount) { this.carbsExhaustion = Math.min(MAX_EXHAUSTION, this.carbsExhaustion + amount); }
+    public void addFatsExhaustion(double amount) { this.fatsExhaustion = Math.min(MAX_EXHAUSTION, this.fatsExhaustion + amount); }
 
     public double drainProteinExhaustion(double threshold) {
         if (proteinExhaustion >= threshold) {
