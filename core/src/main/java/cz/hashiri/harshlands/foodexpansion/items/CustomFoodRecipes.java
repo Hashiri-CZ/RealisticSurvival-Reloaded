@@ -176,17 +176,35 @@ public class CustomFoodRecipes implements Listener {
         NamespacedKey key = getRecipeKey(recipe);
         if (key == null || !registeredKeys.contains(key)) return;
 
+        // Count bucket-type ingredients and find the limiting ingredient in the matrix
+        int bucketCount = 0;
+        int minIngredientStack = Integer.MAX_VALUE;
         for (ItemStack matrix : event.getInventory().getMatrix()) {
-            if (matrix != null && BUCKET_INGREDIENTS.contains(matrix.getType())) {
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    ItemStack bucket = new ItemStack(Material.BUCKET);
-                    if (!player.getInventory().addItem(bucket).isEmpty()) {
-                        player.getWorld().dropItem(player.getLocation(), bucket);
-                    }
-                });
-                break;
+            if (matrix != null && matrix.getType() != Material.AIR) {
+                minIngredientStack = Math.min(minIngredientStack, matrix.getAmount());
+                if (BUCKET_INGREDIENTS.contains(matrix.getType())) {
+                    bucketCount++;
+                }
             }
         }
+        if (bucketCount == 0) return;
+
+        // For shift-click: number of crafts = min stack size across ALL ingredients
+        // (the limiting ingredient determines how many crafts actually happen)
+        // For normal click: always 1 craft
+        int craftCount = event.isShiftClick() ? minIngredientStack : 1;
+
+        // Return empty buckets (1 per bucket ingredient per craft)
+        int bucketsToReturn = craftCount * bucketCount;
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            for (int i = 0; i < bucketsToReturn; i++) {
+                ItemStack bucket = new ItemStack(Material.BUCKET);
+                if (!player.getInventory().addItem(bucket).isEmpty()) {
+                    player.getWorld().dropItem(player.getLocation(), bucket);
+                }
+            }
+        });
     }
 
     // --- World-Gating ---
