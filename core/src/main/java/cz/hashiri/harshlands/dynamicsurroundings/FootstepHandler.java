@@ -285,9 +285,17 @@ public class FootstepHandler {
 
     private final FileConfiguration config;
     private final Random random = new Random();
+    private final double stepThreshold;
+    private final float footstepVolume;
+    private final float pitchVariance;
+    private final float armorOverlayVolume;
 
     public FootstepHandler(DynamicSurroundingsModule module, FileConfiguration config) {
         this.config = config;
+        this.stepThreshold = config.getDouble("Footsteps.Threshold", 1.5);
+        this.footstepVolume = (float) config.getDouble("Footsteps.Volume", 0.8);
+        this.pitchVariance = (float) config.getDouble("Footsteps.PitchVariance", 0.1);
+        this.armorOverlayVolume = (float) config.getDouble("Footsteps.ArmorOverlay.Volume", 0.3);
     }
 
     // -----------------------------------------------------------------------
@@ -329,7 +337,7 @@ public class FootstepHandler {
 
         state.distanceAccumulator += Math.sqrt(dx * dx + dz * dz);
 
-        double threshold = config.getDouble("Footsteps.Threshold", 1.5);
+        double threshold = stepThreshold;
         if (state.distanceAccumulator < threshold) {
             return;
         }
@@ -361,9 +369,8 @@ public class FootstepHandler {
         String key = sounds.getVariant(player.isSprinting(), player.isSneaking());
         if (key == null) return;
 
-        float vol = (float) config.getDouble("Footsteps.Volume", 0.8);
-        float pitchVariance = (float) config.getDouble("Footsteps.PitchVariance", 0.1);
-        float pitch = 1.0f + (random.nextFloat() - 0.5f) * pitchVariance;
+        float vol = footstepVolume;
+        float pitch = 1.0f + (random.nextFloat() - 0.5f) * this.pitchVariance;
 
         playSound(player, loc, key, vol, pitch);
 
@@ -378,7 +385,7 @@ public class FootstepHandler {
         SoundSet sounds = SOUNDS.getOrDefault(surface, SOUNDS.get(SurfaceType.DEFAULT));
         if (sounds.land() == null) return;
 
-        float vol = (float) config.getDouble("Footsteps.Volume", 0.8) * 1.2f;
+        float vol = footstepVolume * 1.2f;
         float pitch = 0.95f + (random.nextFloat() - 0.5f) * 0.1f;
         playSound(player, loc, sounds.land(), vol, pitch);
     }
@@ -387,7 +394,7 @@ public class FootstepHandler {
         ArmorTier tier = getArmorTier(player);
         if (tier == ArmorTier.NONE) return;
 
-        float vol = (float) config.getDouble("Footsteps.ArmorOverlay.Volume", 0.3);
+        float vol = armorOverlayVolume;
         float pitch = 1.0f + (random.nextFloat() - 0.5f) * 0.1f;
         boolean sprinting = player.isSprinting();
 
