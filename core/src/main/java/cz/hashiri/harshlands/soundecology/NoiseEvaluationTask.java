@@ -83,12 +83,12 @@ public class NoiseEvaluationTask implements Runnable {
             double radius = event.getEffectiveRadius();
             double scanRadius = Math.min(radius, MAX_SCAN_RADIUS);
             double yRadius = Math.min(scanRadius, verticalRadius);
-            Collection<Entity> nearby = world.getNearbyEntities(loc, scanRadius, yRadius, scanRadius);
+            Collection<Entity> nearby = world.getNearbyEntities(loc, scanRadius, yRadius, scanRadius,
+                    entity -> entity instanceof Monster);
 
             int assignedForEvent = 0;
             for (Entity entity : nearby) {
                 if (totalAssigned >= maxPerCycle || assignedForEvent >= maxPerEvent) break;
-                if (!(entity instanceof Monster)) continue;
                 Mob mob = (Mob) entity;
                 if (mob.getTarget() != null) {
                     recentlyTargeted.put(mob.getUniqueId(), currentTick + cooldownTicks);
@@ -125,7 +125,7 @@ public class NoiseEvaluationTask implements Runnable {
                     String chatLine = "§d[Noise] §f" + assignedForEvent + " mobs attracted to noise";
                     String consoleLine = "mobsAssigned=" + assignedForEvent + " radius=" + String.format("%.0f", radius)
                             + " loc=" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ()
-                            + " hostileNearby=" + nearby.stream().filter(e -> e instanceof Monster).count();
+                            + " hostileNearby=" + nearby.size();
                     debugMgr.send("Fear", "SoundEcology", event.getSourcePlayer(), chatLine, consoleLine);
                 }
             }
