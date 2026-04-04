@@ -13,7 +13,7 @@
   <a href="https://github.com/Hashiri-CZ/Harshlands/releases"><img src="https://img.shields.io/github/v/release/Hashiri-CZ/Harshlands?style=for-the-badge&color=c9302c&label=Latest%20Release" alt="Latest Release"/></a>
   <a href="https://github.com/Hashiri-CZ/Harshlands"><img src="https://img.shields.io/github/stars/Hashiri-CZ/Harshlands?style=for-the-badge&color=f0ad4e" alt="GitHub Stars"/></a>
   <a href="https://github.com/Hashiri-CZ/Harshlands/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Hashiri-CZ/Harshlands?style=for-the-badge&color=5cb85c" alt="License"/></a>
-  <a href="https://discord.gg/E863pjrSXr"><img src="https://img.shields.io/badge/Discord-Join%20Us-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"/></a>
+  <a href="https://discord.gg/2EkszXWxbE"><img src="https://img.shields.io/badge/Discord-Join%20Us-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"/></a>
 </p>
 
 
@@ -116,7 +116,7 @@ Harshlands is under active development. Here's what's coming:
 - [ ] **Food expansion** — Stop eating that steak!
 - [ ] **Multi-version support** — Expanding beyond 1.21.11
 
-Have a feature request? [Open an issue](https://github.com/Hashiri-CZ/Harshlands/issues) or join our [Discord](https://discord.gg/E863pjrSXr).
+Have a feature request? [Open an issue](https://github.com/Hashiri-CZ/Harshlands/issues) or join our [Discord](https://discord.gg/2EkszXWxbE).
 
 ---
 
