@@ -17,19 +17,21 @@
 package cz.hashiri.harshlands.utils;
 
 public class ObfuscatedFields_v26_1_R1 {
-    // corresponds to net.minecraft.core.MappedRegistry#frozen
-    public static final String FROZEN_SYMBOL = "l";
-    
-    // corresponds to net.minecraft.core.MappedRegistry#unregisteredIntrusiveHolders
-    public static final String INTRUSIVE_HOLDER_CACHE_SYMBOL = "m";
+    // Spigot 26.1.2 is natively Mojang-mapped — no obfuscation. Use actual field names.
 
-    // corresponds to net.minecraft.core.MappedRegistry#allTags
-    public static final String ALL_TAGS_SYMBOL = "k";
+    // net.minecraft.core.MappedRegistry#frozen
+    public static final String FROZEN_SYMBOL = "frozen";
 
-    // corresponds to net.minecraft.core.MappedRegistry$TagSet
-    public static final String TAGSET_SYMBOL_OBFUSCATED = "net.minecraft.core.RegistryMaterials$a";
+    // net.minecraft.core.MappedRegistry#unregisteredIntrusiveHolders
+    public static final String INTRUSIVE_HOLDER_CACHE_SYMBOL = "unregisteredIntrusiveHolders";
 
-    // corresponds to net.minecraft.core.MappedRegistry$TagSet
+    // net.minecraft.core.MappedRegistry#allTags
+    public static final String ALL_TAGS_SYMBOL = "allTags";
+
+    // net.minecraft.core.MappedRegistry$TagSet (no obfuscated alias in 26.1.2)
+    public static final String TAGSET_SYMBOL_OBFUSCATED = "net.minecraft.core.MappedRegistry$TagSet";
+
+    // net.minecraft.core.MappedRegistry$TagSet
     public static final String TAGSET_SYMBOL_UNOBFUSCATED = "net.minecraft.core.MappedRegistry$TagSet";
 
     private ObfuscatedFields_v26_1_R1() {};
