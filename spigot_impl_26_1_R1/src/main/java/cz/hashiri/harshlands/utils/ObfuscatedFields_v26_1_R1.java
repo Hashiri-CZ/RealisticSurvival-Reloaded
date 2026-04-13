@@ -28,9 +28,6 @@ public class ObfuscatedFields_v26_1_R1 {
     // net.minecraft.core.MappedRegistry#allTags
     public static final String ALL_TAGS_SYMBOL = "allTags";
 
-    // net.minecraft.core.MappedRegistry$TagSet (no obfuscated alias in 26.1.2)
-    public static final String TAGSET_SYMBOL_OBFUSCATED = "net.minecraft.core.MappedRegistry$TagSet";
-
     // net.minecraft.core.MappedRegistry$TagSet
     public static final String TAGSET_SYMBOL_UNOBFUSCATED = "net.minecraft.core.MappedRegistry$TagSet";
 

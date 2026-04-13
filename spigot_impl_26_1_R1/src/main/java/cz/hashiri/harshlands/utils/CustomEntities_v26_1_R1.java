@@ -116,7 +116,7 @@ public enum CustomEntities_v26_1_R1 {
             // Dynamically locate the TagSet interface within MappedRegistry
             Class<?> tagSetInterface = null;
             for (Class<?> nestedClass : MappedRegistry.class.getDeclaredClasses()) {
-                if (nestedClass.getName().equals(ObfuscatedFields_v26_1_R1.TAGSET_SYMBOL_OBFUSCATED) || nestedClass.getName().equals(ObfuscatedFields_v26_1_R1.TAGSET_SYMBOL_UNOBFUSCATED)) {
+                if (nestedClass.getName().equals(ObfuscatedFields_v26_1_R1.TAGSET_SYMBOL_UNOBFUSCATED)) {
                     tagSetInterface = nestedClass;
                     break;
                 }
