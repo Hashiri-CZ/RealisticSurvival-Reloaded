@@ -84,9 +84,12 @@ public class Utils {
         LinkedHashSet<String> candidates = new LinkedHashSet<>();
 
         // Strategy 1: exact match on the server's CraftBukkit internal package suffix.
-        // Some Spigot versions (<=1.21.x) expose a versioned subpackage such as v1_21_R7;
-        // MC 26.1+ dropped the suffix, so this strategy produces an unmatchable candidate
-        // there and the formula-based candidate below matches instead.
+        // Retained as future-proofing — if a Spigot release ever ships an impl package
+        // whose suffix matches our impl class names, this catches it cheaply.
+        // For every current version Harshlands supports, this candidate MISSES:
+        //  * MC 1.21.11 reports suffix "v1_21_R7" (we ship "v1_21_R11") — Strategy 3 matches
+        //  * MC 26.1+ has no suffix, reports "craftbukkit" — Strategy 3 matches
+        // The failed attempt is logged as a Skipped line on startup. This is expected.
         String craftPkg = Bukkit.getServer().getClass().getPackage().getName();
         String craftVersion = craftPkg.substring(craftPkg.lastIndexOf('.') + 1);
         candidates.add(packageName + "." + craftVersion);
