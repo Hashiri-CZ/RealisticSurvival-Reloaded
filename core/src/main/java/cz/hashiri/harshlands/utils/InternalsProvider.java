@@ -64,17 +64,17 @@ public abstract class InternalsProvider {
 
     public abstract void attack(LivingEntity attacker, Entity defender);
 
-    public abstract boolean hasItemModel(ItemMeta meta); // for 1.21.11
+    public abstract boolean hasItemModel(ItemMeta meta);
 
-    public abstract NamespacedKey getItemModel(ItemMeta meta); // for 1.21.11
+    public abstract NamespacedKey getItemModel(ItemMeta meta);
 
-    public abstract void setItemModel(ItemMeta meta, NamespacedKey key); // for 1.21.11
+    public abstract void setItemModel(ItemMeta meta, NamespacedKey key);
 
-    public abstract boolean hasEquippableComponentModel(ItemMeta meta); // for 1.21.11
+    public abstract boolean hasEquippableComponentModel(ItemMeta meta);
 
-    public abstract NamespacedKey getEquippableComponentModel(ItemMeta meta); // for 1.21.11
+    public abstract NamespacedKey getEquippableComponentModel(ItemMeta meta);
 
-    public abstract void setEquippableComponentModel(ItemMeta meta, NamespacedKey key, EquipmentSlot slot); // for 1.21.11
+    public abstract void setEquippableComponentModel(ItemMeta meta, NamespacedKey key, EquipmentSlot slot);
 
     public abstract boolean assignInvestigateNoiseGoal(org.bukkit.entity.Mob mob, Location target);
 }

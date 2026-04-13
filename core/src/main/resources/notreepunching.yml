@@ -82,9 +82,9 @@ UpdateNetheriteItems: # Specify which factors will be transferred over when a di
   UpdateUnbreakability: true
   UpdateAttributeModifiers: true
   UpdateLocalizedName: true
-  UpdateCustomModelData: true # For 1.21.11
-  UpdateItemModel: true # For 1.21.11
-  UpdateEquippableComponent: true # For 1.21.11
+  UpdateCustomModelData: true
+  UpdateItemModel: true
+  UpdateEquippableComponent: true
   UpdateEnchants:
     Enabled: true
     PreserveExistingEnchants: true

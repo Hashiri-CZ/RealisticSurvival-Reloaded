@@ -794,7 +794,6 @@ public class TanEvents extends ModuleEvents implements Listener {
             int customModelData = Utils.getCustomModelData(HLItem.getItem("canteen_empty").getItemMeta());
             NamespacedKey itemModel = Utils.getItemModel(HLItem.getItem("canteen_empty").getItemMeta());
 
-            // 1.21.11
             if (!Utils.hasCustomModelData(meta)) {
                 Utils.setCustomModelData(meta, customModelData);
                 canteen.setItemMeta(meta);
@@ -806,7 +805,6 @@ public class TanEvents extends ModuleEvents implements Listener {
                 }
             }
 
-            // 1.21.11
             if (!Utils.hasItemModel(meta)) {
                 Utils.setItemModel(meta, itemModel);
                 canteen.setItemMeta(meta);
@@ -833,7 +831,6 @@ public class TanEvents extends ModuleEvents implements Listener {
 
             meta.addItemFlags(ItemFlag.HIDE_POTION_CONTENTS);
 
-            // 1.21.11
             if (!Utils.hasCustomModelData(meta)) {
                 Utils.setCustomModelData(meta, customModelData);
                 canteen.setItemMeta(meta);
@@ -845,7 +842,6 @@ public class TanEvents extends ModuleEvents implements Listener {
                 }
             }
 
-            // 1.21.11
             if (!Utils.hasItemModel(meta)) {
                 Utils.setItemModel(meta, itemModel);
                 canteen.setItemMeta(meta);

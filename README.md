@@ -69,7 +69,7 @@ Each module has its own configuration file. Mix and match to create the exact ex
 
 | Requirement | Version                  |
 |-------------|--------------------------|
-| Minecraft | `1.21.11`                |
+| Minecraft | `1.21.11`, `26.1.2`      |
 | Server | Spigot, Paper, or Purpur |
 | Java | 21+                      |
 
@@ -82,7 +82,7 @@ Each module has its own configuration file. Mix and match to create the exact ex
 5. Watch your players *suffer* — in the best way possible
 
 > [!NOTE]
-> **Harshlands currently supports Minecraft `1.21.11` only.** Support for additional versions is planned.
+> **Harshlands supports Minecraft `1.21.11` and `26.1.2`.** A single JAR targets both.
 
 ---
 
@@ -114,7 +114,7 @@ Harshlands is under active development. Here's what's coming:
 - [ ] **Custom structures & dungeons** — Exploration rewards for the brave
 - [ ] **Waystone system** — Fast travel for those who've earned it
 - [ ] **Food expansion** — Stop eating that steak!
-- [ ] **Multi-version support** — Expanding beyond 1.21.11
+- [x] **Multi-version support** — 1.21.11 and 26.1.2 supported
 
 Have a feature request? [Open an issue](https://github.com/Hashiri-CZ/Harshlands/issues) or join our [Discord](https://discord.gg/2EkszXWxbE).
 

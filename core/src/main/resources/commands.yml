@@ -159,9 +159,9 @@ UpdateItem:
       Unbreakability: true
       AttributeModifiers: true
       LocalizedName: true
-      CustomModelData: true # For 1.21.11
-      ItemModel: true # For 1.21.11
-      EquippableComponent: true # For 1.21.11
+      CustomModelData: true
+      ItemModel: true
+      EquippableComponent: true
       Enchants:
         Enabled: true
         PreserveExistingEnchants: true
