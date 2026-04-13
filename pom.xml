@@ -16,6 +16,7 @@
     <modules>
         <module>core</module>
         <module>spigot_impl_1_21_R11</module>
+        <module>spigot_impl_26_1_R1</module>
         <module>dist</module>
     </modules>
 
