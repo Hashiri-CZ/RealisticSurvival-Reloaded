@@ -85,8 +85,8 @@ public class Utils {
 
         // Strategy 1: exact match on the server's CraftBukkit internal package suffix.
         // Some Spigot versions (<=1.21.x) expose a versioned subpackage such as v1_21_R7;
-        // MC 26.1+ dropped the suffix, so this strategy typically no-ops there and the
-        // formula-based candidate below matches instead.
+        // MC 26.1+ dropped the suffix, so this strategy produces an unmatchable candidate
+        // there and the formula-based candidate below matches instead.
         String craftPkg = Bukkit.getServer().getClass().getPackage().getName();
         String craftVersion = craftPkg.substring(craftPkg.lastIndexOf('.') + 1);
         candidates.add(packageName + "." + craftVersion);
@@ -112,8 +112,8 @@ public class Utils {
                 internals = (InternalsProvider) Class.forName(className).getDeclaredConstructor().newInstance();
                 logStartup("Loaded NMS class: " + className);
                 break;
-            } catch (Throwable t) {
-                logStartup("Skipped " + className + ": " + t.getClass().getSimpleName());
+            } catch (LinkageError | ReflectiveOperationException | ClassCastException e) {
+                logStartup("Skipped " + className + ": " + e.getClass().getSimpleName());
             }
         }
 
