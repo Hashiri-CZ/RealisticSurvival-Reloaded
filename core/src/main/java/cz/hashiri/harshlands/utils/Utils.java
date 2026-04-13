@@ -61,7 +61,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -72,7 +71,7 @@ public class Utils {
 
     public static final double ATTACK_DAMAGE_CONSTANT = -1.0;
     public static final double ATTACK_SPEED_CONSTANT = -4.0;
-    private static final Pattern VERSION_PATTERN = Pattern.compile("([1-9])\\.([1-9][0-9]|[1-9])(\\.([0-9]+))?");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)(\\.(\\d+))?");
     private static final Pattern CRAFT_SOUND_LOCATION_PATTERN = Pattern.compile("location=([a-z0-9_:.]+)");
     private static final Pattern CRAFT_SOUND_RESOURCE_KEY_PATTERN = Pattern.compile("sound_event\\s*/\\s*([a-z0-9_:.]+)");
 
@@ -82,10 +81,22 @@ public class Utils {
 
     static {
         String packageName = Utils.class.getPackage().getName();
-        String preferredClass = packageName + "." + getMinecraftVersion(true);
         LinkedHashSet<String> candidates = new LinkedHashSet<>();
+
+        // Strategy 1: exact match on the server's CraftBukkit internal package suffix.
+        // Some Spigot versions (<=1.21.x) expose a versioned subpackage such as v1_21_R7;
+        // MC 26.1+ dropped the suffix, so this strategy typically no-ops there and the
+        // formula-based candidate below matches instead.
+        String craftPkg = Bukkit.getServer().getClass().getPackage().getName();
+        String craftVersion = craftPkg.substring(craftPkg.lastIndexOf('.') + 1);
+        candidates.add(packageName + "." + craftVersion);
+
+        // Strategy 2: formula-derived name from Bukkit.getVersion() MC string.
+        String preferredClass = packageName + "." + getMinecraftVersion(true);
         candidates.add(preferredClass);
 
+        // Strategy 3 (legacy fallback): decrement the trailing R<n> on the formula name
+        // so impl classes do not need renaming on each MC point release.
         Matcher matcher = Pattern.compile("(.+\\.v\\d+_\\d+_R)(\\d+)").matcher(preferredClass);
         if (matcher.matches()) {
             String prefix = matcher.group(1);
@@ -95,18 +106,14 @@ public class Utils {
             }
         }
 
-        String craftPkg = Bukkit.getServer().getClass().getPackage().getName();
-        String craftVersion = craftPkg.substring(craftPkg.lastIndexOf('.') + 1);
-        candidates.add(packageName + "." + craftVersion);
-
         for (String className : candidates) {
             try {
                 logStartup("Trying to load NMS class: " + className);
                 internals = (InternalsProvider) Class.forName(className).getDeclaredConstructor().newInstance();
                 logStartup("Loaded NMS class: " + className);
                 break;
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                    ClassCastException | NoSuchMethodException | InvocationTargetException ignored) {
+            } catch (Throwable t) {
+                logStartup("Skipped " + className + ": " + t.getClass().getSimpleName());
             }
         }
 
