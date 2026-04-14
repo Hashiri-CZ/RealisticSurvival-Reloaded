@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.rsv;
 
+import cz.hashiri.harshlands.migration.FolderLayoutMigration;
 import cz.hashiri.harshlands.debug.DebugManager;
 import cz.hashiri.harshlands.baubles.BaubleModule;
 import cz.hashiri.harshlands.comfort.ComfortModule;
@@ -79,6 +80,21 @@ public class HLPlugin extends JavaPlugin {
         plugin = this;
         StartupLog.resetTimer();
         StartupLog.printBanner();
+
+        // Run folder layout migration first thing, before any config/database init
+        if (!getDataFolder().exists() && !getDataFolder().mkdirs()) {
+            getLogger().severe("Could not create data folder at " + getDataFolder());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        try {
+            new FolderLayoutMigration(getDataFolder().toPath(), getLogger()).run();
+        } catch (RuntimeException e) {
+            getLogger().severe("Folder layout migration failed; aborting enable. " + e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         this.config = new PluginConfig(this);
 
         // Ensure shipped Translations/ directory is materialized into the data folder.
