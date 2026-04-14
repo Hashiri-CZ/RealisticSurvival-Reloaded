@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.utils.recipe;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.Ingredient;
 import cz.hashiri.harshlands.utils.HLItem;
 import org.bukkit.NamespacedKey;

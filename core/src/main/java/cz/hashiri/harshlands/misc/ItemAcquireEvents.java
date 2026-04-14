@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.misc;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
 import org.apache.commons.lang.StringUtils;
@@ -631,13 +631,13 @@ public class ItemAcquireEvents implements Listener {
 
         boolean isVanillaGive = args[0].equalsIgnoreCase("give");
 
-        if (!(isVanillaGive || args[0].equalsIgnoreCase("rsv")))
+        if (!(isVanillaGive || args[0].equalsIgnoreCase("hl")))
             return;
 
         String givePerm = "minecraft.command.give";
-        String rsvPerm = "harshlands.command.give";
+        String hlPerm = "harshlands.command.give";
 
-        if (!(player.isOp() || ((isVanillaGive && player.hasPermission(givePerm)) || (!isVanillaGive && player.hasPermission(rsvPerm))))) {
+        if (!(player.isOp() || ((isVanillaGive && player.hasPermission(givePerm)) || (!isVanillaGive && player.hasPermission(hlPerm))))) {
             return;
         }
 
@@ -698,13 +698,13 @@ public class ItemAcquireEvents implements Listener {
 
         boolean isVanillaGive = args[0].equalsIgnoreCase("give");
 
-        if (!(isVanillaGive || args[0].equalsIgnoreCase("rsv")))
+        if (!(isVanillaGive || args[0].equalsIgnoreCase("hl")))
             return;
 
         String givePerm = "minecraft.command.give";
-        String rsvPerm = "harshlands.command.give";
+        String hlPerm = "harshlands.command.give";
 
-        if (!(player.isOp() || ((isVanillaGive && player.hasPermission(givePerm)) || (!isVanillaGive && player.hasPermission(rsvPerm))))) {
+        if (!(player.isOp() || ((isVanillaGive && player.hasPermission(givePerm)) || (!isVanillaGive && player.hasPermission(hlPerm))))) {
             return;
         }
 

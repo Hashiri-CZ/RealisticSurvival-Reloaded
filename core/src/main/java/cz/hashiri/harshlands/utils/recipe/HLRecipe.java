@@ -40,7 +40,7 @@ public interface HLRecipe {
             return new ItemStack(Material.valueOf(itemName));
         }
         else if (HLItem.isHLItem(itemName)) {
-            // rsv item
+            // HL item
             return HLItem.getItem(itemName);
         }
         return null;

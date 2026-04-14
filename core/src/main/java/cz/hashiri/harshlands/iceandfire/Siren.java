@@ -29,7 +29,7 @@ public interface Siren extends HLMob {
 
     @Override
     default void addNbtData() {
-        Utils.addNbtTag(getEntity(), "rsvmob", name(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hlmob", name(), PersistentDataType.STRING);
     }
 
     @Override

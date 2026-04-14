@@ -130,8 +130,8 @@ public class Ingredient {
 
     public void add(@Nullable ItemStack item) {
         if (HLItem.isHLItem(item)) {
-            HLItem rsvItem = HLItem.getItem(HLItem.getNameFromItem(item));
-            items.add(rsvItem);
+            HLItem hlItem = HLItem.getItem(HLItem.getNameFromItem(item));
+            items.add(hlItem);
         }
     }
 

@@ -19,7 +19,7 @@ package cz.hashiri.harshlands.ntp;
 import cz.hashiri.harshlands.data.ModuleEvents;
 import cz.hashiri.harshlands.data.ModuleItems;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.ToolHandler.Tool;
 import cz.hashiri.harshlands.utils.Utils;

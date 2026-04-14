@@ -34,8 +34,8 @@ public class SeaSerpentUtils {
     private static final FileConfiguration CONFIG = HLModule.getModule(IceFireModule.NAME).getUserConfig().getConfig();
 
     public static void convertToSeaSerpent(ElderGuardian elderGuardian) {
-        Utils.addNbtTag(elderGuardian, "rsvmob", "sea_serpent", PersistentDataType.STRING);
-        Utils.addNbtTag(elderGuardian, "rsvseaserpentvariant", SeaSerpentVariant.getEnabledVariants().get(Utils.getRandomNum(0, SeaSerpentVariant.getEnabledVariants().size() - 1)).toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(elderGuardian, "hlmob", "sea_serpent", PersistentDataType.STRING);
+        Utils.addNbtTag(elderGuardian, "hlseaserpentvariant", SeaSerpentVariant.getEnabledVariants().get(Utils.getRandomNum(0, SeaSerpentVariant.getEnabledVariants().size() - 1)).toString(), PersistentDataType.STRING);
     }
 
     public static Collection<ItemStack> generateLoot(ElderGuardian seaSerpent) {
@@ -57,7 +57,7 @@ public class SeaSerpentUtils {
     }
 
     public static SeaSerpentVariant getVariant(ElderGuardian seaSerpent) {
-        return SeaSerpentVariant.valueOf(Utils.getNbtTag(seaSerpent, "rsvseaserpentvariant", PersistentDataType.STRING).toUpperCase());
+        return SeaSerpentVariant.valueOf(Utils.getNbtTag(seaSerpent, "hlseaserpentvariant", PersistentDataType.STRING).toUpperCase());
     }
 }
 

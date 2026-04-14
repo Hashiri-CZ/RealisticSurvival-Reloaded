@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.spartanweaponry;
 
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanandfire.BurnTask;
 import cz.hashiri.harshlands.spartanandfire.ElectrocuteTask;
 import cz.hashiri.harshlands.spartanandfire.FreezeTask;
@@ -173,8 +173,8 @@ public class ThrowWeaponTask extends BukkitRunnable {
 
                                     switch (type) {
                                         case "dragonbone_flamed" -> {
-                                            if (Utils.hasNbtTag(damageable, "rsvmob")) {
-                                                if (!Utils.getNbtTag(damageable, "rsvmob", PersistentDataType.STRING).equals("fire_dragon")) {
+                                            if (Utils.hasNbtTag(damageable, "hlmob")) {
+                                                if (!Utils.getNbtTag(damageable, "hlmob", PersistentDataType.STRING).equals("fire_dragon")) {
                                                     attackDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
                                                 }
                                             }
@@ -184,8 +184,8 @@ public class ThrowWeaponTask extends BukkitRunnable {
                                             }
                                         }
                                         case "dragonbone_iced" -> {
-                                            if (Utils.hasNbtTag(damageable, "rsvmob")) {
-                                                if (!Utils.getNbtTag(damageable, "rsvmob", PersistentDataType.STRING).equals("ice_dragon")) {
+                                            if (Utils.hasNbtTag(damageable, "hlmob")) {
+                                                if (!Utils.getNbtTag(damageable, "hlmob", PersistentDataType.STRING).equals("ice_dragon")) {
                                                     attackDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
                                                 }
                                             }
@@ -194,8 +194,8 @@ public class ThrowWeaponTask extends BukkitRunnable {
                                             }
                                         }
                                         case "dragonbone_lightning" -> {
-                                            if (Utils.hasNbtTag(damageable, "rsvmob")) {
-                                                if (!Utils.getNbtTag(damageable, "rsvmob", PersistentDataType.STRING).equals("lightning_dragon")) {
+                                            if (Utils.hasNbtTag(damageable, "hlmob")) {
+                                                if (!Utils.getNbtTag(damageable, "hlmob", PersistentDataType.STRING).equals("lightning_dragon")) {
                                                     attackDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
                                                 }
                                             }

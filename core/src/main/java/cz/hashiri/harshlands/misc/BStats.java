@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.misc;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Bukkit;
 
 import java.util.HashMap;

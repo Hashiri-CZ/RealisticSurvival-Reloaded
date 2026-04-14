@@ -43,11 +43,11 @@ public interface HLMob {
     String name();
 
     static boolean isMob(Entity entity) {
-        return Utils.hasNbtTag(entity, "rsvmob");
+        return Utils.hasNbtTag(entity, "hlmob");
     }
 
     static String getMob(Entity entity) {
-        return Utils.getNbtTag(entity, "rsvmob", PersistentDataType.STRING);
+        return Utils.getNbtTag(entity, "hlmob", PersistentDataType.STRING);
     }
 
     void addNbtData();

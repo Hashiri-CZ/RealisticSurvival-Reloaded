@@ -120,7 +120,7 @@ public class NoiseEvaluationTask implements Runnable {
                 }
 
                 // Debug instrumentation
-                cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+                cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.HLPlugin.getPlugin().getDebugManager();
                 if (debugMgr.isActive("Fear", "SoundEcology", event.getSourcePlayer())) {
                     String chatLine = "§d[Noise] §f" + assignedForEvent + " mobs attracted to noise";
                     String consoleLine = "mobsAssigned=" + assignedForEvent + " radius=" + String.format("%.0f", radius)

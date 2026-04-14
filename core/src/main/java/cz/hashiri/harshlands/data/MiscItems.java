@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.data;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 
 public class MiscItems extends ItemManager {
 

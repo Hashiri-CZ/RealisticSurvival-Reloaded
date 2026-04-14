@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package cz.hashiri.harshlands.rsv;
+package cz.hashiri.harshlands;
 
 import cz.hashiri.harshlands.debug.DebugManager;
 import cz.hashiri.harshlands.baubles.BaubleModule;
@@ -98,7 +98,6 @@ public class HLPlugin extends JavaPlugin {
         this.database = new HLDatabase(this, scheduler);
         try {
             this.database.connect();
-            this.database.migrateTableNames();
             this.database.createTables();
         } catch (RuntimeException e) {
             Utils.logStartup(e.getMessage());

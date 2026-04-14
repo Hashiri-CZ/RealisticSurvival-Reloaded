@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.spartanandfire;
 
 import cz.hashiri.harshlands.data.ModuleEvents;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
@@ -70,8 +70,8 @@ public class SfEvents extends ModuleEvents implements Listener {
 
         double damage = event.getDamage();
 
-        if (Utils.hasNbtTag(attacker, "rsvbow")) {
-            String name = Utils.getNbtTag(attacker, "rsvbow", PersistentDataType.STRING);
+        if (Utils.hasNbtTag(attacker, "hlbow")) {
+            String name = Utils.getNbtTag(attacker, "hlbow", PersistentDataType.STRING);
 
             IceFireModule.applyDragonItemEffect(defender, name, module);
             damage = IceFireModule.applyDragonItemBonusDamage(defender, name, damage, module);
@@ -116,29 +116,29 @@ public class SfEvents extends ModuleEvents implements Listener {
             // determine if the matrix contains only 2 non-null items
             ItemStack[] matrix = event.getInventory().getMatrix();
 
-            // preprocess matrix to obtain only rsv items
-            List<ItemStack> rsvItems = new ArrayList<>();
+            // preprocess matrix to obtain only HL items
+            List<ItemStack> hlItems = new ArrayList<>();
 
             for (ItemStack item : matrix) {
                 if (HLItem.isHLItem(item)) {
-                    rsvItems.add(item);
+                    hlItems.add(item);
                 }
             }
 
-            if (rsvItems.size() == 2) {
+            if (hlItems.size() == 2) {
                 // check if one of the items is a dragon blood
                 ItemStack dragonBlood;
                 ItemStack dragonboneWeapon;
 
-                switch (HLItem.getNameFromItem(rsvItems.get(0))) {
+                switch (HLItem.getNameFromItem(hlItems.get(0))) {
                     case "dragon_blood_fire", "dragon_blood_ice", "dragon_blood_lightning" -> {
-                        dragonBlood = rsvItems.get(0);
-                        dragonboneWeapon = rsvItems.get(1);
+                        dragonBlood = hlItems.get(0);
+                        dragonboneWeapon = hlItems.get(1);
                     }
                     // check if item2 is the dragon blood instead
                     default -> {
-                        dragonBlood = rsvItems.get(1);
-                        dragonboneWeapon = rsvItems.get(0);
+                        dragonBlood = hlItems.get(1);
+                        dragonboneWeapon = hlItems.get(0);
                     }
                 }
 

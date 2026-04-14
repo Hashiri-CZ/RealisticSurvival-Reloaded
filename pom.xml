@@ -11,7 +11,7 @@
 
     <name>Harshlands</name>
     <description>The RLCraft Experience for Spigot/Paper | Thirst, Temperature, RPG and More</description>
-    <url>https://www.spigotmc.org/resources/realistic-survival-1-17-hardcore-modded-experience.93795/</url>
+    <url>https://github.com/Hashiri/Harshlands</url>
 
     <modules>
         <module>core</module>

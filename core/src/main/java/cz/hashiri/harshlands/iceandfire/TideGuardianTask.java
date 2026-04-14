@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.iceandfire;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

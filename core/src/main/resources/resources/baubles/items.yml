@@ -17,7 +17,7 @@ dragons_eye:
     - ""
     - "&6Bauble (Head)"
   NBTTags:
-    rsvbaubleslot: "Head"
+    hlbaubleslot: "Head"
 poison_stone:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPoison Stone"
@@ -27,7 +27,7 @@ poison_stone:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 potion_ring:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring"
@@ -37,7 +37,7 @@ potion_ring:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 potion_ring_resistance:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring of Resistance"
@@ -51,7 +51,7 @@ potion_ring_resistance:
   ItemFlags:
     - "HIDE_ENCHANTS"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 potion_ring_regeneration:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring of Regeneration"
@@ -65,7 +65,7 @@ potion_ring_regeneration:
   ItemFlags:
     - "HIDE_ENCHANTS"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 potion_ring_haste:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring of Haste"
@@ -79,7 +79,7 @@ potion_ring_haste:
   ItemFlags:
     - "HIDE_ENCHANTS"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 potion_ring_strength:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring of Strength"
@@ -93,7 +93,7 @@ potion_ring_strength:
   ItemFlags:
     - "HIDE_ENCHANTS"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 potion_ring_speed:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring of Speed"
@@ -107,7 +107,7 @@ potion_ring_speed:
   ItemFlags:
     - "HIDE_ENCHANTS"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 potion_ring_jump_boost:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPotion Ring of Jump Boost"
@@ -121,7 +121,7 @@ potion_ring_jump_boost:
   ItemFlags:
     - "HIDE_ENCHANTS"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 ender_queens_crown:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bEnder Queen's Crown"
@@ -131,7 +131,7 @@ ender_queens_crown:
     - ""
     - "&6Bauble (Head)"
   NBTTags:
-    rsvbaubleslot: "Head"
+    hlbaubleslot: "Head"
 sunglasses:
   Material: "LEATHER_HELMET"
   DisplayName: "&fSunglasses"
@@ -144,7 +144,7 @@ sunglasses:
     - ""
     - "&6Bauble (Head)"
   NBTTags:
-    rsvbaubleslot: "Head"
+    hlbaubleslot: "Head"
 balloon:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fBalloon"
@@ -155,7 +155,7 @@ balloon:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 cobalt_shield:
   Material: "SHIELD"
   DisplayName: "&fCobalt Shield"
@@ -166,7 +166,7 @@ cobalt_shield:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 obsidian_skull:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fObsidian Skull"
@@ -179,7 +179,7 @@ obsidian_skull:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 obsidian_shield:
   Material: "SHIELD"
   DisplayName: "&fObsidian Shield"
@@ -191,7 +191,7 @@ obsidian_shield:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 forbidden_fruit:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fForbidden Fruit"
@@ -202,7 +202,7 @@ forbidden_fruit:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 vitamins:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fVitamins"
@@ -213,7 +213,7 @@ vitamins:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 ring_overclocking:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fRing of Overclocking"
@@ -225,7 +225,7 @@ ring_overclocking:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 shulker_heart:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fShulker Heart"
@@ -237,7 +237,7 @@ shulker_heart:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 ring_free_action:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fRing of Free Action"
@@ -249,7 +249,7 @@ ring_free_action:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 bezoar:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fBezoar"
@@ -260,7 +260,7 @@ bezoar:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 ender_dragonscale:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fEnder Dragon Scale"
@@ -284,7 +284,7 @@ black_dragonscale_bauble:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 mixed_color_dragonscale:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fMixed Color Dragon Scale"
@@ -297,7 +297,7 @@ mixed_color_dragonscale:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 ankh_charm:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fAnkh Charm"
@@ -308,7 +308,7 @@ ankh_charm:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 ankh_shield:
   Material: "SHIELD"
   DisplayName: "&fAnkh Shield"
@@ -320,7 +320,7 @@ ankh_shield:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 iron_ring:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fIron Ring"
@@ -376,7 +376,7 @@ lucky_horseshoe:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 scarlite_ring:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fScarlite Ring"
@@ -387,7 +387,7 @@ scarlite_ring:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 spectral_silt:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fSpectral Silt"
@@ -421,7 +421,7 @@ broken_heart:
   NBTTags:
     hldurability: 3
     hlmaxdurability: 3
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 cross_necklace:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fCross Necklace"
@@ -432,7 +432,7 @@ cross_necklace:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 wrath_pendant:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fWrath Pendant"
@@ -444,7 +444,7 @@ wrath_pendant:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 pride_pendant:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPride Pendant"
@@ -455,7 +455,7 @@ pride_pendant:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 gluttony_pendant:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fGluttony Pendant"
@@ -466,7 +466,7 @@ gluttony_pendant:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 sin_pendant:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fSin Pendant"
@@ -477,7 +477,7 @@ sin_pendant:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 golden_crown:
   Material: "GOLDEN_HELMET"
   DisplayName: "&fGolden Crown"
@@ -516,7 +516,7 @@ phytoprostasia_amulet:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 emerald_ring:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fEmerald Ring"
@@ -526,7 +526,7 @@ emerald_ring:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 emerald_amulet:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fEmerald Amulet"
@@ -536,7 +536,7 @@ emerald_amulet:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 glowing_ingot:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fGlowing Ingot"
@@ -577,7 +577,7 @@ stone_negative_gravity:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 stone_inertia_null:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bStone of Inertia Null"
@@ -587,7 +587,7 @@ stone_inertia_null:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 stone_greater_inertia:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bStone of Greater Inertia"
@@ -597,7 +597,7 @@ stone_greater_inertia:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 ring_enchanted_eyes:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bRing of Enchanted Eyes"
@@ -607,7 +607,7 @@ ring_enchanted_eyes:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 stone_sea:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bStone of the Sea"
@@ -617,7 +617,7 @@ stone_sea:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 polarized_stone:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bPolarized Stone"
@@ -629,7 +629,7 @@ polarized_stone:
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 ring_fairies:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bRing of the Fairies"
@@ -639,7 +639,7 @@ ring_fairies:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 ring_dwarves:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bRing of the Dwarves"
@@ -649,7 +649,7 @@ ring_dwarves:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 wither_ring:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bWither Ring"
@@ -659,7 +659,7 @@ wither_ring:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 shield_honor:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bShield of Honor"
@@ -669,7 +669,7 @@ shield_honor:
     - ""
     - "&6Bauble (Body)"
   NBTTags:
-    rsvbaubleslot: "Body"
+    hlbaubleslot: "Body"
 miners_ring:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bMiner's Ring"
@@ -679,7 +679,7 @@ miners_ring:
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 warped_scroll:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fWarped Scroll"
@@ -701,42 +701,42 @@ body_slot:
   CustomModelData: 83718
   ItemModel: "DEFAULT"
   NBTTags:
-    rsvbaubleslot: "Body"
+    hlbaubleslot: "Body"
 charm_slot:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&7"
   CustomModelData: 83719
   ItemModel: "DEFAULT"
   NBTTags:
-    rsvbaubleslot: "Charm"
+    hlbaubleslot: "Charm"
 belt_slot:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&7"
   CustomModelData: 83720
   ItemModel: "DEFAULT"
   NBTTags:
-    rsvbaubleslot: "Belt"
+    hlbaubleslot: "Belt"
 ring_slot:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&7"
   CustomModelData: 83721
   ItemModel: "DEFAULT"
   NBTTags:
-    rsvbaubleslot: "Ring"
+    hlbaubleslot: "Ring"
 head_slot:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&7"
   CustomModelData: 83722
   ItemModel: "DEFAULT"
   NBTTags:
-    rsvbaubleslot: "Head"
+    hlbaubleslot: "Head"
 amulet_slot:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&7"
   CustomModelData: 83723
   ItemModel: "DEFAULT"
   NBTTags:
-    rsvbaubleslot: "Amulet"
+    hlbaubleslot: "Amulet"
 phantom_prism:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fPhantom Prism"
@@ -747,7 +747,7 @@ phantom_prism:
     - ""
     - "&6Bauble (Any)"
   NBTTags:
-    rsvbaubleslot: "Any"
+    hlbaubleslot: "Any"
 gui_glass:
   Material: "GRAY_STAINED_GLASS_PANE"
   DisplayName: "&7"

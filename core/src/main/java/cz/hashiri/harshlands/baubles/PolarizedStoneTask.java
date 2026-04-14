@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,7 +37,7 @@ import java.util.UUID;
 public class PolarizedStoneTask extends BukkitRunnable implements HLTask {
 
     private static final Map<UUID, PolarizedStoneTask> tasks = new ConcurrentHashMap<>();
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final HLPlugin plugin;
     private final UUID id;
     private final Collection<String> allowedWorlds;
@@ -45,9 +45,9 @@ public class PolarizedStoneTask extends BukkitRunnable implements HLTask {
     private final double maxRadius;
     private final double pullForce;
 
-    public PolarizedStoneTask(BaubleModule module, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+    public PolarizedStoneTask(BaubleModule module, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.allowedWorlds = module.getAllowedWorlds();
         this.config = module.getUserConfig().getConfig();
         this.plugin = plugin;
@@ -58,7 +58,7 @@ public class PolarizedStoneTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             Location pLoc = player.getLocation();
@@ -78,7 +78,7 @@ public class PolarizedStoneTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && rsvPlayer.getBaubleDataModule().hasBauble("polarized_stone");
+        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && hlPlayer.getBaubleDataModule().hasBauble("polarized_stone");
     }
 
     @Override

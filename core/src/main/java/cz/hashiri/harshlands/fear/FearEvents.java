@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.fear;
 
 import cz.hashiri.harshlands.data.ModuleEvents;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Bukkit;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;

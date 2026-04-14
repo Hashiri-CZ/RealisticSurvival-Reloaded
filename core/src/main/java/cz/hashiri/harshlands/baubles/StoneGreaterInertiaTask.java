@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -35,16 +35,16 @@ public class StoneGreaterInertiaTask extends BukkitRunnable implements HLTask {
     private static final Map<UUID, StoneGreaterInertiaTask> tasks = new ConcurrentHashMap<>();
     private static final float MAX_WALK_SPEED = 1.0f;
     private static final float DEFAULT_WALK_SPEED = 0.2f;
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final HLPlugin plugin;
     private final UUID id;
     private final Collection<String> allowedWorlds;
     private final FileConfiguration config;
     private final double walkSpeedMultiplier;
 
-    public StoneGreaterInertiaTask(BaubleModule module, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+    public StoneGreaterInertiaTask(BaubleModule module, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.config = module.getUserConfig().getConfig();
         this.allowedWorlds = module.getAllowedWorlds();
         this.plugin = plugin;
@@ -54,7 +54,7 @@ public class StoneGreaterInertiaTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             player.setWalkSpeed((float) Math.min(DEFAULT_WALK_SPEED * walkSpeedMultiplier, MAX_WALK_SPEED));
@@ -66,7 +66,7 @@ public class StoneGreaterInertiaTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && rsvPlayer.getBaubleDataModule().hasBauble("stone_greater_inertia");
+        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && hlPlayer.getBaubleDataModule().hasBauble("stone_greater_inertia");
     }
 
     @Override
@@ -77,8 +77,8 @@ public class StoneGreaterInertiaTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void stop() {
-        if (rsvPlayer.getPlayer() != null) {
-            rsvPlayer.getPlayer().setWalkSpeed(DEFAULT_WALK_SPEED);
+        if (hlPlayer.getPlayer() != null) {
+            hlPlayer.getPlayer().setWalkSpeed(DEFAULT_WALK_SPEED);
         }
         tasks.remove(id);
         cancel();

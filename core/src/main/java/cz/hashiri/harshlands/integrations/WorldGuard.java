@@ -25,7 +25,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Location;
 
 import javax.annotation.Nonnull;
@@ -38,23 +38,15 @@ public class WorldGuard extends ProtectionPlugin {
         super(plugin, NAME);
 
         if (isIntegrated) {
-            // rsv-throwing
             // respect "pvp" state flag
             FlagRegistry registry = com.sk89q.worldguard.WorldGuard.getInstance().getFlagRegistry();
             try {
-                // create a flag with the name "rsv-throwing", defaulting to true
-                StateFlag flag = new StateFlag("rsv-throwing", true);
+                StateFlag flag = new StateFlag("hl-throwing", true);
                 registry.register(flag);
-//                MY_CUSTOM_FLAG = flag; // only set our field if there was no error
             } catch (FlagConflictException e) {
-                // some other plugin registered a flag by the same name already.
-                // you can use the existing flag, but this may cause conflicts - be sure to check type
-                Flag<?> existing = registry.get("rsv-throwing");
+                Flag<?> existing = registry.get("hl-throwing");
                 if (existing instanceof StateFlag) {
-//                    MY_CUSTOM_FLAG = (StateFlag) existing;
-                } else {
-                    // types don't match - this is bad news! some other plugin conflicts with you
-                    // hopefully this never actually happens
+                    // use the existing flag if it matches
                 }
             }
         }

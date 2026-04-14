@@ -20,7 +20,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.comfort.ComfortScoreCalculator;
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.tan.TempManager;
 import cz.hashiri.harshlands.tan.TemperatureCalculateTask;
@@ -52,7 +52,7 @@ public class HLExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nonnull String getIdentifier() {
-        return "rsv";
+        return "hl";
     }
 
     @Override

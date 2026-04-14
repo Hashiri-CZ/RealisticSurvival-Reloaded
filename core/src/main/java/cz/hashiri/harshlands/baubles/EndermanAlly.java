@@ -40,8 +40,8 @@ public interface EndermanAlly extends HLPet {
 
     @Override
     default void addNbtData() {
-        Utils.addNbtTag(getEntity(), "rsvmob", name(), PersistentDataType.STRING);
-        Utils.addNbtTag(getEntity(), "rsvendermanallyowner", getOwner().getUniqueId().toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hlmob", name(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hlendermanallyowner", getOwner().getUniqueId().toString(), PersistentDataType.STRING);
     }
 
     @Override

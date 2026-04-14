@@ -52,8 +52,8 @@ public interface SeaSerpent extends HLMob {
 
     @Override
     default void addNbtData() {
-        Utils.addNbtTag(getEntity(), "rsvmob", name(), PersistentDataType.STRING);
-        Utils.addNbtTag(getEntity(), "rsvseaserpentvariant", getVariant().toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hlmob", name(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hlseaserpentvariant", getVariant().toString(), PersistentDataType.STRING);
     }
 
     @Override

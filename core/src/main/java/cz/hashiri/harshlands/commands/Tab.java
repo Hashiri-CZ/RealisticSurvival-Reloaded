@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.commands;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static cz.hashiri.harshlands.rsv.HLPlugin.NAME;
+import static cz.hashiri.harshlands.HLPlugin.NAME;
 
 /**
  * Tab is a class that creates a tab completer
@@ -137,7 +137,7 @@ public class Tab implements TabCompleter {
                         }
                     }
                     case "debug" -> {
-                        cz.hashiri.harshlands.debug.DebugManager dm = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+                        cz.hashiri.harshlands.debug.DebugManager dm = cz.hashiri.harshlands.HLPlugin.getPlugin().getDebugManager();
                         if (dm != null) {
                             result.add("Everything");
                             result.add("off");

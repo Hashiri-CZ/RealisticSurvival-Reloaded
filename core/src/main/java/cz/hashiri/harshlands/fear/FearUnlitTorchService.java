@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.fear;
 
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.db.HLDatabase;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

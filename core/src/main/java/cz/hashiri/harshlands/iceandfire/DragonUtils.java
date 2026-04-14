@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.iceandfire;
 
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanandfire.BurnTask;
 import cz.hashiri.harshlands.spartanandfire.ElectrocuteTask;
 import cz.hashiri.harshlands.spartanandfire.FreezeTask;
@@ -44,12 +44,12 @@ public class DragonUtils {
     public static void convertToDragon(EnderDragon dragon, DragonBreed breed) {
         int stage = Utils.getRandomNum(1, 5);
 
-        Utils.addNbtTag(dragon, "rsvmob", breed.toString().toLowerCase() + "_dragon", PersistentDataType.STRING);
-        Utils.addNbtTag(dragon, "rsvdragonstage", stage, PersistentDataType.INTEGER);
-        Utils.addNbtTag(dragon, "rsvdragonage", Utils.getRandomNum(stage * 100, stage * 100 + 99), PersistentDataType.INTEGER);
-        Utils.addNbtTag(dragon, "rsvdragonvariant", DragonVariant.getEnabledVariants(breed).get(Utils.getRandomNum(0, DragonVariant.getEnabledVariants(breed).size() - 1)).toString(), PersistentDataType.STRING);
-        Utils.addNbtTag(dragon, "rsvdragonbreed", breed.toString(), PersistentDataType.STRING);
-        Utils.addNbtTag(dragon, "rsvdragongender", (Utils.getRandomNum(0, 1) == 1 ? DragonGender.MALE : DragonGender.FEMALE).toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(dragon, "hlmob", breed.toString().toLowerCase() + "_dragon", PersistentDataType.STRING);
+        Utils.addNbtTag(dragon, "hldragonstage", stage, PersistentDataType.INTEGER);
+        Utils.addNbtTag(dragon, "hldragonage", Utils.getRandomNum(stage * 100, stage * 100 + 99), PersistentDataType.INTEGER);
+        Utils.addNbtTag(dragon, "hldragonvariant", DragonVariant.getEnabledVariants(breed).get(Utils.getRandomNum(0, DragonVariant.getEnabledVariants(breed).size() - 1)).toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(dragon, "hldragonbreed", breed.toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(dragon, "hldragongender", (Utils.getRandomNum(0, 1) == 1 ? DragonGender.MALE : DragonGender.FEMALE).toString(), PersistentDataType.STRING);
     }
 
 
@@ -215,23 +215,23 @@ public class DragonUtils {
     }
 
     public static int getStage(EnderDragon dragon) {
-        return Utils.getNbtTag(dragon, "rsvdragonstage", PersistentDataType.INTEGER);
+        return Utils.getNbtTag(dragon, "hldragonstage", PersistentDataType.INTEGER);
     }
 
     public static int getAge(EnderDragon dragon) {
-        return Utils.getNbtTag(dragon, "rsvdragonage", PersistentDataType.INTEGER);
+        return Utils.getNbtTag(dragon, "hldragonage", PersistentDataType.INTEGER);
     }
 
     public static DragonVariant getVariant(EnderDragon dragon) {
-        return DragonVariant.valueOf(Utils.getNbtTag(dragon, "rsvdragonvariant", PersistentDataType.STRING).toUpperCase());
+        return DragonVariant.valueOf(Utils.getNbtTag(dragon, "hldragonvariant", PersistentDataType.STRING).toUpperCase());
     }
 
     public static DragonBreed getBreed(EnderDragon dragon) {
-        return DragonBreed.valueOf(Utils.getNbtTag(dragon, "rsvdragonbreed", PersistentDataType.STRING).toUpperCase());
+        return DragonBreed.valueOf(Utils.getNbtTag(dragon, "hldragonbreed", PersistentDataType.STRING).toUpperCase());
     }
 
     public static DragonGender getGender(EnderDragon dragon) {
-        return DragonGender.valueOf(Utils.getNbtTag(dragon, "rsvdragongender", PersistentDataType.STRING).toUpperCase());
+        return DragonGender.valueOf(Utils.getNbtTag(dragon, "hldragongender", PersistentDataType.STRING).toUpperCase());
     }
 }
 

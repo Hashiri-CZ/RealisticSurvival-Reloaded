@@ -20,7 +20,7 @@ public class SirenUtils {
     private static final FileConfiguration CONFIG = HLModule.getModule(IceFireModule.NAME).getUserConfig().getConfig();
 
     public static void convertToSiren(ElderGuardian elderGuardian) {
-        Utils.addNbtTag(elderGuardian, "rsvmob", "siren", PersistentDataType.STRING);
+        Utils.addNbtTag(elderGuardian, "hlmob", "siren", PersistentDataType.STRING);
     }
 
     public static boolean isSiren(Entity entity) {

@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,7 +35,7 @@ import java.util.UUID;
 public class BrokenHeartRepairTask extends BukkitRunnable implements HLTask {
 
     private static final Map<UUID, BrokenHeartRepairTask> tasks = new ConcurrentHashMap<>();
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final UUID id;
     private final HLPlugin plugin;
     private final Collection<String> allowedWorlds;
@@ -45,9 +45,9 @@ public class BrokenHeartRepairTask extends BukkitRunnable implements HLTask {
 
     private int ticks = 0;
 
-    public BrokenHeartRepairTask(HLPlugin plugin, BaubleModule module, HLPlayer rsvPlayer) {
-        this.rsvPlayer = rsvPlayer;
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+    public BrokenHeartRepairTask(HLPlugin plugin, BaubleModule module, HLPlayer hlPlayer) {
+        this.hlPlayer = hlPlayer;
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.allowedWorlds = module.getAllowedWorlds();
         this.plugin = plugin;
         FileConfiguration config = module.getUserConfig().getConfig();
@@ -59,13 +59,13 @@ public class BrokenHeartRepairTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             ticks++;
 
             if (ticks > duration) {
-                ItemStack brokenHeart = rsvPlayer.getBaubleDataModule().getBaubleBag().getItem("broken_heart");
+                ItemStack brokenHeart = hlPlayer.getBaubleDataModule().getBaubleBag().getItem("broken_heart");
                 Utils.changeDurability(brokenHeart, durabilityChange, false, false, player);
 
                 stop();
@@ -78,7 +78,7 @@ public class BrokenHeartRepairTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && rsvPlayer.getBaubleDataModule().hasBauble("broken_heart") && sleepRepairEnabled && player.isSleeping() && allowedWorlds.contains(player.getWorld().getName());
+        return globalConditionsMet(player) && hlPlayer.getBaubleDataModule().hasBauble("broken_heart") && sleepRepairEnabled && player.isSleeping() && allowedWorlds.contains(player.getWorld().getName());
     }
 
     @Override

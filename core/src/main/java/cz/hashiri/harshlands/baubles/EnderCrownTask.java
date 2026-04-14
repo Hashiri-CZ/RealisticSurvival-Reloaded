@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Location;
@@ -42,7 +42,7 @@ public class EnderCrownTask extends BukkitRunnable implements HLTask {
 
     private static final Map<UUID, EnderCrownTask> tasks = new ConcurrentHashMap<>();
 
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final UUID id;
     private final HLPlugin plugin;
     private final boolean transfromEndermen;
@@ -64,9 +64,9 @@ public class EnderCrownTask extends BukkitRunnable implements HLTask {
     private int waterDamageTicks;
     private int allyTicks;
 
-    public EnderCrownTask(BaubleModule module, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+    public EnderCrownTask(BaubleModule module, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
+        this.id = hlPlayer.getPlayer().getUniqueId();
         FileConfiguration config = module.getUserConfig().getConfig();
         this.allowedWorlds = module.getAllowedWorlds();
         this.plugin = plugin;
@@ -89,7 +89,7 @@ public class EnderCrownTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = this.rsvPlayer.getPlayer();
+        Player player = this.hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             if (transfromEndermen) {
@@ -131,7 +131,7 @@ public class EnderCrownTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && rsvPlayer.getBaubleDataModule().hasBauble("ender_queens_crown");
+        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && hlPlayer.getBaubleDataModule().hasBauble("ender_queens_crown");
     }
 
     @Override
@@ -160,7 +160,7 @@ public class EnderCrownTask extends BukkitRunnable implements HLTask {
     public boolean canSpawnAllies(boolean playerDamaged) {
         if (allyTicks > allyDelay) {
             if (Utils.roll(allySpawnChance)) {
-                Player player = this.rsvPlayer.getPlayer();
+                Player player = this.hlPlayer.getPlayer();
                 if (player.getHealth() / player.getAttribute(Attribute.MAX_HEALTH).getValue() <= maxHealthPercent) {
                     if (mustTakeDamage) {
                         return playerDamaged;
@@ -173,7 +173,7 @@ public class EnderCrownTask extends BukkitRunnable implements HLTask {
     }
 
     public void spawnAllies() {
-        Player player = this.rsvPlayer.getPlayer();
+        Player player = this.hlPlayer.getPlayer();
         Location loc = player.getLocation();
         World world = player.getWorld();
 

@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.data.cabinfever;
 
 import cz.hashiri.harshlands.data.HLDataModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 
 import java.util.UUID;
 

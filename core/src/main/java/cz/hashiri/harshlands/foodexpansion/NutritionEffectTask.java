@@ -2,7 +2,7 @@ package cz.hashiri.harshlands.foodexpansion;
 
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.utils.AboveActionBarHUD;
 

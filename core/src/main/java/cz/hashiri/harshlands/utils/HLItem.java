@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.utils;
 
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -263,8 +263,8 @@ public class HLItem extends ItemStack {
         }
 
         if (module != null) {
-            Utils.addNbtTag(this, "rsvitem", this.name, PersistentDataType.STRING);
-            Utils.addNbtTag(this, "rsvmodule", module.getName(), PersistentDataType.STRING);
+            Utils.addNbtTag(this, "hlitem", this.name, PersistentDataType.STRING);
+            Utils.addNbtTag(this, "hlmodule", module.getName(), PersistentDataType.STRING);
         }
 
         itemMap.put(name, this);
@@ -283,7 +283,7 @@ public class HLItem extends ItemStack {
 
     public static boolean isHLItem(@Nullable ItemStack item) {
         if (Utils.isItemReal(item)) {
-            return Utils.hasNbtTag(item, "rsvitem");
+            return Utils.hasNbtTag(item, "hlitem");
         }
         return false;
     }
@@ -303,12 +303,12 @@ public class HLItem extends ItemStack {
 
     @Nullable
     public static String getModuleNameFromItem(@Nonnull ItemStack item) {
-        return Utils.getNbtTag(item, "rsvmodule", PersistentDataType.STRING);
+        return Utils.getNbtTag(item, "hlmodule", PersistentDataType.STRING);
     }
 
     @Nullable
     public static String getNameFromItem(@Nonnull ItemStack item) {
-        return Utils.getNbtTag(item, "rsvitem", PersistentDataType.STRING);
+        return Utils.getNbtTag(item, "hlitem", PersistentDataType.STRING);
     }
 
     @Nullable

@@ -1,6 +1,6 @@
 package cz.hashiri.harshlands.foodexpansion.items;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.foodexpansion.FoodExpansionModule;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.*;

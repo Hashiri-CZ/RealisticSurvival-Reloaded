@@ -23,7 +23,7 @@ import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.comfort.ComfortScoreCalculator;
 import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.tan.TempManager;
 import cz.hashiri.harshlands.tan.TemperatureCalculateTask;
@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static cz.hashiri.harshlands.rsv.HLPlugin.NAME;
+import static cz.hashiri.harshlands.HLPlugin.NAME;
 
 /**
  * Commands is a class that allows users to

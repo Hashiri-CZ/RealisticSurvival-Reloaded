@@ -19,7 +19,7 @@ package cz.hashiri.harshlands.data.toughasnails;
 import cz.hashiri.harshlands.data.HLDataModule;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

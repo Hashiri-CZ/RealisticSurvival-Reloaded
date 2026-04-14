@@ -20,7 +20,7 @@ import cz.hashiri.harshlands.data.HLDataModule;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
 import cz.hashiri.harshlands.fear.FearModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 

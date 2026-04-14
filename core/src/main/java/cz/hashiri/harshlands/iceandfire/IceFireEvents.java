@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.iceandfire;
 
 import cz.hashiri.harshlands.data.ModuleEvents;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanandfire.BurnTask;
 import cz.hashiri.harshlands.spartanandfire.ElectrocuteTask;
 import cz.hashiri.harshlands.spartanandfire.FreezeTask;
@@ -98,7 +98,7 @@ public class IceFireEvents extends ModuleEvents implements Listener {
 
         switch (type) {
             case "dragonbone_flamed" -> {
-                if (Utils.hasNbtTag(defender, "rsvmob") && !Utils.getNbtTag(defender, "rsvmob", PersistentDataType.STRING).equals("fire_dragon")) {
+                if (Utils.hasNbtTag(defender, "hlmob") && !Utils.getNbtTag(defender, "hlmob", PersistentDataType.STRING).equals("fire_dragon")) {
                     origDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
                 }
 
@@ -110,7 +110,7 @@ public class IceFireEvents extends ModuleEvents implements Listener {
                 }
             }
             case "dragonbone_iced" -> {
-                if (Utils.hasNbtTag(defender, "rsvmob") && !Utils.getNbtTag(defender, "rsvmob", PersistentDataType.STRING).equals("ice_dragon")) {
+                if (Utils.hasNbtTag(defender, "hlmob") && !Utils.getNbtTag(defender, "hlmob", PersistentDataType.STRING).equals("ice_dragon")) {
                     origDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
                 }
 
@@ -120,7 +120,7 @@ public class IceFireEvents extends ModuleEvents implements Listener {
 
             }
             case "dragonbone_lightning" -> {
-                if (Utils.hasNbtTag(defender, "rsvmob") && !Utils.getNbtTag(defender, "rsvmob", PersistentDataType.STRING).equals("lightning_dragon")) {
+                if (Utils.hasNbtTag(defender, "hlmob") && !Utils.getNbtTag(defender, "hlmob", PersistentDataType.STRING).equals("lightning_dragon")) {
                     origDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
                 }
 
@@ -182,8 +182,8 @@ public class IceFireEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(defender) && shouldEventBeRan(attacker)))
             return;
 
-        if (Utils.hasNbtTag(attacker, "rsvbow")) {
-            String name = Utils.getNbtTag(attacker, "rsvbow", PersistentDataType.STRING);
+        if (Utils.hasNbtTag(attacker, "hlbow")) {
+            String name = Utils.getNbtTag(attacker, "hlbow", PersistentDataType.STRING);
 
             IceFireModule.applyDragonItemEffect(defender, name, module);
         }
@@ -209,8 +209,8 @@ public class IceFireEvents extends ModuleEvents implements Listener {
 
         double damage = event.getDamage();
 
-        if (Utils.hasNbtTag(attacker, "rsvbow")) {
-            String name = Utils.getNbtTag(attacker, "rsvbow", PersistentDataType.STRING);
+        if (Utils.hasNbtTag(attacker, "hlbow")) {
+            String name = Utils.getNbtTag(attacker, "hlbow", PersistentDataType.STRING);
 
             damage = IceFireModule.applyDragonItemBonusDamage(defender, name, damage, module);
         }
@@ -464,7 +464,7 @@ public class IceFireEvents extends ModuleEvents implements Listener {
             return;
         }
 
-        // Cancel the fatigue only if nearby elder guardians are RSV sea serpents.
+        // Cancel the fatigue only if nearby elder guardians are Harshlands sea serpents.
         // If a vanilla elder guardian is nearby, keep vanilla behavior.
         double checkRange = Math.max(1.0, config.getDouble("SeaSerpent.SpawnRules.PlayerRange", 128.0));
         boolean hasSeaSerpentNearby = false;
@@ -515,29 +515,29 @@ public class IceFireEvents extends ModuleEvents implements Listener {
             // determine if the matrix contains only 2 non-null items
             ItemStack[] matrix = event.getInventory().getMatrix();
 
-            // preprocess matrix to obtain only rsv items
-            List<ItemStack> rsvItems = new ArrayList<>();
+            // preprocess matrix to obtain only HL items
+            List<ItemStack> hlItems = new ArrayList<>();
 
             for (ItemStack item : matrix) {
                 if (HLItem.isHLItem(item)) {
-                    rsvItems.add(item);
+                    hlItems.add(item);
                 }
             }
 
-            if (rsvItems.size() == 2) {
+            if (hlItems.size() == 2) {
                 // check if one of the items is a dragon blood
                 ItemStack dragonBlood;
                 ItemStack dragonboneWeapon;
 
-                switch (HLItem.getNameFromItem(rsvItems.get(0))) {
+                switch (HLItem.getNameFromItem(hlItems.get(0))) {
                     case "dragon_blood_fire", "dragon_blood_ice", "dragon_blood_lightning" -> {
-                        dragonBlood = rsvItems.get(0);
-                        dragonboneWeapon = rsvItems.get(1);
+                        dragonBlood = hlItems.get(0);
+                        dragonboneWeapon = hlItems.get(1);
                     }
                     // check if item2 is the dragon blood instead
                     default -> {
-                        dragonBlood = rsvItems.get(1);
-                        dragonboneWeapon = rsvItems.get(0);
+                        dragonBlood = hlItems.get(1);
+                        dragonboneWeapon = hlItems.get(0);
                     }
                 }
 

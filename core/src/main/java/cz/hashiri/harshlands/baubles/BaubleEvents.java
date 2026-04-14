@@ -22,7 +22,7 @@ import cz.hashiri.harshlands.data.baubles.BaubleInventory;
 import cz.hashiri.harshlands.data.baubles.BaubleSlot;
 import cz.hashiri.harshlands.data.baubles.DataModule;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.PlayerJumpEvent;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
@@ -126,9 +126,9 @@ public class BaubleEvents extends ModuleEvents implements Listener {
 
         UUID id = event.getPlayer().getUniqueId();
 
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
 
-        Collection<ItemStack> baubles = rsvPlayer.getBaubleDataModule().getBaubleBag().getAllBaubles();
+        Collection<ItemStack> baubles = hlPlayer.getBaubleDataModule().getBaubleBag().getAllBaubles();
 
         for (ItemStack item : baubles) {
             Bukkit.getServer().getPluginManager().callEvent(new BaubleChangeEvent(player, item, BaubleChange.ADDITION));
@@ -153,9 +153,9 @@ public class BaubleEvents extends ModuleEvents implements Listener {
             return;
 
         UUID id = event.getPlayer().getUniqueId();
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
 
-        DataModule dm = rsvPlayer.getBaubleDataModule();
+        DataModule dm = hlPlayer.getBaubleDataModule();
         if (dm == null) return;
         Collection<ItemStack> baubles = dm.getBaubleBag().getAllBaubles();
 
@@ -178,9 +178,9 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                     return;
 
                 UUID id = event.getPlayer().getUniqueId();
-                HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
+                HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
 
-                DataModule dm = rsvPlayer.getBaubleDataModule();
+                DataModule dm = hlPlayer.getBaubleDataModule();
                 if (dm == null) return;
                 Collection<ItemStack> baubles = dm.getBaubleBag().getAllBaubles();
 
@@ -213,7 +213,7 @@ public class BaubleEvents extends ModuleEvents implements Listener {
             debugMgr.send("Baubles", "Inventory", id, chatLine, consoleLine);
         }
 
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
 
         if (event.getChange() == BaubleChange.ADDITION) {
             boolean isValid = true;
@@ -232,41 +232,41 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                     switch (manager) {
                         case POTION_RING_REGENERATION, POTION_RING_HASTE, POTION_RING_SPEED, POTION_RING_STRENGTH, POTION_RING_JUMP_BOOST, POTION_RING_RESISTANCE, MINERS_RING, SHIELD_HONOR, DRAGONS_EYE, PHANTOM_PRISM, PRIDE_PENDANT -> {
                             if (!PotionBaubleTask.hasTask(id, manager.toString().toLowerCase())) {
-                                new PotionBaubleTask(module, (PotionBauble) bauble, rsvPlayer, plugin).start();
+                                new PotionBaubleTask(module, (PotionBauble) bauble, hlPlayer, plugin).start();
                             }
                         }
                         case STONE_SEA -> {
                             if (!StoneSeaTask.hasTask(id)) {
-                                new StoneSeaTask(module, rsvPlayer, plugin).start();
+                                new StoneSeaTask(module, hlPlayer, plugin).start();
                             }
 
                             if (!PotionBaubleTask.hasTask(id, manager.toString().toLowerCase())) {
-                                new PotionBaubleTask(module, (PotionBauble) bauble, rsvPlayer, plugin).start();
+                                new PotionBaubleTask(module, (PotionBauble) bauble, hlPlayer, plugin).start();
                             }
                         }
                         case SCARLITE_RING -> {
                             if (!ScarliteRingTask.hasTask(id)) {
-                                new ScarliteRingTask(module, rsvPlayer, plugin).start();
+                                new ScarliteRingTask(module, hlPlayer, plugin).start();
                             }
                         }
                         case POLARIZED_STONE -> {
                             if (!PolarizedStoneTask.hasTask(id)) {
-                                new PolarizedStoneTask(module, rsvPlayer, plugin).start();
+                                new PolarizedStoneTask(module, hlPlayer, plugin).start();
                             }
                         }
                         case ENDER_QUEENS_CROWN -> {
                             if (!EnderCrownTask.hasTask(id)) {
-                                new EnderCrownTask(module, rsvPlayer, plugin).start();
+                                new EnderCrownTask(module, hlPlayer, plugin).start();
                             }
                         }
                         case STONE_NEGATIVE_GRAVITY -> {
                             if (!StoneNegativeGravityTask.hasTask(id)) {
-                                new StoneNegativeGravityTask(module, rsvPlayer, plugin).start();
+                                new StoneNegativeGravityTask(module, hlPlayer, plugin).start();
                             }
                         }
                         case STONE_GREATER_INERTIA -> {
                             if (!StoneGreaterInertiaTask.hasTask(id)) {
-                                new StoneGreaterInertiaTask(module, rsvPlayer, plugin).start();
+                                new StoneGreaterInertiaTask(module, hlPlayer, plugin).start();
                             }
                         }
                         default -> {}
@@ -335,8 +335,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                 if (HLItem.isHLItem(cursor)) {
                     String cursorName = HLItem.getNameFromItem(cursor);
 
-                    if (!HLItem.getNameFromItem(cursor).equals("gui_glass") && Utils.hasNbtTag(cursor, "rsvbaubleslot") && Utils.hasNbtTag(current, "rsvbaubleslot") && cursor.getAmount() == 1 && !Objects.equals(HLItem.getNameFromItem(current), HLItem.getNameFromItem(cursor)) && event.getClick() != ClickType.DOUBLE_CLICK) {
-                        String cursorTag = Utils.getNbtTag(cursor, "rsvbaubleslot", PersistentDataType.STRING);
+                    if (!HLItem.getNameFromItem(cursor).equals("gui_glass") && Utils.hasNbtTag(cursor, "hlbaubleslot") && Utils.hasNbtTag(current, "hlbaubleslot") && cursor.getAmount() == 1 && !Objects.equals(HLItem.getNameFromItem(current), HLItem.getNameFromItem(cursor)) && event.getClick() != ClickType.DOUBLE_CLICK) {
+                        String cursorTag = Utils.getNbtTag(cursor, "hlbaubleslot", PersistentDataType.STRING);
 
                         switch (cursorName) {
                             // cursor was a slot
@@ -456,8 +456,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
 
         if (target instanceof Player player && HLPlayer.isValidPlayer(player)) {
             // if the player has an ender queen's crown in his/her inventory
-            HLPlayer rsvPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
-            DataModule module = rsvPlayer.getBaubleDataModule();
+            HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+            DataModule module = hlPlayer.getBaubleDataModule();
 
             if (module.getBaubleBag().hasBauble("ender_queens_crown") && config.getBoolean("Items.ender_queens_crown.PreventEndermenAngering")) {
                 event.setCancelled(true);
@@ -491,8 +491,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
 
         double damage = event.getDamage();
 
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
-        DataModule module = rsvPlayer.getBaubleDataModule();
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        DataModule module = hlPlayer.getBaubleDataModule();
         BaubleInventory inv = module.getBaubleBag();
 
         if (inv.hasBauble("wrath_pendant") && Utils.areCriticalHitConditionsMet(player, event.getDamage(), event.getFinalDamage()))
@@ -523,8 +523,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
             return;
 
         UUID id = player.getUniqueId();
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
-        DataModule module = rsvPlayer.getBaubleDataModule();
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
+        DataModule module = hlPlayer.getBaubleDataModule();
         BaubleInventory inv = module.getBaubleBag();
 
         if (!(inv.hasBauble("ender_queens_crown") && EnderCrownTask.hasTask(id)))
@@ -552,8 +552,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         EntityDamageEvent.DamageCause cause = event.getCause(); // get the damage cause
         PlayerInventory inv = player.getInventory(); // get the player's inventory
         ItemStack itemOffHand = inv.getItemInOffHand(); // get the item in the player's off hand
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
-        DataModule module = rsvPlayer.getBaubleDataModule();
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        DataModule module = hlPlayer.getBaubleDataModule();
         BaubleInventory baubleInv = module.getBaubleBag();
         String offHandName = "";
 
@@ -663,12 +663,12 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(player) && event.getBedEnterResult() == PlayerBedEnterEvent.BedEnterResult.OK && HLPlayer.isValidPlayer(player)))
             return;
 
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
 
-        DataModule dataModule = rsvPlayer.getBaubleDataModule();
+        DataModule dataModule = hlPlayer.getBaubleDataModule();
 
         if (dataModule.getBaubleBag().hasBauble("broken_heart") && !BrokenHeartRepairTask.hasTask(player.getUniqueId())) {
-            new BrokenHeartRepairTask(plugin, module, rsvPlayer).start();
+            new BrokenHeartRepairTask(plugin, module, hlPlayer).start();
         }
     }
 
@@ -685,11 +685,11 @@ public class BaubleEvents extends ModuleEvents implements Listener {
             if (!HLPlayer.isValidPlayer(id))
                 continue;
 
-            HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
-            DataModule dataModule = rsvPlayer.getBaubleDataModule();
+            HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
+            DataModule dataModule = hlPlayer.getBaubleDataModule();
 
             if (dataModule.getBaubleBag().hasBauble("broken_heart")) {
-                Utils.changeDurability(dataModule.getBaubleBag().getItem("broken_heart"), 1, false, false, rsvPlayer.getPlayer());
+                Utils.changeDurability(dataModule.getBaubleBag().getItem("broken_heart"), 1, false, false, hlPlayer.getPlayer());
             }
 
             if (BrokenHeartRepairTask.hasTask(id)) {
@@ -709,8 +709,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(player) && HLPlayer.isValidPlayer(player)))
             return;
 
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
-        DataModule module = rsvPlayer.getBaubleDataModule();
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        DataModule module = hlPlayer.getBaubleDataModule();
 
         BaubleInventory baubleInv = module.getBaubleBag();
 
@@ -814,8 +814,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         ItemStack itemOffHand = player.getInventory().getItemInOffHand(); // get the new effect
         ItemStack helmet = player.getInventory().getHelmet();
 
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
-        DataModule module = rsvPlayer.getBaubleDataModule();
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        DataModule module = hlPlayer.getBaubleDataModule();
         BaubleInventory baubleInv = module.getBaubleBag();
 
         String offHandName = "";
@@ -950,8 +950,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         }
         else if (event.getAction() == Action.LEFT_CLICK_AIR) {
             UUID id = player.getUniqueId();
-            HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
-            DataModule module = rsvPlayer.getBaubleDataModule();
+            HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
+            DataModule module = hlPlayer.getBaubleDataModule();
 
             if (module.getBaubleBag().hasBauble("stone_negative_gravity")) {
                 Vector velocity = player.getVelocity();
@@ -980,8 +980,8 @@ public class BaubleEvents extends ModuleEvents implements Listener {
             return;
 
         UUID id = player.getUniqueId();
-        HLPlayer rsvplayer = HLPlayer.getPlayers().get(id);
-        BaubleInventory inv = rsvplayer.getBaubleDataModule().getBaubleBag();
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
+        BaubleInventory inv = hlPlayer.getBaubleDataModule().getBaubleBag();
 
         if (inv.hasBauble("pride_pendant") && !PotionBaubleTask.hasTask(id, "pride_pendant")) {
             Bukkit.getServer().getPluginManager().callEvent(new BaubleChangeEvent(player, inv.getItem("pride_pendant"), BaubleChange.ADDITION));
@@ -1014,9 +1014,9 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         }
 
         UUID id = player.getUniqueId();
-        HLPlayer rsvPlayer = HLPlayer.getPlayers().get(id);
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
 
-        BaubleInventory inv = rsvPlayer.getBaubleDataModule().getBaubleBag();
+        BaubleInventory inv = hlPlayer.getBaubleDataModule().getBaubleBag();
 
         if (inv.hasBauble("gluttony_pendant"))
             ((PotionBauble) TickableBaubleManager.GLUTTONY_PENDANT.getBauble()).ability(player, inv.getBaubleAmount("gluttony_pendant"));

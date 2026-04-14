@@ -19,7 +19,7 @@ package cz.hashiri.harshlands.tan;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.integrations.CompatiblePlugin;
 import cz.hashiri.harshlands.integrations.RealisticSeasons;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;

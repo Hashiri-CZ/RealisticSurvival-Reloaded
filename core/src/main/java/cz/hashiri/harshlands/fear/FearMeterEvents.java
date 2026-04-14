@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.fear;
 
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.fear.DataModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;

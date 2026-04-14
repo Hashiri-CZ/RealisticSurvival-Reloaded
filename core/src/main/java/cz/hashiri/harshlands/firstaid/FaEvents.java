@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.firstaid;
 
 import cz.hashiri.harshlands.data.ModuleEvents;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.event.Listener;
 
 public class FaEvents extends ModuleEvents implements Listener {

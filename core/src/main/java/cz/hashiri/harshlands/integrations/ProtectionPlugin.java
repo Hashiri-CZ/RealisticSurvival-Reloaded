@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.integrations;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Location;
 
 import javax.annotation.Nonnull;

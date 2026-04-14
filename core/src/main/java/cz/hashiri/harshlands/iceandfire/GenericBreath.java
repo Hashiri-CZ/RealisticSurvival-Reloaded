@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.iceandfire;
 
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLMob;
 import cz.hashiri.harshlands.utils.Utils;
 import org.apache.commons.lang.StringUtils;

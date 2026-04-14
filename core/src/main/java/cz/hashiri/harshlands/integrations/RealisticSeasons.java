@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.integrations;
 
 import me.casperge.realisticseasons.api.SeasonsAPI;
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import org.bukkit.entity.Player;
 

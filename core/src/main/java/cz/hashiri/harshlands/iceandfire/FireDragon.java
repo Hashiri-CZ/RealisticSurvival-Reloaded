@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.iceandfire;
 
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanandfire.BurnTask;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

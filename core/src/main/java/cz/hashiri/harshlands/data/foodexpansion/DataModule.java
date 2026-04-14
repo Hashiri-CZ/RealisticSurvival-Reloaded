@@ -5,7 +5,7 @@ import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
 import cz.hashiri.harshlands.foodexpansion.FoodExpansionModule;
 import cz.hashiri.harshlands.foodexpansion.PlayerNutritionData;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.utils;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.HashSet;

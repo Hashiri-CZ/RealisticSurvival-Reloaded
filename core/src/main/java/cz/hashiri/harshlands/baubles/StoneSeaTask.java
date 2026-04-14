@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,7 +38,7 @@ import java.util.UUID;
 public class StoneSeaTask extends BukkitRunnable implements HLTask {
 
     private static final Map<UUID, StoneSeaTask> tasks = new ConcurrentHashMap<>();
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final UUID id;
     private final Collection<String> allowedWorlds;
     private final HLPlugin plugin;
@@ -50,10 +50,10 @@ public class StoneSeaTask extends BukkitRunnable implements HLTask {
 
     private final FileConfiguration config;
 
-    public StoneSeaTask(BaubleModule module, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
+    public StoneSeaTask(BaubleModule module, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
         this.allowedWorlds = module.getAllowedWorlds();
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.plugin = plugin;
         this.config = module.getUserConfig().getConfig();
         this.baseSwimSpeed = config.getDouble("Items.stone_sea.BaseSwimSpeed");
@@ -66,7 +66,7 @@ public class StoneSeaTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             Vector velocity = player.getVelocity().clone();
@@ -115,7 +115,7 @@ public class StoneSeaTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && rsvPlayer.getBaubleDataModule().hasBauble("stone_sea");
+        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && hlPlayer.getBaubleDataModule().hasBauble("stone_sea");
     }
 
     @Override

@@ -3,7 +3,7 @@ package cz.hashiri.harshlands.data.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import cz.hashiri.harshlands.data.HLScheduler;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -160,77 +160,6 @@ public class HLDatabase {
             startupInfo("Connection established.");
         } catch (Exception e) {
             throw new RuntimeException("Failed to connect to database: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Renames old rsv_* tables to hl_* if they exist (one-time migration from pre-Harshlands DB).
-     * Must be called after connect() and before createTables().
-     */
-    public void migrateTableNames() {
-        try (Connection conn = dataSource.getConnection()) {
-            if (isMysql) {
-                // MySQL: check and rename each table if it still has the old name
-                String[][] migrations = {
-                    {"rsv_tan_data",     "hl_tan_data"},
-                    {"rsv_baubles_data", "hl_baubles_data"},
-                    {"rsv_torch_lit",    "hl_torch_lit"}
-                };
-                for (String[] pair : migrations) {
-                    String oldTable = pair[0];
-                    String newTable = pair[1];
-                    try (PreparedStatement ps = conn.prepareStatement(
-                            "SELECT COUNT(*) FROM information_schema.tables"
-                            + " WHERE table_schema = DATABASE() AND table_name = ?")) {
-                        ps.setString(1, oldTable);
-                        try (ResultSet rs = ps.executeQuery()) {
-                            if (rs.next() && rs.getInt(1) > 0) {
-                                conn.createStatement().execute(
-                                    "RENAME TABLE " + oldTable + " TO " + newTable);
-                                startupInfo("Renamed table " + oldTable + " -> " + newTable);
-                            }
-                        }
-                    }
-                }
-            } else {
-                // H2: table names are stored uppercased in INFORMATION_SCHEMA
-                String[][] migrations = {
-                    {"RSV_TAN_DATA",     "HL_TAN_DATA",     "hl_tan_data"},
-                    {"RSV_BAUBLES_DATA", "HL_BAUBLES_DATA", "hl_baubles_data"},
-                    {"RSV_TORCH_LIT",    "HL_TORCH_LIT",    "hl_torch_lit"}
-                };
-                for (String[] triple : migrations) {
-                    String oldUpper = triple[0];
-                    String newUpper = triple[1];
-                    String newTable = triple[2];
-                    try (PreparedStatement ps = conn.prepareStatement(
-                            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES"
-                            + " WHERE TABLE_SCHEMA = 'PUBLIC' AND TABLE_NAME = ?")) {
-                        ps.setString(1, oldUpper);
-                        try (ResultSet rs = ps.executeQuery()) {
-                            if (rs.next() && rs.getInt(1) > 0) {
-                                // Also check the new name doesn't already exist
-                                boolean newExists;
-                                try (PreparedStatement ps2 = conn.prepareStatement(
-                                        "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES"
-                                        + " WHERE TABLE_SCHEMA = 'PUBLIC' AND TABLE_NAME = ?")) {
-                                    ps2.setString(1, newUpper);
-                                    try (ResultSet rs2 = ps2.executeQuery()) {
-                                        newExists = rs2.next() && rs2.getInt(1) > 0;
-                                    }
-                                }
-                                if (!newExists) {
-                                    conn.createStatement().execute(
-                                        "ALTER TABLE " + oldUpper + " RENAME TO " + newTable);
-                                    startupInfo("Renamed table " + oldUpper + " -> " + newTable);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            startupWarn("Table name migration failed: " + e.getMessage());
         }
     }
 

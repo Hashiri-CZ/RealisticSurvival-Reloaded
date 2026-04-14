@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;
@@ -35,7 +35,7 @@ import java.util.UUID;
 public class StoneNegativeGravityTask extends BukkitRunnable implements HLTask {
 
     private static final Map<UUID, StoneNegativeGravityTask> tasks = new ConcurrentHashMap<>();
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final HLPlugin plugin;
     private final UUID id;
     private final Collection<String> allowedWorlds;
@@ -45,13 +45,13 @@ public class StoneNegativeGravityTask extends BukkitRunnable implements HLTask {
     private final boolean wasGravityInitiallyOn;
     private final boolean reenableGravity;
 
-    public StoneNegativeGravityTask(BaubleModule module, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+    public StoneNegativeGravityTask(BaubleModule module, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.config = module.getUserConfig().getConfig();
         this.allowedWorlds = module.getAllowedWorlds();
         this.plugin = plugin;
-        this.wasGravityInitiallyOn = rsvPlayer.getPlayer().hasGravity();
+        this.wasGravityInitiallyOn = hlPlayer.getPlayer().hasGravity();
         this.reenableGravity = config.getBoolean("Items.stone_negative_gravity.ReenableGravity");
         this.maxDownwardVelocity = config.getDouble("Items.stone_negative_gravity.Instability.MaxDownwardVelocity");
         this.maxUpwardVelocity = config.getDouble("Items.stone_negative_gravity.Instability.MaxUpwardVelocity");
@@ -60,7 +60,7 @@ public class StoneNegativeGravityTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             player.setGravity(false);
@@ -75,7 +75,7 @@ public class StoneNegativeGravityTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && (rsvPlayer.getBaubleDataModule().hasBauble("stone_negative_gravity") || HLItem.isHoldingItemInMainHand("stone_negative_gravity", player));
+        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && (hlPlayer.getBaubleDataModule().hasBauble("stone_negative_gravity") || HLItem.isHoldingItemInMainHand("stone_negative_gravity", player));
     }
 
     @Override
@@ -86,12 +86,12 @@ public class StoneNegativeGravityTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void stop() {
-        if (rsvPlayer.getPlayer() != null) {
+        if (hlPlayer.getPlayer() != null) {
             if (reenableGravity) {
-                rsvPlayer.getPlayer().setGravity(true);
+                hlPlayer.getPlayer().setGravity(true);
             }
             else {
-                rsvPlayer.getPlayer().setGravity(wasGravityInitiallyOn);
+                hlPlayer.getPlayer().setGravity(wasGravityInitiallyOn);
             }
         }
         tasks.remove(id);

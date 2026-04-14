@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.comfort;
 
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.cabinfever.DataModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.ThirstCalculateTask;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;

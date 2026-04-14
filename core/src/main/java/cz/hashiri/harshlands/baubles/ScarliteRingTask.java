@@ -17,7 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,18 +34,18 @@ import java.util.UUID;
 public class ScarliteRingTask extends BukkitRunnable implements HLTask {
 
     private static final Map<UUID, ScarliteRingTask> tasks = new ConcurrentHashMap<>();
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final UUID id;
     private final Collection<String> allowedWorlds;
     private final HLPlugin plugin;
     private final FileConfiguration config;
     private final double defaultHealAmount;
 
-    public ScarliteRingTask(BaubleModule module, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
+    public ScarliteRingTask(BaubleModule module, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
         this.config = module.getUserConfig().getConfig();
         this.allowedWorlds = module.getAllowedWorlds();
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.plugin = plugin;
         this.defaultHealAmount = config.getDouble("Items.scarlite_ring.HealAmount");
         tasks.put(id, this);
@@ -53,7 +53,7 @@ public class ScarliteRingTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getValue();
@@ -68,7 +68,7 @@ public class ScarliteRingTask extends BukkitRunnable implements HLTask {
 
     @Override
     public boolean conditionsMet(@Nullable Player player) {
-        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && rsvPlayer.getBaubleDataModule().hasBauble("scarlite_ring");
+        return globalConditionsMet(player) && allowedWorlds.contains(player.getWorld().getName()) && hlPlayer.getBaubleDataModule().hasBauble("scarlite_ring");
     }
 
     @Override

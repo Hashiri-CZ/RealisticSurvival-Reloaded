@@ -22,7 +22,7 @@ import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
 import cz.hashiri.harshlands.integrations.CompatiblePlugin;
 import cz.hashiri.harshlands.integrations.RealisticSeasons;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.tan.TempManager;
 import cz.hashiri.harshlands.tan.ThirstManager;

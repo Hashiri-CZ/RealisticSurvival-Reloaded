@@ -36,7 +36,7 @@ public class EndermanAllyUtils {
     }
 
     public static UUID getOwnerId(Entity entity) {
-        return UUID.fromString(Utils.getNbtTag(entity, "rsvendermanallyowner", PersistentDataType.STRING));
+        return UUID.fromString(Utils.getNbtTag(entity, "hlendermanallyowner", PersistentDataType.STRING));
     }
 }
 

@@ -23,7 +23,7 @@ import cz.hashiri.harshlands.iceandfire.*;
 import cz.hashiri.harshlands.integrations.AuraSkills;
 import cz.hashiri.harshlands.integrations.CompatiblePlugin;
 import cz.hashiri.harshlands.integrations.PAPI;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanweaponry.KbTask;
 import cz.hashiri.harshlands.utils.ToolHandler.Tool;
 import cz.hashiri.harshlands.utils.recipe.HLRecipe;
@@ -906,7 +906,7 @@ public class Utils {
     }
 
     @Nullable
-    public static EquipmentSlot getSlotContainingRsvItem(@Nonnull Player player, @Nonnull String rsvName) {
+    public static EquipmentSlot getSlotContainingHLItem(@Nonnull Player player, @Nonnull String hlName) {
         PlayerInventory inv = player.getInventory();
 
         ItemStack helmet = inv.getHelmet();
@@ -917,32 +917,32 @@ public class Utils {
         ItemStack offHand = inv.getItemInOffHand();
 
         if (HLItem.isHLItem(mainHand)) {
-            if (HLItem.getNameFromItem(mainHand).equals(rsvName)) {
+            if (HLItem.getNameFromItem(mainHand).equals(hlName)) {
                 return EquipmentSlot.HAND;
             }
         }
         if (HLItem.isHLItem(offHand)) {
-            if (HLItem.getNameFromItem(offHand).equals(rsvName)) {
+            if (HLItem.getNameFromItem(offHand).equals(hlName)) {
                 return EquipmentSlot.OFF_HAND;
             }
         }
         if (HLItem.isHLItem(helmet)) {
-            if (HLItem.getNameFromItem(helmet).equals(rsvName)) {
+            if (HLItem.getNameFromItem(helmet).equals(hlName)) {
                 return EquipmentSlot.HEAD;
             }
         }
         if (HLItem.isHLItem(chestplate)) {
-            if (HLItem.getNameFromItem(chestplate).equals(rsvName)) {
+            if (HLItem.getNameFromItem(chestplate).equals(hlName)) {
                 return EquipmentSlot.CHEST;
             }
         }
         if (HLItem.isHLItem(leggings)) {
-            if (HLItem.getNameFromItem(leggings).equals(rsvName)) {
+            if (HLItem.getNameFromItem(leggings).equals(hlName)) {
                 return EquipmentSlot.LEGS;
             }
         }
         if (HLItem.isHLItem(boots)) {
-            if (HLItem.getNameFromItem(boots).equals(rsvName)) {
+            if (HLItem.getNameFromItem(boots).equals(hlName)) {
                 return EquipmentSlot.FEET;
             }
         }
@@ -1152,18 +1152,18 @@ public class Utils {
         if (hasCustomDurability) {
             int mcDurability;
 
-            int rsvDurability = getCustomDurability(item);
-            int rsvMaxDurability = getMaxCustomDurability(item);
+            int hlDurability = getCustomDurability(item);
+            int hlMaxDurability = getMaxCustomDurability(item);
 
-            rsvDurability += actualChange;
+            hlDurability += actualChange;
 
             // if vanilla item has durability
             if (maxMcDurability > 0) {
-                mcDurability = (int) Math.ceil((double) rsvDurability / rsvMaxDurability * maxMcDurability);
+                mcDurability = (int) Math.ceil((double) hlDurability / hlMaxDurability * maxMcDurability);
                 ((Damageable) meta).setDamage(maxMcDurability - mcDurability);
             }
 
-            if (rsvDurability < 0 && shouldBreak) {
+            if (hlDurability < 0 && shouldBreak) {
                 item.setAmount(0);
                 item.setType(Material.AIR);
 
@@ -1173,8 +1173,8 @@ public class Utils {
             }
             else {
                 item.setItemMeta(meta);
-                addNbtTag(item, "hldurability", Math.min(rsvDurability, rsvMaxDurability), PersistentDataType.INTEGER);
-                updateLore(item, Math.min(rsvDurability, rsvMaxDurability));
+                addNbtTag(item, "hldurability", Math.min(hlDurability, hlMaxDurability), PersistentDataType.INTEGER);
+                updateLore(item, Math.min(hlDurability, hlMaxDurability));
             }
         }
         else {
@@ -1214,8 +1214,8 @@ public class Utils {
     }
 
     @Nonnull
-    public static ItemStack getNetheriteRSVWeapon(@Nonnull ItemStack item) {
-        return HLPlugin.getUtil().getInternalNetheriteRSVWeapon(item);
+    public static ItemStack getNetheriteHLWeapon(@Nonnull ItemStack item) {
+        return HLPlugin.getUtil().getInternalNetheriteHLWeapon(item);
     }
 
     @Nonnull
@@ -1486,7 +1486,7 @@ public class Utils {
                 int maxDurability = getMaxCustomDurability(item);
 
                 boolean changedDurability = false;
-                boolean isJuice = hasNbtTag(item, "rsvdrink");
+                boolean isJuice = hasNbtTag(item, "hldrink");
                 boolean changedJuice = false;
 
                 for (int i = 0; i < lore.size(); i++) {
@@ -1498,7 +1498,7 @@ public class Utils {
                     if (isJuice) {
                         if (lore.get(i).contains("Drink: ")) {
                             lore.set(i, LegacyComponentSerializer.legacySection().serialize(
-                                    Component.text("Drink: " + getNbtTag(item, "rsvdrink", PersistentDataType.STRING), NamedTextColor.GRAY)));
+                                    Component.text("Drink: " + getNbtTag(item, "hldrink", PersistentDataType.STRING), NamedTextColor.GRAY)));
                             changedJuice = true;
                         }
                     }
@@ -1693,50 +1693,50 @@ public class Utils {
         FileConfiguration config = plugin.getCommandsConfig();
 
         if (HLItem.isHLItem(item)) {
-            ItemStack rsvItem = HLItem.getItem(HLItem.getNameFromItem(item));
-            ItemMeta rsvMeta = rsvItem.getItemMeta();
+            ItemStack hlItem = HLItem.getItem(HLItem.getNameFromItem(item));
+            ItemMeta hlMeta = hlItem.getItemMeta();
 
             if (config.getBoolean("UpdateItem.Material"))
-                item.setType(rsvItem.getType());
+                item.setType(hlItem.getType());
 
             if (config.getBoolean("UpdateItem.MaterialData"))
-                item.setData(rsvItem.getData());
+                item.setData(hlItem.getData());
 
             ItemMeta meta = item.getItemMeta();
 
             if (config.getBoolean("UpdateItem.DisplayName")) {
-                if (rsvMeta.hasDisplayName())
-                    meta.setDisplayName(rsvMeta.getDisplayName());
+                if (hlMeta.hasDisplayName())
+                    meta.setDisplayName(hlMeta.getDisplayName());
             }
 
             if (config.getBoolean("UpdateItem.Lore")) {
-                if (rsvMeta.hasLore())
-                    meta.setLore(rsvMeta.getLore());
+                if (hlMeta.hasLore())
+                    meta.setLore(hlMeta.getLore());
             }
 
             if (config.getBoolean("UpdateItem.Unbreakability"))
-                meta.setUnbreakable(rsvMeta.isUnbreakable());
+                meta.setUnbreakable(hlMeta.isUnbreakable());
 
             if (config.getBoolean("UpdateItem.AttributeModifiers")) {
-                if (rsvMeta.hasAttributeModifiers())
-                    meta.setAttributeModifiers(rsvMeta.getAttributeModifiers());
+                if (hlMeta.hasAttributeModifiers())
+                    meta.setAttributeModifiers(hlMeta.getAttributeModifiers());
             }
 
             if (config.getBoolean("UpdateItem.CustomModelData")) {
-                if (hasCustomModelData(rsvMeta)) {
-                    setCustomModelData(meta, getCustomModelData(rsvMeta));
+                if (hasCustomModelData(hlMeta)) {
+                    setCustomModelData(meta, getCustomModelData(hlMeta));
                 }
             }
 
             if (config.getBoolean("UpdateItem.ItemModel")) {
-                if (internals.hasItemModel(rsvMeta)) {
-                    internals.setItemModel(meta, internals.getItemModel(rsvMeta));
+                if (internals.hasItemModel(hlMeta)) {
+                    internals.setItemModel(meta, internals.getItemModel(hlMeta));
                 }
             }
 
             if (config.getBoolean("UpdateItem.EquippableComponent")) {
-                if (internals.hasEquippableComponentModel(rsvMeta)) {
-                    internals.setEquippableComponentModel(meta, internals.getEquippableComponentModel(rsvMeta), getEquipmentSlotFromMaterial(item.getType()));
+                if (internals.hasEquippableComponentModel(hlMeta)) {
+                    internals.setEquippableComponentModel(meta, internals.getEquippableComponentModel(hlMeta), getEquipmentSlotFromMaterial(item.getType()));
                 }
             }
 
@@ -1751,9 +1751,9 @@ public class Utils {
                     }
                 }
 
-                if (rsvMeta.hasEnchants()) {
-                    Map<Enchantment, Integer> rsvMap = rsvMeta.getEnchants();
-                    Set<Map.Entry<Enchantment, Integer>> entries = rsvMap.entrySet();
+                if (hlMeta.hasEnchants()) {
+                    Map<Enchantment, Integer> hlMap = hlMeta.getEnchants();
+                    Set<Map.Entry<Enchantment, Integer>> entries = hlMap.entrySet();
 
                     for (Map.Entry<Enchantment, Integer> entry : entries) {
                         meta.addEnchant(entry.getKey(), entry.getValue(), true);
@@ -1763,7 +1763,7 @@ public class Utils {
 
             if (config.getBoolean("UpdateItem.ItemFlags.Enabled")) {
                 Set<ItemFlag> flags = meta.getItemFlags();
-                Set<ItemFlag> rsvFlags = rsvMeta.getItemFlags();
+                Set<ItemFlag> hlFlags = hlMeta.getItemFlags();
 
                 if (!config.getBoolean("UpdateItem.ItemFlags.PreserveExistingItemFlags")) {
                     for (ItemFlag flag : flags) {
@@ -1773,7 +1773,7 @@ public class Utils {
                     }
                 }
 
-                for (ItemFlag flag : rsvFlags) {
+                for (ItemFlag flag : hlFlags) {
                     if (flag != null) {
                         meta.addItemFlags(flag);
                     }
@@ -1781,8 +1781,8 @@ public class Utils {
             }
 
             if (config.getBoolean("UpdateItem.VanillaDurability")) {
-                if (rsvItem.getType().getMaxDurability() > 0) {
-                    ((Damageable) meta).setDamage(((Damageable) rsvMeta).getDamage());
+                if (hlItem.getType().getMaxDurability() > 0) {
+                    ((Damageable) meta).setDamage(((Damageable) hlMeta).getDamage());
                 }
             }
 
@@ -1791,67 +1791,67 @@ public class Utils {
 
             if (config.getBoolean("UpdateItem.NbtTags.Enabled")) {
                 if (config.getBoolean("UpdateItem.NbtTags.Module"))
-                    addNbtTag(item, "rsvmodule", HLItem.getModuleNameFromItem(rsvItem), PersistentDataType.STRING);
+                    addNbtTag(item, "hlmodule", HLItem.getModuleNameFromItem(hlItem), PersistentDataType.STRING);
 
                 if (config.getBoolean("UpdateItem.NbtTags.CustomDurability"))
-                    if (hasCustomDurability(rsvItem)) {
-                        addNbtTag(item, "hldurability", getCustomDurability(rsvItem), PersistentDataType.INTEGER);
-                        addNbtTag(item, "hlmaxdurability", getMaxCustomDurability(rsvItem), PersistentDataType.INTEGER);
+                    if (hasCustomDurability(hlItem)) {
+                        addNbtTag(item, "hldurability", getCustomDurability(hlItem), PersistentDataType.INTEGER);
+                        addNbtTag(item, "hlmaxdurability", getMaxCustomDurability(hlItem), PersistentDataType.INTEGER);
                     }
             }
         }
     }
 
     @Nonnull
-    public ItemStack getInternalNetheriteRSVWeapon(@Nonnull ItemStack item) {
+    public ItemStack getInternalNetheriteHLWeapon(@Nonnull ItemStack item) {
         ItemStack clone = item.clone();
         FileConfiguration config = HLModule.getModule(HLItem.getModuleNameFromItem(clone)).getUserConfig().getConfig();
         if (config.getBoolean("UpdateNetheriteItems.Enabled")) {
             if (HLItem.isHLItem(clone)) {
-                ItemStack rsvItem = HLItem.getItem(HLItem.getNameFromItem(clone).replace("diamond", "netherite"));
-                ItemMeta rsvMeta = rsvItem.getItemMeta();
+                ItemStack hlItem = HLItem.getItem(HLItem.getNameFromItem(clone).replace("diamond", "netherite"));
+                ItemMeta hlMeta = hlItem.getItemMeta();
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateMaterial"))
-                    clone.setType(rsvItem.getType());
+                    clone.setType(hlItem.getType());
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateMaterialData"))
-                    clone.setData(rsvItem.getData());
+                    clone.setData(hlItem.getData());
 
                 ItemMeta meta = clone.getItemMeta();
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateDisplayName")) {
-                    if (rsvMeta.hasDisplayName())
-                        meta.setDisplayName(rsvMeta.getDisplayName());
+                    if (hlMeta.hasDisplayName())
+                        meta.setDisplayName(hlMeta.getDisplayName());
                 }
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateLore")) {
-                    if (rsvMeta.hasLore())
-                        meta.setLore(rsvMeta.getLore());
+                    if (hlMeta.hasLore())
+                        meta.setLore(hlMeta.getLore());
                 }
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateUnbreakability"))
-                    meta.setUnbreakable(rsvMeta.isUnbreakable());
+                    meta.setUnbreakable(hlMeta.isUnbreakable());
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateAttributeModifiers")) {
-                    if (rsvMeta.hasAttributeModifiers())
-                        meta.setAttributeModifiers(rsvMeta.getAttributeModifiers());
+                    if (hlMeta.hasAttributeModifiers())
+                        meta.setAttributeModifiers(hlMeta.getAttributeModifiers());
                 }
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateCustomModelData")) {
-                    if (hasCustomModelData(rsvMeta)) {
-                        setCustomModelData(meta, getCustomModelData(rsvMeta));
+                    if (hasCustomModelData(hlMeta)) {
+                        setCustomModelData(meta, getCustomModelData(hlMeta));
                     }
                 }
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateItemModel")) {
-                    if (internals.hasItemModel(rsvMeta)) {
-                        internals.setItemModel(meta, internals.getItemModel(rsvMeta));
+                    if (internals.hasItemModel(hlMeta)) {
+                        internals.setItemModel(meta, internals.getItemModel(hlMeta));
                     }
                 }
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateEquippableComponent")) {
-                    if (internals.hasEquippableComponentModel(rsvMeta)) {
-                        internals.setEquippableComponentModel(meta, internals.getEquippableComponentModel(rsvMeta), getEquipmentSlotFromMaterial(item.getType()));
+                    if (internals.hasEquippableComponentModel(hlMeta)) {
+                        internals.setEquippableComponentModel(meta, internals.getEquippableComponentModel(hlMeta), getEquipmentSlotFromMaterial(item.getType()));
                     }
                 }
 
@@ -1866,9 +1866,9 @@ public class Utils {
                         }
                     }
 
-                    if (rsvMeta.hasEnchants()) {
-                        Map<Enchantment, Integer> rsvMap = rsvMeta.getEnchants();
-                        Set<Map.Entry<Enchantment, Integer>> entries = rsvMap.entrySet();
+                    if (hlMeta.hasEnchants()) {
+                        Map<Enchantment, Integer> hlMap = hlMeta.getEnchants();
+                        Set<Map.Entry<Enchantment, Integer>> entries = hlMap.entrySet();
 
                         for (Map.Entry<Enchantment, Integer> entry : entries) {
                             meta.addEnchant(entry.getKey(), entry.getValue(), true);
@@ -1878,7 +1878,7 @@ public class Utils {
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateItemFlags.Enabled")) {
                     Set<ItemFlag> flags = meta.getItemFlags();
-                    Set<ItemFlag> rsvFlags = rsvMeta.getItemFlags();
+                    Set<ItemFlag> hlFlags = hlMeta.getItemFlags();
 
                     if (!config.getBoolean("UpdateNetheriteItems.UpdateItemFlags.PreserveExistingItemFlags")) {
                         for (ItemFlag flag : flags) {
@@ -1888,7 +1888,7 @@ public class Utils {
                         }
                     }
 
-                    for (ItemFlag flag : rsvFlags) {
+                    for (ItemFlag flag : hlFlags) {
                         if (flag != null) {
                             meta.addItemFlags(flag);
                         }
@@ -1896,8 +1896,8 @@ public class Utils {
                 }
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateVanillaDurability")) {
-                    if (rsvItem.getType().getMaxDurability() > 0) {
-                        ((Damageable) meta).setDamage(((Damageable) rsvMeta).getDamage());
+                    if (hlItem.getType().getMaxDurability() > 0) {
+                        ((Damageable) meta).setDamage(((Damageable) hlMeta).getDamage());
                     }
                 }
 
@@ -1905,16 +1905,16 @@ public class Utils {
 
                 updateDamageLore(item, meta.getEnchants().entrySet());
 
-                addNbtTag(clone, "rsvitem", HLItem.getNameFromItem(rsvItem), PersistentDataType.STRING);
+                addNbtTag(clone, "hlitem", HLItem.getNameFromItem(hlItem), PersistentDataType.STRING);
 
                 if (config.getBoolean("UpdateNetheriteItems.UpdateNbtTags.Enabled")) {
                     if (config.getBoolean("UpdateNetheriteItems.UpdateNbtTags.UpdateModule"))
-                        addNbtTag(clone, "rsvmodule", HLItem.getModuleNameFromItem(rsvItem), PersistentDataType.STRING);
+                        addNbtTag(clone, "hlmodule", HLItem.getModuleNameFromItem(hlItem), PersistentDataType.STRING);
 
                     if (config.getBoolean("UpdateNetheriteItems.UpdateNbtTags.UpdateCustomDurability")) {
-                        if (hasCustomDurability(rsvItem)) {
-                            addNbtTag(clone, "hldurability", getCustomDurability(rsvItem), PersistentDataType.INTEGER);
-                            addNbtTag(clone, "hlmaxdurability", getMaxCustomDurability(rsvItem), PersistentDataType.INTEGER);
+                        if (hasCustomDurability(hlItem)) {
+                            addNbtTag(clone, "hldurability", getCustomDurability(hlItem), PersistentDataType.INTEGER);
+                            addNbtTag(clone, "hlmaxdurability", getMaxCustomDurability(hlItem), PersistentDataType.INTEGER);
                         }
                     }
                 }

@@ -234,7 +234,7 @@ public class AmbientSoundHandler {
         player.playSound(loc, "harshlands:" + soundKey, SoundCategory.AMBIENT, volume, pitch);
 
         // Debug instrumentation
-        cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.HLPlugin.getPlugin().getDebugManager();
         if (debugMgr.isActive("DynamicSurroundings", "Ambient", player.getUniqueId())) {
             String consoleLine = "category=" + category + " sound=" + soundKey
                     + " vol=" + String.format("%.1f", volume) + " pitch=" + String.format("%.2f", pitch)

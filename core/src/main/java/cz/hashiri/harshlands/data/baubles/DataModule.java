@@ -6,7 +6,7 @@ import cz.hashiri.harshlands.baubles.BaubleModule;
 import cz.hashiri.harshlands.data.HLDataModule;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

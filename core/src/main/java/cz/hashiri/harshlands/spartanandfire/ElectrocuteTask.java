@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.spartanandfire;
 
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Damageable;
 import org.bukkit.scheduler.BukkitRunnable;

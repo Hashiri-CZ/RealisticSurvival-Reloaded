@@ -20,7 +20,7 @@ import cz.hashiri.harshlands.data.ModuleItems;
 import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanandfire.BurnTask;
 import cz.hashiri.harshlands.spartanandfire.ElectrocuteTask;
 import cz.hashiri.harshlands.spartanandfire.FreezeTask;
@@ -120,7 +120,7 @@ public class IceFireModule extends HLModule {
         if (prefix == null)
             return origDamage;
 
-        if (Utils.hasNbtTag(defender, "rsvmob") && !Utils.getNbtTag(defender, "rsvmob", PersistentDataType.STRING).equals(prefix + "_dragon")) {
+        if (Utils.hasNbtTag(defender, "hlmob") && !Utils.getNbtTag(defender, "hlmob", PersistentDataType.STRING).equals(prefix + "_dragon")) {
             origDamage += config.getDouble("Items." + name + ".DragonBonusDamage");
         }
 

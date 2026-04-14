@@ -55,12 +55,12 @@ public interface Dragon extends HLMob {
 
     @Override
     default void addNbtData() {
-        Utils.addNbtTag(getEntity(), "rsvmob", name(), PersistentDataType.STRING);
-        Utils.addNbtTag(getEntity(), "rsvdragonstage", getStage(), PersistentDataType.INTEGER);
-        Utils.addNbtTag(getEntity(), "rsvdragonage", getAge(), PersistentDataType.INTEGER);
-        Utils.addNbtTag(getEntity(), "rsvdragonvariant", getVariant().toString(), PersistentDataType.STRING);
-        Utils.addNbtTag(getEntity(), "rsvdragonbreed", getBreed().toString(), PersistentDataType.STRING);
-        Utils.addNbtTag(getEntity(), "rsvdragongender", getGender().toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hlmob", name(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hldragonstage", getStage(), PersistentDataType.INTEGER);
+        Utils.addNbtTag(getEntity(), "hldragonage", getAge(), PersistentDataType.INTEGER);
+        Utils.addNbtTag(getEntity(), "hldragonvariant", getVariant().toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hldragonbreed", getBreed().toString(), PersistentDataType.STRING);
+        Utils.addNbtTag(getEntity(), "hldragongender", getGender().toString(), PersistentDataType.STRING);
     }
 
     @Override

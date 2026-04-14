@@ -238,7 +238,7 @@ canteen_empty:
     - "&7Drink: None"
     - "&7Durability: 0/5"
   NBTTags:
-    rsvdrink: "None"
+    hldrink: "None"
     hldurability: 0
     hlmaxdurability: 5
 canteen_filled:
@@ -252,6 +252,6 @@ canteen_filled:
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
   NBTTags:
-    rsvdrink: "Unpurified Water"
+    hldrink: "Unpurified Water"
     hldurability: 5
     hlmaxdurability: 5

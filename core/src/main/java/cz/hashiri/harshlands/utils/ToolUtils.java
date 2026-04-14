@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.utils;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.ToolHandler.Tool;
 import org.bukkit.Material;
 import org.bukkit.Tag;

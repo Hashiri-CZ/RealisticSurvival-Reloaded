@@ -22,7 +22,7 @@ import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.db.HLDatabase;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.soundecology.SoundEcologySubsystem;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;

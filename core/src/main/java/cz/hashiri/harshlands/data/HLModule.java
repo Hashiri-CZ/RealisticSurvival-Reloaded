@@ -16,7 +16,7 @@
  */
 package cz.hashiri.harshlands.data;
 
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

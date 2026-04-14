@@ -20,7 +20,7 @@ import cz.hashiri.harshlands.data.ModuleEvents;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.misc.EntityItemAcquireEvent;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.spartanandfire.SfModule;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
@@ -177,7 +177,7 @@ public class SwEvents extends ModuleEvents implements Listener {
         if (type.equals("longbow") || type.equals("crossbow")) {
             double multiplier = config.getDouble("Items." + name + ".ArrowVelocityMultiplier");
             proj.setVelocity(proj.getVelocity().multiply(multiplier));
-            Utils.addNbtTag(proj, "rsvbow", name, PersistentDataType.STRING); // used to identify projectile if it hits a mob
+            Utils.addNbtTag(proj, "hlbow", name, PersistentDataType.STRING); // used to identify projectile if it hits a mob
             event.setProjectile(proj);
         }
     }

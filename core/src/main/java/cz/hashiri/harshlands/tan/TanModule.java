@@ -22,7 +22,7 @@ import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.toughasnails.DataModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -90,8 +90,8 @@ public class TanModule extends HLModule {
         // Periodic auto-save every 5 minutes (6000 ticks) for dirty player data
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             List<HLPlayer> snapshot = new ArrayList<>(HLPlayer.getPlayers().values());
-            for (HLPlayer rsvPlayer : snapshot) {
-                DataModule dm = rsvPlayer.getTanDataModule();
+            for (HLPlayer hlPlayer : snapshot) {
+                DataModule dm = hlPlayer.getTanDataModule();
                 if (dm != null && dm.isDirty()) {
                     dm.saveData();
                 }

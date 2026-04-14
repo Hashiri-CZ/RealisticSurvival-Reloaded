@@ -1,4 +1,4 @@
-main: cz.hashiri.harshlands.rsv.HLPlugin
+main: cz.hashiri.harshlands.HLPlugin
 name: ${project.parent.name}
 version: ${project.parent.version}
 author: Hashiri_

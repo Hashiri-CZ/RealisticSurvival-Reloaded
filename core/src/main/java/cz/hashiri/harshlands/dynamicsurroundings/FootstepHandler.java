@@ -349,7 +349,7 @@ public class FootstepHandler {
         playArmorOverlay(player, to, surface, state);
 
         // Debug instrumentation
-        cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.rsv.HLPlugin.getPlugin().getDebugManager();
+        cz.hashiri.harshlands.debug.DebugManager debugMgr = cz.hashiri.harshlands.HLPlugin.getPlugin().getDebugManager();
         if (debugMgr.isActive("DynamicSurroundings", "Footsteps", player.getUniqueId())) {
             SoundSet sounds = SOUNDS.getOrDefault(surface, SOUNDS.get(SurfaceType.DEFAULT));
             String key = sounds.getVariant(player.isSprinting(), player.isSneaking());

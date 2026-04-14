@@ -22,7 +22,7 @@ import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.baubles.DataModule;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.DisplayTask;
 import cz.hashiri.harshlands.utils.PlayerJumpEvent;
 import cz.hashiri.harshlands.utils.HLItem;
@@ -84,22 +84,22 @@ public class TanEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(player) && (tempEnabled || thirstEnabled) && HLPlayer.isValidPlayer(player)))
             return;
 
-        HLPlayer rsvplayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
 
         if (tempEnabled) {
             if (!TemperatureCalculateTask.hasTask(player.getUniqueId())) {
-                new TemperatureCalculateTask(module, plugin, rsvplayer).start();
+                new TemperatureCalculateTask(module, plugin, hlPlayer).start();
             }
 
             if (HLItem.isHoldingItem("thermometer", player) && !ThermometerTask.hasTask(player.getUniqueId())) {
-                new ThermometerTask(plugin, rsvplayer).start();
+                new ThermometerTask(plugin, hlPlayer).start();
             }
         }
         if (thirstEnabled && !ThirstCalculateTask.hasTask(player.getUniqueId())) {
-            new ThirstCalculateTask(module, plugin, rsvplayer).start();
+            new ThirstCalculateTask(module, plugin, hlPlayer).start();
         }
         if (!DisplayTask.hasTask(player.getUniqueId())) {
-            new DisplayTask(plugin, rsvplayer).start();
+            new DisplayTask(plugin, hlPlayer).start();
         }
     }
 
@@ -219,16 +219,16 @@ public class TanEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(player) && HLPlayer.isValidPlayer(player) && (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE) && (tempEnabled || thirstEnabled)))
             return;
 
-        HLPlayer rsvplayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
 
         if (tempEnabled && !TemperatureCalculateTask.hasTask(player.getUniqueId())) {
-            new TemperatureCalculateTask(module, plugin, rsvplayer).start();
+            new TemperatureCalculateTask(module, plugin, hlPlayer).start();
         }
         if (thirstEnabled && !ThirstCalculateTask.hasTask(player.getUniqueId())) {
-            new ThirstCalculateTask(module, plugin, rsvplayer).start();
+            new ThirstCalculateTask(module, plugin, hlPlayer).start();
         }
         if (!DisplayTask.hasTask(player.getUniqueId())) {
-            new DisplayTask(plugin, rsvplayer).start();
+            new DisplayTask(plugin, hlPlayer).start();
         }
     }
 
@@ -348,7 +348,7 @@ public class TanEvents extends ModuleEvents implements Listener {
                             if (name.equals("canteen_empty") || name.equals("canteen_filled")) {
                                 if (block.getType() == Material.WATER && Utils.isSourceLiquid(block)) {
                                     if (canFill(item, "Unpurified Water")) {
-                                        EquipmentSlot hand = Utils.getSlotContainingRsvItem(player, name);
+                                        EquipmentSlot hand = Utils.getSlotContainingHLItem(player, name);
 
                                         if (hand != null) {
                                             if (hand == EquipmentSlot.HAND) {
@@ -514,7 +514,7 @@ public class TanEvents extends ModuleEvents implements Listener {
         }
         else {
             if (name.equals("canteen_filled")) {
-                final String canteenDrink = Utils.getNbtTag(item, "rsvdrink", PersistentDataType.STRING);
+                final String canteenDrink = Utils.getNbtTag(item, "hldrink", PersistentDataType.STRING);
                 if (canteenDrink.equals("Unpurified Water")) {
                     int thirstPoints = config.getInt("Thirst.SaturationRestoration.Foods.POTION.ThirstPoints");
                     int saturationPoints = config.getInt("Thirst.SaturationRestoration.Foods.POTION.SaturationPoints");
@@ -540,7 +540,7 @@ public class TanEvents extends ModuleEvents implements Listener {
                     thirstManager.addThirst(player, thirstPoints);
                     thirstManager.addSaturation(player, saturationPoints);
                 }
-                EquipmentSlot hand = Utils.getSlotContainingRsvItem(player, name);
+                EquipmentSlot hand = Utils.getSlotContainingHLItem(player, name);
 
                 if (hand != null) {
                     if (hand == EquipmentSlot.HAND)
@@ -692,11 +692,11 @@ public class TanEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(player) && HLPlayer.isValidPlayer(player) && !module.getAllowedWorlds().contains(oldWorld) && (tempEnabled || thirstEnabled)))
             return;
 
-        HLPlayer rsvplayer = HLPlayer.getPlayers().get(player.getUniqueId());
+        HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
 
         if (tempEnabled) {
             if (!TemperatureCalculateTask.hasTask(player.getUniqueId())) {
-                new TemperatureCalculateTask(module, plugin, rsvplayer).start();
+                new TemperatureCalculateTask(module, plugin, hlPlayer).start();
             }
 
             if (HLItem.isHoldingItem("thermometer", player) && !ThermometerTask.hasTask(player.getUniqueId())) {
@@ -704,10 +704,10 @@ public class TanEvents extends ModuleEvents implements Listener {
             }
         }
         if (thirstEnabled && !ThirstCalculateTask.hasTask(player.getUniqueId())) {
-            new ThirstCalculateTask(module, plugin, rsvplayer).start();
+            new ThirstCalculateTask(module, plugin, hlPlayer).start();
         }
         if (!DisplayTask.hasTask(player.getUniqueId())) {
-            new DisplayTask(plugin, rsvplayer).start();
+            new DisplayTask(plugin, hlPlayer).start();
         }
     }
 
@@ -770,7 +770,7 @@ public class TanEvents extends ModuleEvents implements Listener {
     }
 
     private boolean canFill(ItemStack canteen, String newDrink) {
-        String originalDrink = Utils.getNbtTag(canteen, "rsvdrink", PersistentDataType.STRING);
+        String originalDrink = Utils.getNbtTag(canteen, "hldrink", PersistentDataType.STRING);
         if (Utils.getCustomDurability(canteen) >= Utils.getMaxCustomDurability(canteen)) {
             return false;
         }
@@ -816,8 +816,8 @@ public class TanEvents extends ModuleEvents implements Listener {
                 }
             }
 
-            Utils.addNbtTag(canteen, "rsvitem", "canteen_empty", PersistentDataType.STRING);
-            Utils.addNbtTag(canteen, "rsvdrink", "None", PersistentDataType.STRING);
+            Utils.addNbtTag(canteen, "hlitem", "canteen_empty", PersistentDataType.STRING);
+            Utils.addNbtTag(canteen, "hldrink", "None", PersistentDataType.STRING);
 
             canteen.setType(Material.GLASS_BOTTLE);
         }
@@ -853,8 +853,8 @@ public class TanEvents extends ModuleEvents implements Listener {
                 }
             }
 
-            Utils.addNbtTag(canteen, "rsvitem", "canteen_filled", PersistentDataType.STRING);
-            Utils.addNbtTag(canteen, "rsvdrink", drink, PersistentDataType.STRING);
+            Utils.addNbtTag(canteen, "hlitem", "canteen_filled", PersistentDataType.STRING);
+            Utils.addNbtTag(canteen, "hldrink", drink, PersistentDataType.STRING);
             canteen.setType(Material.POTION);
         }
         Utils.changeDurability(canteen, change, false, false, null);

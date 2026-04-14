@@ -7,7 +7,7 @@ ConfigId: "1.2.16-RELEASE" # Used for config syncing purposes, do NOT edit
 EnableIntegrationMessage: true # Should a message be printed in console notifying that integration with a plugin is enabled?
 
 # Adds compatibility with the Realistic Seasons (RS) plugin
-# The values below are used to convert between the different temperature scales used by RS and Harshlands (RSV)
+# The values below are used to convert between the different temperature scales used by RS and Harshlands
 # Temperature fluctuates more dramatically in RS (-12 to 40 compared to 0 to 25), so the multipliers are less than 1
 RealisticSeasons:
   Enabled: true
@@ -17,8 +17,8 @@ RealisticSeasons:
   Hypothermia:
     DisableCompletely: false
     # Below hypothermia options should be kept to true to avoid a double effect as RS also implements these same effects
-    DisablePotionEffects: true # Disables RSV from inflicting potion effects due to hypothermia
-    DisableDamage: true # Disable RSV from inflicting damage due to hypothermia
+    DisablePotionEffects: true # Disables Harshlands from inflicting potion effects due to hypothermia
+    DisableDamage: true # Disable Harshlands from inflicting damage due to hypothermia
   Hyperthermia:
     DisableCompletely: false
     # Below hyperthermia options should be kept to true to avoid a double effect as RS also implements these same effects
@@ -26,8 +26,8 @@ RealisticSeasons:
     DisableDamage: true
     DisableIgnite: true
   VisualEffects:
-    DisableColdScreenTinting: false # Disables RSV's blue screen tinting
-    DisableHotScreenTinting: false # Disables RSV's orange screen tinting
+    DisableColdScreenTinting: false # Disables Harshlands' blue screen tinting
+    DisableHotScreenTinting: false # Disables Harshlands' orange screen tinting
     DisableColdBreath: true
     DisableSweating: true
 WorldGuard:

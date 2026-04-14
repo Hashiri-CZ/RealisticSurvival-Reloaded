@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.fear;
 
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.fear.DataModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.tan.TempManager;
 import cz.hashiri.harshlands.utils.Utils;

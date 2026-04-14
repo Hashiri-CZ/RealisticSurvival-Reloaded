@@ -19,7 +19,7 @@ package cz.hashiri.harshlands.misc;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.ModuleRecipes;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.PlayerJumpEvent;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
@@ -70,13 +70,13 @@ public class MiscEvents implements Listener {
         Player player = event.getPlayer();
 
         if (!HLPlayer.isValidPlayer(player)) {
-            HLPlayer rsvplayer = new HLPlayer(player);
-            rsvplayer.retrieveData();
+            HLPlayer hlPlayer = new HLPlayer(player);
+            hlPlayer.retrieveData();
         }
 
-        Collection<HLModule> rsvModules = HLModule.getModules().values();
+        Collection<HLModule> hlModules = HLModule.getModules().values();
 
-        for (HLModule module : rsvModules) {
+        for (HLModule module : hlModules) {
             if (module.isGloballyEnabled()) {
                 if (module.getAllowedWorlds().contains(player.getWorld().getName())) {
                     ModuleRecipes recipes = module.getModuleRecipes();
@@ -187,8 +187,8 @@ public class MiscEvents implements Listener {
             }
 
             if (HLItem.isHLItem(base)) {
-                String rsvName = HLItem.getNameFromItem(base);
-                switch (rsvName) {
+                String hlName = HLItem.getNameFromItem(base);
+                switch (hlName) {
                     case "diamond_rapier", "diamond_greatsword", "diamond_longsword", "diamond_spear"
                             , "diamond_saber", "diamond_boomerang", "diamond_dagger", "diamond_glaive", "diamond_halberd"
                             , "diamond_hammer", "diamond_javelin", "diamond_lance", "diamond_mace", "diamond_pike"
@@ -196,8 +196,8 @@ public class MiscEvents implements Listener {
                             , "diamond_battleaxe", "diamond_longbow", "diamond_crossbow", "diamond_knife", "diamond_saw", "diamond_mattock" -> {
                         FileConfiguration userConfig = HLModule.getModule(HLItem.getModuleNameFromItem(base)).getUserConfig().getConfig();
 
-                        if (isEnabledForCurrentVersion(userConfig, "Recipes." + rsvName + ".Enabled"))
-                            event.setResult(Utils.getNetheriteRSVWeapon(base));
+                        if (isEnabledForCurrentVersion(userConfig, "Recipes." + hlName + ".Enabled"))
+                            event.setResult(Utils.getNetheriteHLWeapon(base));
                         else
                             event.setResult(null);
                     }

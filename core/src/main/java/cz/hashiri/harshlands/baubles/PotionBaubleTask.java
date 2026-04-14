@@ -18,7 +18,7 @@ package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.baubles.DataModule;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.attribute.Attribute;
@@ -35,20 +35,20 @@ public class PotionBaubleTask extends BukkitRunnable implements HLTask {
     private static final Map<UUID, Collection<PotionBaubleTask>> tasks = new ConcurrentHashMap<>();
     private final BaubleModule module;
     private final DataModule dataModule;
-    private final HLPlayer rsvPlayer;
+    private final HLPlayer hlPlayer;
     private final UUID id;
     private final Collection<String> allowedWorlds;
     private final HLPlugin plugin;
     private final PotionBauble potionBauble;
 
-    public PotionBaubleTask(BaubleModule module, PotionBauble potionBauble, HLPlayer rsvPlayer, HLPlugin plugin) {
-        this.rsvPlayer = rsvPlayer;
-        this.id = rsvPlayer.getPlayer().getUniqueId();
+    public PotionBaubleTask(BaubleModule module, PotionBauble potionBauble, HLPlayer hlPlayer, HLPlugin plugin) {
+        this.hlPlayer = hlPlayer;
+        this.id = hlPlayer.getPlayer().getUniqueId();
         this.allowedWorlds = module.getAllowedWorlds();
         this.plugin = plugin;
         this.potionBauble = potionBauble;
         this.module = module;
-        this.dataModule = rsvPlayer.getBaubleDataModule();
+        this.dataModule = hlPlayer.getBaubleDataModule();
         Map<UUID, Collection<TickableBauble>> baubles = TickableBaubleManager.getBaubles();
 
         Collection<TickableBauble> potBaubles = (baubles.containsKey(id)) ? baubles.get(id) : new ArrayList<>();
@@ -67,7 +67,7 @@ public class PotionBaubleTask extends BukkitRunnable implements HLTask {
 
     @Override
     public void run() {
-        Player player = rsvPlayer.getPlayer();
+        Player player = hlPlayer.getPlayer();
 
         if (conditionsMet(player)) {
             int amount = getAmount();
