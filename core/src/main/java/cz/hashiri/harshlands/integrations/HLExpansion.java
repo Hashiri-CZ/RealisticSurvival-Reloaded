@@ -25,6 +25,7 @@ import cz.hashiri.harshlands.tan.TanModule;
 import cz.hashiri.harshlands.tan.TempManager;
 import cz.hashiri.harshlands.tan.TemperatureCalculateTask;
 import cz.hashiri.harshlands.tan.ThirstManager;
+import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.utils.CharacterValues;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,7 +34,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 
 public class HLExpansion extends PlaceholderExpansion {
 
@@ -236,7 +236,9 @@ public class HLExpansion extends PlaceholderExpansion {
         ConfigurationSection section = plugin.getIntegrationsConfig().getConfigurationSection(PAPI.NAME + ".Error");
 
         if (section.getBoolean("Enabled")) {
-            plugin.getLogger().info(Utils.translateMsg(section.getString("Message"), null, Map.of("PLACEHOLDER", "%" + params + "%")));
+            plugin.getLogger().info(Messages.of("integrations.placeholder_api.error.message")
+                    .with("placeholder", "%" + params + "%")
+                    .build());
         }
     }
 }
