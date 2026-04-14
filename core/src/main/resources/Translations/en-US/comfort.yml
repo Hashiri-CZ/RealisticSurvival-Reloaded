@@ -3,6 +3,7 @@ comfort:
     message: "&6[Harshlands] &fInitializing &e%name% &fmodule"
   shutdown:
     message: "&6[Harshlands] &fShutting down &e%name% &fmodule"
+  module_disabled: "&c[Harshlands] Comfort module is not enabled."
   messages:
     no_comfort: "§7No comfort nearby."
     buff_applied: "§aComfort: §f%score% §7(%tier%) §a- Resting buff for %minutes%min"
