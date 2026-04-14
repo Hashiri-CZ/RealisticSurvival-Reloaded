@@ -28,4 +28,39 @@ class LocaleManagerTest {
         assertEquals("Gave item to player", mgr.get("commands.give.success"));
         assertEquals("No permission", mgr.get("commands.no_permission"));
     }
+
+    @Test
+    void missing_key_returns_bracketed_key(@TempDir Path translationsRoot) throws IOException {
+        Files.createDirectories(translationsRoot.resolve("en-US"));
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
+        mgr.load();
+
+        assertEquals("[unknown.key]", mgr.get("unknown.key"));
+    }
+
+    @Test
+    void missing_key_is_logged_once_per_key(@TempDir Path translationsRoot) throws IOException {
+        Files.createDirectories(translationsRoot.resolve("en-US"));
+
+        java.util.List<String> warnings = new java.util.ArrayList<>();
+        java.util.logging.Logger logger = java.util.logging.Logger.getAnonymousLogger();
+        logger.setUseParentHandlers(false);
+        logger.addHandler(new java.util.logging.Handler() {
+            public void publish(java.util.logging.LogRecord r) {
+                if (r.getLevel() == java.util.logging.Level.WARNING) warnings.add(r.getMessage());
+            }
+            public void flush() {}
+            public void close() {}
+        });
+
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US", logger);
+        mgr.load();
+        mgr.get("a.missing.key");
+        mgr.get("a.missing.key");
+        mgr.get("a.missing.key");
+        mgr.get("another.missing.key");
+
+        // Two distinct missing keys → two warning messages (deduped per key).
+        assertEquals(2, warnings.stream().filter(w -> w.contains("Missing translation")).count());
+    }
 }

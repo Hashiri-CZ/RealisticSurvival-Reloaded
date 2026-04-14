@@ -15,6 +15,7 @@ public class LocaleManager {
     private final String locale;
     private final Logger logger;
     private Map<String, Object> flatMap = new HashMap<>();
+    private final java.util.Set<String> reportedMissingKeys = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     public LocaleManager(Path translationsRoot, String locale) {
         this(translationsRoot, locale, Logger.getLogger(LocaleManager.class.getName()));
@@ -60,6 +61,12 @@ public class LocaleManager {
 
     public String get(String key) {
         Object value = flatMap.get(key);
-        return value == null ? null : value.toString();
+        if (value == null) {
+            if (reportedMissingKeys.add(key)) {
+                logger.warning("Missing translation for key: " + key);
+            }
+            return "[" + key + "]";
+        }
+        return value.toString();
     }
 }
