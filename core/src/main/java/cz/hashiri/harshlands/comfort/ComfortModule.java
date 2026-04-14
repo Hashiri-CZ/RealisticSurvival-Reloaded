@@ -79,7 +79,7 @@ public class ComfortModule extends HLModule {
         if (config.getBoolean("CabinFever.Enabled", false)) {
             cabinFeverSubsystem = new CabinFeverSubsystem(plugin, config);
             cabinFeverSubsystem.initialize();
-            cabinFeverEvents = new CabinFeverEvents(cabinFeverSubsystem, this, config);
+            cabinFeverEvents = new CabinFeverEvents(cabinFeverSubsystem, this);
             Bukkit.getPluginManager().registerEvents(cabinFeverEvents, plugin);
         }
     }

@@ -5,9 +5,9 @@ comfort:
     message: "&6[Harshlands] &fShutting down &e%name% &fmodule"
   messages:
     no_comfort: "§7No comfort nearby."
-    buff_applied: "§aComfort: §f{score} §7({tier}) §a- Resting buff for {minutes}min"
-    comfort_check: "§7Comfort Score: §f{score} §7({tier})"
-    comfort_breakdown: "§7Nearby: §f{categories}"
+    buff_applied: "§aComfort: §f%score% §7(%tier%) §a- Resting buff for %minutes%min"
+    comfort_check: "§7Comfort Score: §f%score% §7(%tier%)"
+    comfort_breakdown: "§7Nearby: §f%categories%"
   cabin_fever:
     messages:
       restless: "&eYou feel restless from being indoors too long..."

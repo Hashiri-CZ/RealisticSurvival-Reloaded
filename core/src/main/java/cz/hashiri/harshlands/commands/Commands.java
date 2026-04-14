@@ -21,6 +21,7 @@ import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.comfort.ComfortScoreCalculator;
+import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
 import cz.hashiri.harshlands.rsv.HLPlugin;
@@ -997,17 +998,16 @@ public class Commands implements CommandExecutor {
 
                     ComfortScoreCalculator.ComfortResult result = calc.calculate(player.getLocation());
                     comfortModule.updateCache(player, result);
-                    FileConfiguration comfortConfig = comfortModule.getUserConfig().getConfig();
 
-                    String checkMsg = comfortConfig.getString("Messages.ComfortCheck", "\u00a77Comfort Score: \u00a7f{score} \u00a77({tier})");
-                    checkMsg = checkMsg.replace("{score}", String.valueOf(result.getScore()));
-                    checkMsg = checkMsg.replace("{tier}", result.getTier().getDisplayName());
-                    player.sendMessage(checkMsg);
+                    Messages.of("comfort.messages.comfort_check")
+                            .with("score", result.getScore())
+                            .with("tier", result.getTier().getDisplayName())
+                            .send(player);
 
                     if (!result.getFoundCategories().isEmpty()) {
-                        String breakdownMsg = comfortConfig.getString("Messages.ComfortBreakdown", "\u00a77Nearby: \u00a7f{categories}");
-                        breakdownMsg = breakdownMsg.replace("{categories}", String.join(", ", result.getFoundCategories()));
-                        player.sendMessage(breakdownMsg);
+                        Messages.of("comfort.messages.comfort_breakdown")
+                                .with("categories", String.join(", ", result.getFoundCategories()))
+                                .send(player);
                     }
                     return true;
                 }
