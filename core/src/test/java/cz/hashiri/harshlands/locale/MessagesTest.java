@@ -56,4 +56,32 @@ class MessagesTest {
 
         assertEquals(List.of("a", "b"), Messages.getList("lore"));
     }
+
+    @Test
+    void builder_with_chain_substitutes_placeholders(@TempDir Path root) throws IOException {
+        Path enUS = root.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("x.yml"), "give: \"Gave %amount% %item% to %player%\"\n");
+        Messages.bind(new LocaleManager(root, "en-US"));
+        Messages.reload();
+
+        String out = Messages.of("give")
+                .with("amount", 5)
+                .with("item", "canteen")
+                .with("player", "Steve")
+                .build();
+
+        assertEquals("Gave 5 canteen to Steve", out);
+    }
+
+    @Test
+    void builder_send_on_null_recipient_is_a_noop() {
+        Messages.of("any.key").send(null); // must not throw
+    }
+
+    @Test
+    void missing_key_without_bound_manager_returns_bracket_key() {
+        Messages.reset();
+        assertEquals("[x.y.z]", Messages.get("x.y.z"));
+    }
 }
