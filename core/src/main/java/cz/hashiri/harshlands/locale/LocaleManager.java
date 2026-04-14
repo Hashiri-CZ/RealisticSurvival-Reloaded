@@ -49,6 +49,11 @@ public class LocaleManager {
         this.flatMap = accumulator;
     }
 
+    public void reload() {
+        reportedMissingKeys.clear();
+        load();
+    }
+
     private void flatten(ConfigurationSection section, String prefix, Map<String, Object> out) {
         for (String key : section.getKeys(false)) {
             String fullKey = prefix.isEmpty() ? key : prefix + "." + key;

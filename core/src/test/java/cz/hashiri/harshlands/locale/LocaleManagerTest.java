@@ -107,4 +107,43 @@ class LocaleManagerTest {
         List<String> result = mgr.getList("missing.list");
         assertEquals(List.of(), result);
     }
+
+    @Test
+    void reload_re_reads_files_atomically(@TempDir Path translationsRoot) throws IOException {
+        Path enUS = translationsRoot.resolve("en-US");
+        Files.createDirectories(enUS);
+        Path file = enUS.resolve("x.yml");
+        Files.writeString(file, "key: \"original\"\n");
+
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
+        mgr.load();
+        assertEquals("original", mgr.get("key"));
+
+        Files.writeString(file, "key: \"updated\"\n");
+        mgr.reload();
+
+        assertEquals("updated", mgr.get("key"));
+    }
+
+    @Test
+    void reload_clears_stale_keys(@TempDir Path translationsRoot) throws IOException {
+        Path enUS = translationsRoot.resolve("en-US");
+        Files.createDirectories(enUS);
+        Path file = enUS.resolve("x.yml");
+        Files.writeString(file, """
+                a: "keep"
+                b: "remove"
+                """);
+
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
+        mgr.load();
+        assertEquals("keep", mgr.get("a"));
+        assertEquals("remove", mgr.get("b"));
+
+        Files.writeString(file, "a: \"keep\"\n");
+        mgr.reload();
+
+        assertEquals("keep", mgr.get("a"));
+        assertEquals("[b]", mgr.get("b"));
+    }
 }
