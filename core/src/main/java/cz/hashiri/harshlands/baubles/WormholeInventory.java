@@ -17,6 +17,7 @@
 package cz.hashiri.harshlands.baubles;
 
 import cz.hashiri.harshlands.data.baubles.GUI;
+import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.rsv.HLPlugin;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
@@ -65,7 +66,7 @@ public class WormholeInventory extends GUI {
             ((SkullMeta) meta).setOwningPlayer(Bukkit.getOfflinePlayer(id));
         }
 
-        meta.setDisplayName(Utils.translateMsg(config.getString("WormholeInventory.SkullName"), player, Map.of("PLAYER_NAME", player.getDisplayName())));
+        meta.setDisplayName(Messages.of("baubles.wormhole_inventory.skull_name").with("player_name", player.getDisplayName()).build());
 
         skull.setItemMeta(meta);
         if (!players.containsKey(id)) {
