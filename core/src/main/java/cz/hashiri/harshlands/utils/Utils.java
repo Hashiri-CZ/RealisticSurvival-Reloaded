@@ -18,12 +18,12 @@ package cz.hashiri.harshlands.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import cz.hashiri.harshlands.baubles.EndermanAlly;
-import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.iceandfire.*;
 import cz.hashiri.harshlands.integrations.AuraSkills;
 import cz.hashiri.harshlands.integrations.CompatiblePlugin;
 import cz.hashiri.harshlands.integrations.PAPI;
+import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.rsv.HLPlugin;
 import cz.hashiri.harshlands.spartanweaponry.KbTask;
 import cz.hashiri.harshlands.utils.ToolHandler.Tool;
