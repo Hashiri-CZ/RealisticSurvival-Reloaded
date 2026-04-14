@@ -1,3 +1,5 @@
+# Prevents custom sweep attacks from hitting pet wolves
+# Does not protect pets from intentional attacks, vanilla sweep attacks, or the sweeping edge enchant
 ﻿#######################################
 #          Spartan's Weaponry         #
 #######################################
@@ -24,27 +26,6 @@ WeaponDropped:
   Enabled: true
   Message: "&fWeapon dropped at &bx&f: &b%X_COORD%&f, &by&f: &b%Y_COORD%&f, &bz&f: &b%Z_COORD%&f." # All placeholders: %X_COORD%, %Y_COORD%, %Z_COORD%
 
-# Used to specify custom item drops for any mob
-# By default, there is no use for this, so the chance is set to 0.00
-MobDrops:
-# WITHER:
-#   handle:
-#     Type: "Rare"
-#     Chance: 0.00
-
-# Used to specify custom block drops
-# By default, there is no use for this, so the chance is set to 0.00
-BlockDrops:
-# BARRIER:
-#   handle:
-#     Type: "Rare"
-#     Chance: 0.00
-#     ReplaceDefaultDrop: true            # Will prevent whatever items normally drop from dropping if set to true
-#     IgnoreSilkTouchEnchant: false       # If set to false, item will only drop if a block when mined with a tool without silk touch
-#     RequireRightTool: true              # If set to true, item will only drop if block can be mined with the tool in player's hand
-
-# Prevents custom sweep attacks from hitting pet wolves
-# Does not protect pets from intentional attacks, vanilla sweep attacks, or the sweeping edge enchant
 PreventSweepAttackingPets: true
 
 UpdateNetheriteItems: # Specify which factors will be transferred over when a diamond weapon is crafted into a netherite weapon via smithing table

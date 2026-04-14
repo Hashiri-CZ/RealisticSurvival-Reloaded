@@ -1,3 +1,7 @@
+# Customize the Ice and Fire gear and the mobs
+
+# The following settings already work well for a good dragon fight
+# Blocks use the enum constant names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 #######################################
 #          Ice and Fire               #
 #######################################
@@ -12,33 +16,6 @@ Shutdown:
   Enabled: true
   Message: "&6[Harshlands] &fShutting down &e%NAME% &fmodule"
 
-# Used to specify custom item drops for any mob
-MobDrops:
-  WITHER:
-    witherbone:
-      Type: "Range"
-      MinAmount: 20
-      MaxAmount: 40
-  WITHER_SKELETON:
-    witherbone:
-      Type: "Rare"
-      Chance: 0.01
-
-# Used to specify custom block drops
-# By default, there is no use for this, so the chance is set to 0.00
-BlockDrops:
-# BARRIER:
-#   dragonbone_sword:
-#     Type: "Rare"
-#     Chance: 0.00
-#     ReplaceDefaultDrop: true            # Will prevent whatever items normally drop from dropping if set to true
-#     IgnoreSilkTouchEnchant: false       # If set to false, item will only drop if a block when mined with a tool without silk touch
-#     RequireRightTool: true              # If set to true, item will only drop if block can be mined with the tool in player's hand
-
-# Customize the Ice and Fire gear and the mobs
-
-# The following settings already work well for a good dragon fight
-# Blocks use the enum constant names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 Dragon:
   Enabled: true
   SpawnChance: 0.8 # Chance of an ice and fire (I&F) dragon replacing a vanilla ender dragon spawn; set to 1.0 if you only want I&F dragons and -1.0 to disable I&F dragon spawning

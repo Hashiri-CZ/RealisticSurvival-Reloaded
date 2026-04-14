@@ -1,3 +1,5 @@
+# Customize the No Tree Punching features
+
 ﻿#######################################
 #          No Tree Punching           #
 #######################################
@@ -11,67 +13,6 @@ Initialize:
 Shutdown:
   Enabled: true
   Message: "&6[Harshlands] &fShutting down &e%NAME% &fmodule" # All placeholders: %NAME%
-
-# Used to specify custom item drops for any mob
-# By default, there is no use for this, so the chance is set to 0.00
-MobDrops:
-# WITHER:
-#   flint_shard:
-#     Type: "Rare"
-#     Chance: 0.00
-
-# Used to specify custom block drops
-BlockDrops:
-  STONE:
-    stone_rock:
-      Type: "Range"
-      MinAmount: 2
-      MaxAmount: 4
-      ReplaceDefaultDrop: true # Will prevent whatever items normally drop from dropping if set to true
-      IgnoreSilkTouchEnchant: false # If set to false, item will only drop if a block when mined with a tool without silk touch
-      RequireRightTool: true # If set to true, item will only drop if block can be mined with the tool in player's hand
-  ANDESITE:
-    andesite_rock:
-      Type: "Range"
-      MinAmount: 2
-      MaxAmount: 4
-      ReplaceDefaultDrop: true
-      IgnoreSilkTouchEnchant: false
-      RequireRightTool: true
-  SANDSTONE:
-    sandstone_rock:
-      Type: "Range"
-      MinAmount: 2
-      MaxAmount: 4
-      ReplaceDefaultDrop: true
-      IgnoreSilkTouchEnchant: false
-      RequireRightTool: true
-  RED_SANDSTONE:
-    red_sandstone_rock:
-      Type: "Range"
-      MinAmount: 2
-      MaxAmount: 4
-      ReplaceDefaultDrop: true
-      IgnoreSilkTouchEnchant: false
-      RequireRightTool: true
-  GRANITE:
-    granite_rock:
-      Type: "Range"
-      MinAmount: 2
-      MaxAmount: 4
-      ReplaceDefaultDrop: true
-      IgnoreSilkTouchEnchant: false
-      RequireRightTool: true
-  DIORITE:
-    diorite_rock:
-      Type: "Range"
-      MinAmount: 2
-      MaxAmount: 4
-      ReplaceDefaultDrop: true
-      IgnoreSilkTouchEnchant: false
-      RequireRightTool: true
-
-# Customize the No Tree Punching features
 
 UpdateNetheriteItems: # Specify which factors will be transferred over when a diamond mattock is crafted into a netherite mattock via smithing table
   Enabled: true

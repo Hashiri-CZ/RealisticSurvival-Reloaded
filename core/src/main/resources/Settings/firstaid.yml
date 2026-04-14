@@ -12,25 +12,6 @@ Shutdown:
   Enabled: true
   Message: "&6[Harshlands] &fShutting down &e%NAME% &fmodule" # All placeholders: %NAME%
 
-# Used to specify custom item drops for any mob
-# By default, there is no use for this, so the chance is set to 0.00
-MobDrops:
-# WITHER:
-#   handle:
-#     Type: "Rare"
-#     Chance: 0.00
-
-# Used to specify custom block drops
-# By default, there is no use for this, so the chance is set to 0.00
-BlockDrops:
-# BARRIER:
-#   handle:
-#     Type: "Rare"
-#     Chance: 0.00
-#     ReplaceDefaultDrop: true            # Will prevent whatever items normally drop from dropping if set to true
-#     IgnoreSilkTouchEnchant: false       # If set to false, item will only drop if a block when mined with a tool without silk touch
-#     RequireRightTool: true              # If set to true, item will only drop if block can be mined with the tool in player's hand
-
 BodyParts:
   AbsorptionHealthBoost: # Decides how extra health from absorption or health boost will be distributed
     Priority: # Body parts at the top of list will receive health first, followed by the parts below
