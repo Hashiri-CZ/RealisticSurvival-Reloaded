@@ -52,9 +52,9 @@ public class IceFireModule extends HLModule {
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "iceandfire.yml"));
-        setItemConfig(new HLConfig(plugin, "resources/iceandfire/items.yml"));
-        setRecipeConfig(new HLConfig(plugin, "resources/iceandfire/recipes.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/iceandfire.yml"));
+        setItemConfig(new HLConfig(plugin, "Items/iceandfire/items.yml"));
+        setRecipeConfig(new HLConfig(plugin, "Items/iceandfire/recipes.yml"));
         setModuleItems(new ModuleItems(this));
         setModuleRecipes(new ModuleRecipes(this, plugin));
 

@@ -91,12 +91,12 @@ public class HLPlugin extends JavaPlugin {
         this.localeManager.load();
         cz.hashiri.harshlands.locale.Messages.bind(this.localeManager);
 
-        lorePresetConfig = new HLConfig(this, "lorepresets.yml");
-        this.miscItemsConfig = new HLConfig(this, "resources/misc_items.yml");
-        this.miscRecipesConfig = new HLConfig(this, "resources/misc_recipes.yml");
-        this.integrationsConfig = new HLConfig(this, "integrations.yml");
-        this.commandsConfig = new HLConfig(this, "commands.yml");
-        this.auraSkillsRequirementsConfig = new HLConfig(this, "auraskills_requirements.yml");
+        lorePresetConfig = new HLConfig(this, "Presets/lore.yml");
+        this.miscItemsConfig = new HLConfig(this, "Items/misc/items.yml");
+        this.miscRecipesConfig = new HLConfig(this, "Items/misc/recipes.yml");
+        this.integrationsConfig = new HLConfig(this, "Settings/integrations.yml");
+        this.commandsConfig = new HLConfig(this, "Settings/commands.yml");
+        this.auraSkillsRequirementsConfig = new HLConfig(this, "Presets/auraskills_requirements.yml");
         migrateAuraSkillsRequirementsConfig();
         ensureResourcePackDefaults();
         ensureIntegrationDefaults();

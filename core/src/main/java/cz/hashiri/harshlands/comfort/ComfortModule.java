@@ -59,7 +59,7 @@ public class ComfortModule extends HLModule {
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "comfort.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/comfort.yml"));
 
         HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
             @Override public String getModuleName() { return NAME; }

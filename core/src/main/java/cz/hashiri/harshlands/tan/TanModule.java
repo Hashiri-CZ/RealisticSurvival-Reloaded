@@ -59,9 +59,9 @@ public class TanModule extends HLModule {
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "toughasnails.yml"));
-        setItemConfig(new HLConfig(plugin, "resources/toughasnails/items.yml"));
-        setRecipeConfig(new HLConfig(plugin, "resources/toughasnails/recipes.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/toughasnails.yml"));
+        setItemConfig(new HLConfig(plugin, "Items/toughasnails/items.yml"));
+        setRecipeConfig(new HLConfig(plugin, "Items/toughasnails/recipes.yml"));
 
         HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
             @Override public String getModuleName() { return NAME; }

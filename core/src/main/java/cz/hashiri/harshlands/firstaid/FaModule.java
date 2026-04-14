@@ -37,14 +37,14 @@ public class FaModule extends HLModule {
     public FaModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
         this.plugin = plugin;
-        this.config = new HLConfig(plugin, "resources/firstaid/playerdata.yml");
+        this.config = new HLConfig(plugin, "Items/firstaid/playerdata.yml");
     }
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "firstaid.yml"));
-        setItemConfig(new HLConfig(plugin, "resources/firstaid/items.yml"));
-        setRecipeConfig(new HLConfig(plugin, "resources/firstaid/recipes.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/firstaid.yml"));
+        setItemConfig(new HLConfig(plugin, "Items/firstaid/items.yml"));
+        setRecipeConfig(new HLConfig(plugin, "Items/firstaid/recipes.yml"));
 
         setModuleItems(new ModuleItems(this));
         setModuleRecipes(new ModuleRecipes(this, plugin));

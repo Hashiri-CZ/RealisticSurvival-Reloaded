@@ -37,7 +37,7 @@ public class DynamicSurroundingsModule extends HLModule {
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "dynamicsurroundings.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/dynamicsurroundings.yml"));
 
         HLPlugin.getPlugin().getDebugManager().registerProvider(new cz.hashiri.harshlands.debug.DebugProvider() {
             @Override public String getModuleName() { return NAME; }

@@ -56,7 +56,7 @@ public class FoodExpansionModule extends HLModule {
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "foodexpansion.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/foodexpansion.yml"));
         Utils.logModuleLifecycle("Initializing", NAME);
 
         // Create shared attribute modifier keys

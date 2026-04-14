@@ -44,14 +44,14 @@ public class BaubleModule extends HLModule {
     public BaubleModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of(HLModule.getModule(IceFireModule.NAME), "Detected disabled Ice and Fire module. Dragon's eye recipe will be partially disabled."));
         this.plugin = plugin;
-        this.config = new HLConfig(plugin, "resources/baubles/playerdata.yml");
+        this.config = new HLConfig(plugin, "Items/baubles/playerdata.yml");
     }
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "baubles.yml"));
-        setItemConfig(new HLConfig(plugin, "resources/baubles/items.yml"));
-        setRecipeConfig(new HLConfig(plugin, "resources/baubles/recipes.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/baubles.yml"));
+        setItemConfig(new HLConfig(plugin, "Items/baubles/items.yml"));
+        setRecipeConfig(new HLConfig(plugin, "Items/baubles/recipes.yml"));
         setModuleItems(new ModuleItems(this));
         setModuleRecipes(new ModuleRecipes(this, plugin));
 

@@ -43,9 +43,9 @@ public class NtpModule extends HLModule {
 
     @Override
     public void initialize() {
-        setUserConfig(new HLConfig(plugin, "notreepunching.yml"));
-        setItemConfig(new HLConfig(plugin, "resources/notreepunching/items.yml"));
-        setRecipeConfig(new HLConfig(plugin, "resources/notreepunching/recipes.yml"));
+        setUserConfig(new HLConfig(plugin, "Settings/notreepunching.yml"));
+        setItemConfig(new HLConfig(plugin, "Items/notreepunching/items.yml"));
+        setRecipeConfig(new HLConfig(plugin, "Items/notreepunching/recipes.yml"));
         setModuleItems(new ModuleItems(this));
         setModuleRecipes(new ModuleRecipes(this, plugin));
 
