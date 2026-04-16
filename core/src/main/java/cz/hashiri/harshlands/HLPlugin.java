@@ -377,7 +377,11 @@ public class HLPlugin extends JavaPlugin {
             for (String key : embedded.getKeys(true)) {
                 Object embeddedValue = embedded.get(key);
                 if (embeddedValue instanceof org.bukkit.configuration.ConfigurationSection) continue;
-                if (disk.contains(key)) continue;
+                boolean isSystemKey = key.endsWith(".initialize.message")
+                        || key.endsWith(".shutdown.message");
+                boolean isMissing = !disk.contains(key);
+                if (!isMissing && !isSystemKey) continue;
+                if (java.util.Objects.equals(disk.get(key), embeddedValue)) continue;
                 disk.set(key, embeddedValue);
                 changed = true;
             }
