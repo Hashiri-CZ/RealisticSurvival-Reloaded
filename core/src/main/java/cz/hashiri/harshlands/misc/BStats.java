@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class BStats {
 
-    private static final int ID = 13786;
+    private static final int ID = 30794;
     private final Metrics metrics;
 
     public BStats(HLPlugin plugin) {
