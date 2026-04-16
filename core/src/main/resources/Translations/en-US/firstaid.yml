@@ -1,5 +1,5 @@
 firstaid:
   initialize:
-    message: "&fInitializing &e%name% &fmodule"
+    message: "&fInitializing %name% module"
   shutdown:
-    message: "&fShutting down &e%name% &fmodule"
+    message: "&fShutting down %name% module"

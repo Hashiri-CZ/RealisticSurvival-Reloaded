@@ -23,6 +23,7 @@ import java.io.File;
 public class FileBuilder {
     protected File file;
     private final boolean replace;
+    private boolean freshlyCreated;
 
     private final HLPlugin plugin;
 
@@ -42,7 +43,12 @@ public class FileBuilder {
             file.getParentFile().mkdirs();
             // save the yaml file to the plugin resources
             plugin.saveResource(path, replace);
+            freshlyCreated = true;
         }
+    }
+
+    public boolean isFreshlyCreated() {
+        return freshlyCreated;
     }
 
     public File getFile() {

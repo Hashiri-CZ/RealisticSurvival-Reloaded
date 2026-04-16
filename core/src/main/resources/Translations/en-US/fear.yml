@@ -1,8 +1,8 @@
 fear:
   initialize:
-    message: "&fInitializing &e%name% &fmodule"
+    message: "&fInitializing %name% module"
   shutdown:
-    message: "&fShutting down &e%name% &fmodule"
+    message: "&fShutting down %name% module"
   character_overrides:
     fear_actionbar: "%fear_bar%%arrow%  "
     fear_brain: ""

@@ -1,7 +1,7 @@
 baubles:
   initialize:
-    message: "&fInitializing &e%name% &fmodule"
+    message: "&fInitializing %name% module"
   shutdown:
-    message: "&fShutting down &e%name% &fmodule"
+    message: "&fShutting down %name% module"
   wormhole_inventory:
     skull_name: "&e%player_name%"

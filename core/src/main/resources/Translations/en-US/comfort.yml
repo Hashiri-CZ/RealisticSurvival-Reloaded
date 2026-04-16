@@ -1,8 +1,8 @@
 comfort:
   initialize:
-    message: "&fInitializing &e%name% &fmodule"
+    message: "&fInitializing %name% module"
   shutdown:
-    message: "&fShutting down &e%name% &fmodule"
+    message: "&fShutting down %name% module"
   module_disabled: "&c[Harshlands] Comfort module is not enabled."
   messages:
     no_comfort: "§7No comfort nearby."

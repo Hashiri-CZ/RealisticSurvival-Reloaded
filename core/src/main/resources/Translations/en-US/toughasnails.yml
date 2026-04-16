@@ -1,8 +1,8 @@
 toughasnails:
   initialize:
-    message: "&fInitializing &e%name% &fmodule"
+    message: "&fInitializing %name% module"
   shutdown:
-    message: "&fShutting down &e%name% &fmodule"
+    message: "&fShutting down %name% module"
   dehydration_death:
     messages:
       - "&f%player_name% died of dehydration."

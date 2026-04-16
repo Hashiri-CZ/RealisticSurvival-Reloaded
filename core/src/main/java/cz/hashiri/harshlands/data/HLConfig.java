@@ -77,6 +77,21 @@ public class HLConfig extends FileBuilder {
         String latestVersion = plugin.getDescription().getVersion();
         updated = true;
 
+        // Fresh install: file was just extracted from bundled resources. The bundled ConfigId
+        // may lag behind the plugin version, but there's no user data to migrate. Stamp the
+        // current version and skip the backup/merge/log path.
+        if (isFreshlyCreated()) {
+            if (!latestVersion.equals(currentVersion)) {
+                try {
+                    config.set("ConfigId", latestVersion);
+                    config.save(file);
+                } catch (IOException e) {
+                    plugin.getLogger().log(Level.SEVERE, "[HLConfig] Failed to stamp ConfigId on fresh config: " + path, e);
+                }
+            }
+            return;
+        }
+
         if (isOlderVersion(currentVersion, latestVersion)) {
             int num = 0;
             String newPath = path.replace(".yml", "_Backup_" + num + ".yml");
