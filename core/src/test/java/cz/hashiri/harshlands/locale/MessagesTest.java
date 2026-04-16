@@ -84,4 +84,38 @@ class MessagesTest {
         Messages.reset();
         assertEquals("[x.y.z]", Messages.get("x.y.z"));
     }
+
+    @Test
+    void placeholder_substitution_is_case_insensitive(@TempDir Path root) throws IOException {
+        // Legacy translation files may carry upper- or mixed-case %NAME% tokens
+        // (inherited from pre-1.3.0 YAMLs). .with("name", ...) is lowercase.
+        // All forms must resolve against the single lowercase placeholder key.
+        Path enUS = root.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("x.yml"), """
+                caps: "Initializing %NAME% module"
+                mixed: "Initializing %Name% module"
+                lower: "Initializing %name% module"
+                """);
+        Messages.bind(new LocaleManager(root, "en-US"));
+        Messages.reload();
+
+        assertEquals("Initializing Fear module", Messages.get("caps", Map.of("name", "Fear")));
+        assertEquals("Initializing Fear module", Messages.get("mixed", Map.of("name", "Fear")));
+        assertEquals("Initializing Fear module", Messages.get("lower", Map.of("name", "Fear")));
+    }
+
+    @Test
+    void placeholder_replacement_handles_special_regex_chars(@TempDir Path root) throws IOException {
+        // Values containing $ or \ must be inserted literally, not interpreted
+        // as regex back-references when .replaceAll is used internally.
+        Path enUS = root.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("x.yml"), "line: \"cost %amount%\"\n");
+        Messages.bind(new LocaleManager(root, "en-US"));
+        Messages.reload();
+
+        assertEquals("cost $5.00", Messages.get("line", Map.of("amount", "$5.00")));
+        assertEquals("cost a\\b", Messages.get("line", Map.of("amount", "a\\b")));
+    }
 }

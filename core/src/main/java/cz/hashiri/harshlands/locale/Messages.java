@@ -35,7 +35,9 @@ public final class Messages {
         if (placeholders == null || placeholders.isEmpty()) return raw;
         String out = raw;
         for (Map.Entry<String, ?> e : placeholders.entrySet()) {
-            out = out.replace("%" + e.getKey() + "%", String.valueOf(e.getValue()));
+            String pattern = "(?i)%" + java.util.regex.Pattern.quote(e.getKey()) + "%";
+            String replacement = java.util.regex.Matcher.quoteReplacement(String.valueOf(e.getValue()));
+            out = out.replaceAll(pattern, replacement);
         }
         return out;
     }
