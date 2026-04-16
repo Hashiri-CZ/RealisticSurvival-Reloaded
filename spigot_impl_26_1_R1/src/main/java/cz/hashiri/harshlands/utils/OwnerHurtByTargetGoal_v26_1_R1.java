@@ -49,7 +49,7 @@ public class OwnerHurtByTargetGoal_v26_1_R1 extends TargetGoal {
     }
 
     public void start() {
-        mob.setTarget(ownerLastHurtBy, EntityTargetEvent.TargetReason.TARGET_ATTACKED_OWNER, true);
+        MobSetTargetCompat.setTarget(mob, ownerLastHurtBy, EntityTargetEvent.TargetReason.TARGET_ATTACKED_OWNER);
         LivingEntity entityliving = ((CraftPlayer) pet.getOwner()).getHandle();
         if (entityliving != null) {
             timestamp = entityliving.getLastHurtByMobTimestamp();
