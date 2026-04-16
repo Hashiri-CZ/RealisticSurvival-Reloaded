@@ -99,6 +99,11 @@ public class HLPlugin extends JavaPlugin {
 
         // Ensure shipped Translations/ directory is materialized into the data folder.
         ensureTranslationDefaults();
+        // For existing installs whose on-disk translation files were produced by
+        // migration (and may be missing keys that only exist in newer JAR defaults),
+        // merge any missing JAR keys into the on-disk file. Admin customizations on
+        // existing keys are preserved.
+        mergeTranslationDefaults();
         String locale = getConfig().getString("Locale", "en-US");
         this.localeManager = new cz.hashiri.harshlands.locale.LocaleManager(
                 getDataFolder().toPath().resolve("Translations"),
@@ -340,6 +345,49 @@ public class HLPlugin extends JavaPlugin {
             java.io.File target = new java.io.File(getDataFolder(), resourcePath);
             if (!target.exists()) {
                 saveResource(resourcePath, false);
+            }
+        }
+    }
+
+    private void mergeTranslationDefaults() {
+        java.util.List<String> modules = java.util.List.of(
+                "commands", "toughasnails", "baubles", "fear", "iceandfire",
+                "spartanweaponry", "spartanandfire", "foodexpansion", "comfort",
+                "notreepunching", "firstaid", "dynamicsurroundings", "integrations");
+        for (String m : modules) {
+            String resourcePath = "Translations/en-US/" + m + ".yml";
+            java.io.File diskFile = new java.io.File(getDataFolder(), resourcePath);
+            if (!diskFile.exists()) continue;
+
+            org.bukkit.configuration.file.YamlConfiguration disk =
+                    org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(diskFile);
+
+            org.bukkit.configuration.file.YamlConfiguration embedded;
+            try (java.io.InputStream in = getResource(resourcePath)) {
+                if (in == null) continue;
+                try (java.io.InputStreamReader reader = new java.io.InputStreamReader(in)) {
+                    embedded = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(reader);
+                }
+            } catch (java.io.IOException e) {
+                getLogger().warning("Failed to read JAR translation resource " + resourcePath + ": " + e.getMessage());
+                continue;
+            }
+
+            boolean changed = false;
+            for (String key : embedded.getKeys(true)) {
+                Object embeddedValue = embedded.get(key);
+                if (embeddedValue instanceof org.bukkit.configuration.ConfigurationSection) continue;
+                if (disk.contains(key)) continue;
+                disk.set(key, embeddedValue);
+                changed = true;
+            }
+
+            if (changed) {
+                try {
+                    disk.save(diskFile);
+                } catch (IOException e) {
+                    getLogger().warning("Failed to save merged translations to " + diskFile + ": " + e.getMessage());
+                }
             }
         }
     }
