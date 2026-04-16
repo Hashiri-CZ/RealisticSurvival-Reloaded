@@ -17,6 +17,7 @@
 package cz.hashiri.harshlands.data;
 
 import cz.hashiri.harshlands.HLPlugin;
+import cz.hashiri.harshlands.utils.StartupLog;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -115,7 +116,7 @@ public class HLConfig extends FileBuilder {
                     config.set("ConfigId", latestVersion);
                     config.save(file);
 
-                    plugin.getLogger().info("[HLConfig] Updating config: " + currentVersion + " -> " + latestVersion);
+                    StartupLog.log("&f[HLConfig] Updating config: " + currentVersion + " -> " + latestVersion);
 
                 } catch (IOException e) {
                     plugin.getLogger().log(Level.SEVERE, "[HLConfig] Failed to update config: " + path, e);
@@ -127,7 +128,7 @@ public class HLConfig extends FileBuilder {
                 }
                 createFile(path);
                 createConfig();
-                plugin.getLogger().info("[HLConfig] AutoUpdate disabled, replaced config with new default: " + currentVersion + " -> " + latestVersion);
+                StartupLog.log("&f[HLConfig] AutoUpdate disabled, replaced config with new default: " + currentVersion + " -> " + latestVersion);
             }
 
         }
