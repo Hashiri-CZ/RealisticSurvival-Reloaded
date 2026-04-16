@@ -2,7 +2,7 @@ package cz.hashiri.harshlands.locale;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
-import cz.hashiri.harshlands.rsv.HLPlugin;
+import cz.hashiri.harshlands.HLPlugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
