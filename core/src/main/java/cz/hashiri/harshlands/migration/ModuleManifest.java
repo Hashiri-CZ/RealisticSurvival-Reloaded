@@ -20,6 +20,17 @@ public abstract class ModuleManifest {
      */
     protected abstract Set<String> translationRoots();
 
+    /**
+     * Leaf key names (last segment only) that must stay in Settings even when they
+     * appear under a declared translation root. Use for gameplay fields that look
+     * like strings or lists but are actually enum values or cross-references —
+     * e.g. Recipe.Type ("SHAPELESS"), MobDrops.X.Item (custom-food name reference),
+     * Recipe.Ingredients (list of item names).
+     */
+    protected Set<String> translationLeafDenylist() {
+        return Set.of();
+    }
+
     public ModuleSplitResult split(YamlConfiguration legacy, Path dataFolder) {
         YamlConfiguration settings = cloneYaml(legacy);
         YamlConfiguration mobDrops = new YamlConfiguration();
@@ -56,6 +67,7 @@ public abstract class ModuleManifest {
                                            Map<String, Object> translations,
                                            YamlConfiguration settings,
                                            String settingsPath) {
+        Set<String> denylist = translationLeafDenylist();
         for (String key : sec.getKeys(false)) {
             Object value = sec.get(key);
             String flatKey = prefix + "." + normalize(key);
@@ -63,6 +75,7 @@ public abstract class ModuleManifest {
             if (value instanceof ConfigurationSection sub) {
                 collectStringsFromSection(sub, flatKey, translations, settings, legacyPath);
             } else if (value instanceof String || value instanceof java.util.List<?>) {
+                if (denylist.contains(key)) continue;
                 translations.put(flatKey, value);
                 settings.set(legacyPath, null);
             }

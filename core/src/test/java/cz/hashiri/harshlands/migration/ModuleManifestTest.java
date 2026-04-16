@@ -127,6 +127,48 @@ class ModuleManifestTest {
     }
 
     @Test
+    void food_expansion_manifest_keeps_gameplay_fields_in_settings() {
+        FoodExpansionManifest manifest = new FoodExpansionManifest();
+
+        YamlConfiguration legacy = new YamlConfiguration();
+        // Translatable fields — should move to Translations
+        legacy.set("FoodExpansion.CustomFoods.bacon.DisplayName", "&fBacon");
+        legacy.set("FoodExpansion.Overeating.Messages.WarningText", "full");
+        // Gameplay/reference fields — must stay in Settings
+        legacy.set("FoodExpansion.CustomFoods.bacon.Recipe.Type", "SHAPELESS");
+        legacy.set("FoodExpansion.CustomFoods.bacon.Recipe.Ingredients",
+                java.util.List.of("pork", "salt"));
+        legacy.set("FoodExpansion.CustomFoods.bacon.BaseMaterial", "PAPER");
+        legacy.set("FoodExpansion.CustomFoods.bacon.Flags",
+                java.util.List.of("HIDE_ATTRIBUTES"));
+        legacy.set("FoodExpansion.MobDrops.SQUID.Item", "cooked_squid");
+        legacy.set("FoodExpansion.BonusRecipes.bread_from_dough.Type", "FURNACE");
+        legacy.set("FoodExpansion.BonusRecipes.bread_from_dough.Input", "dough");
+        legacy.set("FoodExpansion.BonusRecipes.bread_from_dough.Output", "BREAD");
+
+        ModuleSplitResult out = manifest.split(legacy, null);
+
+        Map<String, Object> translations = out.translations();
+        YamlConfiguration settings = out.settings();
+
+        // Translatable fields did go to Translations
+        assertEquals("&fBacon", translations.get("foodexpansion.food_expansion.custom_foods.bacon.display_name"));
+        assertNotNull(translations.get("foodexpansion.food_expansion.overeating.messages.warning_text"));
+
+        // Denylisted gameplay fields stay in Settings and are NOT in Translations
+        assertEquals("SHAPELESS", settings.getString("FoodExpansion.CustomFoods.bacon.Recipe.Type"));
+        assertEquals(java.util.List.of("pork", "salt"),
+                settings.getStringList("FoodExpansion.CustomFoods.bacon.Recipe.Ingredients"));
+        assertEquals("PAPER", settings.getString("FoodExpansion.CustomFoods.bacon.BaseMaterial"));
+        assertEquals(java.util.List.of("HIDE_ATTRIBUTES"),
+                settings.getStringList("FoodExpansion.CustomFoods.bacon.Flags"));
+        assertEquals("cooked_squid", settings.getString("FoodExpansion.MobDrops.SQUID.Item"));
+        assertNull(translations.get("foodexpansion.food_expansion.custom_foods.bacon.recipe.type"));
+        assertNull(translations.get("foodexpansion.food_expansion.custom_foods.bacon.base_material"));
+        assertNull(translations.get("foodexpansion.food_expansion.mob_drops.squid.item"));
+    }
+
+    @Test
     void fear_manifest_routes_correctly() {
         FearManifest manifest = new FearManifest();
 
