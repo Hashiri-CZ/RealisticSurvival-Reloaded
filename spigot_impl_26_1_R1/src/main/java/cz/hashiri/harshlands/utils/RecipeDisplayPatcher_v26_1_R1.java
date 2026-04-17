@@ -53,7 +53,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.lang.reflect.Field;
@@ -92,10 +92,12 @@ public class RecipeDisplayPatcher_v26_1_R1 implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onLogin(PlayerLoginEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         Player bukkitPlayer = event.getPlayer();
+        ServerPlayer serverPlayer;
         try {
-            Channel channel = resolveChannel(bukkitPlayer);
+            serverPlayer = ((CraftPlayer) bukkitPlayer).getHandle();
+            Channel channel = resolveChannel(serverPlayer);
             if (channel.pipeline().get(HANDLER_NAME) == null) {
                 channel.pipeline().addBefore("packet_handler", HANDLER_NAME, new RewriteHandler());
             }
@@ -105,13 +107,27 @@ public class RecipeDisplayPatcher_v26_1_R1 implements Listener {
                 plugin.getLogger().log(Level.WARNING,
                         "Recipe display patcher could not be installed for player " + uuid + ".", t);
             }
+            return;
+        }
+        // Resend the initial recipe book so our just-installed handler can rewrite it.
+        // Without this resend, the recipe book listing remains stuck with whatever
+        // PlayerList.placeNewPlayer sent before our handler was attached.
+        try {
+            serverPlayer.getRecipeBook().sendInitialRecipeBook(serverPlayer);
+        } catch (Throwable t) {
+            UUID uuid = bukkitPlayer.getUniqueId();
+            if (warnedPlayers.add(uuid)) {
+                plugin.getLogger().log(Level.WARNING,
+                        "Recipe book resend after patcher install failed for player " + uuid + "; recipe book listing may show base materials until next server resync.", t);
+            }
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         try {
-            Channel channel = resolveChannel(event.getPlayer());
+            ServerPlayer serverPlayer = ((CraftPlayer) event.getPlayer()).getHandle();
+            Channel channel = resolveChannel(serverPlayer);
             if (channel.pipeline().get(HANDLER_NAME) != null) {
                 channel.pipeline().remove(HANDLER_NAME);
             }
@@ -120,8 +136,7 @@ public class RecipeDisplayPatcher_v26_1_R1 implements Listener {
         }
     }
 
-    private Channel resolveChannel(Player bukkitPlayer) throws IllegalAccessException {
-        ServerPlayer serverPlayer = ((CraftPlayer) bukkitPlayer).getHandle();
+    private Channel resolveChannel(ServerPlayer serverPlayer) throws IllegalAccessException {
         ServerGamePacketListenerImpl listener = serverPlayer.connection;
         Connection connection = (Connection) CONNECTION_FIELD.get(listener);
         return connection.channel;
