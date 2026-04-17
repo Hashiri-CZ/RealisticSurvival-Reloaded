@@ -79,16 +79,32 @@ public class HLShapedRecipe extends ShapedRecipe implements HLRecipe {
 
         // Register HL display items so the version-specific patcher can rewrite
         // recipe-book SlotDisplays for clients on MC versions that strip data
-        // components from ExactChoice ingredients.
+        // components from ExactChoice ingredients. NMS trims the recipe to its
+        // bounding box and indexes slots as row*effectiveWidth+col, so we must
+        // compute the bounding box of non-null cells and mirror that indexing.
         RecipeDisplayRegistry registry = plugin.getRecipeDisplayRegistry();
         if (registry != null) {
-            for (int row = 0; row < 3; row++) {
-                for (int col = 0; col < 3; col++) {
-                    RecipeIngredient ing = grid[row][col];
-                    if (ing != null && !ing.getItems().isEmpty()) {
-                        int slotIndex = row * 3 + col;
-                        registry.register(this.getKey(), slotIndex,
-                                new java.util.ArrayList<org.bukkit.inventory.ItemStack>(ing.getItems()));
+            int minRow = 3, maxRow = -1, minCol = 3, maxCol = -1;
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    if (grid[r][c] != null) {
+                        if (r < minRow) minRow = r;
+                        if (r > maxRow) maxRow = r;
+                        if (c < minCol) minCol = c;
+                        if (c > maxCol) maxCol = c;
+                    }
+                }
+            }
+            if (maxRow >= 0) {
+                int effectiveWidth = maxCol - minCol + 1;
+                for (int r = minRow; r <= maxRow; r++) {
+                    for (int c = minCol; c <= maxCol; c++) {
+                        RecipeIngredient ing = grid[r][c];
+                        if (ing != null && !ing.getItems().isEmpty()) {
+                            int slotIndex = (r - minRow) * effectiveWidth + (c - minCol);
+                            registry.register(this.getKey(), slotIndex,
+                                    new java.util.ArrayList<org.bukkit.inventory.ItemStack>(ing.getItems()));
+                        }
                     }
                 }
             }
