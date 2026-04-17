@@ -40,6 +40,7 @@ import cz.hashiri.harshlands.utils.ToolHandler;
 import cz.hashiri.harshlands.utils.ToolUtils;
 import cz.hashiri.harshlands.utils.StartupLog;
 import cz.hashiri.harshlands.utils.Utils;
+import cz.hashiri.harshlands.utils.recipe.RecipeDisplayRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -66,6 +67,7 @@ public class HLPlugin extends JavaPlugin {
     private HLConfig miscItemsConfig;
     private HLConfig miscRecipesConfig;
     private MiscRecipes miscRecipes;
+    private RecipeDisplayRegistry recipeDisplayRegistry;
     private MiscItems miscItems;
     private HLConfig integrationsConfig;
     private HLConfig commandsConfig;
@@ -147,6 +149,7 @@ public class HLPlugin extends JavaPlugin {
         ensureDynamicSurroundingsDefaults();
 
         this.miscItems = new MiscItems(this);
+        this.recipeDisplayRegistry = new RecipeDisplayRegistry();
         this.miscRecipes = new MiscRecipes(this);
 
         debugManager = new DebugManager(this);
@@ -216,10 +219,24 @@ public class HLPlugin extends JavaPlugin {
 
         this.getCommand(NAME).setExecutor(new Commands(this));
         this.getCommand(NAME).setTabCompleter(new Tab(this));
+
+        try {
+            Utils.installRecipeDisplayPatcher(this, this.recipeDisplayRegistry);
+        } catch (Throwable t) {
+            getLogger().log(java.util.logging.Level.WARNING,
+                    "Recipe display patcher could not be installed; custom items will appear as their base material in the recipe book.", t);
+        }
     }
 
     @Override
     public void onDisable() {
+        try {
+            Utils.uninstallRecipeDisplayPatcher();
+        } catch (Throwable t) {
+            getLogger().log(java.util.logging.Level.WARNING,
+                    "Recipe display patcher uninstall failed; continuing shutdown.", t);
+        }
+
         // Save all online player data (submits async DB writes)
         Collection<HLPlayer> players = HLPlayer.getPlayers().values();
         Collection<HLModule> modules = HLModule.getModules().values();
@@ -309,6 +326,11 @@ public class HLPlugin extends JavaPlugin {
     @Nonnull
     public MiscRecipes getMiscRecipes() {
         return miscRecipes;
+    }
+
+    @Nonnull
+    public RecipeDisplayRegistry getRecipeDisplayRegistry() {
+        return recipeDisplayRegistry;
     }
 
     @Nonnull

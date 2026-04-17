@@ -807,6 +807,19 @@ public class Utils {
         return internals.isNetheriteRecipe(inv);
     }
 
+    public static void installRecipeDisplayPatcher(@Nonnull HLPlugin plugin,
+                                                   @Nonnull cz.hashiri.harshlands.utils.recipe.RecipeDisplayRegistry registry) {
+        if (internals != null) {
+            internals.installRecipeDisplayPatcher(plugin, registry);
+        }
+    }
+
+    public static void uninstallRecipeDisplayPatcher() {
+        if (internals != null) {
+            internals.uninstallRecipeDisplayPatcher();
+        }
+    }
+
     public static boolean isTag(@Nonnull String name) {
         try {
             internals.getTag(name);
