@@ -76,6 +76,23 @@ public class HLShapedRecipe extends ShapedRecipe implements HLRecipe {
         for (Map.Entry<Character, RecipeIngredient> entry : this.ingredients.entrySet()) {
             this.setIngredient(entry.getKey(), entry.getValue().getRecipeChoice());
         }
+
+        // Register HL display items so the version-specific patcher can rewrite
+        // recipe-book SlotDisplays for clients on MC versions that strip data
+        // components from ExactChoice ingredients.
+        RecipeDisplayRegistry registry = plugin.getRecipeDisplayRegistry();
+        if (registry != null) {
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    RecipeIngredient ing = grid[row][col];
+                    if (ing != null && !ing.getItems().isEmpty()) {
+                        int slotIndex = row * 3 + col;
+                        registry.register(this.getKey(), slotIndex,
+                                new java.util.ArrayList<org.bukkit.inventory.ItemStack>(ing.getItems()));
+                    }
+                }
+            }
+        }
     }
 
     public RecipeIngredient[] getItems(String text) {
