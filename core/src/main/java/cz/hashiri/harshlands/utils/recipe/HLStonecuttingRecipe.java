@@ -25,6 +25,17 @@ public class HLStonecuttingRecipe extends StonecuttingRecipe implements HLRecipe
 
     public HLStonecuttingRecipe(FileConfiguration config, String name, HLPlugin plugin) {
         super(new NamespacedKey(plugin, name), HLRecipe.getResult(config, name), new RecipeIngredient(config.getString(name + ".Input")).getRecipeChoice());
+        RecipeDisplayRegistry registry = plugin.getRecipeDisplayRegistry();
+        if (registry != null) {
+            String inputRaw = config.getString(name + ".Input");
+            if (inputRaw != null && cz.hashiri.harshlands.utils.Ingredient.isValid(inputRaw)) {
+                RecipeIngredient input = new RecipeIngredient(inputRaw);
+                if (!input.getItems().isEmpty()) {
+                    registry.register(this.getKey(), 0,
+                            new java.util.ArrayList<org.bukkit.inventory.ItemStack>(input.getItems()));
+                }
+            }
+        }
     }
 }
 
