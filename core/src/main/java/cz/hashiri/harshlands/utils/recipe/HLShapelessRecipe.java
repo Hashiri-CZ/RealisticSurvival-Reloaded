@@ -47,6 +47,18 @@ public class HLShapelessRecipe extends ShapelessRecipe implements HLRecipe {
         }
 
         ingredients.forEach(ing -> this.addIngredient(ing.getRecipeChoice()));
+
+        RecipeDisplayRegistry registry = plugin.getRecipeDisplayRegistry();
+        if (registry != null) {
+            int slotIndex = 0;
+            for (RecipeIngredient ing : ingredients) {
+                if (!ing.getItems().isEmpty()) {
+                    registry.register(this.getKey(), slotIndex,
+                            new java.util.ArrayList<org.bukkit.inventory.ItemStack>(ing.getItems()));
+                }
+                slotIndex++;
+            }
+        }
     }
 
     public boolean isValidRecipe(@Nonnull CraftingInventory inv) {
