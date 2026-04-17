@@ -23,6 +23,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundPlaceGhostRecipePacket;
 import net.minecraft.network.protocol.game.ClientboundRecipeBookAddPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -234,6 +235,41 @@ public class RecipeDisplayPatcher_v26_1_R1 implements Listener {
         return options.size() == 1 ? options.get(0) : new SlotDisplay.Composite(options);
     }
 
+    private ClientboundPlaceGhostRecipePacket rewritePlaceGhost(ClientboundPlaceGhostRecipePacket original) {
+        RecipeDisplay incoming = original.recipeDisplay();
+        if (incoming == null) {
+            return original;
+        }
+        RecipeManager recipeManager = ((CraftServer) Bukkit.getServer()).getServer().getRecipeManager();
+        for (RecipeHolder<?> holder : recipeManager.getRecipes()) {
+            ResourceKey<Recipe<?>> recipeKey = holder.id();
+            Identifier ident = recipeKey.identifier();
+            NamespacedKey bukkitKey = new NamespacedKey(ident.getNamespace(), ident.getPath());
+            if (!registry.contains(bukkitKey)) {
+                continue;
+            }
+            boolean[] match = {false};
+            recipeManager.listDisplaysForRecipe(recipeKey, entry -> {
+                if (entry.display() == incoming) {
+                    match[0] = true;
+                }
+            });
+            if (!match[0]) {
+                continue;
+            }
+            Map<Integer, List<org.bukkit.inventory.ItemStack>> slots = registry.get(bukkitKey);
+            if (slots == null || slots.isEmpty()) {
+                return original;
+            }
+            RecipeDisplay rewrittenDisplay = rewriteDisplay(incoming, slots);
+            if (rewrittenDisplay == incoming) {
+                return original;
+            }
+            return new ClientboundPlaceGhostRecipePacket(original.containerId(), rewrittenDisplay);
+        }
+        return original;
+    }
+
     /**
      * Outbound-rewrite handler installed per-player connection.
      */
@@ -243,6 +279,11 @@ public class RecipeDisplayPatcher_v26_1_R1 implements Listener {
             try {
                 if (msg instanceof ClientboundRecipeBookAddPacket pkt) {
                     Object rewritten = rewriteRecipeBookAdd(pkt);
+                    super.write(ctx, rewritten, promise);
+                    return;
+                }
+                if (msg instanceof ClientboundPlaceGhostRecipePacket pkt) {
+                    Object rewritten = rewritePlaceGhost(pkt);
                     super.write(ctx, rewritten, promise);
                     return;
                 }
