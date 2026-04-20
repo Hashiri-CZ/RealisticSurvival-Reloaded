@@ -1230,6 +1230,38 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage("\u00a77Status: " + data.getCachedTier().name().replace("_", " "));
                     return true;
                 }
+                case "hints" -> {
+                    if (!sender.hasPermission("harshlands.admin.hints")) {
+                        sendNoPermissionMessage(sender);
+                        return true;
+                    }
+                    if (args.length < 3 || !args[1].equalsIgnoreCase("reset")) {
+                        sendIncompleteCommandMsg(sender);
+                        return true;
+                    }
+
+                    Player target = Bukkit.getPlayerExact(args[2]);
+                    if (target == null) {
+                        sendInvalidTargetMsg(sender);
+                        return true;
+                    }
+
+                    HLPlayer hlTarget = HLPlayer.getPlayers().get(target.getUniqueId());
+                    if (hlTarget == null) {
+                        sendInvalidTargetMsg(sender);
+                        return true;
+                    }
+
+                    cz.hashiri.harshlands.data.hints.DataModule dm = hlTarget.getHintsDataModule();
+                    if (dm == null) {
+                        sender.sendMessage("\u00a7cHints module is not enabled.");
+                        return true;
+                    }
+                    dm.clearAllSeen();
+                    dm.saveData();
+                    sender.sendMessage("\u00a7aReset hint state for " + target.getName() + ".");
+                    return true;
+                }
                 default -> {
                     return true;
                 }

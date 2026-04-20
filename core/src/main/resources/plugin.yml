@@ -173,6 +173,9 @@ permissions:
   harshlands.comfort.cabinfever.bypass:
     description: Exempts a player from cabin fever accumulation
     default: false
+  harshlands.admin.hints:
+    description: Allows resetting another player's progressive-hint state
+    default: op
   harshlands.command.*:
     description: Wildcard permission
     default: op
@@ -197,4 +200,5 @@ permissions:
       harshlands.command.nutrition.others: true
       harshlands.command.nutrition.set: true
       harshlands.command.nutrition.reset: true
+      harshlands.admin.hints: true
 
