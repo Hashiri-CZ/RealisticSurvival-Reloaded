@@ -24,6 +24,8 @@ public class DataModule implements HLDataModule {
     private final Map<HintKey, Long> cooldowns = new EnumMap<>(HintKey.class);
 
     private volatile boolean dirty = false;
+    // volatile: publishes load-completion across threads. Readers of `seen`/`cooldowns`
+    // MUST still go through synchronized accessors — the volatile only guards `loaded` itself.
     private volatile boolean loaded = false;
 
     public DataModule(Player player) {
@@ -110,6 +112,6 @@ public class DataModule implements HLDataModule {
             }
             dirty = false;
         }
-        database.saveHintsData(id, new cz.hashiri.harshlands.data.db.HLDatabase.HintsDataRow(csv));
+        database.saveHintsData(id, new HLDatabase.HintsDataRow(csv));
     }
 }
