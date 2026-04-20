@@ -17,60 +17,83 @@ hints:
     FirstSawCrafted: "Place the %item_saw% with a %item_log% in the crafting grid for 4 %item_plank%s. With %item_plank%s for 4 %item_stick%s."
   # Obtain instructions — shown on /hl obtain <item>, also previewed in hint hovers.
   # Each entry: Name (pretty display name) + Lines (multi-line description).
+  # Lines may contain %item_<key>% placeholders — they render as clickable tags.
   Obtain:
     axe:
       Name: "Axe"
       Lines:
-        - "&7Any axe works: wooden, stone, iron, diamond, netherite"
-        - "&7or the Harshlands &eflint hatchet&7."
-        - "&7Vanilla wood tools need planks first, so the"
-        - "&eflint hatchet&7 is your starter axe."
+        - "&7Any axe works: wooden, stone, iron, diamond, netherite,"
+        - "&7or the Harshlands %item_flint_hatchet%."
+        - "&7Vanilla wood tools need %item_plank%s first, so the"
+        - "&7%item_flint_hatchet% is your starter axe."
     flint_hatchet:
       Name: "Flint Hatchet"
       Lines:
         - "&7Craft in a crafting table:"
-        - "&8  • &7flint shard"
-        - "&8  • &7plant string"
-        - "&8  • &7stick"
+        - "&8  • &7%item_flint_shard%"
+        - "&8  • &7%item_plant_string%"
+        - "&8  • &7%item_stick%"
     flint_shard:
       Name: "Flint Shard"
       Lines:
-        - "&7Hold a &fflint&7 item in hand and left-click"
-        - "&7the top face of a hard block (stone, gravel,"
-        - "&7sandstone, etc.) to knap a shard off."
+        - "&7Hold %item_flint% in hand and left-click the top"
+        - "&7face of a hard block (stone, gravel, sandstone, etc.)"
+        - "&7to knap a shard off."
+    flint:
+      Name: "Flint"
+      Lines:
+        - "&7Break gravel — it sometimes drops a flint item"
+        - "&7instead of the gravel block."
     plant_string:
       Name: "Plant String"
       Lines:
-        - "&7Break tall grass while holding a &edagger"
-        - "&7or &eknife&7 to gather plant fiber."
-        - "&7Combine 2 plant fibers in a crafting grid"
+        - "&7Break tall grass while holding a %item_dagger%"
+        - "&7or %item_knife% to gather %item_plant_fiber%."
+        - "&7Combine 2 %item_plant_fiber%s in a crafting grid"
         - "&7to get plant string."
+    plant_fiber:
+      Name: "Plant Fiber"
+      Lines:
+        - "&7Break tall grass while holding a %item_dagger%"
+        - "&7or %item_knife%."
+    dagger:
+      Name: "Dagger"
+      Lines:
+        - "&7Harshlands adds several tiered daggers"
+        - "&7(flint, copper, iron, etc.)."
+        - "&7Check the in-game recipe book for recipes."
+    knife:
+      Name: "Knife"
+      Lines:
+        - "&7Harshlands adds several tiered knives"
+        - "&7(flint, copper, iron, etc.)."
+        - "&7Check the in-game recipe book for recipes."
     stick:
       Name: "Stick"
       Lines:
-        - "&7Hold an axe and right-click upward on a"
-        - "&7plank block for a chance to split off a stick."
-        - "&7A &esaw&7 + planks in the crafting grid"
+        - "&7Hold an %item_axe% and right-click upward on a"
+        - "&7%item_plank% block for a chance to split off a stick."
+        - "&7A %item_saw% + planks in the crafting grid"
         - "&7gives guaranteed output."
     log:
       Name: "Log"
       Lines:
-        - "&7Break any log with an axe in your hand."
+        - "&7Break any log with an %item_axe% in your hand."
         - "&7Bare fists break logs but drop nothing."
     plank:
       Name: "Plank"
       Lines:
-        - "&7Hold an axe and right-click upward on a"
-        - "&7log block for a chance to split off a plank."
-        - "&7A &esaw&7 + log in the crafting grid"
+        - "&7Hold an %item_axe% and right-click upward on a"
+        - "&7%item_log% block for a chance to split off a plank."
+        - "&7A %item_saw% + log in the crafting grid"
         - "&7gives guaranteed output (4 planks per log)."
     saw:
       Name: "Saw"
       Lines:
         - "&7Craft in a crafting table:"
         - "&8  • &7gold, iron, or diamond ingots"
-        - "&8  • &7sticks"
-        - "&7Place saw + log = 4 planks, saw + planks"
+        - "&8  • &7%item_stick%s"
+        - "&7Place saw + %item_log% = 4 planks, saw + planks"
         - "&7= 4 sticks. Check the in-game recipe book."
   # Shown by /hl obtain when the item key is not recognised.
-  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, plant_string, stick, log, plank, saw."
+  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw."

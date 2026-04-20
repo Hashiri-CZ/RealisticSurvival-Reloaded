@@ -168,7 +168,7 @@ public class Tab implements TabCompleter {
                     }
                     case "obtain" -> {
                         String prefix = args[1].toLowerCase();
-                        for (String key : List.of("axe", "flint_hatchet", "flint_shard", "plant_string", "stick", "log", "plank", "saw")) {
+                        for (String key : List.of("axe", "flint_hatchet", "flint_shard", "flint", "plant_string", "plant_fiber", "dagger", "knife", "stick", "log", "plank", "saw")) {
                             if (key.startsWith(prefix)) result.add(key);
                         }
                     }

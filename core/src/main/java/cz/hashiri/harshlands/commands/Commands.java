@@ -1237,18 +1237,22 @@ public class Commands implements CommandExecutor {
                         return true;
                     }
                     String itemKey = args[1].toLowerCase();
-                    String nameKey = "hints.Obtain." + itemKey + ".Name";
-                    String linesKey = "hints.Obtain." + itemKey + ".Lines";
-                    String name = Messages.get(nameKey);
-                    java.util.List<String> lines = Messages.getList(linesKey);
+                    String name = Messages.get("hints.Obtain." + itemKey + ".Name");
+                    java.util.List<String> lines = Messages.getList("hints.Obtain." + itemKey + ".Lines");
                     boolean nameMissing = name == null || name.startsWith("[hints.");
                     if (nameMissing && lines.isEmpty()) {
                         Messages.of("hints.UnknownItem").with("name", itemKey).send(sender);
                         return true;
                     }
-                    sender.sendMessage(ChatColor.GOLD + "— " + (nameMissing ? itemKey : name) + " " + ChatColor.GOLD + "—");
+                    sender.sendMessage(ChatColor.GOLD + "— " + (nameMissing ? itemKey : name) + ChatColor.GOLD + " —");
                     for (String line : lines) {
-                        sender.sendMessage(line);
+                        net.md_5.bungee.api.chat.BaseComponent[] components =
+                            cz.hashiri.harshlands.hints.HintSender.renderClickable(line);
+                        if (sender instanceof Player p) {
+                            p.spigot().sendMessage(components);
+                        } else {
+                            sender.sendMessage(net.md_5.bungee.api.chat.BaseComponent.toLegacyText(components));
+                        }
                     }
                     return true;
                 }

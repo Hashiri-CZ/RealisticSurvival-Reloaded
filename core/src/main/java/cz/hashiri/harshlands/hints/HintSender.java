@@ -71,7 +71,9 @@ public class HintSender {
 
     // Parses a legacy-colored string with %item_<key>% tokens and emits a
     // BaseComponent[] where each token becomes a clickable + hoverable tag.
-    private BaseComponent[] renderClickable(String raw) {
+    // Public + static so other callers (e.g. /hl obtain response lines) can
+    // render the same clickable item tags.
+    public static BaseComponent[] renderClickable(String raw) {
         ComponentBuilder builder = new ComponentBuilder();
         Matcher m = ITEM_PLACEHOLDER.matcher(raw);
         int last = 0;
@@ -84,14 +86,14 @@ public class HintSender {
         return builder.create();
     }
 
-    private void appendLegacy(ComponentBuilder builder, String text) {
+    private static void appendLegacy(ComponentBuilder builder, String text) {
         if (text.isEmpty()) return;
         for (BaseComponent bc : TextComponent.fromLegacyText(text)) {
             builder.append(bc, ComponentBuilder.FormatRetention.NONE);
         }
     }
 
-    private void appendItemTag(ComponentBuilder builder, String itemKey) {
+    private static void appendItemTag(ComponentBuilder builder, String itemKey) {
         String pretty = displayNameFor(itemKey);
         String tagText = Messages.get("hints.ItemTag", Map.of("name", pretty));
         String hoverText = Messages.get("hints.ClickHint");
@@ -107,7 +109,7 @@ public class HintSender {
         builder.append(wrapper, ComponentBuilder.FormatRetention.NONE);
     }
 
-    private String displayNameFor(String itemKey) {
+    private static String displayNameFor(String itemKey) {
         String fromLocale = Messages.get("hints.Obtain." + itemKey + ".Name");
         // LocaleManager returns "[key]" on missing — detect and fall back to title-cased key.
         if (fromLocale != null && !fromLocale.startsWith("[hints.")) {
@@ -116,7 +118,7 @@ public class HintSender {
         return prettify(itemKey);
     }
 
-    private String prettify(String key) {
+    private static String prettify(String key) {
         String[] parts = key.split("_");
         StringBuilder sb = new StringBuilder();
         for (String p : parts) {
