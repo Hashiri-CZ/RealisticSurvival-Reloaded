@@ -23,9 +23,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -98,13 +97,12 @@ public class DynamicSurroundingsEvents implements Listener {
         itemSoundHandler.handleEquip(player, event.getNewSlot());
     }
 
-    @EventHandler
-    public void onArmSwing(PlayerAnimationEvent event) {
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
         if (itemSoundHandler == null) return;
-        Player player = event.getPlayer();
+        if (!(event.getDamager() instanceof Player player)) return;
         if (!module.isEnabled(player.getWorld())) return;
         if (player.getGameMode() == GameMode.SPECTATOR) return;
-        if (event.getAnimationType() != PlayerAnimationType.ARM_SWING) return;
         itemSoundHandler.handleSwing(player);
     }
 
@@ -121,8 +119,14 @@ public class DynamicSurroundingsEvents implements Listener {
         if (itemSoundHandler == null) return;
         Player player = event.getPlayer();
         if (!module.isEnabled(player.getWorld())) return;
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        itemSoundHandler.handleInteract(player, event);
+        if (player.getGameMode() == GameMode.SPECTATOR) return;
+
+        Action action = event.getAction();
+        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+            itemSoundHandler.handleSwing(player);
+        } else if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+            itemSoundHandler.handleInteract(player, event);
+        }
     }
 
     // -----------------------------------------------------------------------
