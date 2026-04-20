@@ -103,8 +103,11 @@ public class HintsListener implements Listener {
     }
 
     private boolean acceptableCause(cz.hashiri.harshlands.misc.EntityItemAcquireEvent.ItemAcquireCause cause) {
+        // Intentionally excludes PLAYER_JOIN (noisy login-time replay — safety net is the
+        // loaded flag, but cheaper to filter here) and PLAYER_RESPAWN (keepInventory would
+        // re-fire FIRST_LOG etc. on death/respawn, which is surprising).
         return switch (cause) {
-            case ITEM_PICKUP, INVENTORY_CLICK, DRAG_CLICK, PLAYER_JOIN, PLAYER_RESPAWN, GIVE_COMMAND -> true;
+            case ITEM_PICKUP, INVENTORY_CLICK, DRAG_CLICK, GIVE_COMMAND -> true;
             default -> false;
         };
     }

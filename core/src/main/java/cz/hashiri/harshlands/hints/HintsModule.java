@@ -11,6 +11,7 @@ import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class HintsModule extends HLModule {
     public static final String NAME = "Hints";
 
     private final HLPlugin plugin;
+    private BukkitTask periodicSaveTask;
 
     public HintsModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
@@ -44,7 +46,7 @@ public class HintsModule extends HLModule {
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 
         // Periodic save every 5 min (6000 ticks), dirty players only — matches TAN/Fear pattern
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        this.periodicSaveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             for (HLPlayer hlPlayer : new ArrayList<>(HLPlayer.getPlayers().values())) {
                 cz.hashiri.harshlands.data.hints.DataModule dm = hlPlayer.getHintsDataModule();
                 if (dm != null && dm.isDirty()) dm.saveData();
@@ -54,6 +56,11 @@ public class HintsModule extends HLModule {
 
     @Override
     public void shutdown() {
-        // No per-module resources to release — player data is flushed by HLPlugin.onDisable
+        // Player data is flushed by HLPlugin.onDisable via HLPlayer.saveData().
+        // Cancel the periodic-save task so /reload doesn't accumulate duplicate schedulers.
+        if (periodicSaveTask != null) {
+            periodicSaveTask.cancel();
+            periodicSaveTask = null;
+        }
     }
 }
