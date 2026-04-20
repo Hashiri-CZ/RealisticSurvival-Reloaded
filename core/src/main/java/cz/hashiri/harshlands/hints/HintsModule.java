@@ -17,8 +17,6 @@ public class HintsModule extends HLModule {
     public static final String NAME = "Hints";
 
     private final HLPlugin plugin;
-    private HintsListener listener;
-    private HintSender sender;
 
     public HintsModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
@@ -38,8 +36,8 @@ public class HintsModule extends HLModule {
             Utils.logModuleInit("hints", NAME);
         }
 
-        this.sender = new HintSender(plugin, this);
-        this.listener = new HintsListener(this, plugin, sender);
+        HintSender sender = new HintSender(plugin, this);
+        HintsListener listener = new HintsListener(this, sender);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 

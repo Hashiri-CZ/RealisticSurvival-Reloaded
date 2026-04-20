@@ -4,7 +4,6 @@
  */
 package cz.hashiri.harshlands.hints;
 
-import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
@@ -24,12 +23,10 @@ import org.bukkit.inventory.PlayerInventory;
 public class HintsListener implements Listener {
 
     private final HintsModule module;
-    private final HLPlugin plugin;
     private final HintSender sender;
 
-    public HintsListener(HintsModule module, HLPlugin plugin, HintSender sender) {
+    public HintsListener(HintsModule module, HintSender sender) {
         this.module = module;
-        this.plugin = plugin;
         this.sender = sender;
     }
 
@@ -113,8 +110,10 @@ public class HintsListener implements Listener {
     }
 
     /**
-     * Returns true iff the player now has at least one plank AND at least one stick,
-     * considering the item just acquired (it may not yet be in the inventory view).
+     * Returns true iff the player now has at least one plank AND at least one stick.
+     * The {@code justAcquired} stack is pre-seeded because for {@code ITEM_PICKUP}
+     * events the item is not yet in the inventory view; for other acquire causes
+     * it's already in {@code getContents()} and the pre-seed is a harmless OR.
      */
     private boolean playerHasBothPlankAndStick(Player player, ItemStack justAcquired) {
         boolean hasPlank = false;
