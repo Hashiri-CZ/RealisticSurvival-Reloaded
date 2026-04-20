@@ -26,9 +26,9 @@ public class DataModule implements HLDataModule {
         this.database = plugin.getDatabase();
         this.id = player.getUniqueId();
 
-        double defaultProtein = config.getDouble("FoodExpansion.Defaults.Protein", 50.0);
-        double defaultCarbs = config.getDouble("FoodExpansion.Defaults.Carbs", 50.0);
-        double defaultFats = config.getDouble("FoodExpansion.Defaults.Fats", 50.0);
+        double defaultProtein = config.getDouble("FoodExpansion.Defaults.Protein", 100.0);
+        double defaultCarbs = config.getDouble("FoodExpansion.Defaults.Carbs", 100.0);
+        double defaultFats = config.getDouble("FoodExpansion.Defaults.Fats", 100.0);
 
         this.data = new PlayerNutritionData(defaultProtein, defaultCarbs, defaultFats, 0.0, 0.0, 0.0);
     }

@@ -55,11 +55,13 @@ public class PlayerNutritionData {
         }
     }
 
-    public void applyDeathPenalty(double percentLoss) {
-        double factor = 1.0 - (percentLoss / 100.0);
-        this.protein *= factor;
-        this.carbs *= factor;
-        this.fats *= factor;
+    public void resetOnDeath(double value) {
+        this.protein = value;
+        this.carbs = value;
+        this.fats = value;
+        this.proteinExhaustion = 0.0;
+        this.carbsExhaustion = 0.0;
+        this.fatsExhaustion = 0.0;
         dirty = true;
         this.starvationTickCounter = 0;
     }

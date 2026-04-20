@@ -1190,9 +1190,9 @@ public class Commands implements CommandExecutor {
                         cz.hashiri.harshlands.foodexpansion.FoodExpansionModule fem =
                             (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule) HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
                         org.bukkit.configuration.file.FileConfiguration feConfig = fem.getUserConfig().getConfig();
-                        data.setProtein(feConfig.getDouble("FoodExpansion.Defaults.Protein", 50.0));
-                        data.setCarbs(feConfig.getDouble("FoodExpansion.Defaults.Carbs", 50.0));
-                        data.setFats(feConfig.getDouble("FoodExpansion.Defaults.Fats", 50.0));
+                        data.setProtein(feConfig.getDouble("FoodExpansion.Defaults.Protein", 100.0));
+                        data.setCarbs(feConfig.getDouble("FoodExpansion.Defaults.Carbs", 100.0));
+                        data.setFats(feConfig.getDouble("FoodExpansion.Defaults.Fats", 100.0));
                         sender.sendMessage("\u00a7aReset nutrition for " + target.getName() + ".");
                         return true;
                     }

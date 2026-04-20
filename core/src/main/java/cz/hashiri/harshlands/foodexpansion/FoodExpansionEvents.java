@@ -55,7 +55,7 @@ public class FoodExpansionEvents implements Listener {
     private final boolean comfortEnabled;
     private final String comfortMinTier;
     private final double comfortAbsorptionBonus;
-    private final double deathPenaltyPercent;
+    private final double deathResetValue;
     private final boolean overeatingEnabled;
     private final int hungerThreshold;
     private final long cooldownMs;
@@ -87,7 +87,7 @@ public class FoodExpansionEvents implements Listener {
         this.comfortEnabled = config.getBoolean("FoodExpansion.Comfort.Enabled", true);
         this.comfortMinTier = config.getString("FoodExpansion.Comfort.MinTier", "HOME");
         this.comfortAbsorptionBonus = config.getDouble("FoodExpansion.Comfort.AbsorptionBonus", 0.10);
-        this.deathPenaltyPercent = config.getDouble("FoodExpansion.DeathPenalty.PercentLoss", 25.0);
+        this.deathResetValue = config.getDouble("FoodExpansion.DeathPenalty.ResetValue", 50.0);
 
         this.overeatingEnabled = config.getBoolean("FoodExpansion.Overeating.Enabled", true);
         this.hungerThreshold = config.getInt("FoodExpansion.Overeating.HungerThreshold", 20);
@@ -297,7 +297,7 @@ public class FoodExpansionEvents implements Listener {
         PlayerNutritionData data = getNutritionData(player);
         if (data == null) return;
 
-        data.applyDeathPenalty(deathPenaltyPercent);
+        data.resetOnDeath(deathResetValue);
         data.clearSatiationCounters();
     }
 
