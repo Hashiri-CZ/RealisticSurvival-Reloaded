@@ -1,0 +1,28 @@
+# Harshlands — Progressive Hints
+# Controls which hints fire for new players learning the plugin's altered wood progression.
+
+Enabled: true
+
+Initialize:
+  Enabled: true   # Log "Initializing Hints module" on startup
+
+Hints:
+  FIST_ON_LOG:
+    Enabled: true
+    CooldownSeconds: 30
+    Sound: "BLOCK_NOTE_BLOCK_BASS"
+  FIRST_FLINT_SHARD:
+    Enabled: true
+    Sound: "UI_TOAST_CHALLENGE_COMPLETE"
+  FIRST_FLINT_HATCHET_CRAFTED:
+    Enabled: true
+    Sound: "UI_TOAST_CHALLENGE_COMPLETE"
+  FIRST_LOG:
+    Enabled: true
+    Sound: "UI_TOAST_CHALLENGE_COMPLETE"
+  FIRST_PLANK_AND_STICK:
+    Enabled: true
+    Sound: "UI_TOAST_CHALLENGE_COMPLETE"
+  FIRST_SAW_CRAFTED:
+    Enabled: true
+    Sound: "UI_TOAST_CHALLENGE_COMPLETE"
