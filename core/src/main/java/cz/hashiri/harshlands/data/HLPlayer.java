@@ -20,6 +20,7 @@ import cz.hashiri.harshlands.baubles.BaubleModule;
 import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.data.toughasnails.DataModule;
 import cz.hashiri.harshlands.fear.FearModule;
+import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.tan.TanModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -39,6 +40,7 @@ public class HLPlayer {
     private final cz.hashiri.harshlands.data.fear.DataModule fearDataModule;
     private final cz.hashiri.harshlands.data.cabinfever.DataModule cabinFeverDataModule;
     private final cz.hashiri.harshlands.data.foodexpansion.DataModule nutritionDataModule;
+    private final cz.hashiri.harshlands.data.hints.DataModule hintsDataModule;
     private static final Map<UUID, HLPlayer> players = new ConcurrentHashMap<>();
 
     public HLPlayer(Player player) {
@@ -60,6 +62,11 @@ public class HLPlayer {
         HLModule fem = HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
         this.nutritionDataModule = (fem != null && fem.isGloballyEnabled())
             ? new cz.hashiri.harshlands.data.foodexpansion.DataModule(player)
+            : null;
+
+        HLModule hintsMod = HLModule.getModule(HintsModule.NAME);
+        this.hintsDataModule = (hintsMod != null && hintsMod.isGloballyEnabled())
+            ? new cz.hashiri.harshlands.data.hints.DataModule(player)
             : null;
 
         players.put(uuid, this);
@@ -91,6 +98,9 @@ public class HLPlayer {
         if (nutritionDataModule != null) {
             nutritionDataModule.retrieveData();
         }
+        if (hintsDataModule != null) {
+            hintsDataModule.retrieveData();
+        }
     }
 
     public void saveData() {
@@ -108,6 +118,9 @@ public class HLPlayer {
         }
         if (nutritionDataModule != null) {
             nutritionDataModule.saveData();
+        }
+        if (hintsDataModule != null) {
+            hintsDataModule.saveData();
         }
     }
 
@@ -134,6 +147,11 @@ public class HLPlayer {
     @Nullable
     public cz.hashiri.harshlands.data.foodexpansion.DataModule getNutritionDataModule() {
         return nutritionDataModule;
+    }
+
+    @Nullable
+    public cz.hashiri.harshlands.data.hints.DataModule getHintsDataModule() {
+        return hintsDataModule;
     }
 
     public static boolean isValidPlayer(@Nullable Player player) {
