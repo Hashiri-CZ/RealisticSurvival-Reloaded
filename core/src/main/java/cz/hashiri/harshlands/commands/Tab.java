@@ -83,7 +83,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain"));
             }
 
             if (mobs.isEmpty()) {
@@ -164,6 +164,12 @@ public class Tab implements TabCompleter {
                     case "hints" -> {
                         if (sender.hasPermission("harshlands.admin.hints") && "reset".startsWith(args[1].toLowerCase())) {
                             result.add("reset");
+                        }
+                    }
+                    case "obtain" -> {
+                        String prefix = args[1].toLowerCase();
+                        for (String key : List.of("axe", "flint_hatchet", "flint_shard", "plant_string", "stick", "log", "plank", "saw")) {
+                            if (key.startsWith(prefix)) result.add(key);
                         }
                     }
                 }

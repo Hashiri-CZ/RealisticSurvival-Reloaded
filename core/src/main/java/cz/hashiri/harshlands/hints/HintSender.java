@@ -7,18 +7,24 @@ package cz.hashiri.harshlands.hints;
 import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.locale.Messages;
-import cz.hashiri.harshlands.utils.HLItem;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HintSender {
+
+    private static final Pattern ITEM_PLACEHOLDER = Pattern.compile("%item_(\\w+)%");
 
     private final HLPlugin plugin;
     private final HintsModule module;
@@ -47,8 +53,10 @@ public class HintSender {
         if (key.isRepeating() && data.isOnCooldown(key, cooldownMs)) return;
 
         String prefix = Messages.get("hints.Prefix");
-        String body = Messages.get("hints.Hints." + key.translationKey(), resolvePlaceholders(key));
-        player.sendMessage(prefix + body);
+        String rawBody = Messages.get("hints.Hints." + key.translationKey());
+
+        BaseComponent[] components = renderClickable(prefix + rawBody);
+        player.spigot().sendMessage(components);
 
         String soundName = cfg.getString("Hints." + key.name() + ".Sound", key.defaultSound().name());
         Sound sound = parseSound(soundName, key.defaultSound());
@@ -61,19 +69,62 @@ public class HintSender {
         }
     }
 
-    private Map<String, Object> resolvePlaceholders(HintKey key) {
-        Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put("item_flint_hatchet", displayName("flint_hatchet", "Flint Hatchet"));
-        placeholders.put("item_saw", displayName("iron_saw", "Saw"));
-        return placeholders;
+    // Parses a legacy-colored string with %item_<key>% tokens and emits a
+    // BaseComponent[] where each token becomes a clickable + hoverable tag.
+    private BaseComponent[] renderClickable(String raw) {
+        ComponentBuilder builder = new ComponentBuilder();
+        Matcher m = ITEM_PLACEHOLDER.matcher(raw);
+        int last = 0;
+        while (m.find()) {
+            appendLegacy(builder, raw.substring(last, m.start()));
+            appendItemTag(builder, m.group(1).toLowerCase());
+            last = m.end();
+        }
+        appendLegacy(builder, raw.substring(last));
+        return builder.create();
     }
 
-    private String displayName(String hlItemId, String fallback) {
-        ItemStack stack = HLItem.getItem(hlItemId);
-        if (stack == null) return ChatColor.WHITE + fallback;
-        ItemMeta meta = stack.getItemMeta();
-        if (meta == null || !meta.hasDisplayName()) return ChatColor.WHITE + fallback;
-        return meta.getDisplayName();
+    private void appendLegacy(ComponentBuilder builder, String text) {
+        if (text.isEmpty()) return;
+        for (BaseComponent bc : TextComponent.fromLegacyText(text)) {
+            builder.append(bc, ComponentBuilder.FormatRetention.NONE);
+        }
+    }
+
+    private void appendItemTag(ComponentBuilder builder, String itemKey) {
+        String pretty = displayNameFor(itemKey);
+        String tagText = Messages.get("hints.ItemTag", Map.of("name", pretty));
+        String hoverText = Messages.get("hints.ClickHint");
+
+        TextComponent wrapper = new TextComponent();
+        for (BaseComponent bc : TextComponent.fromLegacyText(tagText)) {
+            wrapper.addExtra(bc);
+        }
+        wrapper.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new Text(TextComponent.fromLegacyText(hoverText))));
+        wrapper.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hl obtain " + itemKey));
+
+        builder.append(wrapper, ComponentBuilder.FormatRetention.NONE);
+    }
+
+    private String displayNameFor(String itemKey) {
+        String fromLocale = Messages.get("hints.Obtain." + itemKey + ".Name");
+        // LocaleManager returns "[key]" on missing — detect and fall back to title-cased key.
+        if (fromLocale != null && !fromLocale.startsWith("[hints.")) {
+            return ChatColor.stripColor(fromLocale);
+        }
+        return prettify(itemKey);
+    }
+
+    private String prettify(String key) {
+        String[] parts = key.split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String p : parts) {
+            if (p.isEmpty()) continue;
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(Character.toUpperCase(p.charAt(0))).append(p.substring(1));
+        }
+        return sb.toString();
     }
 
     private Sound parseSound(String name, Sound fallback) {

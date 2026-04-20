@@ -35,6 +35,7 @@ import cz.hashiri.harshlands.utils.HLMob;
 import cz.hashiri.harshlands.utils.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
@@ -1228,6 +1229,27 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage(buildNutrientBar("Carbs", data.getCarbs()));
                     sender.sendMessage(buildNutrientBar("Fats", data.getFats()));
                     sender.sendMessage("\u00a77Status: " + data.getCachedTier().name().replace("_", " "));
+                    return true;
+                }
+                case "obtain" -> {
+                    if (args.length < 2) {
+                        sender.sendMessage(ChatColor.RED + "Usage: /hl obtain <item>");
+                        return true;
+                    }
+                    String itemKey = args[1].toLowerCase();
+                    String nameKey = "hints.Obtain." + itemKey + ".Name";
+                    String linesKey = "hints.Obtain." + itemKey + ".Lines";
+                    String name = Messages.get(nameKey);
+                    java.util.List<String> lines = Messages.getList(linesKey);
+                    boolean nameMissing = name == null || name.startsWith("[hints.");
+                    if (nameMissing && lines.isEmpty()) {
+                        Messages.of("hints.UnknownItem").with("name", itemKey).send(sender);
+                        return true;
+                    }
+                    sender.sendMessage(ChatColor.GOLD + "— " + (nameMissing ? itemKey : name) + " " + ChatColor.GOLD + "—");
+                    for (String line : lines) {
+                        sender.sendMessage(line);
+                    }
                     return true;
                 }
                 case "hints" -> {

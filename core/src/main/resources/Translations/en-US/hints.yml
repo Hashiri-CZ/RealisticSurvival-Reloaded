@@ -4,10 +4,73 @@ hints:
   shutdown:
     message: "&fShutting down %name% module"
   Prefix: "&f[&5Harshlands&f] &7» &f"
+  # Click hint (shown as hover over every item tag in a hint message)
+  ClickHint: "&7Click for obtain instructions"
+  # Styling for the clickable item tag. %name% is the pretty item name.
+  ItemTag: "&e%name%"
   Hints:
-    FistOnLog: "You need an axe to harvest logs. Craft a %item_flint_hatchet% &f(flint shard + plant string + stick)."
-    FirstFlintShard: "Combine flint shards with plant string and a stick to craft a %item_flint_hatchet%&f."
-    FirstFlintHatchetCrafted: "Hold your %item_flint_hatchet% &fto break logs. Right-click upward on a log for a chance to split planks."
-    FirstLog: "Right-click upward on a log with your axe for a chance to drop planks. Right-click planks for sticks."
+    FistOnLog: "You need an %item_axe% to harvest %item_log%s. Craft a %item_flint_hatchet% (%item_flint_shard% + %item_plant_string% + %item_stick%)."
+    FirstFlintShard: "Combine %item_flint_shard%s with %item_plant_string% and a %item_stick% to craft a %item_flint_hatchet%."
+    FirstFlintHatchetCrafted: "Hold your %item_flint_hatchet% &fto break %item_log%s. Right-click upward on a %item_log% for a chance to split %item_plank%s."
+    FirstLog: "Right-click upward on a %item_log% with your %item_axe% for a chance to drop %item_plank%s. Right-click %item_plank%s for %item_stick%s."
     FirstPlankAndStick: "Craft a %item_saw% &ffor guaranteed output. In the crafting table: saw + log = 4 planks, saw + planks = 4 sticks."
-    FirstSawCrafted: "Place the saw with a log in the crafting grid for 4 planks. With planks for 4 sticks. Guaranteed output."
+    FirstSawCrafted: "Place the %item_saw% with a %item_log% in the crafting grid for 4 %item_plank%s. With %item_plank%s for 4 %item_stick%s."
+  # Obtain instructions — shown on /hl obtain <item>, also previewed in hint hovers.
+  # Each entry: Name (pretty display name) + Lines (multi-line description).
+  Obtain:
+    axe:
+      Name: "Axe"
+      Lines:
+        - "&7Any axe works: wooden, stone, iron, diamond, netherite"
+        - "&7or the Harshlands &eflint hatchet&7."
+        - "&7Vanilla wood tools need planks first, so the"
+        - "&eflint hatchet&7 is your starter axe."
+    flint_hatchet:
+      Name: "Flint Hatchet"
+      Lines:
+        - "&7Craft in a crafting table:"
+        - "&8  • &7flint shard"
+        - "&8  • &7plant string"
+        - "&8  • &7stick"
+    flint_shard:
+      Name: "Flint Shard"
+      Lines:
+        - "&7Hold a &fflint&7 item in hand and left-click"
+        - "&7the top face of a hard block (stone, gravel,"
+        - "&7sandstone, etc.) to knap a shard off."
+    plant_string:
+      Name: "Plant String"
+      Lines:
+        - "&7Break tall grass while holding a &edagger"
+        - "&7or &eknife&7 to gather plant fiber."
+        - "&7Combine 2 plant fibers in a crafting grid"
+        - "&7to get plant string."
+    stick:
+      Name: "Stick"
+      Lines:
+        - "&7Hold an axe and right-click upward on a"
+        - "&7plank block for a chance to split off a stick."
+        - "&7A &esaw&7 + planks in the crafting grid"
+        - "&7gives guaranteed output."
+    log:
+      Name: "Log"
+      Lines:
+        - "&7Break any log with an axe in your hand."
+        - "&7Bare fists break logs but drop nothing."
+    plank:
+      Name: "Plank"
+      Lines:
+        - "&7Hold an axe and right-click upward on a"
+        - "&7log block for a chance to split off a plank."
+        - "&7A &esaw&7 + log in the crafting grid"
+        - "&7gives guaranteed output (4 planks per log)."
+    saw:
+      Name: "Saw"
+      Lines:
+        - "&7Craft in a crafting table:"
+        - "&8  • &7gold, iron, or diamond ingots"
+        - "&8  • &7sticks"
+        - "&7Place saw + log = 4 planks, saw + planks"
+        - "&7= 4 sticks. Check the in-game recipe book."
+  # Shown by /hl obtain when the item key is not recognised.
+  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, plant_string, stick, log, plank, saw."
