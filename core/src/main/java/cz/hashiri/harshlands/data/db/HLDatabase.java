@@ -56,6 +56,8 @@ public class HLDatabase {
         double proteinExhaustion, double carbsExhaustion, double fatsExhaustion
     ) {}
 
+    public record HintsDataRow(String seenHintsCsv) {}
+
     private HikariDataSource dataSource;
     private final HLPlugin plugin;
     private final HLScheduler scheduler;
@@ -217,6 +219,10 @@ public class HLDatabase {
                 + "protein_exhaustion DOUBLE DEFAULT 0.0,"
                 + "carbs_exhaustion DOUBLE DEFAULT 0.0,"
                 + "fats_exhaustion DOUBLE DEFAULT 0.0"
+                + ")");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS hl_hints_data ("
+                + "uuid VARCHAR(36) PRIMARY KEY,"
+                + "seen_hints VARCHAR(512) NOT NULL DEFAULT ''"
                 + ")");
             startupInfo("Schema is ready.");
         } catch (SQLException e) {
@@ -793,6 +799,43 @@ public class HLDatabase {
                 ps.executeUpdate();
             } catch (SQLException e) {
                 logger.warning("[HLDatabase] Failed to save nutrition data for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    // ── Hints Data ────────────────────────────────────────────────────────────
+
+    public CompletableFuture<Optional<HintsDataRow>> loadHintsData(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            String sql = "SELECT seen_hints FROM hl_hints_data WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return Optional.of(new HintsDataRow(rs.getString("seen_hints")));
+                    }
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load hints data for " + uuid + ": " + e.getMessage());
+            }
+            return Optional.empty();
+        });
+    }
+
+    public CompletableFuture<Void> saveHintsData(UUID uuid, HintsDataRow row) {
+        return scheduler.runAsync(() -> {
+            String sql = isMysql
+                ? "INSERT INTO hl_hints_data (uuid, seen_hints) VALUES (?, ?)"
+                    + " ON DUPLICATE KEY UPDATE seen_hints=VALUES(seen_hints)"
+                : "MERGE INTO hl_hints_data (uuid, seen_hints) KEY(uuid) VALUES (?, ?)";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, row.seenHintsCsv());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save hints data for " + uuid + ": " + e.getMessage());
             }
         });
     }
