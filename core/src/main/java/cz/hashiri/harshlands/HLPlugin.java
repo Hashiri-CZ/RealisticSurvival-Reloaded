@@ -366,7 +366,8 @@ public class HLPlugin extends JavaPlugin {
         java.util.List<String> modules = java.util.List.of(
                 "commands", "toughasnails", "baubles", "fear", "iceandfire",
                 "spartanweaponry", "spartanandfire", "foodexpansion", "comfort",
-                "notreepunching", "firstaid", "dynamicsurroundings", "integrations");
+                "notreepunching", "firstaid", "dynamicsurroundings", "integrations",
+                "hints");
         for (String m : modules) {
             String resourcePath = "Translations/en-US/" + m + ".yml";
             java.io.File target = new java.io.File(getDataFolder(), resourcePath);
@@ -380,7 +381,8 @@ public class HLPlugin extends JavaPlugin {
         java.util.List<String> modules = java.util.List.of(
                 "commands", "toughasnails", "baubles", "fear", "iceandfire",
                 "spartanweaponry", "spartanandfire", "foodexpansion", "comfort",
-                "notreepunching", "firstaid", "dynamicsurroundings", "integrations");
+                "notreepunching", "firstaid", "dynamicsurroundings", "integrations",
+                "hints");
         for (String m : modules) {
             String resourcePath = "Translations/en-US/" + m + ".yml";
             java.io.File diskFile = new java.io.File(getDataFolder(), resourcePath);

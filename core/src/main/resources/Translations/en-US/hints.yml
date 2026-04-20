@@ -1,4 +1,8 @@
 hints:
+  initialize:
+    message: "&fInitializing %name% module"
+  shutdown:
+    message: "&fShutting down %name% module"
   Prefix: "&f[&5Harshlands&f] &7» &f"
   Hints:
     FistOnLog: "You need an axe to harvest logs. Craft a %item_flint_hatchet% &f(flint shard + plant string + stick)."
