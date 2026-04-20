@@ -83,7 +83,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints"));
             }
 
             if (mobs.isEmpty()) {
@@ -161,6 +161,11 @@ public class Tab implements TabCompleter {
                             .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
                             .collect(java.util.stream.Collectors.toList());
                     }
+                    case "hints" -> {
+                        if (sender.hasPermission("harshlands.admin.hints") && "reset".startsWith(args[1].toLowerCase())) {
+                            result.add("reset");
+                        }
+                    }
                 }
 
                 return result;
@@ -189,6 +194,14 @@ public class Tab implements TabCompleter {
                     }
                     case "nutrition" -> {
                         if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("reset")) {
+                            return Bukkit.getOnlinePlayers().stream()
+                                .map(Player::getName)
+                                .filter(s -> s.toLowerCase().startsWith(args[2].toLowerCase()))
+                                .collect(java.util.stream.Collectors.toList());
+                        }
+                    }
+                    case "hints" -> {
+                        if (sender.hasPermission("harshlands.admin.hints") && args[1].equalsIgnoreCase("reset")) {
                             return Bukkit.getOnlinePlayers().stream()
                                 .map(Player::getName)
                                 .filter(s -> s.toLowerCase().startsWith(args[2].toLowerCase()))
