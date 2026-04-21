@@ -49,6 +49,17 @@ public class FoodExpansionModule extends HLModule {
     private NamespacedKey keyAttack;
     private NamespacedKey keyMining;
 
+    // Cached tier thresholds (read from foodexpansion.yml in initialize()).
+    private double severeThreshold;
+    private double malnourishedThreshold;
+    private double wellNourishedThreshold;
+    private double peakThreshold;
+
+    // Cached comfort config for preview multiplier calculation.
+    private boolean comfortEnabled;
+    private String comfortMinTier;
+    private double comfortAbsorptionBonus;
+
     public FoodExpansionModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of()); // No hard deps, soft deps handled at runtime
         this.plugin = plugin;
@@ -74,6 +85,17 @@ public class FoodExpansionModule extends HLModule {
         });
 
         loadFoodMap();
+
+        // Cache thresholds for preview HUD (NutritionEffectTask still reads its own copy to
+        // avoid changing its construction contract).
+        FileConfiguration thresholdCfg = getUserConfig().getConfig();
+        this.severeThreshold        = thresholdCfg.getDouble("FoodExpansion.Effects.SeverelyMalnourished.Threshold", 15);
+        this.malnourishedThreshold  = thresholdCfg.getDouble("FoodExpansion.Effects.Malnourished.Threshold", 30);
+        this.wellNourishedThreshold = thresholdCfg.getDouble("FoodExpansion.Effects.WellNourished.Threshold", 60);
+        this.peakThreshold          = thresholdCfg.getDouble("FoodExpansion.Effects.PeakNutrition.Threshold", 80);
+        this.comfortEnabled         = thresholdCfg.getBoolean("FoodExpansion.Comfort.Enabled", true);
+        this.comfortMinTier         = thresholdCfg.getString("FoodExpansion.Comfort.MinTier", "HOME");
+        this.comfortAbsorptionBonus = thresholdCfg.getDouble("FoodExpansion.Comfort.AbsorptionBonus", 0.10);
 
         // Custom foods
         FileConfiguration feConfig = getUserConfig().getConfig();
@@ -263,4 +285,35 @@ public class FoodExpansionModule extends HLModule {
     public NamespacedKey getKeySpeed() { return keySpeed; }
     public NamespacedKey getKeyAttack() { return keyAttack; }
     public NamespacedKey getKeyMining() { return keyMining; }
+
+    public double getSevereThreshold() { return severeThreshold; }
+    public double getMalnourishedThreshold() { return malnourishedThreshold; }
+    public double getWellNourishedThreshold() { return wellNourishedThreshold; }
+    public double getPeakThreshold() { return peakThreshold; }
+
+    /**
+     * Current comfort absorption multiplier for the player. Returns 1.0 when comfort is
+     * disabled, the comfort module is absent/off, or the player's tier is below the
+     * configured {@code MinTier}. Otherwise returns {@code 1.0 + AbsorptionBonus}.
+     * Mirrors the logic used by FoodExpansionEvents when actually eating.
+     */
+    public double getComfortMultiplier(org.bukkit.entity.Player player) {
+        if (!comfortEnabled) return 1.0;
+        cz.hashiri.harshlands.comfort.ComfortModule cm =
+                (cz.hashiri.harshlands.comfort.ComfortModule) cz.hashiri.harshlands.data.HLModule.getModule(
+                        cz.hashiri.harshlands.comfort.ComfortModule.NAME);
+        if (cm == null || !cm.isGloballyEnabled()) return 1.0;
+        cz.hashiri.harshlands.comfort.ComfortScoreCalculator.ComfortResult result = cm.getCachedResult(player, 60);
+        if (result == null) return 1.0;
+        try {
+            cz.hashiri.harshlands.comfort.ComfortTier minTier =
+                    cz.hashiri.harshlands.comfort.ComfortTier.valueOf(comfortMinTier.toUpperCase());
+            if (result.getTier().ordinal() >= minTier.ordinal()) {
+                return 1.0 + comfortAbsorptionBonus;
+            }
+        } catch (IllegalArgumentException ignored) {
+            // Invalid tier name in config — no bonus.
+        }
+        return 1.0;
+    }
 }
