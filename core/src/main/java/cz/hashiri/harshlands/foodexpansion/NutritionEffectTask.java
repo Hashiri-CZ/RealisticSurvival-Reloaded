@@ -101,6 +101,14 @@ public class NutritionEffectTask extends BukkitRunnable {
             cancel();
             return;
         }
+        // Stop immediately if the module is disabled (globally or for this world) — the task
+        // may have been started before an admin disabled it; never deal starvation damage then.
+        if (!module.isEnabled(player)) {
+            removeAllModifiers();
+            removeHudElements();
+            cancel();
+            return;
+        }
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
         // 1. Get hydration from TAN
