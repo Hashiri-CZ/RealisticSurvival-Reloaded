@@ -86,3 +86,7 @@ foodexpansion:
         display_name: "&fRoasted Seed"
       dough:
         display_name: "&fDough"
+    preview:
+      protein: "Protein"
+      carbs: "Carbs"
+      fat: "Fat"
