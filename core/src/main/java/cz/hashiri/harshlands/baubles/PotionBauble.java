@@ -46,17 +46,22 @@ public class PotionBauble extends TickableBauble {
             int dur;
             int amp;
             int ampInc;
+            int maxStackedAmp;
 
             for (String key : keys) {
                 dur = section.getInt(key + ".Duration");
                 amp = section.getInt(key + ".Amplifier");
                 ampInc = section.getInt(key + ".AmplifierIncrement");
+                // Default to 2 so old configs without the key get a sensible cap.
+                maxStackedAmp = section.contains(key + ".MaxStackedAmplifier")
+                        ? section.getInt(key + ".MaxStackedAmplifier")
+                        : 2;
 
                 PotionEffectType type = Registry.EFFECT.get(NamespacedKey.minecraft(key.toLowerCase()));
                 if (type == null) {
                     HLPlugin.getPlugin().getLogger().warning("[Baubles] Unknown effect type '" + key + "' in bauble '" + name + "' — skipping.");
                 } else {
-                    effects.add(new PotionBaubleEffect(type, dur, amp, ampInc));
+                    effects.add(new PotionBaubleEffect(type, dur, amp, ampInc, maxStackedAmp));
                 }
             }
         }
@@ -67,6 +72,12 @@ public class PotionBauble extends TickableBauble {
             int baseAmp = effect.getAmplifier();
             int inc = effect.getIncrement();
             int amp = baseAmp + (amount - 1) * inc;
+
+            // Clamp to the configured max stacked amplifier (-1 disables capping).
+            int maxStacked = effect.getMaxStackedAmplifier();
+            if (maxStacked >= 0) {
+                amp = Math.min(amp, maxStacked);
+            }
 
             player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), amp));
         }

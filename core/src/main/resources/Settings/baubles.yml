@@ -65,6 +65,10 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        # Cap on amplifier level reached by stacking multiple rings of this type.
+        # 0 = Resistance I, 1 = II, 2 = III — so MaxStackedAmplifier: 2 means
+        # "at most Resistance III regardless of how many rings you wear."
+        MaxStackedAmplifier: 2
   potion_ring_regeneration:
     Enabled:
       Enabled_1_21_11: true
@@ -74,6 +78,7 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        MaxStackedAmplifier: 2
   potion_ring_haste:
     Enabled:
       Enabled_1_21_11: true
@@ -83,6 +88,7 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        MaxStackedAmplifier: 2
   potion_ring_strength:
     Enabled:
       Enabled_1_21_11: true
@@ -92,6 +98,7 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        MaxStackedAmplifier: 2
   potion_ring_speed:
     Enabled:
       Enabled_1_21_11: true
@@ -101,6 +108,7 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        MaxStackedAmplifier: 2
   potion_ring_jump_boost:
     Enabled:
       Enabled_1_21_11: true
@@ -110,6 +118,7 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        MaxStackedAmplifier: 2
   ender_queens_crown:
     Enabled:
       Enabled_1_21_11: true
