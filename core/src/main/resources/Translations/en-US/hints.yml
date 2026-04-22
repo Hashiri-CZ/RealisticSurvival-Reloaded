@@ -159,5 +159,17 @@ hints:
         - "&7Craft from leather + string."
         - "&7Right-click to open — shows the 6 bauble slots"
         - "&7(head, amulet, body, belt, charm, ring)."
+    thermometer:
+      Name: "Thermometer"
+      Lines:
+        - "&7Craft from iron ingots, glass, and redstone."
+        - "&7Hold in hand to see your current temperature."
+        - "&7Range 0-25; hypothermia starts near 1, hyperthermia near 24."
+    medical_kit:
+      Name: "Medical Kit"
+      Lines:
+        - "&7Craft from bandages, splints, and leather."
+        - "&7Right-click to fully restore every body part."
+        - "&7Consumed on use — reserve for emergencies."
   # Shown by /hl obtain when the item key is not recognised.
-  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty, bandage, splint, bauble_bag."
+  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty, bandage, splint, medical_kit, thermometer, bauble_bag."
