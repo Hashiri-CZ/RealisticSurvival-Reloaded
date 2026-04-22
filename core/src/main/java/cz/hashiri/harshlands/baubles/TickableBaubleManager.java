@@ -42,7 +42,8 @@ public enum TickableBaubleManager {
     STONE_GREATER_INERTIA(new TickableBauble("stone_greater_inertia")),
     GLUTTONY_PENDANT(new PotionBauble("gluttony_pendant")),
     WRATH_PENDANT(new PotionBauble("wrath_pendant")),
-    PRIDE_PENDANT(new PotionBauble("pride_pendant"));
+    PRIDE_PENDANT(new PotionBauble("pride_pendant")),
+    SIN_PENDANT(new TickableBauble("sin_pendant"));
 
     private static final Map<UUID, Collection<TickableBauble>> baubles = new ConcurrentHashMap<>();
     private final TickableBauble bauble;

@@ -460,8 +460,8 @@ wrath_pendant:
   CustomModelData: 83683
   ItemModel: "DEFAULT"
   Lore:
-    - "&9Gives extra damage."
-    - "&9Grants sinful buff (+damage, +armor) after you deal a critical hit."
+    - "&7Carved from obsidian and anger."
+    - "&7+2 damage on hit. Strength I while worn."
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
@@ -472,7 +472,9 @@ pride_pendant:
   CustomModelData: 83684
   ItemModel: "DEFAULT"
   Lore:
-    - "&9Gives sinful buff (+damage, +armor) while at full health."
+    - "&7Forged from vanity and spite."
+    - "&7Reflects 15% of incoming damage back to attackers."
+    - "&7Resistance I while worn. Stacks, max 50% reflection."
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
@@ -483,7 +485,8 @@ gluttony_pendant:
   CustomModelData: 83685
   ItemModel: "DEFAULT"
   Lore:
-    - "&9Gives sinful buff (+damage, +armor) while you eat."
+    - "&7Born of insatiable hunger."
+    - "&7Saturation I while worn. Reduces hunger exhaustion drain."
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
@@ -494,7 +497,9 @@ sin_pendant:
   CustomModelData: 83686
   ItemModel: "DEFAULT"
   Lore:
-    - "&9Crafting Component."
+    - "&7A convergence of wrath, pride, and gluttony."
+    - "&7Combines all three sin pendant effects."
+    - "&7Does not stack with individual sin pendants."
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:

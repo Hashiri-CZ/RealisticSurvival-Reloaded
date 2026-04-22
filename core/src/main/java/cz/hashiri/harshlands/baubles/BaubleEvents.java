@@ -238,9 +238,24 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                 Tickable bauble = manager.getBauble();
                 if (bauble != null) {
                     switch (manager) {
-                        case POTION_RING_REGENERATION, POTION_RING_HASTE, POTION_RING_SPEED, POTION_RING_STRENGTH, POTION_RING_JUMP_BOOST, POTION_RING_RESISTANCE, MINERS_RING, SHIELD_HONOR, DRAGONS_EYE, PHANTOM_PRISM, PRIDE_PENDANT -> {
+                        case POTION_RING_REGENERATION, POTION_RING_HASTE, POTION_RING_SPEED, POTION_RING_STRENGTH, POTION_RING_JUMP_BOOST, POTION_RING_RESISTANCE, MINERS_RING, SHIELD_HONOR, DRAGONS_EYE, PHANTOM_PRISM, PRIDE_PENDANT, GLUTTONY_PENDANT -> {
                             if (!PotionBaubleTask.hasTask(id, manager.toString().toLowerCase())) {
                                 new PotionBaubleTask(module, (PotionBauble) bauble, hlPlayer, plugin).start();
+                            }
+                        }
+                        case SIN_PENDANT -> {
+                            // Sin pendant combines wrath (strength), pride (resistance + reflect), gluttony (saturation + exhaustion).
+                            // Start a PotionBaubleTask for each individual pendant's effects unless the player already wears that pendant
+                            // (to avoid double-stacking where the individual pendant's own task would already run).
+                            BaubleInventory sinBag = hlPlayer.getBaubleDataModule().getBaubleBag();
+                            if (!sinBag.hasBauble("wrath_pendant") && !PotionBaubleTask.hasTask(id, "wrath_pendant")) {
+                                new PotionBaubleTask(module, (PotionBauble) TickableBaubleManager.WRATH_PENDANT.getBauble(), hlPlayer, plugin).start();
+                            }
+                            if (!sinBag.hasBauble("pride_pendant") && !PotionBaubleTask.hasTask(id, "pride_pendant")) {
+                                new PotionBaubleTask(module, (PotionBauble) TickableBaubleManager.PRIDE_PENDANT.getBauble(), hlPlayer, plugin).start();
+                            }
+                            if (!sinBag.hasBauble("gluttony_pendant") && !PotionBaubleTask.hasTask(id, "gluttony_pendant")) {
+                                new PotionBaubleTask(module, (PotionBauble) TickableBaubleManager.GLUTTONY_PENDANT.getBauble(), hlPlayer, plugin).start();
                             }
                         }
                         case STONE_SEA -> {
@@ -528,8 +543,26 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         DataModule module = hlPlayer.getBaubleDataModule();
         BaubleInventory inv = module.getBaubleBag();
 
-        if (inv.hasBauble("wrath_pendant") && Utils.areCriticalHitConditionsMet(player, event.getDamage(), event.getFinalDamage()))
+        boolean hasWrath = inv.hasBauble("wrath_pendant");
+        boolean hasSin = inv.hasBauble("sin_pendant");
+
+        if (hasWrath && Utils.areCriticalHitConditionsMet(player, event.getDamage(), event.getFinalDamage()))
             ((PotionBauble) TickableBaubleManager.WRATH_PENDANT.getBauble()).ability(player, inv.getBaubleAmount("wrath_pendant"));
+
+        // ExtraDamage: flat bonus on every hit from wrath_pendant (or sin_pendant which combines wrath).
+        // Take the larger of the two if somehow both are present.
+        double extraDamage = 0;
+        if (hasWrath) {
+            double wd = config.getDouble("Items.wrath_pendant.ExtraDamage", 0);
+            if (wd > extraDamage) extraDamage = wd;
+        }
+        if (hasSin && config.getBoolean("Items.sin_pendant.CombinesAll", false)) {
+            double sd = config.getDouble("Items.wrath_pendant.ExtraDamage", 0);
+            if (sd > extraDamage) extraDamage = sd;
+        }
+        if (extraDamage > 0) {
+            damage += extraDamage;
+        }
 
         if (inv.hasBauble("poison_stone")) {
             boolean isAffected = false;
@@ -567,6 +600,48 @@ public class BaubleEvents extends ModuleEvents implements Listener {
 
         if (task.areAlliesEnabled() && task.canSpawnAllies(true))
             task.spawnAllies();
+    }
+
+    /**
+     * Reflects a portion of incoming damage back to the attacker for pride_pendant and sin_pendant wearers.
+     * Multiple pride_pendants stack additively, capped at 0.5 (50%).
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPridePendantReflect(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim && shouldEventBeRan(victim) && HLPlayer.isValidPlayer(victim)))
+            return;
+
+        Entity attacker = event.getDamager();
+        if (!(attacker instanceof LivingEntity attackerLiving))
+            return;
+
+        HLPlayer hlVictim = HLPlayer.getPlayers().get(victim.getUniqueId());
+        BaubleInventory victimInv = hlVictim.getBaubleDataModule().getBaubleBag();
+
+        boolean hasPride = victimInv.hasBauble("pride_pendant");
+        boolean hasSinCombines = victimInv.hasBauble("sin_pendant") && config.getBoolean("Items.sin_pendant.CombinesAll", false);
+
+        if (!hasPride && !hasSinCombines)
+            return;
+
+        double reflectPerPendant = config.getDouble("Items.pride_pendant.ReflectDamagePercent", 0.15);
+        double totalReflect = 0;
+
+        if (hasPride) {
+            totalReflect += reflectPerPendant * victimInv.getBaubleAmount("pride_pendant");
+        }
+        if (hasSinCombines && !hasPride) {
+            // Sin pendant contributes one pendant's worth of reflection when not already wearing pride_pendant
+            totalReflect += reflectPerPendant;
+        }
+
+        // Hard cap at 0.5 to prevent instant-kill reflect
+        totalReflect = Math.min(totalReflect, 0.5);
+
+        double reflectedDamage = event.getFinalDamage() * totalReflect;
+        if (reflectedDamage > 0) {
+            attackerLiving.damage(reflectedDamage, victim);
+        }
     }
 
     /**
@@ -1046,13 +1121,7 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                 player.openInventory(module.getInv().getInventory());
         }
 
-        UUID id = player.getUniqueId();
-        HLPlayer hlPlayer = HLPlayer.getPlayers().get(id);
-
-        BaubleInventory inv = hlPlayer.getBaubleDataModule().getBaubleBag();
-
-        if (inv.hasBauble("gluttony_pendant"))
-            ((PotionBauble) TickableBaubleManager.GLUTTONY_PENDANT.getBauble()).ability(player, inv.getBaubleAmount("gluttony_pendant"));
+        // Note: gluttony_pendant saturation is now applied continuously via PotionBaubleTask, not on-consume.
     }
 
     @EventHandler

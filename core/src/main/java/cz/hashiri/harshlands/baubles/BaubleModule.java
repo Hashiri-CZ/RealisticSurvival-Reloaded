@@ -20,10 +20,15 @@ import cz.hashiri.harshlands.data.ModuleItems;
 import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
+import cz.hashiri.harshlands.data.baubles.BaubleInventory;
+import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
 import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,6 +79,28 @@ public class BaubleModule extends HLModule {
         events.initialize();
 
         inv = new WormholeInventory(plugin, this);
+
+        // Periodic exhaustion scaling for gluttony_pendant and sin_pendant (every 20 ticks = 1 s)
+        FileConfiguration baublesConfig = getUserConfig().getConfig();
+        double exhaustionMultiplier = baublesConfig.getDouble("Items.gluttony_pendant.HungerExhaustionMultiplier", 0.75);
+        boolean sinCombinesAll = baublesConfig.getBoolean("Items.sin_pendant.CombinesAll", false);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!HLPlayer.isValidPlayer(player)) continue;
+                    BaubleInventory bag = HLPlayer.getPlayers().get(player.getUniqueId()).getBaubleDataModule().getBaubleBag();
+                    boolean hasGluttony = bag.hasBauble("gluttony_pendant");
+                    boolean hasSinGluttony = sinCombinesAll && bag.hasBauble("sin_pendant") && !hasGluttony;
+                    if (hasGluttony || hasSinGluttony) {
+                        float current = player.getExhaustion();
+                        if (current > 0) {
+                            player.setExhaustion((float) (current * exhaustionMultiplier));
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
     }
 
     @Override

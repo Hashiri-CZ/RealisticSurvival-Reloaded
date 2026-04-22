@@ -276,37 +276,36 @@ Items:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
-      resistance:
-        AmplifierIncrement: 1
-        Amplifier: 0
-        Duration: 270
+        MaxStackedAmplifier: 2
   pride_pendant:
     Enabled:
       Enabled_1_21_11: true
+    # Pride pendants reflect incoming damage back to the attacker.
+    # Stacks additively across multiple pendants, capped at 0.5 total.
+    ReflectDamagePercent: 0.15
     Effects:
-      strength:
-        AmplifierIncrement: 1
-        Amplifier: 0
-        Duration: 270
       resistance:
         AmplifierIncrement: 1
         Amplifier: 0
         Duration: 270
+        MaxStackedAmplifier: 2
   gluttony_pendant:
     Enabled:
       Enabled_1_21_11: true
+    # Gluttony pendants slowly restore hunger saturation and reduce hunger exhaustion drain.
+    HungerExhaustionMultiplier: 0.75
     Effects:
-      strength:
-        AmplifierIncrement: 1
+      saturation:
+        AmplifierIncrement: 0
         Amplifier: 0
         Duration: 270
-      resistance:
-        AmplifierIncrement: 1
-        Amplifier: 0
-        Duration: 270
+        MaxStackedAmplifier: 0
   sin_pendant:
     Enabled:
       Enabled_1_21_11: true
+    # Applies the effects of wrath, pride, and gluttony pendants combined.
+    # Does not double-stack with wearing the individual pendants separately.
+    CombinesAll: true
   golden_crown:
     Enabled:
       Enabled_1_21_11: true
