@@ -40,6 +40,25 @@ Player-experience polish pass addressing 130 findings from the 1.3.0 review. Foc
 - Tough As Nails death messages rewritten to match the Harshlands tone (dehydration / parasites / hyperthermia / hypothermia).
 - Macro decay values now documented inline (units per minute of idle).
 
+### Changed (Phase 3 — veteran balance)
+
+- Golden Crown armor value dropped from 13 to 4 — single head-slot no longer contributes 65% of a full netherite set.
+- Potion rings (resistance / regeneration / haste / strength / speed / jump_boost) now cap at `MaxStackedAmplifier: 2` per ring type. 10 speed rings no longer equals Speed XI.
+- Sin pendants (wrath / pride / gluttony / sin) now have distinct mechanics — wrath = +damage on hit + Strength, pride = Resistance + 15% damage reflect (capped at 50% stacked), gluttony = Saturation + 0.75× hunger exhaustion, sin = combines all three without double-stacking.
+- Ice & Fire dragons now show stage in their name (`"%VARIANT% Dragon — Stage %STAGE%"`). Brand-prefix dropped.
+- Stage-1 dragons now drop 1-3 dragonscales (was 0 — killing a baby dragon was previously unrewarded).
+- Rapier `UnarmoredDamageMultiplier` now tier-scales: netherite 2.0, diamond 2.25, gold/iron 2.5, copper 2.75, stone/wooden stay at 3.0. High-tier rapiers no longer one-shot unarmored targets.
+- `dough` custom food now uses `BROWN_DYE` base material instead of `PAPER` — dough is no longer visually identical to paper without the resource pack.
+
+### Fixed (Phase 3)
+
+- Freeze ability (`dragonbone_iced_rapier`, `dragonsteel_ice_rapier`, 43 freeze weapons total) now only spawns encase ice in air/water positions. Player bases are no longer griefable via freeze.
+- Ender Queen's Crown enforces `MaxConcurrentAllies: 5` per wearer — no more infinite enderman farms via tanking damage.
+
+### Added (Phase 3 — content)
+
+- 24 previously undocumented baubles now have meaningful lore in `Items/baubles/items.yml` — effects described honestly, items with no handler flagged as "mechanic pending" rather than given made-up descriptions.
+
 ### Known backlog (deferred to later releases)
 
 - Book-based new-player guide (in lieu of a first-join chat greeting).
