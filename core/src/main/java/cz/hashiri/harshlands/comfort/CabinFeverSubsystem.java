@@ -23,10 +23,12 @@ import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.tan.ThirstCalculateTask;
+import cz.hashiri.harshlands.utils.Utils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.World;
@@ -43,7 +45,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnull;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -71,6 +75,9 @@ public class CabinFeverSubsystem {
     private final int nauseaFullInterval;
     private final int nauseaDuration;
     private final double thirstMultiplier;
+
+    private final boolean requireMaterialRoof;
+    private final Set<Material> naturalRoofMaterials;
 
     private final Map<UUID, Long> lastNauseaTick = new ConcurrentHashMap<>();
     private long tickCounter = 0;
@@ -104,6 +111,15 @@ public class CabinFeverSubsystem {
         this.nauseaFullInterval = config.getInt("CabinFever.Effects.Nausea.FullIntervalTicks", 2400);
         this.nauseaDuration = config.getInt("CabinFever.Effects.Nausea.DurationTicks", 40);
         this.thirstMultiplier = config.getDouble("CabinFever.Effects.ThirstExhaustionMultiplier", 1.3);
+
+        this.requireMaterialRoof = config.getBoolean("CabinFever.RequireMaterialRoof", true);
+        List<String> naturalRoofList = config.getStringList("CabinFever.NaturalRoofBlocks");
+        Set<Material> roofMats = EnumSet.noneOf(Material.class);
+        if (!naturalRoofList.isEmpty()) {
+            List<Material> resolved = Utils.getMaterialsFromList(naturalRoofList);
+            roofMats.addAll(resolved);
+        }
+        this.naturalRoofMaterials = roofMats;
     }
 
     public void initialize() {
@@ -199,7 +215,12 @@ public class CabinFeverSubsystem {
         int z = player.getLocation().getBlockZ();
 
         for (int dy = 1; dy <= roofCheckHeight; dy++) {
-            if (world.getBlockAt(x, eyeY + dy, z).getType().isOccluding()) {
+            Material mat = world.getBlockAt(x, eyeY + dy, z).getType();
+            if (mat.isOccluding()) {
+                if (requireMaterialRoof && naturalRoofMaterials.contains(mat)) {
+                    // Natural canopy block — skip it, not a man-made roof
+                    continue;
+                }
                 return true;
             }
         }

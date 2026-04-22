@@ -230,6 +230,16 @@ CabinFever:
   Enabled: true
   CheckIntervalTicks: 600
   RoofCheckHeight: 4
+  # When true, only player-placed (man-made) blocks above count as "indoors".
+  # Blocks in NaturalRoofBlocks are ignored when scanning upward.
+  # Set to false to restore pre-1.3.1 behaviour (any block counts as roof).
+  RequireMaterialRoof: true
+  NaturalRoofBlocks:
+    - "Tag.LEAVES"
+    - "VINE"
+    - "GLOW_LICHEN"
+    - "SNOW"
+    - "MANGROVE_ROOTS"
   ExemptEnvironments:
     - NETHER
     - THE_END
