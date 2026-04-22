@@ -1023,6 +1023,16 @@ public class Commands implements CommandExecutor {
                                 .with("categories", String.join(", ", result.getFoundCategories()))
                                 .send(player);
                     }
+
+                    ComfortScoreCalculator.NextTierInfo nextTier = calc.getNextTierInfo(result.getScore());
+                    if (nextTier == null) {
+                        Messages.of("comfort.messages.at_max_tier").send(player);
+                    } else {
+                        Messages.of("comfort.messages.next_tier_hint")
+                                .with("next_tier", nextTier.tierDisplayName())
+                                .with("points_needed", nextTier.pointsNeeded())
+                                .send(player);
+                    }
                     return true;
                 }
                 case "help" -> {
