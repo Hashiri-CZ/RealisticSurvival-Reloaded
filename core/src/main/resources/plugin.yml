@@ -135,16 +135,16 @@ permissions:
     default: op
   harshlands.command.help:
     description: Allows users to access the help command
-    default: op
+    default: true
   harshlands.command.version:
     description: Allows users to access the plugin version
-    default: op
+    default: true
   harshlands.command.comfort:
     description: Allows checking comfort score at current location
     default: true
   harshlands.command.fear:
     description: Allows checking your own fear level
-    default: op
+    default: true
   harshlands.command.fear.others:
     description: Allows checking other players' fear levels
     default: op
@@ -153,7 +153,7 @@ permissions:
     default: op
   harshlands.command.debug:
     description: Allows using /hl debug on yourself
-    default: op
+    default: true
   harshlands.command.debug.others:
     description: Allows using /hl debug targeting other players
     default: op
@@ -175,6 +175,9 @@ permissions:
   harshlands.admin.hints:
     description: Allows resetting another player's progressive-hint state
     default: op
+  harshlands.command.hints.reset.self:
+    description: Allows resetting your own progressive-hint state
+    default: true
   harshlands.command.*:
     description: Wildcard permission
     default: op
@@ -200,4 +203,5 @@ permissions:
       harshlands.command.nutrition.set: true
       harshlands.command.nutrition.reset: true
       harshlands.admin.hints: true
+      harshlands.command.hints.reset.self: true
 

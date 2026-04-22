@@ -1257,36 +1257,66 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 case "hints" -> {
-                    if (!sender.hasPermission("harshlands.admin.hints")) {
-                        sendNoPermissionMessage(sender);
-                        return true;
-                    }
-                    if (args.length < 3 || !args[1].equalsIgnoreCase("reset")) {
+                    if (args.length < 2 || !args[1].equalsIgnoreCase("reset")) {
                         sendIncompleteCommandMsg(sender);
                         return true;
                     }
 
-                    Player target = Bukkit.getPlayerExact(args[2]);
-                    if (target == null) {
-                        sendInvalidTargetMsg(sender);
-                        return true;
-                    }
+                    // Determine whether this is a self-reset or an others-reset
+                    boolean isSelfReset = args.length < 3
+                            || (sender instanceof Player p2 && args[2].equalsIgnoreCase(p2.getName()));
 
-                    HLPlayer hlTarget = HLPlayer.getPlayers().get(target.getUniqueId());
-                    if (hlTarget == null) {
-                        sendInvalidTargetMsg(sender);
+                    if (isSelfReset) {
+                        if (!sender.hasPermission("harshlands.command.hints.reset.self")) {
+                            sendNoPermissionMessage(sender);
+                            return true;
+                        }
+                        if (!(sender instanceof Player selfPlayer)) {
+                            sender.sendMessage("\u00a7cYou must be a player to reset your own hints.");
+                            return true;
+                        }
+                        HLPlayer hlSelf = HLPlayer.getPlayers().get(selfPlayer.getUniqueId());
+                        if (hlSelf == null) {
+                            sendInvalidTargetMsg(sender);
+                            return true;
+                        }
+                        cz.hashiri.harshlands.data.hints.DataModule dmSelf = hlSelf.getHintsDataModule();
+                        if (dmSelf == null) {
+                            sender.sendMessage("\u00a7cHints module is not enabled.");
+                            return true;
+                        }
+                        dmSelf.clearAllSeen();
+                        dmSelf.saveData();
+                        sender.sendMessage("\u00a7aReset your hint state.");
                         return true;
-                    }
+                    } else {
+                        if (!sender.hasPermission("harshlands.admin.hints")) {
+                            sendNoPermissionMessage(sender);
+                            return true;
+                        }
 
-                    cz.hashiri.harshlands.data.hints.DataModule dm = hlTarget.getHintsDataModule();
-                    if (dm == null) {
-                        sender.sendMessage("\u00a7cHints module is not enabled.");
+                        Player target = Bukkit.getPlayerExact(args[2]);
+                        if (target == null) {
+                            sendInvalidTargetMsg(sender);
+                            return true;
+                        }
+
+                        HLPlayer hlTarget = HLPlayer.getPlayers().get(target.getUniqueId());
+                        if (hlTarget == null) {
+                            sendInvalidTargetMsg(sender);
+                            return true;
+                        }
+
+                        cz.hashiri.harshlands.data.hints.DataModule dm = hlTarget.getHintsDataModule();
+                        if (dm == null) {
+                            sender.sendMessage("\u00a7cHints module is not enabled.");
+                            return true;
+                        }
+                        dm.clearAllSeen();
+                        dm.saveData();
+                        sender.sendMessage("\u00a7aReset hint state for " + target.getName() + ".");
                         return true;
                     }
-                    dm.clearAllSeen();
-                    dm.saveData();
-                    sender.sendMessage("\u00a7aReset hint state for " + target.getName() + ".");
-                    return true;
                 }
                 default -> {
                     return true;
