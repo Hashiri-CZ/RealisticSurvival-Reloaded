@@ -29,6 +29,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -39,7 +40,11 @@ public class ComfortScoreCalculator {
     private final Set<String> requireLitCategories = new HashSet<>();
     private final Map<EntityType, String> entityToCategory = new HashMap<>();
     private final int searchRadius;
-    private final int totalCategories;
+
+    // Diminishing returns config
+    private final boolean diminishingEnabled;
+    private final double diminishingFactor;
+    private final double diminishingCap;
 
     private record TierRange(int minScore, int maxScore, ComfortTier tier) {}
     private final List<TierRange> tierRanges;
@@ -49,7 +54,18 @@ public class ComfortScoreCalculator {
     public ComfortScoreCalculator(@Nonnull FileConfiguration config, @Nonnull Logger logger) {
         this.searchRadius = config.getInt("SearchRadius", 8);
         loadCategories(config, logger);
-        this.totalCategories = categoryPoints.size();
+
+        // Load diminishing returns config
+        ConfigurationSection dr = config.getConfigurationSection("DiminishingReturns");
+        if (dr != null) {
+            this.diminishingEnabled = dr.getBoolean("Enabled", false);
+            this.diminishingFactor = dr.getDouble("Factor", 1.0);
+            this.diminishingCap = dr.getDouble("Cap", 2.0);
+        } else {
+            this.diminishingEnabled = false;
+            this.diminishingFactor = 1.0;
+            this.diminishingCap = 2.0;
+        }
 
         List<TierRange> ranges = new ArrayList<>();
         ConfigurationSection tiersSection = config.getConfigurationSection("Tiers");
@@ -66,6 +82,8 @@ public class ComfortScoreCalculator {
                 } catch (IllegalArgumentException ignored) {}
             }
         }
+        // Sort by minScore ascending so we can iterate in order for next-tier lookup
+        ranges.sort(Comparator.comparingInt(r -> r.minScore()));
         this.tierRanges = List.copyOf(ranges);
     }
 
@@ -131,7 +149,9 @@ public class ComfortScoreCalculator {
             return new ComfortResult(0, ComfortTier.NONE, Collections.emptySet());
         }
 
-        Set<String> foundCategories = new HashSet<>();
+        // Count matches per category (not just presence)
+        Map<String, Integer> matchCounts = new HashMap<>();
+
         int cx = center.getBlockX();
         int cy = center.getBlockY();
         int cz = center.getBlockZ();
@@ -150,45 +170,77 @@ public class ComfortScoreCalculator {
 
                     // Check direct material mapping (includes pre-computed POTTED_* materials)
                     String category = materialToCategory.get(mat);
-                    if (category != null && !foundCategories.contains(category)) {
+                    if (category != null) {
                         if (requireLitCategories.contains(category)) {
                             if (!isBlockLit(block)) {
                                 continue;
                             }
                         }
-                        foundCategories.add(category);
-
-                        // Early termination: all block-based categories found
-                        if (foundCategories.size() >= totalCategories) {
-                            break;
-                        }
+                        matchCounts.merge(category, 1, Integer::sum);
                     }
                 }
-                if (foundCategories.size() >= totalCategories) break;
             }
-            if (foundCategories.size() >= totalCategories) break;
         }
 
-        // Scan nearby entities (only if entity categories not yet found)
-        if (!entityToCategory.isEmpty() && foundCategories.size() < totalCategories) {
+        // Scan nearby entities
+        if (!entityToCategory.isEmpty()) {
             double radius = searchRadius;
             Collection<Entity> entities = world.getNearbyEntities(center, radius, radius, radius);
             for (Entity entity : entities) {
                 String category = entityToCategory.get(entity.getType());
                 if (category != null) {
-                    foundCategories.add(category);
+                    matchCounts.merge(category, 1, Integer::sum);
                 }
             }
         }
 
-        // Sum points from found categories
-        int score = 0;
-        for (String cat : foundCategories) {
-            score += categoryPoints.getOrDefault(cat, 0);
+        // Sum points from found categories, applying diminishing returns
+        double scoreDouble = 0.0;
+        for (Map.Entry<String, Integer> entry : matchCounts.entrySet()) {
+            String cat = entry.getKey();
+            int count = entry.getValue();
+            int basePoints = categoryPoints.getOrDefault(cat, 0);
+            scoreDouble += computeCategoryContribution(basePoints, count);
         }
 
+        int score = (int) scoreDouble; // floor to nearest integer
+
+        // Build the set of found categories (categories with at least one match)
+        Set<String> foundCategories = Collections.unmodifiableSet(matchCounts.keySet());
+
         ComfortTier tier = resolveTier(score);
-        return new ComfortResult(score, tier, Collections.unmodifiableSet(foundCategories));
+        return new ComfortResult(score, tier, foundCategories);
+    }
+
+    /**
+     * Computes the score contribution from a single category given its base point value
+     * and the number of matching blocks/entities found.
+     *
+     * <p>When DiminishingReturns is disabled: returns basePoints (old behaviour — one match
+     * worth of points regardless of count).</p>
+     *
+     * <p>When DiminishingReturns is enabled: computes
+     * {@code basePoints * (1 + factor + factor^2 + ... + factor^(count-1))} capped at
+     * {@code Cap * basePoints}.</p>
+     */
+    private double computeCategoryContribution(int basePoints, int count) {
+        if (!diminishingEnabled || count <= 0) {
+            // Disabled: original behaviour — one category, full points once
+            return count > 0 ? basePoints : 0;
+        }
+
+        double contribution = 0.0;
+        double multiplier = 1.0;
+        double capValue = diminishingCap * basePoints;
+
+        for (int i = 0; i < count; i++) {
+            contribution += basePoints * multiplier;
+            if (contribution >= capValue) {
+                return capValue;
+            }
+            multiplier *= diminishingFactor;
+        }
+        return Math.min(contribution, capValue);
     }
 
     private boolean isBlockLit(@Nonnull Block block) {
@@ -206,10 +258,49 @@ public class ComfortScoreCalculator {
     private ComfortTier resolveTier(int score) {
         if (score <= 0) return ComfortTier.NONE;
         for (TierRange range : tierRanges) {
-            if (score >= range.minScore && score <= range.maxScore) return range.tier;
+            if (score >= range.minScore() && score <= range.maxScore()) return range.tier();
         }
         return ComfortTier.NONE;
     }
+
+    /**
+     * Returns the next tier above the given score, or {@code null} if the score is
+     * already in or above the highest tier (LUXURY).
+     *
+     * <p>If the score is below all tiers, returns info for the lowest tier.</p>
+     *
+     * @return array of [nextTierDisplayName, pointsNeeded] as Object[2], or null if at max tier
+     */
+    @Nullable
+    public NextTierInfo getNextTierInfo(int score) {
+        // tierRanges is sorted ascending by minScore
+        // Find current tier range
+        TierRange current = null;
+        for (TierRange range : tierRanges) {
+            if (score >= range.minScore() && score <= range.maxScore()) {
+                current = range;
+                break;
+            }
+        }
+
+        if (current != null && current.tier() == ComfortTier.LUXURY) {
+            // Already at max tier
+            return null;
+        }
+
+        // Find the first tier whose minScore is greater than current score
+        for (TierRange range : tierRanges) {
+            if (range.minScore() > score) {
+                int pointsNeeded = range.minScore() - score;
+                return new NextTierInfo(range.tier().getDisplayName(), pointsNeeded);
+            }
+        }
+
+        // Score is beyond all tier ranges but wasn't matched as LUXURY — edge case
+        return null;
+    }
+
+    public record NextTierInfo(String tierDisplayName, int pointsNeeded) {}
 
     public static class ComfortResult {
         private final int score;

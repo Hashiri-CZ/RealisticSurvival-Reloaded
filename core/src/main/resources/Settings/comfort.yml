@@ -21,8 +21,8 @@ SearchRadius: 8
 CacheSeconds: 5
 
 # ── Categories ───────────────────────────────────────────────
-# Each category contributes its Points ONCE, even if multiple
-# matching blocks/entities exist nearby. Duplicates do not stack.
+# Each category contributes its Points for every match found, with
+# diminishing returns when DiminishingReturns.Enabled is true (see below).
 #
 # Material names use Bukkit Material enum names (1.21).
 # EntityType names use Bukkit EntityType enum names.
@@ -194,34 +194,45 @@ Categories:
 # Effects use Bukkit PotionEffectType names (lowercase for Registry lookup).
 Tiers:
   SHELTER:
-    MinScore: 1
-    MaxScore: 3
+    MinScore: 2
+    MaxScore: 5
     Duration: 6000
     Effects:
       regeneration: 0
   HOME:
-    MinScore: 4
-    MaxScore: 6
+    MinScore: 6
+    MaxScore: 10
     Duration: 12000
     Effects:
       regeneration: 0
       resistance: 0
   COZY:
-    MinScore: 7
-    MaxScore: 10
+    MinScore: 11
+    MaxScore: 16
     Duration: 18000
     Effects:
       regeneration: 0
       resistance: 0
       saturation: 0
   LUXURY:
-    MinScore: 11
+    MinScore: 17
     MaxScore: 999
     Duration: 24000
     Effects:
       regeneration: 1
       resistance: 0
       saturation: 0
+
+# Diminishing returns on stacking the same category. Each extra match in a
+# category contributes a decreasing fraction of its base Points.
+# Example with base=3 (bed) and factor=0.5: 1st bed = 3, 2nd = 1.5, 3rd = 0.75, etc.
+# Set Factor to 1.0 to disable (each match gives full Points).
+DiminishingReturns:
+  Enabled: true
+  Factor: 0.5
+  # Cap total contribution from any single category at this multiple of its base Points.
+  # Cap=2.0 means "at most 2× the base Points from one category", regardless of count.
+  Cap: 2.0
 
 # ── Cabin Fever ─────────────────────────────────────────────
 # Players who stay indoors too long suffer escalating debuffs.
