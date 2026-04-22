@@ -28,6 +28,9 @@ hints:
     FirstBrokenLimb: "&cA body part is badly hurt. &fIt'll slow you until you patch it. Craft a %item_bandage% or %item_splint%."
     FirstFearHigh: "&8The dark is pressing in. &7Fear past half. Find light, a fire, or company before it summons something worse."
     FirstNightmare: "&8You hear it now. &7Something came for you. Run."
+    FirstBaubleEquipped: "&dBauble equipped. &fOpen your bauble bag with &e/hl obtain bauble_bag&f if you haven't crafted one yet."
+    FirstComfortBuff: "&aResting paid off. &fSleep near more comfort items for stronger buffs."
+    FirstCabinFever: "&8You're restless. &7Too long indoors. Go outside to settle your nerves."
   # Obtain instructions — shown on /hl obtain <item>, also previewed in hint hovers.
   # Each entry: Name (pretty display name) + Lines (multi-line description).
   # Lines may contain %item_<key>% placeholders — they render as clickable tags.
@@ -150,5 +153,11 @@ hints:
       Lines:
         - "&7Craft from sticks and string (3x3 pattern)."
         - "&7Right-click to brace a broken leg for 4 HP."
+    bauble_bag:
+      Name: "Bauble Bag"
+      Lines:
+        - "&7Craft from leather + string."
+        - "&7Right-click to open — shows the 6 bauble slots"
+        - "&7(head, amulet, body, belt, charm, ring)."
   # Shown by /hl obtain when the item key is not recognised.
-  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty, bandage, splint."
+  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty, bandage, splint, bauble_bag."

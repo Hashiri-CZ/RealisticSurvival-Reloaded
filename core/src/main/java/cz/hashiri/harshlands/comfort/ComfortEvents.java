@@ -17,6 +17,8 @@
 package cz.hashiri.harshlands.comfort;
 
 import cz.hashiri.harshlands.HLPlugin;
+import cz.hashiri.harshlands.hints.HintKey;
+import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.locale.Messages;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -119,6 +121,11 @@ public class ComfortEvents implements Listener {
                     // addPotionEffect replaces existing effects of the same type automatically
                     player.addPotionEffect(new PotionEffect(type, durationTicks, amplifier, true, true, true));
                 }
+            }
+            // FIRST_COMFORT_BUFF: fire when at least one buff was granted
+            if (!effectsSection.getKeys(false).isEmpty()) {
+                HintsModule hintsModule = (HintsModule) cz.hashiri.harshlands.data.HLModule.getModule(HintsModule.NAME);
+                if (hintsModule != null) hintsModule.sendHint(player, HintKey.FIRST_COMFORT_BUFF);
             }
         }
 

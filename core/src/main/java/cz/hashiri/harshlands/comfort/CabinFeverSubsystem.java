@@ -18,6 +18,8 @@ package cz.hashiri.harshlands.comfort;
 
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.cabinfever.DataModule;
+import cz.hashiri.harshlands.hints.HintKey;
+import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.tan.ThirstCalculateTask;
@@ -162,6 +164,15 @@ public class CabinFeverSubsystem {
 
         long effectiveIndoor = dm.getIndoorTicks() - comfortDelay;
         CabinFeverStage stage = evaluateStage(effectiveIndoor);
+
+        // FIRST_CABIN_FEVER: fire when restless threshold is first crossed on the way up
+        if (indoors) {
+            long prevEffective = effectiveIndoor - checkInterval;
+            if (prevEffective < thresholdRestless && effectiveIndoor >= thresholdRestless) {
+                HintsModule hintsModule = (HintsModule) cz.hashiri.harshlands.data.HLModule.getModule(HintsModule.NAME);
+                if (hintsModule != null) hintsModule.sendHint(player, HintKey.FIRST_CABIN_FEVER);
+            }
+        }
 
         cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();
         if (debugMgr.isActive("Comfort", "CabinFever", player.getUniqueId())) {

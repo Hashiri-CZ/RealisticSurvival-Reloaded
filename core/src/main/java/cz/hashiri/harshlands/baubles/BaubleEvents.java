@@ -21,6 +21,8 @@ import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.baubles.BaubleInventory;
 import cz.hashiri.harshlands.data.baubles.BaubleSlot;
 import cz.hashiri.harshlands.data.baubles.DataModule;
+import cz.hashiri.harshlands.hints.HintKey;
+import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.misc.PlayerItemAcquireEvent;
 import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.PlayerJumpEvent;
@@ -368,6 +370,9 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                                             default -> {}
                                         }
                                         Bukkit.getServer().getPluginManager().callEvent(new BaubleChangeEvent(player, cursor, BaubleChange.ADDITION));
+                                        // FIRST_BAUBLE_EQUIPPED: fire on the first actual bauble-slot placement
+                                        HintsModule hintsModule = (HintsModule) cz.hashiri.harshlands.data.HLModule.getModule(HintsModule.NAME);
+                                        if (hintsModule != null) hintsModule.sendHint(player, HintKey.FIRST_BAUBLE_EQUIPPED);
                                     } else
                                         event.setCancelled(true);
                                 }

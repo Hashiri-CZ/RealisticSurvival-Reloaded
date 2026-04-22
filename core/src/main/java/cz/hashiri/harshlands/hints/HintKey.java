@@ -29,7 +29,11 @@ public enum HintKey {
     // Task 1.7 — first-aid & fear hints
     FIRST_BROKEN_LIMB("FirstBrokenLimb", false, 0L, Sound.ENTITY_PLAYER_HURT),
     FIRST_FEAR_HIGH("FirstFearHigh", false, 0L, Sound.ENTITY_ENDERMAN_STARE),
-    FIRST_NIGHTMARE("FirstNightmare", false, 0L, Sound.ENTITY_ENDERMAN_SCREAM);
+    FIRST_NIGHTMARE("FirstNightmare", false, 0L, Sound.ENTITY_ENDERMAN_SCREAM),
+    // Task 1.8 — baubles & comfort hints
+    FIRST_BAUBLE_EQUIPPED("FirstBaubleEquipped", false, 0L, Sound.ITEM_ARMOR_EQUIP_GOLD),
+    FIRST_COMFORT_BUFF("FirstComfortBuff", false, 0L, Sound.BLOCK_AMETHYST_BLOCK_CHIME),
+    FIRST_CABIN_FEVER("FirstCabinFever", false, 0L, Sound.AMBIENT_CAVE);
 
     private final String translationKey;
     private final boolean repeating;

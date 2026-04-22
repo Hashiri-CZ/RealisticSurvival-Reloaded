@@ -68,3 +68,12 @@ Hints:
   FIRST_NIGHTMARE:
     Enabled: true
     Sound: "ENTITY_ENDERMAN_SCREAM"
+  FIRST_BAUBLE_EQUIPPED:
+    Enabled: true
+    Sound: "ITEM_ARMOR_EQUIP_GOLD"
+  FIRST_COMFORT_BUFF:
+    Enabled: true
+    Sound: "BLOCK_AMETHYST_BLOCK_CHIME"
+  FIRST_CABIN_FEVER:
+    Enabled: true
+    Sound: "AMBIENT_CAVE"
