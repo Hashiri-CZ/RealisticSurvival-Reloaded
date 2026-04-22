@@ -24,6 +24,8 @@ poison_stone:
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Poisons enemies on contact. If the target is already poisoned,"
+    - "&7your strikes deal additional damage."
     - ""
     - "&6Bauble (Any)"
   NBTTags:
@@ -34,6 +36,7 @@ potion_ring:
   CustomModelData: 83690
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Crafting component for the specialized potion rings."
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
@@ -46,6 +49,8 @@ potion_ring_resistance:
   Enchantments:
     DURABILITY: 1
   Lore:
+    - "&7Continuously applies Resistance while worn."
+    - "&7Effect grows stronger when multiple rings are equipped."
     - ""
     - "&6Bauble (Ring)"
   ItemFlags:
@@ -60,6 +65,8 @@ potion_ring_regeneration:
   Enchantments:
     DURABILITY: 1
   Lore:
+    - "&7Continuously applies Regeneration while worn."
+    - "&7Effect grows stronger when multiple rings are equipped."
     - ""
     - "&6Bauble (Ring)"
   ItemFlags:
@@ -74,6 +81,8 @@ potion_ring_haste:
   Enchantments:
     DURABILITY: 1
   Lore:
+    - "&7Continuously applies Haste while worn."
+    - "&7Effect grows stronger when multiple rings are equipped."
     - ""
     - "&6Bauble (Ring)"
   ItemFlags:
@@ -88,6 +97,8 @@ potion_ring_strength:
   Enchantments:
     DURABILITY: 1
   Lore:
+    - "&7Continuously applies Strength while worn."
+    - "&7Effect grows stronger when multiple rings are equipped."
     - ""
     - "&6Bauble (Ring)"
   ItemFlags:
@@ -102,6 +113,8 @@ potion_ring_speed:
   Enchantments:
     DURABILITY: 1
   Lore:
+    - "&7Continuously applies Speed while worn."
+    - "&7Effect grows stronger when multiple rings are equipped."
     - ""
     - "&6Bauble (Ring)"
   ItemFlags:
@@ -116,6 +129,8 @@ potion_ring_jump_boost:
   Enchantments:
     DURABILITY: 1
   Lore:
+    - "&7Continuously applies Jump Boost while worn."
+    - "&7Effect grows stronger when multiple rings are equipped."
     - ""
     - "&6Bauble (Ring)"
   ItemFlags:
@@ -128,6 +143,9 @@ ender_queens_crown:
   CustomModelData: 83661
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Endermen will not aggro on sight. When you take damage, nearby"
+    - "&7endermen are claimed as allies to fight for you."
+    - "&7Contact with water deals damage while worn."
     - ""
     - "&6Bauble (Head)"
   NBTTags:
@@ -266,6 +284,9 @@ ender_dragonscale:
   DisplayName: "&fEnder Dragon Scale"
   CustomModelData: 83670
   ItemModel: "DEFAULT"
+  Lore:
+    - "&7A scale shed by an ender dragon. Crafting material."
+    - "&7Can be forged into dragonscale baubles."
 cracked_black_dragonscale:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fCracked Black Dragon Scale"
@@ -484,6 +505,10 @@ golden_crown:
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
+  Lore:
+    - "&7A crown fit for the merciless. Provides bonus armor"
+    - "&7when worn in the head slot."
+    - "&7Durability: 275/275"
   NBTTags:
     hldurability: 275
     hlmaxdurability: 275
@@ -523,6 +548,7 @@ emerald_ring:
   CustomModelData: 83691
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Crafting component. No active effect in 1.3.1 — mechanic pending."
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
@@ -533,6 +559,7 @@ emerald_amulet:
   CustomModelData: 83692
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Crafting component. No active effect in 1.3.1 — mechanic pending."
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
@@ -542,38 +569,48 @@ glowing_ingot:
   DisplayName: "&fGlowing Ingot"
   CustomModelData: 83693
   ItemModel: "DEFAULT"
+  Lore:
+    - "&7Crafting component. Can be ground into glowing powder."
 glowing_powder:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fGlowing Powder"
   CustomModelData: 83694
   ItemModel: "DEFAULT"
+  Lore:
+    - "&7Crafting component. Refined from glowing ingots."
 glowing_gem:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fGlowing Gem"
   CustomModelData: 83695
   ItemModel: "DEFAULT"
+  Lore:
+    - "&7Crafting component. Used in advanced bauble recipes."
 dwarf_stout:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fDwarf Stout"
   CustomModelData: 83696
   ItemModel: "DEFAULT"
   Lore:
-    - "&7I might be able to remove the effects"
-    - "&7by drinking some sort of potion"
+    - "&7A tonic brewed from the Ring of the Dwarves."
+    - "&7Drinking it may relieve whatever that ring has done to you."
+    - "&7No active effect in 1.3.1 — mechanic pending."
 fairy_dew:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&fFairy Dew"
   CustomModelData: 83697
   ItemModel: "DEFAULT"
   Lore:
-    - "&7I might be able to remove the effects"
-    - "&7by drinking some sort of potion"
+    - "&7An elixir distilled from the Ring of the Fairies."
+    - "&7Drinking it may undo whatever curse the ring left behind."
+    - "&7No active effect in 1.3.1 — mechanic pending."
 stone_negative_gravity:
   Material: "PRISMARINE_SHARD"
   DisplayName: "&bStone of Negative Gravity"
   CustomModelData: 83698
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Suspends gravity while in the bauble slot. Left-click in hand"
+    - "&7to thrust upward; sneak and left-click to descend."
     - ""
     - "&6Bauble (Any)"
   NBTTags:
@@ -584,6 +621,7 @@ stone_inertia_null:
   CustomModelData: 83699
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Completely negates knockback and fall damage."
     - ""
     - "&6Bauble (Any)"
   NBTTags:
@@ -594,6 +632,8 @@ stone_greater_inertia:
   CustomModelData: 83700
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Boosts walk speed and jump height. Reduces fall damage and"
+    - "&7softens some knockback. Heavier than it looks."
     - ""
     - "&6Bauble (Any)"
   NBTTags:
@@ -604,6 +644,7 @@ ring_enchanted_eyes:
   CustomModelData: 83701
   ItemModel: "DEFAULT"
   Lore:
+    - "&7No active effect in 1.3.1 — mechanic pending."
     - ""
     - "&6Bauble (Any)"
   NBTTags:
@@ -614,6 +655,8 @@ stone_sea:
   CustomModelData: 83702
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Grants water breathing and night vision underwater."
+    - "&7Dramatically increases swim speed."
     - ""
     - "&6Bauble (Amulet)"
   NBTTags:
@@ -636,6 +679,8 @@ ring_fairies:
   CustomModelData: 83704
   ItemModel: "DEFAULT"
   Lore:
+    - "&7A fey curse bound in metal. No active effect in 1.3.1 — mechanic pending."
+    - "&7Required to brew Fairy Dew."
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
@@ -646,6 +691,8 @@ ring_dwarves:
   CustomModelData: 83705
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Ancient dwarven craft, sealed with runes. No active effect in 1.3.1 — mechanic pending."
+    - "&7Required to brew Dwarf Stout."
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
@@ -656,6 +703,7 @@ wither_ring:
   CustomModelData: 83706
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Grants immunity to the Wither effect."
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
@@ -666,6 +714,8 @@ shield_honor:
   CustomModelData: 83707
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Continuously applies Resistance while worn."
+    - "&7Reduces explosion damage."
     - ""
     - "&6Bauble (Body)"
   NBTTags:
@@ -676,6 +726,7 @@ miners_ring:
   CustomModelData: 83708
   ItemModel: "DEFAULT"
   Lore:
+    - "&7Continuously applies Haste while worn."
     - ""
     - "&6Bauble (Ring)"
   NBTTags:
