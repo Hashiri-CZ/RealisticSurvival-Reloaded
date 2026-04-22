@@ -17,6 +17,7 @@
 package cz.hashiri.harshlands.spartanweaponry;
 
 import cz.hashiri.harshlands.data.HLModule;
+import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
@@ -40,8 +41,9 @@ public class ReturnWeaponTask extends BukkitRunnable {
     private final ArmorStand armorStand;
     private final LivingEntity entity;
     private final boolean rotateWeapon;
+    private final HLPlugin plugin;
 
-    public ReturnWeaponTask(HLModule module, ItemStack item, ArmorStand armorStand, LivingEntity entity, boolean rotateWeapon) {
+    public ReturnWeaponTask(HLModule module, HLPlugin plugin, ItemStack item, ArmorStand armorStand, LivingEntity entity, boolean rotateWeapon) {
         this.item = item;
         this.armorStand = armorStand;
         this.entity = entity;
@@ -49,6 +51,7 @@ public class ReturnWeaponTask extends BukkitRunnable {
         this.name = HLItem.getNameFromItem(item);
         this.maxReturnDistance = config.getDouble("Items." + name + ".ThrownAttributes.MaxReturnDistance");
         this.rotateWeapon = rotateWeapon;
+        this.plugin = plugin;
     }
 
     @Override
@@ -128,7 +131,7 @@ public class ReturnWeaponTask extends BukkitRunnable {
                                         .with("z_coord", (int) Math.round(pLocation.getZ()))
                                         .build());
                             }
-                            dropItem(pLocation);
+                            dropProtectedItem(pLocation);
                         }
                         else {
                             if (entity instanceof Player player) {
@@ -154,6 +157,35 @@ public class ReturnWeaponTask extends BukkitRunnable {
         Item droppedItem = entity.getWorld().dropItem(location, item.clone());
         droppedItem.setGlowing(true);
         droppedItem.setOwner(entity.getUniqueId());
+
+        return droppedItem.getLocation();
+    }
+
+    /** Drops the weapon with owner-locked pickup delay and an extended despawn timer. */
+    public Location dropProtectedItem(Location location) {
+        Item droppedItem = entity.getWorld().dropItem(location, item.clone());
+        droppedItem.setGlowing(true);
+        droppedItem.setOwner(entity.getUniqueId());
+        droppedItem.setThrower(entity.getUniqueId());
+
+        int ownerOnlyPickupSeconds = config.getInt("FullInventoryWeaponDropped.OwnerOnlyPickupSeconds", 10);
+        int extendedDespawnSeconds = config.getInt("FullInventoryWeaponDropped.ExtendedDespawnSeconds", 180);
+
+        // Block all pickup for ownerOnlyPickupSeconds so the owner has time to clear
+        // inventory and retrieve the weapon before anyone else can grab it.
+        droppedItem.setPickupDelay(ownerOnlyPickupSeconds * 20);
+
+        // Schedule forced removal at extendedDespawnSeconds to prevent indefinite
+        // lingering (vanilla despawn is 300s; this overrides to configured value).
+        long despawnTicks = (long) extendedDespawnSeconds * 20;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (droppedItem.isValid() && !droppedItem.isDead()) {
+                    droppedItem.remove();
+                }
+            }
+        }.runTaskLater(plugin, despawnTicks);
 
         return droppedItem.getLocation();
     }

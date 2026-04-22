@@ -17,6 +17,11 @@ MaxReturnDistanceReached:
   Enabled: true
 FullInventoryWeaponDropped:
   Enabled: true
+  # When a thrown weapon returns but the player's inventory is full, the dropped
+  # item is locked to the owner for OwnerOnlyPickupSeconds before anyone can pick
+  # it up, then despawns after ExtendedDespawnSeconds (vanilla despawn is 300s).
+  OwnerOnlyPickupSeconds: 10
+  ExtendedDespawnSeconds: 180
 WeaponDropped:
   Enabled: true
 

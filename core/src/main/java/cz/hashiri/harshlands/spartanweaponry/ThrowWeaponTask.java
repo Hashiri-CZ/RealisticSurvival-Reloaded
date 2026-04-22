@@ -356,7 +356,7 @@ public class ThrowWeaponTask extends BukkitRunnable {
     }
 
     public void returnWeapon() {
-        new ReturnWeaponTask(module, item, armorStand, entity, rotateWeapon).runTaskTimer(plugin, 4L, 1L);
+        new ReturnWeaponTask(module, plugin, item, armorStand, entity, rotateWeapon).runTaskTimer(plugin, 4L, 1L);
 
         cancel();
         tasks.remove(entity.getUniqueId());
