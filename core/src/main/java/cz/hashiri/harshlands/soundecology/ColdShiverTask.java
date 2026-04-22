@@ -16,9 +16,12 @@
  */
 package cz.hashiri.harshlands.soundecology;
 
+import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.toughasnails.DataModule;
 import cz.hashiri.harshlands.fear.FearModule;
+import cz.hashiri.harshlands.hints.HintKey;
+import cz.hashiri.harshlands.hints.HintsModule;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -55,6 +58,8 @@ public class ColdShiverTask implements Runnable {
             if (tanDm.getTemperature() < threshold) {
                 if (ThreadLocalRandom.current().nextDouble() < chance) {
                     noiseManager.createNoise(player.getLocation(), radius, player.getUniqueId(), "SHIVERING");
+                    HintsModule hints = (HintsModule) HLModule.getModule(HintsModule.NAME);
+                    if (hints != null) hints.sendHint(player, HintKey.FIRST_SHIVERING);
                 }
             }
         }

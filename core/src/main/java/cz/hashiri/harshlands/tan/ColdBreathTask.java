@@ -16,10 +16,7 @@
  */
 package cz.hashiri.harshlands.tan;
 
-import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
-import cz.hashiri.harshlands.hints.HintKey;
-import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.HLTask;
 import cz.hashiri.harshlands.utils.Utils;
@@ -110,11 +107,6 @@ public class ColdBreathTask extends BukkitRunnable implements HLTask {
                     Vector dir = player.getLocation().clone().subtract(0, 0.5D, 0).getDirection().normalize().multiply(0.5D);
                     player.spawnParticle(particle, player.getEyeLocation().add(dir), Utils.getRandomNum(minCount, maxCount), xOffset, yOffset, zOffset, extra, dust);
                 }
-            }
-            // Shivering hint — fire each time cold breath is active (repeating, 120 s cooldown handled by HintSender)
-            HintsModule hints = (HintsModule) HLModule.getModule(HintsModule.NAME);
-            if (hints != null) {
-                hints.sendHint(player, HintKey.FIRST_SHIVERING);
             }
         }
         else {
