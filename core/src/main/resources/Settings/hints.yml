@@ -26,3 +26,24 @@ Hints:
   FIRST_SAW_CRAFTED:
     Enabled: true
     Sound: "UI_TOAST_CHALLENGE_COMPLETE"
+  FIRST_COLD_EXPOSURE:
+    Enabled: true
+    Sound: "UI_TOAST_IN"
+  FIRST_HEAT_EXPOSURE:
+    Enabled: true
+    Sound: "UI_TOAST_IN"
+  FIRST_SHIVERING:
+    Enabled: true
+    CooldownSeconds: 120
+    Sound: "ENTITY_PLAYER_HURT_FREEZE"
+  FIRST_THIRST_WARNING:
+    Enabled: true
+    Sound: "BLOCK_WATER_AMBIENT"
+  FIRST_PARASITE:
+    Enabled: true
+    CooldownSeconds: 300
+    Sound: "ENTITY_SPIDER_AMBIENT"
+  PARASITE_CURED:
+    Enabled: true
+    CooldownSeconds: 300
+    Sound: "ENTITY_PLAYER_BURP"

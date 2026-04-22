@@ -16,7 +16,10 @@
  */
 package cz.hashiri.harshlands.tan;
 
+import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.hints.HintKey;
+import cz.hashiri.harshlands.hints.HintsModule;
 import cz.hashiri.harshlands.integrations.CompatiblePlugin;
 import cz.hashiri.harshlands.integrations.RealisticSeasons;
 import cz.hashiri.harshlands.HLPlugin;
@@ -354,6 +357,17 @@ public class TemperatureCalculateTask extends BukkitRunnable implements HLTask {
                 Bukkit.getServer().getPluginManager().callEvent(new TemperatureChangeEvent(player, oldTemp, temp));
             }
             manager.setTemperature(player, temp);
+
+            // Temperature threshold hints
+            HintsModule hints = (HintsModule) HLModule.getModule(HintsModule.NAME);
+            if (hints != null) {
+                if (temp < 6.0) {
+                    hints.sendHint(player, HintKey.FIRST_COLD_EXPOSURE);
+                }
+                if (temp > 19.0) {
+                    hints.sendHint(player, HintKey.FIRST_HEAT_EXPOSURE);
+                }
+            }
 
             // Debug instrumentation
             cz.hashiri.harshlands.debug.DebugManager debugMgr = plugin.getDebugManager();

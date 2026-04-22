@@ -12,7 +12,15 @@ public enum HintKey {
     FIRST_FLINT_HATCHET_CRAFTED("FirstFlintHatchetCrafted", false, 0L, Sound.UI_TOAST_CHALLENGE_COMPLETE),
     FIRST_LOG("FirstLog", false, 0L, Sound.UI_TOAST_CHALLENGE_COMPLETE),
     FIRST_PLANK_AND_STICK("FirstPlankAndStick", false, 0L, Sound.UI_TOAST_CHALLENGE_COMPLETE),
-    FIRST_SAW_CRAFTED("FirstSawCrafted", false, 0L, Sound.UI_TOAST_CHALLENGE_COMPLETE);
+    FIRST_SAW_CRAFTED("FirstSawCrafted", false, 0L, Sound.UI_TOAST_CHALLENGE_COMPLETE),
+    // Task 1.4 — temperature hints
+    FIRST_COLD_EXPOSURE("FirstColdExposure", false, 0L, Sound.UI_TOAST_IN),
+    FIRST_HEAT_EXPOSURE("FirstHeatExposure", false, 0L, Sound.UI_TOAST_IN),
+    FIRST_SHIVERING("FirstShivering", true, 120_000L, Sound.ENTITY_PLAYER_HURT_FREEZE),
+    // Task 1.5 — thirst & parasite hints
+    FIRST_THIRST_WARNING("FirstThirstWarning", false, 0L, Sound.BLOCK_WATER_AMBIENT),
+    FIRST_PARASITE("FirstParasite", true, 300_000L, Sound.ENTITY_SPIDER_AMBIENT),
+    PARASITE_CURED("ParasiteCured", true, 300_000L, Sound.ENTITY_PLAYER_BURP);
 
     private final String translationKey;
     private final boolean repeating;

@@ -11,6 +11,7 @@ import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class HintsModule extends HLModule {
 
     private final HLPlugin plugin;
     private BukkitTask periodicSaveTask;
+    private HintSender sender;
 
     public HintsModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
@@ -41,7 +43,7 @@ public class HintsModule extends HLModule {
             Utils.logModuleInit("hints", NAME);
         }
 
-        HintSender sender = new HintSender(plugin, this);
+        sender = new HintSender(plugin, this);
         HintsListener listener = new HintsListener(this, sender);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 
@@ -52,6 +54,11 @@ public class HintsModule extends HLModule {
                 if (dm != null && dm.isDirty()) dm.saveData();
             }
         }, 6000L, 6000L);
+    }
+
+    /** Fires a hint to the given player. Safe to call from any module — no-ops if HintsModule is not initialised. */
+    public void sendHint(Player player, HintKey key) {
+        if (sender != null) sender.send(player, key);
     }
 
     @Override

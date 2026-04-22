@@ -15,6 +15,12 @@ hints:
     FirstLog: "Right-click upward on a %item_log% with your %item_axe% for a chance to drop %item_plank%s. Right-click %item_plank%s for %item_stick%s."
     FirstPlankAndStick: "Craft a %item_saw% &ffor guaranteed output. In the crafting table: saw + log = 4 planks, saw + planks = 4 sticks."
     FirstSawCrafted: "Place the %item_saw% with a %item_log% in the crafting grid for 4 %item_plank%s. With %item_plank%s for 4 %item_stick%s."
+    FirstColdExposure: "&bYour body is losing heat. &fFind shelter, stand near a %item_campfire%, or craft warmer armour before it kills you."
+    FirstHeatExposure: "&6You're overheating. &fGet into shade or water. %item_jelled_slime% armour and soul fire blocks cool you down."
+    FirstShivering: "&bYou're shivering — mobs can hear it. &fWarm up or move carefully."
+    FirstThirstWarning: "&bYour throat is dry. &fWater source blocks and canteens quench thirst — but beware, untreated water can make you sick."
+    FirstParasite: "&cYou feel cramps. &fSomething was in that water. Drink %item_purified_water_bottle% or wait it out."
+    ParasiteCured: "&aYour stomach settles. The parasites are gone."
   # Obtain instructions — shown on /hl obtain <item>, also previewed in hint hovers.
   # Each entry: Name (pretty display name) + Lines (multi-line description).
   # Lines may contain %item_<key>% placeholders — they render as clickable tags.
@@ -95,5 +101,37 @@ hints:
         - "&8  • &7%item_stick%s"
         - "&7Place saw + %item_log% = 4 planks, saw + planks"
         - "&7= 4 sticks. Check the in-game recipe book."
+    campfire:
+      Name: "Campfire"
+      Lines:
+        - "&7Hold a %item_fire_starter% and right-click on"
+        - "&7fuel + kindling items to build a campfire."
+        - "&7Kindling = sticks, saplings, or string."
+    jelled_slime:
+      Name: "Jelled Slime"
+      Lines:
+        - "&7Craft from slime balls and ice."
+        - "&7Wearing Jelled Slime armour keeps you cool."
+    fire_starter:
+      Name: "Fire Starter"
+      Lines:
+        - "&7Craft with an iron ingot and flint."
+        - "&7Hold and right-click fuel + kindling stacks"
+        - "&7within 1 block of each other to build a fire."
+    purified_water_bottle:
+      Name: "Purified Water Bottle"
+      Lines:
+        - "&7Combine a %item_charcoal_filter% with a glass bottle"
+        - "&7of water to filter out parasites."
+    charcoal_filter:
+      Name: "Charcoal Filter"
+      Lines:
+        - "&7Craft 2 charcoal + 2 paper + a string."
+        - "&7Used to purify water."
+    canteen_empty:
+      Name: "Canteen"
+      Lines:
+        - "&7Craft from iron ingots."
+        - "&7Holds several drinks of water at once."
   # Shown by /hl obtain when the item key is not recognised.
-  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw."
+  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty."
