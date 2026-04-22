@@ -105,7 +105,10 @@ FearMeter:
     EatCookedFood:
       Enabled: true
       Amount: 5.0        # fear removed immediately on eating
+      # Entries match either vanilla Material names OR Harshlands custom-food keys
+      # (the hlitem NBT value). Both are checked.
       Foods:
+        # Vanilla cooked foods
         - COOKED_BEEF
         - COOKED_CHICKEN
         - COOKED_COD
@@ -115,6 +118,29 @@ FearMeter:
         - COOKED_SALMON
         - BAKED_POTATO
         - BREAD
+        # Harshlands cooked meats
+        - cooked_bacon
+        - cooked_horse_meat
+        - cooked_wolf_meat
+        - cooked_ocelot_meat
+        - cooked_parrot_meat
+        - cooked_llama_meat
+        - cooked_polar_bear_meat
+        - cooked_bat_wing
+        - cooked_squid
+        # Harshlands soups and stews
+        - carrot_seed_soup
+        - nether_wart_soup
+        - blaze_cream
+        - melon_salad
+        - beetroot_noodles
+        - veggie_stew
+        - bat_soup
+        - golden_feast
+        # Harshlands baked goods and prepared meals
+        - carrot_pie
+        - bacon_and_egg
+        - fried_egg
 
     Sleep:
       Enabled: true
@@ -150,13 +176,15 @@ FearMeter:
     FakeMobSounds:
       Enabled: true
       MinFear: 50.0
-      Chance: 0.05         # probability per effects tick
+      # Was 0.05 (one fake sound per ~20s). Dropped to 0.012 so players don't
+      # develop alarm fatigue. Creeper-primed removed from the pool — it was
+      # creating real mechanical danger (players walking backward into traps).
+      Chance: 0.012
       MaxDistance: 20.0    # max blocks from player for the fake sound origin
       Volume: 1.0
       Pitch: 1.0
       Sounds:              # sound name: relative weight (higher = more common)
-        ENTITY_CREEPER_PRIMED: 35
-        ENTITY_CREEPER_HURT: 15
+        ENTITY_CREEPER_HURT: 20
         ENTITY_SPIDER_AMBIENT: 18
         ENTITY_SKELETON_AMBIENT: 8
         ENTITY_ZOMBIE_AMBIENT: 8
@@ -167,9 +195,10 @@ FearMeter:
 
     Heartbeat:
       Enabled: true
-      MinFear: 85.0        # plays every effects tick above this threshold
-      Volume: 0.6
+      MinFear: 85.0        # plays at most once per CooldownTicks above this threshold
+      Volume: 0.45
       Pitch: 1.0
+      CooldownTicks: 60    # minimum ticks between heartbeats (60 = 3 seconds)
 
 Nightmare:
   Enabled: true

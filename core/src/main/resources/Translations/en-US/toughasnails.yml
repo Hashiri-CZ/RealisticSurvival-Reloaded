@@ -5,17 +5,21 @@ toughasnails:
     message: "&fShutting down %name% module"
   dehydration_death:
     messages:
-      - "&f%player_name% died of dehydration."
-      - "&f%player_name% ran out of water."
+      - "&f%player_name%'s tongue cracked before the well did."
+      - "&f%player_name% chose the wrong puddle."
+      - "&f%player_name% drank the last breath."
   parasite_death:
     messages:
-      - "&f%player_name% died of parasite poisoning."
-      - "&f%player_name% should have drank clean water."
+      - "&f%player_name% let something else grow inside."
+      - "&f%player_name% paid for dirty water."
+      - "&f%player_name%'s gut gave up the fight."
   hyperthermia_death:
     messages:
-      - "&f%player_name% died of hyperthermia."
-      - "&f%player_name% couldn't take the heat."
+      - "&f%player_name% boiled in their own skin."
+      - "&f%player_name%'s sweat ran out."
+      - "&f%player_name% stopped moving in the heat."
   hypothermia_death:
     messages:
-      - "&f%player_name% died of hypothermia."
-      - "&f%player_name% froze to death."
+      - "&f%player_name% froze mid-sentence."
+      - "&f%player_name% stopped shivering."
+      - "&f%player_name% went quiet in the cold."
