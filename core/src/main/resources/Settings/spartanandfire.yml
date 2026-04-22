@@ -78,6 +78,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE" # What block the mob is encased in, default is packed ice
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -135,6 +136,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -209,6 +211,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -269,6 +272,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -347,6 +351,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -410,6 +415,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -539,6 +545,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -601,6 +608,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -649,6 +657,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -717,6 +726,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -774,6 +784,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -923,6 +934,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1058,6 +1070,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1236,6 +1249,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1379,6 +1393,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1482,6 +1497,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1545,6 +1561,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1630,6 +1647,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1699,6 +1717,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1774,6 +1793,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1831,6 +1851,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -1980,6 +2001,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2115,6 +2137,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2206,6 +2229,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2257,6 +2281,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2317,6 +2342,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2365,6 +2391,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2436,6 +2463,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2496,6 +2524,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2571,6 +2600,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2631,6 +2661,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2780,6 +2811,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -2915,6 +2947,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3090,6 +3123,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3225,6 +3259,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3319,6 +3354,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3373,6 +3409,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3443,6 +3480,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3500,6 +3538,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3553,6 +3592,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3592,6 +3632,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3639,6 +3680,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "PACKED_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"
@@ -3678,6 +3720,7 @@ Items:
       EncaseIce:
         Enabled: true
         Block: "BLUE_ICE"
+        OnlyReplaceAir: true
       Sound:
         Enabled: true
         Sound: "BLOCK_GLASS_BREAK"

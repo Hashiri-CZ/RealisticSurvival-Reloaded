@@ -22,6 +22,7 @@ import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -40,6 +41,7 @@ public class FreezeTask extends BukkitRunnable {
     private final Collection<FrozenBlock> blocks = new ArrayList<>();
     private final FileConfiguration config;
     private final boolean encaseIce;
+    private final boolean onlyReplaceAir;
     private final boolean playSound;
     private final PotionEffect slowness;
     private final Material frozenMaterial;
@@ -54,6 +56,7 @@ public class FreezeTask extends BukkitRunnable {
         this.plugin = plugin;
         this.config = HLModule.getModule(IceFireModule.NAME).getUserConfig().getConfig();
         this.encaseIce = config.getBoolean("Dragon.IceDragon.FreezeAbility.EncaseIce.Enabled");
+        this.onlyReplaceAir = config.getBoolean("Dragon.IceDragon.FreezeAbility.EncaseIce.OnlyReplaceAir", true);
         this.playSound = config.getBoolean("Dragon.IceDragon.FreezeAbility.Sound.Enabled");
 
         int amplifier = config.getInt("Dragon.IceDragon.FreezeAbility.Slowness.Amplifier.Stage" + stage);
@@ -73,6 +76,7 @@ public class FreezeTask extends BukkitRunnable {
         this.plugin = plugin;
         this.config = module.getUserConfig().getConfig();
         this.encaseIce = config.getBoolean("Items." + itemName + ".FreezeAbility.EncaseIce.Enabled");
+        this.onlyReplaceAir = config.getBoolean("Items." + itemName + ".FreezeAbility.EncaseIce.OnlyReplaceAir", true);
         this.playSound = config.getBoolean("Items." + itemName + ".FreezeAbility.Sound.Enabled");
         int amplifier = config.getInt("Items." + itemName + ".FreezeAbility.Slowness.Amplifier");
         int duration = config.getInt("Items." + itemName + ".FreezeAbility.Slowness.Duration");
@@ -102,9 +106,14 @@ public class FreezeTask extends BukkitRunnable {
         double height = entity.getHeight();
 
         if (encaseIce) {
-            blocks.add(new FrozenBlock(loc, frozenMaterial));
+            if (canPlaceAt(loc)) {
+                blocks.add(new FrozenBlock(loc, frozenMaterial));
+            }
             for (int i = 0; i < height - 1; i++) {
-                blocks.add(new FrozenBlock(loc.add(0, 1, 0), frozenMaterial));
+                loc.add(0, 1, 0);
+                if (canPlaceAt(loc)) {
+                    blocks.add(new FrozenBlock(loc, frozenMaterial));
+                }
             }
         }
 
@@ -121,6 +130,13 @@ public class FreezeTask extends BukkitRunnable {
         }
 
         tasks.remove(entity.getUniqueId());
+    }
+
+    private boolean canPlaceAt(Location loc) {
+        if (!onlyReplaceAir) return true;
+        Block block = loc.getBlock();
+        Material type = block.getType();
+        return type.isAir() || type == Material.WATER;
     }
 
     public void start() {
