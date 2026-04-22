@@ -115,9 +115,25 @@ public class CabinFeverSubsystem {
         this.requireMaterialRoof = config.getBoolean("CabinFever.RequireMaterialRoof", true);
         List<String> naturalRoofList = config.getStringList("CabinFever.NaturalRoofBlocks");
         Set<Material> roofMats = EnumSet.noneOf(Material.class);
-        if (!naturalRoofList.isEmpty()) {
-            List<Material> resolved = Utils.getMaterialsFromList(naturalRoofList);
-            roofMats.addAll(resolved);
+        // Parse each entry directly instead of routing through Utils.getMaterialsFromList,
+        // which has a latent bug: Utils.isTag() returns true for plain material names whose
+        // Tag lookup returns null (no exception), then getTag().getValues() NPEs.
+        for (String entry : naturalRoofList) {
+            if (entry == null || entry.isEmpty()) continue;
+            if (entry.startsWith("Tag.")) {
+                org.bukkit.Tag<Material> tag = Utils.getTag(entry.substring(4));
+                if (tag != null) {
+                    roofMats.addAll(tag.getValues());
+                } else {
+                    logger.warning("[CabinFever] Unknown material tag: " + entry);
+                }
+            } else {
+                try {
+                    roofMats.add(Material.valueOf(entry));
+                } catch (IllegalArgumentException e) {
+                    logger.warning("[CabinFever] Unknown material: " + entry);
+                }
+            }
         }
         this.naturalRoofMaterials = roofMats;
     }
