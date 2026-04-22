@@ -193,9 +193,9 @@ public class TanEvents extends ModuleEvents implements Listener {
             HyperthermiaTask.getTasks().remove(id);
         }
 
-        if (DehydrationTask.hasTask(id)) {
-            DehydrationTask.getTasks().get(id).cancel();
-            DehydrationTask.getTasks().remove(id);
+        if (ThirstEffectsTask.hasTask(id)) {
+            ThirstEffectsTask.getTasks().get(id).cancel();
+            ThirstEffectsTask.getTasks().remove(id);
         }
 
         if (ParasiteTask.hasTask(id)) {
