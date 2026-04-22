@@ -482,6 +482,18 @@ public class TanEvents extends ModuleEvents implements Listener {
             return;
 
         if (keys.contains(name)) {
+            // For POTION items, honour the RestrictToBasicWater filter so that
+            // only water-type potions (WATER, MUNDANE, AWKWARD, THICK) restore
+            // thirst — other potions still drink normally but skip restoration.
+            if (name.equals(item.getType().toString()) && item.getType() == Material.POTION
+                    && config.getBoolean("Thirst.SaturationRestoration.Foods.POTION.RestrictToBasicWater", false)) {
+                PotionType potionType = ((PotionMeta) item.getItemMeta()).getBasePotionType();
+                if (potionType != PotionType.WATER && potionType != PotionType.MUNDANE
+                        && potionType != PotionType.AWKWARD && potionType != PotionType.THICK) {
+                    return; // non-water potion: skip thirst/saturation, let the potion effects apply normally
+                }
+            }
+
             int thirstPoints = config.getInt("Thirst.SaturationRestoration.Foods." + name + ".ThirstPoints");;
             int saturationPoints = config.getInt("Thirst.SaturationRestoration.Foods." + name + ".SaturationPoints");
 

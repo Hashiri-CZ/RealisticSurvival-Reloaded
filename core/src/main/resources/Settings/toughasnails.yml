@@ -690,6 +690,10 @@ Thirst:
       POTION:
         ThirstPoints: 4
         SaturationPoints: 2
+        # Only water-type potions (WATER, MUNDANE, AWKWARD, THICK) restore thirst.
+        # Other potions (splash, healing, speed, etc.) don't — brewing stand was
+        # an unintended water fountain before this filter.
+        RestrictToBasicWater: true
       MILK_BUCKET:
         ThirstPoints: 6
         SaturationPoints: 3
