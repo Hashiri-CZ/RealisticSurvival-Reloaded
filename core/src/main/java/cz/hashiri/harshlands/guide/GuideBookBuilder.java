@@ -140,8 +140,10 @@ public final class GuideBookBuilder {
 
     private static BaseComponent[] renderPage(String raw, String trailingBackLabel,
                                               String itemTagTemplate, String clickHint) {
+        // YAML pipe-literal "|" preserves a trailing newline; strip it so we don't stack blanks.
+        String normalized = raw.replaceAll("\\s+$", "");
         // Translate & color codes before feeding to fromLegacyText / HintSender.
-        String translated = ChatColor.translateAlternateColorCodes('&', raw);
+        String translated = ChatColor.translateAlternateColorCodes('&', normalized);
         // Use the hints renderer to parse %item_<key>% tokens into clickable tags.
         BaseComponent[] body = HintSender.renderClickable(translated, itemTagTemplate, clickHint);
 

@@ -83,7 +83,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide"));
             }
 
             if (mobs.isEmpty()) {
@@ -166,6 +166,14 @@ public class Tab implements TabCompleter {
                             result.add("reset");
                         }
                     }
+                    case "guide" -> {
+                        if (sender.hasPermission("harshlands.command.guide.give") && "give".startsWith(args[1].toLowerCase())) {
+                            result.add("give");
+                        }
+                        if (sender.hasPermission("harshlands.command.guide.reset") && "reset".startsWith(args[1].toLowerCase())) {
+                            result.add("reset");
+                        }
+                    }
                     case "obtain" -> {
                         String prefix = args[1].toLowerCase();
                         for (String key : List.of("axe", "flint_hatchet", "flint_shard", "flint", "plant_string", "plant_fiber", "dagger", "knife", "stick", "log", "plank", "saw")) {
@@ -208,6 +216,16 @@ public class Tab implements TabCompleter {
                     }
                     case "hints" -> {
                         if (sender.hasPermission("harshlands.admin.hints") && args[1].equalsIgnoreCase("reset")) {
+                            return Bukkit.getOnlinePlayers().stream()
+                                .map(Player::getName)
+                                .filter(s -> s.toLowerCase().startsWith(args[2].toLowerCase()))
+                                .collect(java.util.stream.Collectors.toList());
+                        }
+                    }
+                    case "guide" -> {
+                        boolean giveCompletable = sender.hasPermission("harshlands.command.guide.give") && args[1].equalsIgnoreCase("give");
+                        boolean resetCompletable = sender.hasPermission("harshlands.command.guide.reset") && args[1].equalsIgnoreCase("reset");
+                        if (giveCompletable || resetCompletable) {
                             return Bukkit.getOnlinePlayers().stream()
                                 .map(Player::getName)
                                 .filter(s -> s.toLowerCase().startsWith(args[2].toLowerCase()))

@@ -129,7 +129,7 @@ hints:
         - "&7Hold and right-click fuel + kindling stacks"
         - "&7within 1 block of each other to build a fire."
     purified_water_bottle:
-      Name: "Purified Water Bottle"
+      Name: "Pure Water"
       Lines:
         - "&7Combine a %item_charcoal_filter% with a glass bottle"
         - "&7of water to filter out parasites."
