@@ -16,9 +16,9 @@ guide:
     - "&5&lHARSHLANDS"
     - "&7Field Manual"
     - ""
-    - "&8A book that will save"
-    - "&8your life twice, if you"
-    - "&8bother to read it once."
+    - "&8A book that may"
+    - "&8save your life"
+    - "&8if you read it."
     - ""
     - "&7Turn the page."
 
@@ -26,14 +26,14 @@ guide:
     Heading: "&5&lContents"
     Entries:
       - { key: "axe",         label: "&01. The Axe" }
-      - { key: "nutrition",   label: "&02. Food & Macros" }
+      - { key: "nutrition",   label: "&02. Food" }
       - { key: "thirst",      label: "&03. Water" }
       - { key: "fear",        label: "&04. The Dark" }
       - { key: "temperature", label: "&05. Cold & Heat" }
       - { key: "comfort",     label: "&06. Comfort" }
       - { key: "baubles",     label: "&07. Baubles" }
-      - { key: "creatures",   label: "&08. Things To Avoid" }
-      - { key: "ecology",     label: "&09. Sound & Silence" }
+      - { key: "creatures",   label: "&08. Beware" }
+      - { key: "ecology",     label: "&09. Silence" }
       - { key: "commands",    label: "&010. Commands" }
 
   Chapters:
@@ -41,217 +41,232 @@ guide:
       - |
         &5&lThe Axe
 
-        &8Your hands can't fell
-        &8an oak. They can bruise
-        &8on one.
+        &8Fists can't fell
+        &8an oak.
 
-        &0Craft a %item_flint_hatchet%:
-        &0• %item_flint_shard%
-        &0• %item_plant_string%
-        &0• %item_stick%
+        &0Craft a
+        &0%item_flint_hatchet%:
+        &0+ %item_flint_shard%
+        &0+ %item_plant_string%
       - |
         &5&lThe Axe &7(2/2)
 
-        &0Break a %item_log% with
-        &0your hatchet.
+        &0Use the hatchet
+        &0on %item_log%s.
 
-        &0Right-click upward on
-        &0a log for a chance of
-        &0%item_plank%s. Right-click
-        &0a plank for %item_stick%s.
+        &0Right-click up
+        &0for %item_plank%s.
 
-        &0Craft a %item_saw% for
-        &0guaranteed output.
+        &0Craft a %item_saw%
+        &0for guaranteed
+        &0yields.
     nutrition:
       - |
-        &5&lFood & Macros
+        &5&lFood
 
-        &8Hunger is three numbers
-        &8now. Eat one food forever
-        &8and you rot.
+        &8Hunger is three
+        &8numbers now.
 
-        &0Protein, Carbs, Fats.
-        &0Each drains on its own.
+        &0Protein, Carbs,
+        &0Fats. Each drains.
+
         &0Eat varied meals.
       - |
-        &5&lFood & Macros &7(2/3)
+        &5&lFood &7(2/3)
 
-        &0Type &e/hl nutrition&0 to
-        &0see your current macros.
+        &0Run &0&l/hl nutrition
+        &0to see macros.
 
-        &0Eat the same food too
-        &0often and you'll get
-        &0tired of it — smaller
-        &0macro refills each time.
+        &0Same food gets
+        &0boring. Overeat
+        &0= smaller refills.
       - |
-        &5&lFood & Macros &7(3/3)
+        &5&lFood &7(3/3)
 
-        &0All three macros above
-        &0threshold = &aWell Nourished&0:
-        &0bonus hearts, slight speed.
+        &0All three macros
+        &0high = &2Well
+        &2Nourished&0: extra
+        &0hearts and speed.
 
-        &8A quiet guilt settles in
-        &8when you eat something
-        &8that had a name once.
+        &8A quiet guilt.
+        &8You ate something
+        &8that had a name.
     thirst:
       - |
         &5&lWater
 
-        &8Water is a resource now.
-        &8Drink wrong and it
+        &8Water is finite.
+        &8Drink wrong, it
         &8drinks you back.
 
-        &0Drink from a water source
-        &0by right-clicking it, or
-        &0carry a %item_canteen_empty%.
+        &0Right-click a
+        &0source, or carry
+        &0a %item_canteen_empty%.
       - |
         &5&lWater &7(2/2)
 
-        &0Raw water can give you
-        &0parasites — cramps and
-        &0damage for 30 seconds.
+        &0Raw water brings
+        &0parasites. Cramps
+        &0and hurt for 30s.
 
-        &0Purify with a
-        &0%item_charcoal_filter% to make
-        &0a %item_purified_water_bottle%.
+        &0Use a
+        &0%item_charcoal_filter%
+        &0for a
+        &0%item_purified_water_bottle%.
     fear:
       - |
         &5&lThe Dark
 
-        &8The dark has opinions.
-        &8Feed it a torch or it
-        &8feeds on you.
+        &8Torches help.
+        &8The dark bites.
 
-        &0Fear builds when you're
-        &0in darkness, caves, alone
-        &0underground, at night,
-        &0or low on health.
+        &0Fear grows in:
+        &0- darkness
+        &0- caves, alone
+        &0- night, low HP
       - |
         &5&lThe Dark &7(2/3)
 
-        &0Past half-bar: projectiles
-        &0go wide. Your aim is
-        &0wrong now.
+        &0Half-bar: arrows
+        &0fly crooked.
 
-        &0Past the top: something
-        &0finds you. A Nightmare.
-        &0Faster than you.
+        &0Full bar: it
+        &0finds you. A
+        &0Nightmare. Run.
       - |
         &5&lThe Dark &7(3/3)
 
         &0Lower Fear with:
-        &0• Light (a %item_campfire% helps)
-        &0• Cooked food
-        &0• Sleep in a safe bed
+        &0- %item_campfire%
+        &0- cooked food
+        &0- a safe bed
 
-        &0Keep a %item_fire_starter%
-        &0on you for emergencies.
+        &0Keep a
+        &0%item_fire_starter%.
     temperature:
       - |
         &5&lCold & Heat
 
-        &8The biome wants you
-        &8dead before the mobs do.
+        &8The biome kills
+        &8before mobs do.
 
-        &0Cold biomes freeze you.
-        &0Hot biomes cook you.
-        &0Both damage at extremes.
+        &0Cold freezes.
+        &0Heat burns.
+        &0Extremes damage.
       - |
         &5&lCold & Heat &7(2/2)
 
-        &0Craft a %item_thermometer%
-        &0to check your temperature.
+        &0Use a
+        &0%item_thermometer%
+        &0to check.
 
-        &0Cold: %item_campfire%s, warmer
-        &0armour, stay out of rain.
-        &0Hot: shade, water,
-        &0%item_jelled_slime% armour.
+        &0Cold: a
+        &0%item_campfire%,
+        &0warm armour.
+      - |
+        &5&lCold & Heat &7(3/3)
 
-        &8Shivering makes noise.
-        &8Mobs hear it.
+        &0Hot: shade,
+        &0water, and
+        &0%item_jelled_slime%
+        &0armour.
+
+        &8Shivering is
+        &8loud. Mobs hear.
     comfort:
       - |
         &5&lComfort
 
-        &8Sleep in a hole and
-        &8you sleep like you're
-        &8in a hole.
+        &8Holes don't rest.
 
-        &0Near your bed, add decor:
-        &0chairs, bookshelves,
-        &0paintings, a campfire.
+        &0Add decor near
+        &0your bed:
+        &0- chairs
+        &0- bookshelves
+        &0- paintings
+        &0- a campfire.
+      - |
+        &5&lComfort &7(2/2)
 
-        &0More comfort = longer
-        &0resting buffs after sleep.
+        &0More comfort =
+        &0longer resting
+        &0buff after sleep.
     baubles:
       - |
         &5&lBaubles
 
-        &8Six slots your armour
-        &8doesn't know about.
+        &8Six slots your
+        &8armour misses.
 
-        &0Head, Amulet, Body,
-        &0Belt, Charm, Ring.
-
-        &0Craft a %item_bauble_bag%
-        &0to open the slot UI.
+        &0Head, Amulet,
+        &0Body, Belt,
+        &0Charm, Ring.
       - |
         &5&lBaubles &7(2/2)
 
-        &0Each bauble is a
-        &0passive effect while
-        &0equipped in its slot.
+        &0Craft a
+        &0%item_bauble_bag%.
+        &0Right-click to
+        &0open the slots.
 
-        &0Right-click the bag
-        &0to open it. Drop baubles
-        &0into their slot to wear.
+        &0Drop each bauble
+        &0into its slot.
     creatures:
       - |
-        &5&lThings To Avoid
+        &5&lBeware
 
-        &8Not everything that moves
-        &8wants to eat you. Just
-        &8most things.
+        &8Most things want
+        &8to eat you.
 
-        &0Sea serpents in deep water —
-        &0they drag you under.
+        &0Sea serpents
+        &0drag divers down.
 
-        &0Dragons roam far and high.
-        &0Fire, Ice, Lightning.
+        &0Dragons roam:
+        &0fire, ice, storm.
       - |
-        &5&lThings To Avoid &7(2/2)
+        &5&lBeware &7(2/2)
 
-        &0Don't fight what you
-        &0can't outrun at dawn.
+        &0Don't fight what
+        &0you can't outrun
+        &0by morning.
 
-        &0Iron gear minimum before
-        &0you pick a fight with
-        &0anything mythical.
-
-        &8The dark amplifies every
-        &8mistake you make.
+        &0Iron gear at
+        &0minimum. Better
+        &0yet, hide.
     ecology:
       - |
-        &5&lSound & Silence
+        &5&lSilence
 
-        &8The cave hears you mine.
+        &8The cave hears
+        &8you mine.
 
-        &0Loud actions — mining,
-        &0fighting, sprinting —
-        &0pull nearby hostiles.
+        &0Loud work pulls
+        &0mobs:
+        &0- mining
+        &0- fighting
+        &0- sprinting
 
-        &0Sneaking is quieter.
-        &0Shivering adds noise.
+        &0Sneak is quieter.
     commands:
       - |
         &5&lCommands
 
-        &0&e/hl nutrition&0 — macros
-        &0&e/hl fear&0 — fear level
-        &0&e/hl comfort&0 — comfort tier
-        &0&e/hl obtain <item>&0 — recipe
-        &0&e/hl hints reset&0 — replay tips
-        &0&e/hl guide&0 — reopen this book
+        &0&l/hl nutrition
+        &0macros
 
-        &8When in doubt,
-        &8ask the book.
+        &0&l/hl fear
+        &0fear level
+
+        &0&l/hl comfort
+        &0comfort tier
+      - |
+        &5&lCommands &7(2/2)
+
+        &0&l/hl obtain
+        &0<item> recipe
+
+        &0&l/hl hints reset
+        &0replay tips
+
+        &0&l/hl guide
+        &0reopen this book

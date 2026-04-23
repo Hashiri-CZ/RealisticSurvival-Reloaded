@@ -126,14 +126,17 @@ public class HintSender {
     private static void appendItemTag(ComponentBuilder builder, String itemKey, String tagTemplate, String hoverText) {
         String pretty = displayNameFor(itemKey);
         // Replace %name% token in the template (same placeholder convention Messages.get uses)
-        String tagText = tagTemplate.replace("%name%", pretty);
+        // then translate & color codes since fromLegacyText only understands §
+        String tagText = org.bukkit.ChatColor.translateAlternateColorCodes(
+                '&', tagTemplate.replace("%name%", pretty));
+        String translatedHover = org.bukkit.ChatColor.translateAlternateColorCodes('&', hoverText);
 
         TextComponent wrapper = new TextComponent();
         for (BaseComponent bc : TextComponent.fromLegacyText(tagText)) {
             wrapper.addExtra(bc);
         }
         wrapper.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new Text(TextComponent.fromLegacyText(hoverText))));
+                new Text(TextComponent.fromLegacyText(translatedHover))));
         wrapper.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hl obtain " + itemKey));
 
         builder.append(wrapper, ComponentBuilder.FormatRetention.NONE);
