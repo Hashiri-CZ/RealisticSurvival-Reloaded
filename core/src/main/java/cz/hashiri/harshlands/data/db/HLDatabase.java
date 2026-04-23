@@ -58,6 +58,8 @@ public class HLDatabase {
 
     public record HintsDataRow(String seenHintsCsv) {}
 
+    public record GuideDataRow(int lastSeenVersion, long lastOpenedAt) {}
+
     private HikariDataSource dataSource;
     private final HLPlugin plugin;
     private final HLScheduler scheduler;
@@ -223,6 +225,11 @@ public class HLDatabase {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS hl_hints_data ("
                 + "uuid VARCHAR(36) PRIMARY KEY,"
                 + "seen_hints VARCHAR(512) NOT NULL DEFAULT ''"
+                + ")");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS hl_guide_seen ("
+                + "uuid VARCHAR(36) PRIMARY KEY,"
+                + "last_seen_version INT NOT NULL,"
+                + "last_opened_at BIGINT NOT NULL"
                 + ")");
             startupInfo("Schema is ready.");
         } catch (SQLException e) {
@@ -836,6 +843,47 @@ public class HLDatabase {
                 ps.executeUpdate();
             } catch (SQLException e) {
                 logger.warning("[HLDatabase] Failed to save hints data for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    // ── Guide Data ────────────────────────────────────────────────────────────
+
+    public CompletableFuture<Optional<GuideDataRow>> loadGuideData(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            String sql = "SELECT last_seen_version, last_opened_at FROM hl_guide_seen WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return Optional.of(new GuideDataRow(
+                            rs.getInt("last_seen_version"),
+                            rs.getLong("last_opened_at")
+                        ));
+                    }
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load guide data for " + uuid + ": " + e.getMessage());
+            }
+            return Optional.empty();
+        });
+    }
+
+    public CompletableFuture<Void> saveGuideData(UUID uuid, GuideDataRow row) {
+        return scheduler.runAsync(() -> {
+            String sql = isMysql
+                ? "INSERT INTO hl_guide_seen (uuid, last_seen_version, last_opened_at) VALUES (?, ?, ?)"
+                    + " ON DUPLICATE KEY UPDATE last_seen_version=VALUES(last_seen_version), last_opened_at=VALUES(last_opened_at)"
+                : "MERGE INTO hl_guide_seen (uuid, last_seen_version, last_opened_at) KEY(uuid) VALUES (?, ?, ?)";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setInt(2, row.lastSeenVersion());
+                ps.setLong(3, row.lastOpenedAt());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save guide data for " + uuid + ": " + e.getMessage());
             }
         });
     }
