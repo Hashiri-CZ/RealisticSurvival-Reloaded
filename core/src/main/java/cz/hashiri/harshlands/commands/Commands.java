@@ -1342,21 +1342,18 @@ public class Commands implements CommandExecutor {
                     cz.hashiri.harshlands.data.HLModule gm =
                         cz.hashiri.harshlands.data.HLModule.getModule(cz.hashiri.harshlands.guide.GuideModule.NAME);
                     if (!(gm instanceof cz.hashiri.harshlands.guide.GuideModule guideMod) || !gm.isGloballyEnabled()) {
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&f[&5Harshlands&f] &7» &cGuide module is disabled."));
+                        Messages.of("commands.guide.module_disabled").send(sender);
                         return true;
                     }
                     if (!guideMod.getUserConfig().getConfig().getBoolean("Command.Enabled", true)) {
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&f[&5Harshlands&f] &7» &cGuide command is disabled."));
+                        Messages.of("commands.guide.command_disabled").send(sender);
                         return true;
                     }
 
                     // /hl guide — open for self
                     if (args.length == 1) {
                         if (!(sender instanceof Player p)) {
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                "&f[&5Harshlands&f] &7» &cOnly players can open the guide."));
+                            Messages.of("commands.guide.player_only").send(sender);
                             return true;
                         }
                         p.openBook(guideMod.buildBook());
@@ -1389,8 +1386,7 @@ public class Commands implements CommandExecutor {
                         } else {
                             target.getInventory().addItem(book);
                         }
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&f[&5Harshlands&f] &7» &fGuide given to " + target.getName() + "."));
+                        Messages.of("commands.guide.given").with("target", target.getName()).send(sender);
                         return true;
                     }
 
@@ -1414,8 +1410,7 @@ public class Commands implements CommandExecutor {
                         if (hl != null && hl.getGuideDataModule() != null) {
                             hl.getGuideDataModule().resetSeen();
                         }
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&f[&5Harshlands&f] &7» &fGuide state reset for " + target.getName() + "."));
+                        Messages.of("commands.guide.reset").with("target", target.getName()).send(sender);
                         return true;
                     }
 

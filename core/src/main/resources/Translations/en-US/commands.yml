@@ -118,3 +118,9 @@ commands:
       success: "&6[Harshlands] &fSet %player%'s fear to &e%fear_level%&f."
       invalid_amount: "&c[Harshlands] Amount must be a number between 0 and 100."
       usage: "&c[Harshlands] Usage: /hl setfear <player> <amount>"
+  guide:
+    module_disabled: "&f[&5Harshlands&f] &7» &cGuide module is disabled."
+    command_disabled: "&f[&5Harshlands&f] &7» &cGuide command is disabled."
+    player_only: "&f[&5Harshlands&f] &7» &cOnly players can open the guide."
+    given: "&f[&5Harshlands&f] &7» &fGuide given to %target%."
+    reset: "&f[&5Harshlands&f] &7» &fGuide state reset for %target%."
