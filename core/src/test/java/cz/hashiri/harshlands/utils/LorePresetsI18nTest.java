@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -44,14 +45,13 @@ class LorePresetsI18nTest {
     }
 
     @Test
-    void all_four_stat_keys_present_in_enUS_file() throws IOException {
-        // Guards against shipping a partial en-US update.
-        Path translations = Path.of("src/main/resources/Translations");
-        Path file = translations.resolve("en-US/item_stats.yml");
-        assertTrue(Files.exists(file), "item_stats.yml must ship with en-US");
-        String contents = Files.readString(file);
+    void all_four_stat_keys_present_in_enUS_file() throws IOException, URISyntaxException {
+        // Load via classpath so the test is independent of JVM working directory.
+        java.net.URL url = getClass().getClassLoader().getResource("Translations/en-US/item_stats.yml");
+        assertTrue(url != null, "item_stats.yml must ship with en-US (not found on test classpath)");
+        String contents = Files.readString(Path.of(url.toURI()));
         for (String key : List.of("attack_damage:", "attack_speed:", "armor:", "armor_toughness:")) {
-            assertTrue(contents.contains(key), "missing key " + key + " in " + file);
+            assertTrue(contents.contains(key), "missing key " + key + " in " + url);
         }
     }
 }

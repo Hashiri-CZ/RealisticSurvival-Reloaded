@@ -567,7 +567,7 @@ public class LorePresets {
         else if (atr == Attribute.ARMOR_TOUGHNESS) key = "item_stats.armor_toughness";
         if (key == null) return;
 
-        lore.add(Utils.translateMsg(Messages.get(key, placeholders), null, null));
+        lore.add(Messages.get(key, placeholders));
     }
 
     public static void useLorePreset(List<String> lore, String weaponType, ConfigurationSection section) {
