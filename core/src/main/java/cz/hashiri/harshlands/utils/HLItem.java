@@ -50,6 +50,22 @@ public class HLItem extends ItemStack {
     public static final String MODEL_NAMESPACE_HARSHLANDS = "harshlands";
     public static final String MODEL_NAMESPACE_REALISTIC_SURVIVAL = "realisticsurvival";
 
+    /** Prefix marker in YAML values: "i18n:<key>" triggers a translation lookup. */
+    public static final String I18N_PREFIX = "i18n:";
+
+    /**
+     * If {@code raw} begins with {@link #I18N_PREFIX}, return the translated value
+     * for the key after the prefix (missing keys produce {@code [key]} per
+     * {@link cz.hashiri.harshlands.locale.LocaleManager#get}). Otherwise return
+     * {@code raw} unchanged. Null in, null out.
+     */
+    public static String resolveI18n(String raw) {
+        if (raw == null) return null;
+        if (!raw.startsWith(I18N_PREFIX)) return raw;
+        String key = raw.substring(I18N_PREFIX.length());
+        return cz.hashiri.harshlands.locale.Messages.get(key);
+    }
+
     // Constructor for HLItem with only Material - used for default vanilla items
     public HLItem(Material material) {
         super(material);
@@ -88,7 +104,7 @@ public class HLItem extends ItemStack {
         String repairIngPath = name + ".RepairIngredients";
 
         Material material = Material.valueOf(itemConfig.getString(materialPath));
-        String displayName = itemConfig.getString(displayNamePath);
+        String displayName = resolveI18n(itemConfig.getString(displayNamePath));
         int customModelData = itemConfig.getInt(customModelDataPath);
 
         String modelNamespace = resolveItemModelNamespace();
@@ -129,7 +145,22 @@ public class HLItem extends ItemStack {
             }
         }
 
-        List<String> lore = itemConfig.getStringList(lorePath);
+        List<String> rawLore = itemConfig.getStringList(lorePath);
+        List<String> lore = new ArrayList<>(rawLore.size());
+        for (String entry : rawLore) {
+            if (entry != null && entry.startsWith(I18N_PREFIX)) {
+                String key = entry.substring(I18N_PREFIX.length());
+                List<String> translatedList = cz.hashiri.harshlands.locale.Messages.getList(key);
+                if (!translatedList.isEmpty()) {
+                    lore.addAll(translatedList);
+                    continue;
+                }
+                // scalar (or missing); fall through to scalar resolver
+                lore.add(cz.hashiri.harshlands.locale.Messages.get(key));
+            } else {
+                lore.add(entry);
+            }
+        }
         List<String> itemFlags = itemConfig.getStringList(itemFlagsPath);
         ConfigurationSection enchantments = itemConfig.getConfigurationSection(enchantmentsPath);
         ConfigurationSection attributes = itemConfig.getConfigurationSection(attributesPath);

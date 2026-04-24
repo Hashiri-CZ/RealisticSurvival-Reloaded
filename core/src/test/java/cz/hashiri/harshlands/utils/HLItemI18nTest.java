@@ -1,0 +1,60 @@
+package cz.hashiri.harshlands.utils;
+
+import cz.hashiri.harshlands.locale.LocaleManager;
+import cz.hashiri.harshlands.locale.Messages;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class HLItemI18nTest {
+
+    @BeforeEach
+    void bind(@TempDir Path root) throws IOException {
+        Path en = root.resolve("en-US");
+        Files.createDirectories(en);
+        Files.writeString(en.resolve("items.yml"), """
+                items:
+                  test:
+                    netherite_rapier:
+                      display_name: "&fNetherite Rapier"
+                """);
+        Messages.bind(new LocaleManager(root, "en-US"));
+        Messages.reload();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Messages.reset();
+    }
+
+    @Test
+    void literal_string_returned_as_is() {
+        assertEquals("&fRegular Item", HLItem.resolveI18n("&fRegular Item"));
+    }
+
+    @Test
+    void null_returned_as_null() {
+        assertEquals(null, HLItem.resolveI18n(null));
+    }
+
+    @Test
+    void i18n_prefix_resolves_to_translated_value() {
+        // Messages.get runs ChatColor.translateAlternateColorCodes('&', ...) — expect section-sign form in result
+        assertEquals("\u00A7fNetherite Rapier",
+                HLItem.resolveI18n("i18n:items.test.netherite_rapier.display_name"));
+    }
+
+    @Test
+    void i18n_prefix_with_missing_key_returns_bracketed_key() {
+        // LocaleManager.get returns "[key]" for missing keys
+        assertEquals("[items.test.unknown]",
+                HLItem.resolveI18n("i18n:items.test.unknown"));
+    }
+}
