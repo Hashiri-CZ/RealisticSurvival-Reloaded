@@ -336,3 +336,324 @@ items:
       display_name: "&eNext Page"
     back_page:
       display_name: "&eBack Page"
+  spartanweaponry:
+    handle:
+      display_name: "&fHandle"
+    pole:
+      display_name: "&fPole"
+    netherite_rapier:
+      display_name: "&fNetherite Rapier"
+    netherite_katana:
+      display_name: "&fNetherite Katana"
+    netherite_greatsword:
+      display_name: "&fNetherite Greatsword"
+    netherite_longsword:
+      display_name: "&fNetherite Longsword"
+    netherite_spear:
+      display_name: "&fNetherite Spear"
+    netherite_saber:
+      display_name: "&fNetherite Saber"
+    netherite_boomerang:
+      display_name: "&fNetherite Boomerang"
+    netherite_dagger:
+      display_name: "&fNetherite Dagger"
+    netherite_glaive:
+      display_name: "&fNetherite Glaive"
+    netherite_halberd:
+      display_name: "&fNetherite Halberd"
+    netherite_hammer:
+      display_name: "&fNetherite Hammer"
+    netherite_javelin:
+      display_name: "&fNetherite Javelin"
+    netherite_lance:
+      display_name: "&fNetherite Lance"
+    netherite_mace:
+      display_name: "&fNetherite Flanged Mace"
+    netherite_pike:
+      display_name: "&fNetherite Pike"
+    netherite_quarterstaff:
+      display_name: "&fNetherite Quarterstaff"
+    netherite_tomahawk:
+      display_name: "&fNetherite Tomahawk"
+    netherite_throwing_knife:
+      display_name: "&fNetherite Throwing Knife"
+    netherite_warhammer:
+      display_name: "&fNetherite Warhammer"
+    netherite_battleaxe:
+      display_name: "&fNetherite Battleaxe"
+    netherite_longbow:
+      display_name: "&fNetherite-Strengthened Longbow"
+    netherite_crossbow:
+      display_name: "&fNetherite-Strengthened Crossbow"
+    diamond_rapier:
+      display_name: "&fDiamond Rapier"
+    diamond_katana:
+      display_name: "&fDiamond Katana"
+    diamond_greatsword:
+      display_name: "&fDiamond Greatsword"
+    diamond_longsword:
+      display_name: "&fDiamond Longsword"
+    diamond_spear:
+      display_name: "&fDiamond Spear"
+    diamond_saber:
+      display_name: "&fDiamond Saber"
+    diamond_boomerang:
+      display_name: "&fDiamond Boomerang"
+    diamond_dagger:
+      display_name: "&fDiamond Dagger"
+    diamond_glaive:
+      display_name: "&fDiamond Glaive"
+    diamond_halberd:
+      display_name: "&fDiamond Halberd"
+    diamond_hammer:
+      display_name: "&fDiamond Hammer"
+    diamond_javelin:
+      display_name: "&fDiamond Javelin"
+    diamond_lance:
+      display_name: "&fDiamond Lance"
+    diamond_mace:
+      display_name: "&fDiamond Flanged Mace"
+    diamond_pike:
+      display_name: "&fDiamond Pike"
+    diamond_quarterstaff:
+      display_name: "&fDiamond Quarterstaff"
+    diamond_tomahawk:
+      display_name: "&fDiamond Tomahawk"
+    diamond_throwing_knife:
+      display_name: "&fDiamond Throwing Knife"
+    diamond_warhammer:
+      display_name: "&fDiamond Warhammer"
+    diamond_battleaxe:
+      display_name: "&fDiamond Battleaxe"
+    diamond_longbow:
+      display_name: "&fDiamond-Strengthened Longbow"
+    diamond_crossbow:
+      display_name: "&fDiamond-Strengthened Crossbow"
+    iron_rapier:
+      display_name: "&fIron Rapier"
+    iron_katana:
+      display_name: "&fIron Katana"
+    iron_greatsword:
+      display_name: "&fIron Greatsword"
+    iron_longsword:
+      display_name: "&fIron Longsword"
+    iron_spear:
+      display_name: "&fIron Spear"
+    iron_saber:
+      display_name: "&fIron Saber"
+    iron_boomerang:
+      display_name: "&fIron Boomerang"
+    iron_dagger:
+      display_name: "&fIron Dagger"
+    iron_glaive:
+      display_name: "&fIron Glaive"
+    iron_halberd:
+      display_name: "&fIron Halberd"
+    iron_hammer:
+      display_name: "&fIron Hammer"
+    iron_javelin:
+      display_name: "&fIron Javelin"
+    iron_lance:
+      display_name: "&fIron Lance"
+    iron_mace:
+      display_name: "&fIron Flanged Mace"
+    iron_pike:
+      display_name: "&fIron Pike"
+    iron_quarterstaff:
+      display_name: "&fIron Quarterstaff"
+    iron_tomahawk:
+      display_name: "&fIron Tomahawk"
+    iron_throwing_knife:
+      display_name: "&fIron Throwing Knife"
+    iron_warhammer:
+      display_name: "&fIron Warhammer"
+    iron_battleaxe:
+      display_name: "&fIron Battleaxe"
+    iron_longbow:
+      display_name: "&fIron-Strengthened Longbow"
+    iron_crossbow:
+      display_name: "&fIron-Strengthened Crossbow"
+    gold_rapier:
+      display_name: "&fGolden Rapier"
+    gold_katana:
+      display_name: "&fGolden Katana"
+    gold_greatsword:
+      display_name: "&fGolden Greatsword"
+    gold_longsword:
+      display_name: "&fGolden Longsword"
+    gold_spear:
+      display_name: "&fGolden Spear"
+    gold_saber:
+      display_name: "&fGolden Saber"
+    gold_boomerang:
+      display_name: "&fGolden Boomerang"
+    gold_dagger:
+      display_name: "&fGolden Dagger"
+    gold_glaive:
+      display_name: "&fGolden Glaive"
+    gold_halberd:
+      display_name: "&fGolden Halberd"
+    gold_hammer:
+      display_name: "&fGolden Hammer"
+    gold_javelin:
+      display_name: "&fGolden Javelin"
+    gold_lance:
+      display_name: "&fGolden Lance"
+    gold_mace:
+      display_name: "&fGolden Flanged Mace"
+    gold_pike:
+      display_name: "&fGolden Pike"
+    gold_quarterstaff:
+      display_name: "&fGolden Quarterstaff"
+    gold_tomahawk:
+      display_name: "&fGolden Tomahawk"
+    gold_throwing_knife:
+      display_name: "&fGolden Throwing Knife"
+    gold_warhammer:
+      display_name: "&fGolden Warhammer"
+    gold_battleaxe:
+      display_name: "&fGolden Battleaxe"
+    gold_longbow:
+      display_name: "&fGolden-Strengthened Longbow"
+    gold_crossbow:
+      display_name: "&fGolden-Strengthened Crossbow"
+    stone_rapier:
+      display_name: "&fStone Rapier"
+    stone_katana:
+      display_name: "&fStone Katana"
+    stone_greatsword:
+      display_name: "&fStone Greatsword"
+    stone_longsword:
+      display_name: "&fStone Longsword"
+    stone_spear:
+      display_name: "&fStone Spear"
+    stone_saber:
+      display_name: "&fStone Saber"
+    stone_boomerang:
+      display_name: "&fStone Boomerang"
+    stone_dagger:
+      display_name: "&fStone Dagger"
+    stone_glaive:
+      display_name: "&fStone Glaive"
+    stone_halberd:
+      display_name: "&fStone Halberd"
+    stone_hammer:
+      display_name: "&fStone Hammer"
+    stone_javelin:
+      display_name: "&fStone Javelin"
+    stone_lance:
+      display_name: "&fStone Lance"
+    stone_mace:
+      display_name: "&fStone Flanged Mace"
+    stone_pike:
+      display_name: "&fStone Pike"
+    stone_quarterstaff:
+      display_name: "&fStone Quarterstaff"
+    stone_tomahawk:
+      display_name: "&fStone Tomahawk"
+    stone_throwing_knife:
+      display_name: "&fStone Throwing Knife"
+    stone_warhammer:
+      display_name: "&fStone Warhammer"
+    stone_battleaxe:
+      display_name: "&fStone Battleaxe"
+    wooden_rapier:
+      display_name: "&fWooden Rapier"
+    wooden_katana:
+      display_name: "&fWooden Katana"
+    wooden_greatsword:
+      display_name: "&fWooden Greatsword"
+    wooden_longsword:
+      display_name: "&fWooden Longsword"
+    wooden_spear:
+      display_name: "&fWooden Spear"
+    wooden_saber:
+      display_name: "&fWooden Saber"
+    wooden_boomerang:
+      display_name: "&fWooden Boomerang"
+    wooden_dagger:
+      display_name: "&fWooden Dagger"
+    wooden_glaive:
+      display_name: "&fWooden Glaive"
+    wooden_halberd:
+      display_name: "&fWooden Halberd"
+    wooden_hammer:
+      display_name: "&fWooden Hammer"
+    wooden_javelin:
+      display_name: "&fWooden Javelin"
+    wooden_lance:
+      display_name: "&fWooden Lance"
+    wooden_mace:
+      display_name: "&fWooden Flanged Mace"
+    wooden_pike:
+      display_name: "&fWooden Pike"
+    wooden_quarterstaff:
+      display_name: "&fWooden Quarterstaff"
+    wooden_tomahawk:
+      display_name: "&fWooden Tomahawk"
+    wooden_throwing_knife:
+      display_name: "&fWooden Throwing Knife"
+    wooden_warhammer:
+      display_name: "&fWooden Warhammer"
+    wooden_battleaxe:
+      display_name: "&fWooden Battleaxe"
+    wooden_longbow:
+      display_name: "&fWooden-Strengthened Longbow"
+    wooden_crossbow:
+      display_name: "&fWooden-Strengthened Crossbow"
+    wooden_club:
+      display_name: "&fWooden Club"
+    leather_longbow:
+      display_name: "&fLeather-Strengthened Longbow"
+    leather_crossbow:
+      display_name: "&fLeather-Strengthened Crossbow"
+    copper_rapier:
+      display_name: "&fCopper Rapier"
+    copper_katana:
+      display_name: "&fCopper Katana"
+    copper_greatsword:
+      display_name: "&fCopper Greatsword"
+    copper_longsword:
+      display_name: "&fCopper Longsword"
+    copper_spear:
+      display_name: "&fCopper Spear"
+    copper_saber:
+      display_name: "&fCopper Saber"
+    copper_boomerang:
+      display_name: "&fCopper Boomerang"
+    copper_dagger:
+      display_name: "&fCopper Dagger"
+    copper_glaive:
+      display_name: "&fCopper Glaive"
+    copper_halberd:
+      display_name: "&fCopper Halberd"
+    copper_hammer:
+      display_name: "&fCopper Hammer"
+    copper_javelin:
+      display_name: "&fCopper Javelin"
+    copper_lance:
+      display_name: "&fCopper Lance"
+    copper_mace:
+      display_name: "&fCopper Flanged Mace"
+    copper_pike:
+      display_name: "&fCopper Pike"
+    copper_quarterstaff:
+      display_name: "&fCopper Quarterstaff"
+    copper_tomahawk:
+      display_name: "&fCopper Tomahawk"
+    copper_throwing_knife:
+      display_name: "&fCopper Throwing Knife"
+    copper_warhammer:
+      display_name: "&fCopper Warhammer"
+    copper_battleaxe:
+      display_name: "&fCopper Battleaxe"
+    copper_longbow:
+      display_name: "&fCopper-Strengthened Longbow"
+    copper_crossbow:
+      display_name: "&fCopper-Strengthened Crossbow"
+    studded_club:
+      display_name: "&fStudded Club"
+    cestus:
+      display_name: "&fCestus"
+    studded_cestus:
+      display_name: "&fStudded Cestus"
