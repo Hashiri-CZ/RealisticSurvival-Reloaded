@@ -35,6 +35,7 @@ import java.util.Map;
 
 public class LorePresets {
 
+    @SuppressWarnings("unused")
     private static final FileConfiguration CONFIG = HLPlugin.getLorePresetConfig();
 
     public static void addRapierLore(List<String> lore, ConfigurationSection section) {
@@ -45,7 +46,7 @@ public class LorePresets {
         int durabilityTaken = section.getInt("Protection.DamageDurability");
         double damageBonus = section.getDouble("UnarmoredDamageMultiplier") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Rapier");
+        List<String> lines = Messages.getList("lore_presets.rapier");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_ABSORBED", dfpercent.format(percentAbsorbed), "DURABILITY_TAKEN", df.format(durabilityTaken), "DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -57,7 +58,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("ChestDamageMultiplier") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Katana");
+        List<String> lines = Messages.getList("lore_presets.katana");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -69,7 +70,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("SweepingDamageMultiplier");
 
-        List<String> lines = CONFIG.getStringList("Greatsword");
+        List<String> lines = Messages.getList("lore_presets.greatsword");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -81,7 +82,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("SweepingDamageMultiplier");
 
-        List<String> lines = CONFIG.getStringList("Longsword");
+        List<String> lines = Messages.getList("lore_presets.longsword");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -89,7 +90,7 @@ public class LorePresets {
     }
 
     public static void addSpearLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Spear");
+        List<String> lines = Messages.getList("lore_presets.spear");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
@@ -102,7 +103,7 @@ public class LorePresets {
         int durabilityTaken = section.getInt("Protection.DamageDurability");
         double damageBonus = section.getDouble("ChestDamageMultiplier") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Saber");
+        List<String> lines = Messages.getList("lore_presets.saber");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_ABSORBED", dfpercent.format(percentAbsorbed), "DURABILITY_TAKEN", df.format(durabilityTaken), "DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -110,7 +111,7 @@ public class LorePresets {
     }
 
     public static void addBoomerangLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Boomerang");
+        List<String> lines = Messages.getList("lore_presets.boomerang");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
@@ -120,7 +121,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("BackstabDamageMultiplier") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Dagger");
+        List<String> lines = Messages.getList("lore_presets.dagger");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -132,7 +133,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("SweepingDamageMultiplier");
 
-        List<String> lines = CONFIG.getStringList("Glaive");
+        List<String> lines = Messages.getList("lore_presets.glaive");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -144,7 +145,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("ShieldBreachChance") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Halberd");
+        List<String> lines = Messages.getList("lore_presets.halberd");
 
         Map<String, Object> placeholders = Map.of("SHIELD_BREACH", dfpercent.format(damageBonus));
 
@@ -157,7 +158,7 @@ public class LorePresets {
         int amplifier = section.getInt("Nausea.Amplifier") + 1;
         int duration = section.getInt("Nausea.Duration");
 
-        List<String> lines = CONFIG.getStringList("Hammer");
+        List<String> lines = Messages.getList("lore_presets.hammer");
 
         Map<String, Object> placeholders = Map.of("NAUSEA_AMPLIFIER", Utils.toRomanNumeral(amplifier), "NAUSEA_DURATION", df.format(duration / 20D));
 
@@ -169,7 +170,7 @@ public class LorePresets {
 
         double damageBonus = (section.getDouble("ThrownAttributes.AttackDamage") / section.getDouble("Attributes.AttackDamage")) - 1D;
 
-        List<String> lines = CONFIG.getStringList("Javelin");
+        List<String> lines = Messages.getList("lore_presets.javelin");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -181,7 +182,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("RidingDamageBonus") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Lance");
+        List<String> lines = Messages.getList("lore_presets.lance");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -193,7 +194,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("UndeadDamageMultiplier") - 1D;
 
-        List<String> lines = CONFIG.getStringList("Mace");
+        List<String> lines = Messages.getList("lore_presets.mace");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -201,7 +202,7 @@ public class LorePresets {
     }
 
     public static void addPikeLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Pike");
+        List<String> lines = Messages.getList("lore_presets.pike");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
@@ -211,7 +212,7 @@ public class LorePresets {
 
         double damageBonus = section.getDouble("SweepingDamageMultiplier");
 
-        List<String> lines = CONFIG.getStringList("Quarterstaff");
+        List<String> lines = Messages.getList("lore_presets.quarterstaff");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -223,7 +224,7 @@ public class LorePresets {
 
         double damageBonus = (section.getDouble("ThrownAttributes.AttackDamage") / section.getDouble("Attributes.AttackDamage")) - 1D;
 
-        List<String> lines = CONFIG.getStringList("Tomahawk");
+        List<String> lines = Messages.getList("lore_presets.tomahawk");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -235,7 +236,7 @@ public class LorePresets {
 
         double damageBonus = (section.getDouble("ThrownAttributes.AttackDamage") / section.getDouble("Attributes.AttackDamage")) - 1D;
 
-        List<String> lines = CONFIG.getStringList("ThrowingKnife");
+        List<String> lines = Messages.getList("lore_presets.throwing_knife");
 
         Map<String, Object> placeholders = Map.of("DAMAGE_BONUS", dfpercent.format(damageBonus));
 
@@ -247,7 +248,7 @@ public class LorePresets {
 
         double percentAbsorbed = section.getDouble("ArmorPiercing");
 
-        List<String> lines = CONFIG.getStringList("Warhammer");
+        List<String> lines = Messages.getList("lore_presets.warhammer");
 
         Map<String, Object> placeholders = Map.of("ARMOR_PIERCING", dfpercent.format(percentAbsorbed));
 
@@ -255,7 +256,7 @@ public class LorePresets {
     }
 
     public static void addBattleaxeLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Battleaxe");
+        List<String> lines = Messages.getList("lore_presets.battleaxe");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
@@ -266,7 +267,7 @@ public class LorePresets {
         int amplifier = section.getInt("Nausea.Amplifier") + 1;
         int duration = section.getInt("Nausea.Duration");
 
-        List<String> lines = CONFIG.getStringList("Club");
+        List<String> lines = Messages.getList("lore_presets.club");
 
         Map<String, Object> placeholders = Map.of("NAUSEA_AMPLIFIER", Utils.toRomanNumeral(amplifier), "NAUSEA_DURATION", df.format(duration / 20D));
 
@@ -274,55 +275,55 @@ public class LorePresets {
     }
 
     public static void addCestusLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Cestus");
+        List<String> lines = Messages.getList("lore_presets.cestus");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addCrossbowLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Crossbow");
+        List<String> lines = Messages.getList("lore_presets.crossbow");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addLongbowLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Longbow");
+        List<String> lines = Messages.getList("lore_presets.longbow");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addFlamedDragonboneLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("FlamedDragonbone");
+        List<String> lines = Messages.getList("lore_presets.flamed_dragonbone");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addIcedDragonboneLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("IcedDragonbone");
+        List<String> lines = Messages.getList("lore_presets.iced_dragonbone");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addLightningDragonboneLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("LightningDragonbone");
+        List<String> lines = Messages.getList("lore_presets.lightning_dragonbone");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addFireDragonsteelLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("FireDragonsteel");
+        List<String> lines = Messages.getList("lore_presets.fire_dragonsteel");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addIceDragonsteelLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("IceDragonsteel");
+        List<String> lines = Messages.getList("lore_presets.ice_dragonsteel");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addLightningDragonsteelLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("LightningDragonsteel");
+        List<String> lines = Messages.getList("lore_presets.lightning_dragonsteel");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
@@ -331,7 +332,7 @@ public class LorePresets {
         ItemMeta meta = item.getItemMeta();
         List<String> lore = (!(meta.getLore() == null || meta.getLore().isEmpty())) ? meta.getLore() : new ArrayList<>();
 
-        List<String> lines = CONFIG.getStringList("DragonSkull");
+        List<String> lines = Messages.getList("lore_presets.dragon_skull");
 
         Map<String, Object> placeholders = Map.of("BREED", StringUtils.capitalize(breed.toLowerCase()), "STAGE", String.valueOf(stage));
 
@@ -342,139 +343,139 @@ public class LorePresets {
     }
 
     public static void addBlueDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("BlueDragonscale");
+        List<String> lines = Messages.getList("lore_presets.blue_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addBronzeDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("BronzeDragonscale");
+        List<String> lines = Messages.getList("lore_presets.bronze_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addGrayDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("GrayDragonscale");
+        List<String> lines = Messages.getList("lore_presets.gray_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addGreenDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("GreenDragonscale");
+        List<String> lines = Messages.getList("lore_presets.green_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addRedDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("RedDragonscale");
+        List<String> lines = Messages.getList("lore_presets.red_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addSapphireDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("SapphireDragonscale");
+        List<String> lines = Messages.getList("lore_presets.sapphire_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addSilverDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("SilverDragonscale");
+        List<String> lines = Messages.getList("lore_presets.silver_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addWhiteDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("WhiteDragonscale");
+        List<String> lines = Messages.getList("lore_presets.white_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addAmethystDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("AmethystDragonscale");
+        List<String> lines = Messages.getList("lore_presets.amethyst_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addBlackDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("BlackDragonscale");
+        List<String> lines = Messages.getList("lore_presets.black_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addCopperDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("CopperDragonscale");
+        List<String> lines = Messages.getList("lore_presets.copper_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addElectricDragonscaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("ElectricDragonscale");
+        List<String> lines = Messages.getList("lore_presets.electric_dragonscale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addBlueSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("BlueSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.blue_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addBronzeSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("BronzeSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.bronze_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addDeepblueSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("DeepBlueSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.deepblue_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addGreenSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("GreenSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.green_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addPurpleSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("PurpleSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.purple_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addRedSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("RedSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.red_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addTealSeaSerpentScaleLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("TealSeaSerpentScale");
+        List<String> lines = Messages.getList("lore_presets.teal_sea_serpent_scale");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addDragonProtectionLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("DragonProtection");
+        List<String> lines = Messages.getList("lore_presets.dragon_protection");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addTideGuardianBreathingLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("TideGuardianBreathing");
+        List<String> lines = Messages.getList("lore_presets.tide_guardian_breathing");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addLegendaryWeaponLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("LegendaryWeapon");
+        List<String> lines = Messages.getList("lore_presets.legendary_weapon");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addFlamedExtraDamageLore(List<String> lore, ConfigurationSection section) {
-        List<String> lines = CONFIG.getStringList("FlamedExtraDamage");
+        List<String> lines = Messages.getList("lore_presets.flamed_extra_damage");
 
         double bonusDamage = section.getDouble("DragonBonusDamage");
 
@@ -484,7 +485,7 @@ public class LorePresets {
     }
 
     public static void addIcedExtraDamageLore(List<String> lore, ConfigurationSection section) {
-        List<String> lines = CONFIG.getStringList("IcedExtraDamage");
+        List<String> lines = Messages.getList("lore_presets.iced_extra_damage");
 
         double bonusDamage = section.getDouble("DragonBonusDamage");
 
@@ -494,7 +495,7 @@ public class LorePresets {
     }
 
     public static void addLightningExtraDamageLore(List<String> lore, ConfigurationSection section) {
-        List<String> lines = CONFIG.getStringList("LightningExtraDamage");
+        List<String> lines = Messages.getList("lore_presets.lightning_extra_damage");
 
         double bonusDamage = section.getDouble("DragonBonusDamage");
 
@@ -504,31 +505,31 @@ public class LorePresets {
     }
 
     public static void addWeaponLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Weapon");
+        List<String> lines = Messages.getList("lore_presets.weapon");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addHelmetLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Helmet");
+        List<String> lines = Messages.getList("lore_presets.helmet");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addChestplateLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Chestplate");
+        List<String> lines = Messages.getList("lore_presets.chestplate");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addLeggingsLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Leggings");
+        List<String> lines = Messages.getList("lore_presets.leggings");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }
 
     public static void addBootsLore(List<String> lore) {
-        List<String> lines = CONFIG.getStringList("Boots");
+        List<String> lines = Messages.getList("lore_presets.boots");
 
         lore.addAll(Utils.translateMsgs(lines, null, null));
     }

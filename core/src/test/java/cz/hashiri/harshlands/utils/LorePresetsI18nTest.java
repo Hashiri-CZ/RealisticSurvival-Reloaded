@@ -54,4 +54,32 @@ class LorePresetsI18nTest {
             assertTrue(contents.contains(key), "missing key " + key + " in " + url);
         }
     }
+
+    @Test
+    void every_preset_key_exists_in_enUS_file() throws java.net.URISyntaxException, IOException {
+        java.net.URL url = getClass().getClassLoader().getResource("Translations/en-US/lore_presets.yml");
+        assertTrue(url != null, "lore_presets.yml must ship with en-US (not found on test classpath)");
+        String contents = Files.readString(Path.of(url.toURI()));
+        for (String preset : List.of(
+                "rapier", "katana", "greatsword", "longsword", "spear", "saber",
+                "boomerang", "dagger", "glaive", "halberd", "hammer", "javelin",
+                "lance", "mace", "pike", "quarterstaff", "tomahawk", "throwing_knife",
+                "warhammer", "battleaxe", "club", "cestus", "crossbow", "longbow",
+                "flamed_dragonbone", "iced_dragonbone", "lightning_dragonbone",
+                "fire_dragonsteel", "ice_dragonsteel", "lightning_dragonsteel",
+                "blue_dragonscale", "bronze_dragonscale", "gray_dragonscale",
+                "green_dragonscale", "red_dragonscale", "sapphire_dragonscale",
+                "silver_dragonscale", "white_dragonscale", "amethyst_dragonscale",
+                "black_dragonscale", "copper_dragonscale", "electric_dragonscale",
+                "blue_sea_serpent_scale", "bronze_sea_serpent_scale",
+                "deepblue_sea_serpent_scale", "green_sea_serpent_scale",
+                "purple_sea_serpent_scale", "red_sea_serpent_scale",
+                "teal_sea_serpent_scale", "dragon_protection", "tide_guardian_breathing",
+                "legendary_weapon", "flamed_extra_damage", "iced_extra_damage",
+                "lightning_extra_damage", "dragon_skull", "weapon", "helmet",
+                "chestplate", "leggings", "boots")) {
+            assertTrue(contents.contains("  " + preset + ":"),
+                    "missing preset '" + preset + "' in lore_presets.yml");
+        }
+    }
 }
