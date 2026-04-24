@@ -8,12 +8,12 @@ ConfigId: "1.3.1-RELEASE" # Used for config syncing purposes, do NOT edit
 
 flint_shard:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fFlint Shard"
+  DisplayName: "i18n:items.notreepunching.flint_shard.display_name"
   CustomModelData: 83786
   ItemModel: "DEFAULT"
 flint_hatchet:
   Material: "WOODEN_AXE"
-  DisplayName: "&fFlint Hatchet"
+  DisplayName: "i18n:items.notreepunching.flint_hatchet.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -26,7 +26,7 @@ flint_hatchet:
   RepairIngredients: "flint_shard"
 flint_knife:
   Material: "WOODEN_SWORD"
-  DisplayName: "&fFlint Knife"
+  DisplayName: "i18n:items.notreepunching.flint_knife.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -39,7 +39,7 @@ flint_knife:
   RepairIngredients: "flint_shard"
 copper_knife:
   Material: "STONE_SWORD"
-  DisplayName: "&fCopper Knife"
+  DisplayName: "i18n:items.notreepunching.copper_knife.display_name"
   CustomModelData: 83688
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -52,7 +52,7 @@ copper_knife:
   RepairIngredients: "COPPER_INGOT"
 golden_knife:
   Material: "GOLDEN_SWORD"
-  DisplayName: "&fGolden Knife"
+  DisplayName: "i18n:items.notreepunching.golden_knife.display_name"
   CustomModelData: 83669
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -61,7 +61,7 @@ golden_knife:
     UseModuleConfig: true
 iron_knife:
   Material: "IRON_SWORD"
-  DisplayName: "&fIron Knife"
+  DisplayName: "i18n:items.notreepunching.iron_knife.display_name"
   CustomModelData: 83671
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -70,7 +70,7 @@ iron_knife:
     UseModuleConfig: true
 diamond_knife:
   Material: "DIAMOND_SWORD"
-  DisplayName: "&fDiamond Knife"
+  DisplayName: "i18n:items.notreepunching.diamond_knife.display_name"
   CustomModelData: 83749
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -79,7 +79,7 @@ diamond_knife:
     UseModuleConfig: true
 netherite_knife:
   Material: "NETHERITE_SWORD"
-  DisplayName: "&fNetherite Knife"
+  DisplayName: "i18n:items.notreepunching.netherite_knife.display_name"
   CustomModelData: 83729
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -88,7 +88,7 @@ netherite_knife:
     UseModuleConfig: true
 flint_pickaxe:
   Material: "WOODEN_PICKAXE"
-  DisplayName: "&fFlint Pickaxe"
+  DisplayName: "i18n:items.notreepunching.flint_pickaxe.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -101,7 +101,7 @@ flint_pickaxe:
   RepairIngredients: "flint_shard"
 flint_shovel:
   Material: "WOODEN_SHOVEL"
-  DisplayName: "&fFlint Shovel"
+  DisplayName: "i18n:items.notreepunching.flint_shovel.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -114,7 +114,7 @@ flint_shovel:
   RepairIngredients: "flint_shard"
 flint_hoe:
   Material: "WOODEN_HOE"
-  DisplayName: "&fFlint Hoe"
+  DisplayName: "i18n:items.notreepunching.flint_hoe.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -127,7 +127,7 @@ flint_hoe:
   RepairIngredients: "flint_shard"
 golden_saw:
   Material: "GOLDEN_AXE"
-  DisplayName: "&fGolden Saw"
+  DisplayName: "i18n:items.notreepunching.golden_saw.display_name"
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -139,7 +139,7 @@ golden_saw:
     hlmaxdurability: 48
 copper_saw:
   Material: "STONE_AXE"
-  DisplayName: "&fCopper Saw"
+  DisplayName: "i18n:items.notreepunching.copper_saw.display_name"
   CustomModelData: 83652
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -151,7 +151,7 @@ copper_saw:
     hlmaxdurability: 262
 iron_saw:
   Material: "IRON_AXE"
-  DisplayName: "&fIron Saw"
+  DisplayName: "i18n:items.notreepunching.iron_saw.display_name"
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -163,7 +163,7 @@ iron_saw:
     hlmaxdurability: 375
 diamond_saw:
   Material: "DIAMOND_AXE"
-  DisplayName: "&fDiamond Saw"
+  DisplayName: "i18n:items.notreepunching.diamond_saw.display_name"
   CustomModelData: 83656
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -175,7 +175,7 @@ diamond_saw:
     hlmaxdurability: 2341
 netherite_saw:
   Material: "NETHERITE_AXE"
-  DisplayName: "&fNetherite Saw"
+  DisplayName: "i18n:items.notreepunching.netherite_saw.display_name"
   CustomModelData: 83657
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -187,47 +187,47 @@ netherite_saw:
     hlmaxdurability: 3046
 plant_fiber:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fPlant Fiber"
+  DisplayName: "i18n:items.notreepunching.plant_fiber.display_name"
   CustomModelData: 83787
   ItemModel: "DEFAULT"
 plant_string:
   Material: "STRING"
-  DisplayName: "&fPlant String"
+  DisplayName: "i18n:items.notreepunching.plant_string.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 stone_rock:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fStone Rock"
+  DisplayName: "i18n:items.notreepunching.stone_rock.display_name"
   CustomModelData: 83729
   ItemModel: "DEFAULT"
 andesite_rock:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fAndesite Rock"
+  DisplayName: "i18n:items.notreepunching.andesite_rock.display_name"
   CustomModelData: 83730
   ItemModel: "DEFAULT"
 diorite_rock:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fDiorite Rock"
+  DisplayName: "i18n:items.notreepunching.diorite_rock.display_name"
   CustomModelData: 83731
   ItemModel: "DEFAULT"
 granite_rock:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fGranite Rock"
+  DisplayName: "i18n:items.notreepunching.granite_rock.display_name"
   CustomModelData: 83732
   ItemModel: "DEFAULT"
 sandstone_rock:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fSandstone Rock"
+  DisplayName: "i18n:items.notreepunching.sandstone_rock.display_name"
   CustomModelData: 83733
   ItemModel: "DEFAULT"
 red_sandstone_rock:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fRed Sandstone Rock"
+  DisplayName: "i18n:items.notreepunching.red_sandstone_rock.display_name"
   CustomModelData: 83734
   ItemModel: "DEFAULT"
 matchbox:
   Material: "FLINT_AND_STEEL"
-  DisplayName: "&fMatchbox"
+  DisplayName: "i18n:items.notreepunching.matchbox.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   NBTTags:
@@ -235,7 +235,7 @@ matchbox:
     hlmaxdurability: 32
 fire_starter:
   Material: "WOODEN_AXE"
-  DisplayName: "&fFire Starter"
+  DisplayName: "i18n:items.notreepunching.fire_starter.display_name"
   CustomModelData: 83652
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -246,7 +246,7 @@ fire_starter:
   RepairIngredients: "Tag.PLANKS"
 copper_axe:
   Material: "STONE_AXE"
-  DisplayName: "&fCopper Axe"
+  DisplayName: "i18n:items.notreepunching.copper_axe.display_name"
   CustomModelData: 83653
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -259,7 +259,7 @@ copper_axe:
   RepairIngredients: "COPPER_INGOT"
 copper_pickaxe:
   Material: "STONE_PICKAXE"
-  DisplayName: "&fCopper Pickaxe"
+  DisplayName: "i18n:items.notreepunching.copper_pickaxe.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -272,7 +272,7 @@ copper_pickaxe:
   RepairIngredients: "COPPER_INGOT"
 copper_shovel:
   Material: "STONE_SHOVEL"
-  DisplayName: "&fCopper Shovel"
+  DisplayName: "i18n:items.notreepunching.copper_shovel.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -285,7 +285,7 @@ copper_shovel:
   RepairIngredients: "COPPER_INGOT"
 copper_sword:
   Material: "STONE_SWORD"
-  DisplayName: "&fCopper Sword"
+  DisplayName: "i18n:items.notreepunching.copper_sword.display_name"
   CustomModelData: 83690
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -298,7 +298,7 @@ copper_sword:
   RepairIngredients: "COPPER_INGOT"
 copper_hoe:
   Material: "STONE_HOE"
-  DisplayName: "&fCopper Hoe"
+  DisplayName: "i18n:items.notreepunching.copper_hoe.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -311,7 +311,7 @@ copper_hoe:
   RepairIngredients: "COPPER_INGOT"
 copper_helmet:
   Material: "IRON_HELMET"
-  DisplayName: "&fCopper Helmet"
+  DisplayName: "i18n:items.notreepunching.copper_helmet.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -325,7 +325,7 @@ copper_helmet:
   RepairIngredients: "COPPER_INGOT"
 copper_chestplate:
   Material: "IRON_CHESTPLATE"
-  DisplayName: "&fCopper Chestplate"
+  DisplayName: "i18n:items.notreepunching.copper_chestplate.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -339,7 +339,7 @@ copper_chestplate:
   RepairIngredients: "COPPER_INGOT"
 copper_leggings:
   Material: "IRON_LEGGINGS"
-  DisplayName: "&fCopper Leggings"
+  DisplayName: "i18n:items.notreepunching.copper_leggings.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -353,7 +353,7 @@ copper_leggings:
   RepairIngredients: "COPPER_INGOT"
 copper_boots:
   Material: "IRON_BOOTS"
-  DisplayName: "&fCopper Boots"
+  DisplayName: "i18n:items.notreepunching.copper_boots.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -367,7 +367,7 @@ copper_boots:
   RepairIngredients: "COPPER_INGOT"
 golden_mattock:
   Material: "GOLDEN_AXE"
-  DisplayName: "&fGolden Mattock"
+  DisplayName: "i18n:items.notreepunching.golden_mattock.display_name"
   CustomModelData: 93650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -379,7 +379,7 @@ golden_mattock:
     hlmaxdurability: 64
 copper_mattock:
   Material: "STONE_AXE"
-  DisplayName: "&fCopper Mattock"
+  DisplayName: "i18n:items.notreepunching.copper_mattock.display_name"
   CustomModelData: 93650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -392,7 +392,7 @@ copper_mattock:
   RepairIngredients: "COPPER_INGOT"
 iron_mattock:
   Material: "IRON_AXE"
-  DisplayName: "&fIron Mattock"
+  DisplayName: "i18n:items.notreepunching.iron_mattock.display_name"
   CustomModelData: 93650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -404,7 +404,7 @@ iron_mattock:
     hlmaxdurability: 500
 diamond_mattock:
   Material: "DIAMOND_AXE"
-  DisplayName: "&fDiamond Mattock"
+  DisplayName: "i18n:items.notreepunching.diamond_mattock.display_name"
   CustomModelData: 93650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -416,7 +416,7 @@ diamond_mattock:
     hlmaxdurability: 3122
 netherite_mattock:
   Material: "NETHERITE_AXE"
-  DisplayName: "&fNetherite Mattock"
+  DisplayName: "i18n:items.notreepunching.netherite_mattock.display_name"
   CustomModelData: 93650
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -428,7 +428,7 @@ netherite_mattock:
     hlmaxdurability: 4062
 macuahuitl:
   Material: "STONE_SWORD"
-  DisplayName: "&fMacuahuitl"
+  DisplayName: "i18n:items.notreepunching.macuahuitl.display_name"
   CustomModelData: 83689
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -441,7 +441,7 @@ macuahuitl:
   RepairIngredients: "FLINT"
 clay_tool:
   Material: "WOODEN_AXE"
-  DisplayName: "&fClay Tool"
+  DisplayName: "i18n:items.notreepunching.clay_tool.display_name"
   CustomModelData: 83653
   ItemModel: "DEFAULT"
   ItemFlags:
@@ -452,71 +452,71 @@ clay_tool:
   RepairIngredients: "Tag.PLANKS"
 clay_brick:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fClay Brick"
+  DisplayName: "i18n:items.notreepunching.clay_brick.display_name"
   CustomModelData: 83735
   ItemModel: "DEFAULT"
 clay_bucket:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fClay Bucket"
+  DisplayName: "i18n:items.notreepunching.clay_bucket.display_name"
   CustomModelData: 83736
   ItemModel: "DEFAULT"
 clay_flower_pot:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fClay Flower Pot"
+  DisplayName: "i18n:items.notreepunching.clay_flower_pot.display_name"
   CustomModelData: 83737
   ItemModel: "DEFAULT"
 ceramic_bucket:
   Material: "BUCKET"
-  DisplayName: "&fCeramic Bucket"
+  DisplayName: "i18n:items.notreepunching.ceramic_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_water_bucket:
   Material: "WATER_BUCKET"
-  DisplayName: "&fCeramic Water Bucket"
+  DisplayName: "i18n:items.notreepunching.ceramic_water_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_lava_bucket:
   Material: "LAVA_BUCKET"
-  DisplayName: "&fCeramic Lava Bucket"
+  DisplayName: "i18n:items.notreepunching.ceramic_lava_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_milk_bucket:
   Material: "MILK_BUCKET"
-  DisplayName: "&fCeramic Milk Bucket"
+  DisplayName: "i18n:items.notreepunching.ceramic_milk_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_tropical_fish_bucket:
   Material: "TROPICAL_FISH_BUCKET"
-  DisplayName: "&fCeramic Bucket of Tropical Fish"
+  DisplayName: "i18n:items.notreepunching.ceramic_tropical_fish_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_tadpole_bucket:
   Material: "TADPOLE_BUCKET"
-  DisplayName: "&fCeramic Bucket of Tadpole"
+  DisplayName: "i18n:items.notreepunching.ceramic_tadpole_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_salmon_bucket:
   Material: "SALMON_BUCKET"
-  DisplayName: "&fCeramic Bucket of Salmon"
+  DisplayName: "i18n:items.notreepunching.ceramic_salmon_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_pufferfish_bucket:
   Material: "PUFFERFISH_BUCKET"
-  DisplayName: "&fCeramic Bucket of Pufferfish"
+  DisplayName: "i18n:items.notreepunching.ceramic_pufferfish_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_powder_snow_bucket:
   Material: "POWDER_SNOW_BUCKET"
-  DisplayName: "&fCeramic Powder Snow Bucket"
+  DisplayName: "i18n:items.notreepunching.ceramic_powder_snow_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_axolotl_bucket:
   Material: "AXOLOTL_BUCKET"
-  DisplayName: "&fCeramic Bucket of Axolotl"
+  DisplayName: "i18n:items.notreepunching.ceramic_axolotl_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 ceramic_cod_bucket:
   Material: "COD_BUCKET"
-  DisplayName: "&fCeramic Bucket of Cod"
+  DisplayName: "i18n:items.notreepunching.ceramic_cod_bucket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"

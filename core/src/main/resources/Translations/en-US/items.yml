@@ -66,3 +66,116 @@ items:
       display_name: "&fEmpty Canteen"
     canteen_filled:
       display_name: "&fFilled Canteen"
+  notreepunching:
+    flint_shard:
+      display_name: "&fFlint Shard"
+    flint_hatchet:
+      display_name: "&fFlint Hatchet"
+    flint_knife:
+      display_name: "&fFlint Knife"
+    copper_knife:
+      display_name: "&fCopper Knife"
+    golden_knife:
+      display_name: "&fGolden Knife"
+    iron_knife:
+      display_name: "&fIron Knife"
+    diamond_knife:
+      display_name: "&fDiamond Knife"
+    netherite_knife:
+      display_name: "&fNetherite Knife"
+    flint_pickaxe:
+      display_name: "&fFlint Pickaxe"
+    flint_shovel:
+      display_name: "&fFlint Shovel"
+    flint_hoe:
+      display_name: "&fFlint Hoe"
+    golden_saw:
+      display_name: "&fGolden Saw"
+    copper_saw:
+      display_name: "&fCopper Saw"
+    iron_saw:
+      display_name: "&fIron Saw"
+    diamond_saw:
+      display_name: "&fDiamond Saw"
+    netherite_saw:
+      display_name: "&fNetherite Saw"
+    plant_fiber:
+      display_name: "&fPlant Fiber"
+    plant_string:
+      display_name: "&fPlant String"
+    stone_rock:
+      display_name: "&fStone Rock"
+    andesite_rock:
+      display_name: "&fAndesite Rock"
+    diorite_rock:
+      display_name: "&fDiorite Rock"
+    granite_rock:
+      display_name: "&fGranite Rock"
+    sandstone_rock:
+      display_name: "&fSandstone Rock"
+    red_sandstone_rock:
+      display_name: "&fRed Sandstone Rock"
+    matchbox:
+      display_name: "&fMatchbox"
+    fire_starter:
+      display_name: "&fFire Starter"
+    copper_axe:
+      display_name: "&fCopper Axe"
+    copper_pickaxe:
+      display_name: "&fCopper Pickaxe"
+    copper_shovel:
+      display_name: "&fCopper Shovel"
+    copper_sword:
+      display_name: "&fCopper Sword"
+    copper_hoe:
+      display_name: "&fCopper Hoe"
+    copper_helmet:
+      display_name: "&fCopper Helmet"
+    copper_chestplate:
+      display_name: "&fCopper Chestplate"
+    copper_leggings:
+      display_name: "&fCopper Leggings"
+    copper_boots:
+      display_name: "&fCopper Boots"
+    golden_mattock:
+      display_name: "&fGolden Mattock"
+    copper_mattock:
+      display_name: "&fCopper Mattock"
+    iron_mattock:
+      display_name: "&fIron Mattock"
+    diamond_mattock:
+      display_name: "&fDiamond Mattock"
+    netherite_mattock:
+      display_name: "&fNetherite Mattock"
+    macuahuitl:
+      display_name: "&fMacuahuitl"
+    clay_tool:
+      display_name: "&fClay Tool"
+    clay_brick:
+      display_name: "&fClay Brick"
+    clay_bucket:
+      display_name: "&fClay Bucket"
+    clay_flower_pot:
+      display_name: "&fClay Flower Pot"
+    ceramic_bucket:
+      display_name: "&fCeramic Bucket"
+    ceramic_water_bucket:
+      display_name: "&fCeramic Water Bucket"
+    ceramic_lava_bucket:
+      display_name: "&fCeramic Lava Bucket"
+    ceramic_milk_bucket:
+      display_name: "&fCeramic Milk Bucket"
+    ceramic_tropical_fish_bucket:
+      display_name: "&fCeramic Bucket of Tropical Fish"
+    ceramic_tadpole_bucket:
+      display_name: "&fCeramic Bucket of Tadpole"
+    ceramic_salmon_bucket:
+      display_name: "&fCeramic Bucket of Salmon"
+    ceramic_pufferfish_bucket:
+      display_name: "&fCeramic Bucket of Pufferfish"
+    ceramic_powder_snow_bucket:
+      display_name: "&fCeramic Powder Snow Bucket"
+    ceramic_axolotl_bucket:
+      display_name: "&fCeramic Bucket of Axolotl"
+    ceramic_cod_bucket:
+      display_name: "&fCeramic Bucket of Cod"
