@@ -1,0 +1,5 @@
+item_stats:
+  attack_damage: "&2 %VALUE% Attack Damage"
+  attack_speed: "&2 %VALUE% Attack Speed"
+  armor: "&9+%VALUE% Armor"
+  armor_toughness: "&9+%VALUE% Armor Toughness"
