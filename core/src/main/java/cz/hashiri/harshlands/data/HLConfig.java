@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -110,7 +111,7 @@ public class HLConfig extends FileBuilder {
 
                     FileConfiguration embedded;
                     try (InputStream stream = plugin.getResource(path);
-                         InputStreamReader reader = new InputStreamReader(stream)) {
+                         InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
                         embedded = YamlConfiguration.loadConfiguration(reader);
                     }
 

@@ -529,7 +529,7 @@ public class HLPlugin extends JavaPlugin {
             org.bukkit.configuration.file.YamlConfiguration embedded;
             try (java.io.InputStream in = getResource(resourcePath)) {
                 if (in == null) continue;
-                try (java.io.InputStreamReader reader = new java.io.InputStreamReader(in)) {
+                try (java.io.InputStreamReader reader = new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8)) {
                     embedded = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(reader);
                 }
             } catch (java.io.IOException e) {
