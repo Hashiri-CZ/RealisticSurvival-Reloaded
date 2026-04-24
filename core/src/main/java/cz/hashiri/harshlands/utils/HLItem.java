@@ -46,9 +46,9 @@ public class HLItem extends ItemStack {
 
     private static final Map<String, HLItem> itemMap = new HashMap<>();
     private static final String MODEL_CONFIG_DEFAULT_OPTION = "DEFAULT";
-    private static final String MODEL_NAMESPACE_CONFIG_PATH = "ResourcePack.ModelNamespace";
-    private static final String MODEL_NAMESPACE_HARSHLANDS = "harshlands";
-    private static final String MODEL_NAMESPACE_REALISTIC_SURVIVAL = "realisticsurvival";
+    public static final String MODEL_NAMESPACE_CONFIG_PATH = "ResourcePack.ModelNamespace";
+    public static final String MODEL_NAMESPACE_HARSHLANDS = "harshlands";
+    public static final String MODEL_NAMESPACE_REALISTIC_SURVIVAL = "realisticsurvival";
 
     // Constructor for HLItem with only Material - used for default vanilla items
     public HLItem(Material material) {

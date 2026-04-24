@@ -38,6 +38,7 @@ import cz.hashiri.harshlands.ntp.NtpModule;
 import cz.hashiri.harshlands.spartanandfire.SfModule;
 import cz.hashiri.harshlands.spartanweaponry.SwModule;
 import cz.hashiri.harshlands.tan.TanModule;
+import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.ToolHandler;
 import cz.hashiri.harshlands.utils.ToolUtils;
 import cz.hashiri.harshlands.utils.StartupLog;
@@ -88,9 +89,63 @@ public class HLPlugin extends JavaPlugin {
     private final Deque<NamespacedKey> pendingRemovals = new ArrayDeque<>();
     private volatile boolean recipesFlushed = false;
 
+    /**
+     * Compatibility layer. Verifies that the plugin is running under its expected
+     * identity (plugin name and Bukkit namespace) before modules bootstrap. On
+     * mismatch, disables the plugin with a severe log message describing the
+     * expected value.
+     *
+     * @return true if all checks passed; false if the plugin was disabled.
+     */
+    private boolean verifyCompatibility() {
+        if (!NAME.equals(getName())) {
+            getLogger().severe("Harshlands requires plugin.yml name=\"" + NAME + "\", found \""
+                    + getName() + "\". See LICENSE for terms regarding modified versions.");
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        }
+
+        // Defense in depth: re-verify via NamespacedKey in case a subclassed JavaPlugin
+        // decouples getName() from the plugin's effective namespace.
+        NamespacedKey probe = new NamespacedKey(this, "probe");
+        if (!HLItem.MODEL_NAMESPACE_HARSHLANDS.equals(probe.getNamespace())) {
+            getLogger().severe("Harshlands detected a mismatched plugin namespace: \""
+                    + probe.getNamespace() + "\". Refusing to start.");
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Resource-pack namespace whitelist check. Runs after config load.
+     * The default shipped by ensureResourcePackDefaults() is
+     * MODEL_NAMESPACE_REALISTIC_SURVIVAL (preserved for backward compatibility
+     * with long-standing resource packs); MODEL_NAMESPACE_HARSHLANDS is also
+     * accepted. Any other value disables the plugin.
+     */
+    private boolean verifyResourcePackNamespace() {
+        String ns = getConfig().getString(HLItem.MODEL_NAMESPACE_CONFIG_PATH,
+                HLItem.MODEL_NAMESPACE_REALISTIC_SURVIVAL);
+        if (!HLItem.MODEL_NAMESPACE_HARSHLANDS.equals(ns)
+                && !HLItem.MODEL_NAMESPACE_REALISTIC_SURVIVAL.equals(ns)) {
+            getLogger().severe("Harshlands requires ResourcePack.ModelNamespace to be \""
+                    + HLItem.MODEL_NAMESPACE_HARSHLANDS + "\" or \""
+                    + HLItem.MODEL_NAMESPACE_REALISTIC_SURVIVAL
+                    + "\". Custom item rendering is not supported with any other namespace.");
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void onEnable() {
         plugin = this;
+        if (!verifyCompatibility()) {
+            return;
+        }
         StartupLog.resetTimer();
         StartupLog.printBanner();
 
@@ -133,6 +188,9 @@ public class HLPlugin extends JavaPlugin {
         this.auraSkillsRequirementsConfig = new HLConfig(this, "Presets/auraskills_requirements.yml");
         migrateAuraSkillsRequirementsConfig();
         ensureResourcePackDefaults();
+        if (!verifyResourcePackNamespace()) {
+            return;
+        }
 
         util = new Utils(this);
 
@@ -610,10 +668,10 @@ public class HLPlugin extends JavaPlugin {
         FileConfiguration cfg = getConfig();
         boolean changed = false;
 
-        String namespacePath = "ResourcePack.ModelNamespace";
+        String namespacePath = HLItem.MODEL_NAMESPACE_CONFIG_PATH;
         if (!cfg.contains(namespacePath) || cfg.getString(namespacePath, "").isBlank()) {
             // Preserve compatibility with the long-lived Realistic Survival resource pack namespace.
-            cfg.set(namespacePath, "realisticsurvival");
+            cfg.set(namespacePath, HLItem.MODEL_NAMESPACE_REALISTIC_SURVIVAL);
             changed = true;
         }
 
