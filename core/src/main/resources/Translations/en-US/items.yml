@@ -13,3 +13,56 @@ items:
       display_name: "&fSplint"
     medical_kit:
       display_name: "&fMedical Kit"
+  toughasnails:
+    ice_cube:
+      display_name: "&fIce Cube"
+    magma_shard:
+      display_name: "&fMagma Shard"
+    jelled_slime:
+      display_name: "&fJelled Slime"
+    thermometer:
+      display_name: "&fThermometer"
+    wool_hood:
+      display_name: "&fWool Hood"
+    wool_jacket:
+      display_name: "&fWool Jacket"
+    wool_pants:
+      display_name: "&fWool Pants"
+    wool_boots:
+      display_name: "&fWool Boots"
+    jelled_slime_helmet:
+      display_name: "&fJelled Slime Helmet"
+    jelled_slime_chestplate:
+      display_name: "&fJelled Slime Chestplate"
+    jelled_slime_leggings:
+      display_name: "&fJelled Slime Leggings"
+    jelled_slime_boots:
+      display_name: "&fJelled Slime Boots"
+    juice_apple:
+      display_name: "&fApple Juice"
+    juice_beetroot:
+      display_name: "&fBeetroot Juice"
+    juice_cactus:
+      display_name: "&fCactus Juice"
+    juice_carrot:
+      display_name: "&fCarrot Juice"
+    juice_chorus_fruit:
+      display_name: "&fChorus Fruit Juice"
+    juice_melon_glistering:
+      display_name: "&fGlistering Melon Juice"
+    juice_apple_golden:
+      display_name: "&fGolden Apple Juice"
+    juice_carrot_golden:
+      display_name: "&fGolden Carrot Juice"
+    juice_melon:
+      display_name: "&fMelon Juice"
+    juice_pumpkin:
+      display_name: "&fPumpkin Juice"
+    purified_water_bottle:
+      display_name: "&fPurified Water Bottle"
+    charcoal_filter:
+      display_name: "&fCharcoal Filter"
+    canteen_empty:
+      display_name: "&fEmpty Canteen"
+    canteen_filled:
+      display_name: "&fFilled Canteen"

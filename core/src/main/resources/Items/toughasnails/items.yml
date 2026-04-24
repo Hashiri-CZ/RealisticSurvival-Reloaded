@@ -8,27 +8,27 @@ ConfigId: "1.3.1-RELEASE" # Used for config syncing purposes, do NOT edit
 
 ice_cube:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fIce Cube"
+  DisplayName: "i18n:items.toughasnails.ice_cube.display_name"
   CustomModelData: 83715
   ItemModel: "DEFAULT"
 magma_shard:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fMagma Shard"
+  DisplayName: "i18n:items.toughasnails.magma_shard.display_name"
   CustomModelData: 83716
   ItemModel: "DEFAULT"
 jelled_slime:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fJelled Slime"
+  DisplayName: "i18n:items.toughasnails.jelled_slime.display_name"
   CustomModelData: 83717
   ItemModel: "DEFAULT"
 thermometer:
   Material: "COMPASS"
-  DisplayName: "&fThermometer"
+  DisplayName: "i18n:items.toughasnails.thermometer.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
 wool_hood:
   Material: "LEATHER_HELMET"
-  DisplayName: "&fWool Hood"
+  DisplayName: "i18n:items.toughasnails.wool_hood.display_name"
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -42,7 +42,7 @@ wool_hood:
   RepairIngredients: "Tag.WOOL"
 wool_jacket:
   Material: "LEATHER_CHESTPLATE"
-  DisplayName: "&fWool Jacket"
+  DisplayName: "i18n:items.toughasnails.wool_jacket.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -56,7 +56,7 @@ wool_jacket:
   RepairIngredients: "Tag.WOOL"
 wool_pants:
   Material: "LEATHER_LEGGINGS"
-  DisplayName: "&fWool Pants"
+  DisplayName: "i18n:items.toughasnails.wool_pants.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -70,7 +70,7 @@ wool_pants:
   RepairIngredients: "Tag.WOOL"
 wool_boots:
   Material: "LEATHER_BOOTS"
-  DisplayName: "&fWool Boots"
+  DisplayName: "i18n:items.toughasnails.wool_boots.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -84,7 +84,7 @@ wool_boots:
   RepairIngredients: "Tag.WOOL"
 jelled_slime_helmet:
   Material: "LEATHER_HELMET"
-  DisplayName: "&fJelled Slime Helmet"
+  DisplayName: "i18n:items.toughasnails.jelled_slime_helmet.display_name"
   CustomModelData: 83652
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -98,7 +98,7 @@ jelled_slime_helmet:
   RepairIngredients: "jelled_slime"
 jelled_slime_chestplate:
   Material: "LEATHER_CHESTPLATE"
-  DisplayName: "&fJelled Slime Chestplate"
+  DisplayName: "i18n:items.toughasnails.jelled_slime_chestplate.display_name"
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -112,7 +112,7 @@ jelled_slime_chestplate:
   RepairIngredients: "jelled_slime"
 jelled_slime_leggings:
   Material: "LEATHER_LEGGINGS"
-  DisplayName: "&fJelled Slime Leggings"
+  DisplayName: "i18n:items.toughasnails.jelled_slime_leggings.display_name"
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -126,7 +126,7 @@ jelled_slime_leggings:
   RepairIngredients: "jelled_slime"
 jelled_slime_boots:
   Material: "LEATHER_BOOTS"
-  DisplayName: "&fJelled Slime Boots"
+  DisplayName: "i18n:items.toughasnails.jelled_slime_boots.display_name"
   CustomModelData: 83651
   ItemModel: "DEFAULT"
   EquippableComponentModel: "DEFAULT"
@@ -140,42 +140,42 @@ jelled_slime_boots:
   RepairIngredients: "jelled_slime"
 juice_apple:
   Material: "POTION"
-  DisplayName: "&fApple Juice"
+  DisplayName: "i18n:items.toughasnails.juice_apple.display_name"
   CustomModelData: 83652
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 juice_beetroot:
   Material: "POTION"
-  DisplayName: "&fBeetroot Juice"
+  DisplayName: "i18n:items.toughasnails.juice_beetroot.display_name"
   CustomModelData: 83653
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 juice_cactus:
   Material: "POTION"
-  DisplayName: "&fCactus Juice"
+  DisplayName: "i18n:items.toughasnails.juice_cactus.display_name"
   CustomModelData: 83654
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 juice_carrot:
   Material: "POTION"
-  DisplayName: "&fCarrot Juice"
+  DisplayName: "i18n:items.toughasnails.juice_carrot.display_name"
   CustomModelData: 83655
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 juice_chorus_fruit:
   Material: "POTION"
-  DisplayName: "&fChorus Fruit Juice"
+  DisplayName: "i18n:items.toughasnails.juice_chorus_fruit.display_name"
   CustomModelData: 83656
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 juice_melon_glistering:
   Material: "POTION"
-  DisplayName: "&fGlistering Melon Juice"
+  DisplayName: "i18n:items.toughasnails.juice_melon_glistering.display_name"
   CustomModelData: 83657
   ItemModel: "DEFAULT"
   Enchantments:
@@ -185,7 +185,7 @@ juice_melon_glistering:
     - "HIDE_POTION_EFFECTS"
 juice_apple_golden:
   Material: "POTION"
-  DisplayName: "&fGolden Apple Juice"
+  DisplayName: "i18n:items.toughasnails.juice_apple_golden.display_name"
   CustomModelData: 83658
   ItemModel: "DEFAULT"
   Enchantments:
@@ -195,7 +195,7 @@ juice_apple_golden:
     - "HIDE_POTION_EFFECTS"
 juice_carrot_golden:
   Material: "POTION"
-  DisplayName: "&fGolden Carrot Juice"
+  DisplayName: "i18n:items.toughasnails.juice_carrot_golden.display_name"
   CustomModelData: 83659
   ItemModel: "DEFAULT"
   Enchantments:
@@ -205,33 +205,33 @@ juice_carrot_golden:
     - "HIDE_POTION_EFFECTS"
 juice_melon:
   Material: "POTION"
-  DisplayName: "&fMelon Juice"
+  DisplayName: "i18n:items.toughasnails.juice_melon.display_name"
   CustomModelData: 83660
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 juice_pumpkin:
   Material: "POTION"
-  DisplayName: "&fPumpkin Juice"
+  DisplayName: "i18n:items.toughasnails.juice_pumpkin.display_name"
   CustomModelData: 83661
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 purified_water_bottle:
   Material: "POTION"
-  DisplayName: "&fPurified Water Bottle"
+  DisplayName: "i18n:items.toughasnails.purified_water_bottle.display_name"
   CustomModelData: 83662
   ItemModel: "DEFAULT"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
 charcoal_filter:
   Material: "PRISMARINE_SHARD"
-  DisplayName: "&fCharcoal Filter"
+  DisplayName: "i18n:items.toughasnails.charcoal_filter.display_name"
   CustomModelData: 83791
   ItemModel: "DEFAULT"
 canteen_empty:
   Material: "GLASS_BOTTLE"
-  DisplayName: "&fEmpty Canteen"
+  DisplayName: "i18n:items.toughasnails.canteen_empty.display_name"
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   Lore:
@@ -243,7 +243,7 @@ canteen_empty:
     hlmaxdurability: 5
 canteen_filled:
   Material: "POTION"
-  DisplayName: "&fFilled Canteen"
+  DisplayName: "i18n:items.toughasnails.canteen_filled.display_name"
   CustomModelData: 83663
   ItemModel: "DEFAULT"
   Lore:
