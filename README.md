@@ -97,10 +97,18 @@ Servers running a pre-reorganization build auto-migrate on first boot. Old flat 
 
 ### Adding a language
 
-1. Copy `Translations/en-US/` to `Translations/<code>/` (e.g., `cs-CZ`, `de-DE`).
-2. Translate the string values in each YAML.
-3. Set `Locale: "<code>"` in `config.yml`.
-4. `/hl reload`.
+Harshlands ships with English (`en-US`). To serve your players in a different language:
+
+1. Locate the plugin's data folder: `plugins/Harshlands/Translations/en-US/`.
+2. Copy the folder and rename the copy to your locale tag, e.g. `Translations/zh-CN/`.
+3. Translate the values (everything on the right-hand side of `:`) in each `*.yml` file. Keep the keys, color codes (`&f`, `&6`, etc.), and placeholders (`%VALUE%`, `%DAMAGE_BONUS%`, etc.) unchanged.
+4. Save all files as UTF-8.
+5. Edit `plugins/Harshlands/config.yml` and set `Locale: "zh-CN"` (or whichever locale tag you chose).
+6. Restart the server or run `/hl reload`.
+
+A missing key falls back to `[key]` in-game and logs a warning once per key — useful for spotting gaps in partial translations.
+
+Non-ASCII scripts (Chinese, Cyrillic, Greek, Arabic, etc.) render through Minecraft's unifont fallback. For the Protein/Carbs/Fat bossbar preview to render these with the same above-action-bar ascent as English labels, your resource pack needs a small font update — see `docs/resource-pack/preview_text-font-fallback.md`.
 
 ---
 
