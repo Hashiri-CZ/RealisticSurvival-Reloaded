@@ -43,8 +43,15 @@ public class LocaleManager {
             return;
         }
         for (File f : yamls) {
-            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
-            flatten(yaml, "", accumulator);
+            try (java.io.Reader r = java.nio.file.Files.newBufferedReader(
+                    f.toPath(), java.nio.charset.StandardCharsets.UTF_8)) {
+                YamlConfiguration yaml = new YamlConfiguration();
+                yaml.load(r);
+                flatten(yaml, "", accumulator);
+            } catch (Exception ex) {
+                logger.warning("Failed to load translation file " + f.getName()
+                        + " (must be UTF-8 encoded): " + ex.getMessage());
+            }
         }
         this.flatMap = accumulator;
     }
