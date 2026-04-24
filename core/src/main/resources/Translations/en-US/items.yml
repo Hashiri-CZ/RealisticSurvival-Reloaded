@@ -6,3 +6,10 @@ items:
       display_name: "&fUnlit Torch"
     lit_torch:
       display_name: "&fTorch"
+  firstaid:
+    bandage:
+      display_name: "&fBandage"
+    splint:
+      display_name: "&fSplint"
+    medical_kit:
+      display_name: "&fMedical Kit"

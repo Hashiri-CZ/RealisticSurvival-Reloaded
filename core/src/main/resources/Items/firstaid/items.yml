@@ -8,7 +8,7 @@ ConfigId: "1.3.1-RELEASE" # Used for config syncing purposes, do NOT edit
 
 bandage:
   Material: "PAPER"
-  DisplayName: "&fBandage"
+  DisplayName: "i18n:items.firstaid.bandage.display_name"
   CustomModelData: 84001
   ItemModel: "DEFAULT"
   Lore:
@@ -21,7 +21,7 @@ bandage:
 
 splint:
   Material: "STICK"
-  DisplayName: "&fSplint"
+  DisplayName: "i18n:items.firstaid.splint.display_name"
   CustomModelData: 84002
   ItemModel: "DEFAULT"
   Lore:
@@ -34,7 +34,7 @@ splint:
 
 medical_kit:
   Material: "LEATHER"
-  DisplayName: "&fMedical Kit"
+  DisplayName: "i18n:items.firstaid.medical_kit.display_name"
   CustomModelData: 84003
   ItemModel: "DEFAULT"
   Lore:
