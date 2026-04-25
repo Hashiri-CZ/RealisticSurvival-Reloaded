@@ -76,6 +76,27 @@ public class Utils {
     private static final Pattern CRAFT_SOUND_LOCATION_PATTERN = Pattern.compile("location=([a-z0-9_:.]+)");
     private static final Pattern CRAFT_SOUND_RESOURCE_KEY_PATTERN = Pattern.compile("sound_event\\s*/\\s*([a-z0-9_:.]+)");
 
+    /**
+     * Splits a {@code %VALUE%}-templated translation into its prefix and suffix
+     * around the placeholder. Used to match a localized lore line by structure
+     * rather than by the (locale-dependent) value substring.
+     *
+     * <p>Example: template {@code "&sect;2 %VALUE% Attack Damage"} &rarr; prefix {@code "&sect;2 "},
+     * suffix {@code " Attack Damage"}. For Chinese the suffix would be {@code " 攻击伤害"}.</p>
+     */
+    private static String[] valueTemplateParts(String key) {
+        // Render with a marker that won't appear naturally in any line.
+        String marker = "\u0001";  // SOH control char, not used in lore
+        String rendered = cz.hashiri.harshlands.locale.Messages.get(
+                key, java.util.Map.of("VALUE", marker));
+        int idx = rendered.indexOf(marker);
+        if (idx < 0) {
+            // Defensive: translator dropped %VALUE%. Treat whole string as prefix.
+            return new String[]{ rendered, "" };
+        }
+        return new String[]{ rendered.substring(0, idx), rendered.substring(idx + marker.length()) };
+    }
+
     private final HLPlugin plugin;
 
     private static InternalsProvider internals;
@@ -471,8 +492,12 @@ public class Utils {
                         int len = lore.size();
                         int index = -1;
 
+                        String[] parts = valueTemplateParts("item_stats.attack_damage");
+                        String prefix = parts[0];
+                        String suffix = parts[1];
                         for (int i = 0 ; i < len; i++) {
-                            if (lore.get(i).contains("Attack Damage")) {
+                            String line = lore.get(i);
+                            if (line.startsWith(prefix) && line.endsWith(suffix)) {
                                 index = i;
                                 break;
                             }
