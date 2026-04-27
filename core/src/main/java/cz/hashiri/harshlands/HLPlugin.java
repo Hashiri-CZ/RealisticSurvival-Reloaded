@@ -87,6 +87,7 @@ public class HLPlugin extends JavaPlugin {
     private final cz.hashiri.harshlands.utils.AnchorRegistry anchorRegistry =
             new cz.hashiri.harshlands.utils.AnchorRegistry();
     private cz.hashiri.harshlands.locale.LocaleManager localeManager;
+    private cz.hashiri.harshlands.utils.BossbarSentryProbe.Decision bossbarSentryDecision;
     private final Deque<Recipe> pendingRecipes = new ArrayDeque<>();
     private final Deque<NamespacedKey> pendingRemovals = new ArrayDeque<>();
     private volatile boolean recipesFlushed = false;
@@ -192,6 +193,17 @@ public class HLPlugin extends JavaPlugin {
         ensureResourcePackDefaults();
         if (!verifyResourcePackNamespace()) {
             return;
+        }
+
+        // Bossbar sentry probe — runs once at enable, result reused for every
+        // DisplayTask created during the session.
+        cz.hashiri.harshlands.utils.BossbarSentryProbe.Mode bossbarMode =
+                cz.hashiri.harshlands.utils.BossbarSentryProbe.Mode.parse(
+                        getConfig().getString("BossBar.SentryMode", "AUTO"));
+        this.bossbarSentryDecision = cz.hashiri.harshlands.utils.BossbarSentryProbe.evaluateLive(bossbarMode);
+        if (!bossbarSentryDecision.shouldInstall()) {
+            getLogger().info("Bossbar sentry skipped: " + bossbarSentryDecision.skipReason()
+                    + ". HUD remains screen-pinned via shader.");
         }
 
         util = new Utils(this);
@@ -397,6 +409,19 @@ public class HLPlugin extends JavaPlugin {
             debugManager.shutdown();
         }
 
+        // Drain bossbar sentries before closing the connection pipeline.
+        try {
+            for (java.util.UUID id : cz.hashiri.harshlands.utils.DisplayTask.getTasks().keySet()) {
+                org.bukkit.entity.Player p = org.bukkit.Bukkit.getPlayer(id);
+                if (p != null && p.isOnline()) {
+                    cz.hashiri.harshlands.utils.Utils.uninstallBossbarSentry(p);
+                }
+            }
+        } catch (Throwable t) {
+            getLogger().log(java.util.logging.Level.WARNING,
+                    "Failed to uninstall bossbar sentries on disable", t);
+        }
+
         // Wait for all pending async DB writes (up to 10s), then close pool
         if (scheduler != null) {
             scheduler.shutdown();
@@ -501,6 +526,10 @@ public class HLPlugin extends JavaPlugin {
 
     public cz.hashiri.harshlands.utils.AnchorRegistry getAnchorRegistry() {
         return anchorRegistry;
+    }
+
+    public cz.hashiri.harshlands.utils.BossbarSentryProbe.Decision getBossbarSentryDecision() {
+        return bossbarSentryDecision;
     }
 
     private void ensureTranslationDefaults() {

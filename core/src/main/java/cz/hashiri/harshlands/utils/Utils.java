@@ -845,6 +845,18 @@ public class Utils {
         }
     }
 
+    public static void installBossbarSentry(@Nonnull org.bukkit.entity.Player player) {
+        if (internals != null) {
+            internals.installBossbarSentry(player);
+        }
+    }
+
+    public static void uninstallBossbarSentry(@Nonnull org.bukkit.entity.Player player) {
+        if (internals != null) {
+            internals.uninstallBossbarSentry(player);
+        }
+    }
+
     public static boolean isTag(@Nonnull String name) {
         try {
             internals.getTag(name);
