@@ -845,6 +845,10 @@ public class Utils {
         }
     }
 
+    public static boolean supportsBossbarSentry() {
+        return internals != null && internals.supportsBossbarSentry();
+    }
+
     public static void installBossbarSentry(@Nonnull org.bukkit.entity.Player player) {
         if (internals != null) {
             internals.installBossbarSentry(player);

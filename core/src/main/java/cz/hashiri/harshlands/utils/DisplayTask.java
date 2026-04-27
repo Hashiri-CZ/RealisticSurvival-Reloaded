@@ -95,6 +95,10 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
                 : null;
 
         this.bossbarHud = new BossbarHUD((net.kyori.adventure.audience.Audience) player.getPlayer(), this.id);
+        if (Utils.supportsBossbarSentry()
+                && HLPlugin.getPlugin().getBossbarSentryDecision().shouldInstall()) {
+            Utils.installBossbarSentry(player.getPlayer());
+        }
         bossbarHud.show();
         cz.hashiri.harshlands.foodexpansion.FoodExpansionModule fem =
             (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule) HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
@@ -248,6 +252,10 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
     @Override
     public void stop() {
         bossbarHud.hide();
+        if (Utils.supportsBossbarSentry()) {
+            org.bukkit.entity.Player p = org.bukkit.Bukkit.getPlayer(id);
+            if (p != null) Utils.uninstallBossbarSentry(p);
+        }
         tasks.remove(id);
         cancel();
     }
