@@ -118,6 +118,34 @@ public abstract class InternalsProvider {
     public void uninstallRecipeDisplayPatcher() {
         // no-op default
     }
+
+    /**
+     * Returns true if this NMS implementation can install a per-player bossbar sentry.
+     * Default false — overridden by impls that ship a Sentry class.
+     */
+    public boolean supportsBossbarSentry() {
+        return false;
+    }
+
+    /**
+     * Installs a read-only Netty handler that observes outbound ClientboundBossEventPacket
+     * for the given player. Must be called on the Bukkit main thread BEFORE
+     * {@code BossbarHUD.show()} so the anchor's first ADD is captured. Idempotent.
+     *
+     * @param player the player whose connection pipeline gets the handler
+     */
+    public void installBossbarSentry(@javax.annotation.Nonnull Player player) {
+        // no-op default
+    }
+
+    /**
+     * Removes the bossbar sentry from the player's connection pipeline. Idempotent.
+     *
+     * @param player the player whose handler should be removed
+     */
+    public void uninstallBossbarSentry(@javax.annotation.Nonnull Player player) {
+        // no-op default
+    }
 }
 
 
