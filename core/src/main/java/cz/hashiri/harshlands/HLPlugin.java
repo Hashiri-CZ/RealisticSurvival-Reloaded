@@ -88,6 +88,7 @@ public class HLPlugin extends JavaPlugin {
             new cz.hashiri.harshlands.utils.AnchorRegistry();
     private cz.hashiri.harshlands.locale.LocaleManager localeManager;
     private cz.hashiri.harshlands.utils.BossbarSentryProbe.Decision bossbarSentryDecision;
+    private cz.hashiri.harshlands.utils.BossbarReorderScheduler bossbarReorderScheduler;
     private final Deque<Recipe> pendingRecipes = new ArrayDeque<>();
     private final Deque<NamespacedKey> pendingRemovals = new ArrayDeque<>();
     private volatile boolean recipesFlushed = false;
@@ -205,6 +206,7 @@ public class HLPlugin extends JavaPlugin {
             getLogger().info("Bossbar sentry skipped: " + bossbarSentryDecision.skipReason()
                     + ". HUD remains screen-pinned via shader.");
         }
+        this.bossbarReorderScheduler = new cz.hashiri.harshlands.utils.BossbarReorderScheduler(this);
 
         util = new Utils(this);
 
@@ -530,6 +532,10 @@ public class HLPlugin extends JavaPlugin {
 
     public cz.hashiri.harshlands.utils.BossbarSentryProbe.Decision getBossbarSentryDecision() {
         return bossbarSentryDecision;
+    }
+
+    public cz.hashiri.harshlands.utils.BossbarReorderScheduler getBossbarReorderScheduler() {
+        return bossbarReorderScheduler;
     }
 
     private void ensureTranslationDefaults() {
