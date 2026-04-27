@@ -538,14 +538,42 @@ public class HLPlugin extends JavaPlugin {
         return bossbarReorderScheduler;
     }
 
+    private static final String SHIPPED_TRANSLATIONS_PREFIX = "Translations/en-US/";
+
+    /**
+     * Enumerates every {@code Translations/en-US/*.yml} resource shipped inside the
+     * plugin JAR. Using JAR enumeration rather than a hardcoded module list ensures
+     * new translation files added under {@code core/src/main/resources/Translations/en-US/}
+     * are picked up automatically by both {@link #ensureTranslationDefaults()} and
+     * {@link #mergeTranslationDefaults()} on the next plugin upgrade.
+     */
+    private java.util.List<String> listShippedTranslationResources() {
+        java.io.File jarFile = getFile();
+        if (!jarFile.isFile()) {
+            // Running from an exploded classpath (e.g. tests / IDE) — no JAR to walk.
+            return java.util.List.of();
+        }
+        java.util.List<String> resources = new java.util.ArrayList<>();
+        try (java.util.zip.ZipFile zip = new java.util.zip.ZipFile(jarFile)) {
+            java.util.Enumeration<? extends java.util.zip.ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements()) {
+                java.util.zip.ZipEntry entry = entries.nextElement();
+                if (entry.isDirectory()) continue;
+                String name = entry.getName();
+                if (!name.startsWith(SHIPPED_TRANSLATIONS_PREFIX)) continue;
+                if (!name.endsWith(".yml")) continue;
+                // Direct child of en-US/ only; no nested directories.
+                if (name.indexOf('/', SHIPPED_TRANSLATIONS_PREFIX.length()) != -1) continue;
+                resources.add(name);
+            }
+        } catch (java.io.IOException e) {
+            getLogger().warning("Failed to enumerate shipped translation resources: " + e.getMessage());
+        }
+        return resources;
+    }
+
     private void ensureTranslationDefaults() {
-        java.util.List<String> modules = java.util.List.of(
-                "commands", "toughasnails", "baubles", "fear", "iceandfire",
-                "spartanweaponry", "spartanandfire", "foodexpansion", "comfort",
-                "notreepunching", "firstaid", "dynamicsurroundings", "integrations",
-                "hints", "guide");
-        for (String m : modules) {
-            String resourcePath = "Translations/en-US/" + m + ".yml";
+        for (String resourcePath : listShippedTranslationResources()) {
             java.io.File target = new java.io.File(getDataFolder(), resourcePath);
             if (!target.exists()) {
                 saveResource(resourcePath, false);
@@ -554,13 +582,7 @@ public class HLPlugin extends JavaPlugin {
     }
 
     private void mergeTranslationDefaults() {
-        java.util.List<String> modules = java.util.List.of(
-                "commands", "toughasnails", "baubles", "fear", "iceandfire",
-                "spartanweaponry", "spartanandfire", "foodexpansion", "comfort",
-                "notreepunching", "firstaid", "dynamicsurroundings", "integrations",
-                "hints", "guide");
-        for (String m : modules) {
-            String resourcePath = "Translations/en-US/" + m + ".yml";
+        for (String resourcePath : listShippedTranslationResources()) {
             java.io.File diskFile = new java.io.File(getDataFolder(), resourcePath);
             if (!diskFile.exists()) continue;
 
