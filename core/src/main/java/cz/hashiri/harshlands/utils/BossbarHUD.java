@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -57,6 +58,8 @@ public class BossbarHUD {
 
     private final Audience audience;
     private final BossBar mainBar;
+    private final UUID instanceTag = UUID.randomUUID();
+    private final UUID playerUuid; // null when caller did not opt into anchor tracking
     // Insertion-order preserved; sorted by X when building the title
     private final Map<String, HudElement> elements = new LinkedHashMap<>();
 
@@ -72,8 +75,18 @@ public class BossbarHUD {
         }
     }
 
+    /** Backward-compatible constructor for callers that do not need anchor tracking. */
     public BossbarHUD(Audience audience) {
+        this(audience, null);
+    }
+
+    /**
+     * Anchor-tracking constructor. The Sentry pairs the next outbound bossbar ADD
+     * for {@code playerUuid} with this HUD instance via {@code AnchorRegistry}.
+     */
+    public BossbarHUD(Audience audience, UUID playerUuid) {
         this.audience = audience;
+        this.playerUuid = playerUuid;
         this.mainBar = BossBar.bossBar(
                 Component.empty(),
                 0.0f,
@@ -88,6 +101,10 @@ public class BossbarHUD {
 
     /** Show the HUD bossbar to the player. */
     public void show() {
+        if (playerUuid != null) {
+            cz.hashiri.harshlands.HLPlugin.getPlugin().getAnchorRegistry()
+                    .markPending(playerUuid, instanceTag);
+        }
         audience.showBossBar(mainBar);
     }
 

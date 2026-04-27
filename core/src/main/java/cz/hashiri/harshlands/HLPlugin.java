@@ -84,6 +84,8 @@ public class HLPlugin extends JavaPlugin {
     private HLScheduler scheduler;
     private HLDatabase database;
     private DebugManager debugManager;
+    private final cz.hashiri.harshlands.utils.AnchorRegistry anchorRegistry =
+            new cz.hashiri.harshlands.utils.AnchorRegistry();
     private cz.hashiri.harshlands.locale.LocaleManager localeManager;
     private final Deque<Recipe> pendingRecipes = new ArrayDeque<>();
     private final Deque<NamespacedKey> pendingRemovals = new ArrayDeque<>();
@@ -495,6 +497,10 @@ public class HLPlugin extends JavaPlugin {
 
     public DebugManager getDebugManager() {
         return debugManager;
+    }
+
+    public cz.hashiri.harshlands.utils.AnchorRegistry getAnchorRegistry() {
+        return anchorRegistry;
     }
 
     private void ensureTranslationDefaults() {

@@ -94,7 +94,7 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
                 ? fearModule.getUserConfig().getConfig()
                 : null;
 
-        this.bossbarHud = new BossbarHUD((net.kyori.adventure.audience.Audience) player.getPlayer());
+        this.bossbarHud = new BossbarHUD((net.kyori.adventure.audience.Audience) player.getPlayer(), this.id);
         bossbarHud.show();
         cz.hashiri.harshlands.foodexpansion.FoodExpansionModule fem =
             (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule) HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
