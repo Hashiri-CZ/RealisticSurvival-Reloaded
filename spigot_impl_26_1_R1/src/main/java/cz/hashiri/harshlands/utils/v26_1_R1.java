@@ -35,6 +35,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
+import io.netty.channel.ChannelPipeline;
+import net.minecraft.network.Connection;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
@@ -336,6 +338,81 @@ public class v26_1_R1 extends InternalsProvider {
         if (this.recipeDisplayPatcher != null) {
             HandlerList.unregisterAll(this.recipeDisplayPatcher);
             this.recipeDisplayPatcher = null;
+        }
+    }
+
+    private static final String SENTRY_PIPELINE_NAME = "harshlands_bossbar_sentry";
+
+    /**
+     * Reflectively obtains the Netty ChannelPipeline for the given player.
+     *
+     * <p>The {@code connection} field on {@code ServerCommonPacketListenerImpl} is
+     * {@code protected}, so it is not directly accessible from this package.
+     * We obtain it via reflection once and cache the Field for reuse.</p>
+     */
+    private static final java.lang.reflect.Field CONNECTION_FIELD;
+    static {
+        java.lang.reflect.Field f = null;
+        try {
+            f = net.minecraft.server.network.ServerCommonPacketListenerImpl.class
+                    .getDeclaredField("connection");
+            f.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            // Will surface as NPE/IllegalStateException at install time — logged there.
+        }
+        CONNECTION_FIELD = f;
+    }
+
+    private static ChannelPipeline getPipeline(Player player) throws Exception {
+        if (CONNECTION_FIELD == null) throw new IllegalStateException(
+                "ServerCommonPacketListenerImpl#connection field not found");
+        net.minecraft.server.network.ServerGamePacketListenerImpl packetListener =
+                ((CraftPlayer) player).getHandle().connection;
+        Connection conn = (Connection) CONNECTION_FIELD.get(packetListener);
+        return conn.channel.pipeline();
+    }
+
+    @Override
+    public boolean supportsBossbarSentry() {
+        return true;
+    }
+
+    @Override
+    public void installBossbarSentry(@javax.annotation.Nonnull Player player) {
+        try {
+            ChannelPipeline pipeline = getPipeline(player);
+            if (pipeline.get(SENTRY_PIPELINE_NAME) != null) return; // idempotent
+            // Locate the Connection handler and insert before it
+            String anchorName = null;
+            for (var entry : pipeline.toMap().entrySet()) {
+                if (entry.getValue() instanceof Connection) {
+                    anchorName = entry.getKey();
+                    break;
+                }
+            }
+            if (anchorName == null) return; // pipeline missing Connection — bail
+            pipeline.addBefore(anchorName, SENTRY_PIPELINE_NAME,
+                    new HLBossbarSentry_v26_1_R1(
+                            cz.hashiri.harshlands.HLPlugin.getPlugin(),
+                            player.getUniqueId()));
+        } catch (Throwable t) {
+            cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
+                    .warning("Failed to install bossbar sentry for " + player.getName() + ": " + t);
+        }
+    }
+
+    @Override
+    public void uninstallBossbarSentry(@javax.annotation.Nonnull Player player) {
+        try {
+            ChannelPipeline pipeline = getPipeline(player);
+            if (pipeline.get(SENTRY_PIPELINE_NAME) != null) {
+                pipeline.remove(SENTRY_PIPELINE_NAME);
+            }
+            cz.hashiri.harshlands.HLPlugin.getPlugin().getAnchorRegistry()
+                    .clear(player.getUniqueId());
+        } catch (Throwable t) {
+            cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
+                    .warning("Failed to uninstall bossbar sentry for " + player.getName() + ": " + t);
         }
     }
 }
