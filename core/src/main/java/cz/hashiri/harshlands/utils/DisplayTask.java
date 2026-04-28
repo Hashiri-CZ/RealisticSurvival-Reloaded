@@ -19,6 +19,7 @@ package cz.hashiri.harshlands.utils;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.fear.FearModule;
+import cz.hashiri.harshlands.foodexpansion.FoodPreviewState;
 import cz.hashiri.harshlands.iceandfire.IceFireModule;
 import cz.hashiri.harshlands.integrations.CompatiblePlugin;
 import cz.hashiri.harshlands.integrations.RealisticSeasons;
@@ -218,7 +219,9 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
             }
 
             Audience audience = (Audience) player;
-            if (!actionbarText.isEmpty()) {
+            // When the held-food nutrient preview is active, NutritionPreviewController owns
+            // the action bar this tick — skip our send to avoid clobbering the preview.
+            if (!actionbarText.isEmpty() && !FoodPreviewState.isActive(player)) {
                 audience.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(actionbarText));
             }
 
