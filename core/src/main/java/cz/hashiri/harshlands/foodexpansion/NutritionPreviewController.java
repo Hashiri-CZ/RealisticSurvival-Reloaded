@@ -1,11 +1,11 @@
 package cz.hashiri.harshlands.foodexpansion;
 
 import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.data.foodexpansion.DataModule;
 import cz.hashiri.harshlands.foodexpansion.items.CustomFoodRegistry;
 import cz.hashiri.harshlands.locale.Messages;
 
 import net.kyori.adventure.audience.Audience;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -60,7 +60,7 @@ public class NutritionPreviewController extends BukkitRunnable {
 
         HLPlayer hl = HLPlayer.getPlayers().get(player.getUniqueId());
         if (hl == null) { clear(); return; }
-        cz.hashiri.harshlands.data.foodexpansion.DataModule dm = hl.getNutritionDataModule();
+        DataModule dm = hl.getNutritionDataModule();
         if (dm == null || dm.getData() == null) { clear(); return; }
         PlayerNutritionData data = dm.getData();
 
