@@ -18,6 +18,7 @@ package cz.hashiri.harshlands.foodexpansion;
 
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.data.foodexpansion.DataModule;
 import cz.hashiri.harshlands.foodexpansion.items.CustomFoodRegistry;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -50,7 +51,7 @@ public final class FoodPreviewState {
         if (mode == GameMode.CREATIVE || mode == GameMode.SPECTATOR) return false;
 
         ItemStack mainHand = player.getInventory().getItemInMainHand();
-        if (mainHand == null || mainHand.getType() == Material.AIR) return false;
+        if (mainHand.getType() == Material.AIR) return false;
 
         // Hide during the right-click-hold eating animation. Comparing to the
         // active item avoids also hiding when the player is, say, raising a
@@ -61,21 +62,16 @@ public final class FoodPreviewState {
         }
 
         CustomFoodRegistry cfRegistry = module.getCustomFoodRegistry();
-        boolean isEdible = mainHand.getType().isEdible()
-                || (cfRegistry != null && cfRegistry.isCustomFood(mainHand));
+        boolean isCustom = cfRegistry != null && cfRegistry.isCustomFood(mainHand);
+        boolean isEdible = mainHand.getType().isEdible() || isCustom;
         if (!isEdible) return false;
 
-        String itemKey;
-        if (cfRegistry != null && cfRegistry.isCustomFood(mainHand)) {
-            itemKey = cfRegistry.getFoodId(mainHand);
-        } else {
-            itemKey = mainHand.getType().name();
-        }
+        String itemKey = isCustom ? cfRegistry.getFoodId(mainHand) : mainHand.getType().name();
         if (module.getNutrientProfile(itemKey) == null) return false;
 
         HLPlayer hl = HLPlayer.getPlayers().get(player.getUniqueId());
         if (hl == null) return false;
-        cz.hashiri.harshlands.data.foodexpansion.DataModule dm = hl.getNutritionDataModule();
+        DataModule dm = hl.getNutritionDataModule();
         if (dm == null || dm.getData() == null) return false;
 
         return true;
