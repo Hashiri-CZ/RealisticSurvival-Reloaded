@@ -105,19 +105,13 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
         int centerX = 0;
         int iconW = 32;
         int iconSpacing = 16;
-        int off1 = 0;
-        int off2 = 0;
-        int off3 = 0;
         if (fem != null && fem.getUserConfig() != null) {
             org.bukkit.configuration.file.FileConfiguration feConfig = fem.getUserConfig().getConfig();
             centerX = feConfig.getInt("FoodExpansion.HUD.IconCenterX", 0);
             iconW = feConfig.getInt("FoodExpansion.HUD.IconWidth", 32);
             iconSpacing = feConfig.getInt("FoodExpansion.HUD.IconSpacing", 16);
-            off1 = feConfig.getInt("FoodExpansion.HUD.IconCenterXOffset1", 0);
-            off2 = feConfig.getInt("FoodExpansion.HUD.IconCenterXOffset2", 0);
-            off3 = feConfig.getInt("FoodExpansion.HUD.IconCenterXOffset3", 0);
         }
-        this.aboveActionBarHud = new AboveActionBarHUD(bossbarHud, centerX, iconW, iconSpacing, off1, off2, off3);
+        this.aboveActionBarHud = new AboveActionBarHUD(bossbarHud, centerX, iconW, iconSpacing);
 
         sirenChangeScreenEnabled       = ifConfig  != null && ifConfig.getBoolean("Siren.ChangeScreen.Enabled");
         hypothermiaScreenEnabled       = tanConfig != null && tanConfig.getBoolean("Temperature.Hypothermia.ScreenTinting.Enabled");

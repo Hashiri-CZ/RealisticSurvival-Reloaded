@@ -21,113 +21,64 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Manages a center-aligned strip of status icons rendered just above the action bar
- * via BossbarHUD. Visible icons are packed left-to-right with no gaps; hidden icons
- * take no space. The group is always centered around {@code centerX}.
+ * Manages a center-aligned strip of low-macro warning icons rendered just above
+ * the action bar via {@link BossbarHUD}. Visible icons are packed left-to-right
+ * with no gaps; hidden icons take no space. The group is always centered around
+ * {@code centerX}.
  *
- * <p>Y positioning is handled entirely by the RP font ascent + rendertype_text.vsh
- * (bottom-anchored). Java only computes X via BossbarHUD's negative-space shifting.</p>
+ * <p>Y positioning is handled entirely by the resource pack's font ascent +
+ * {@code rendertype_text.vsh}'s Bucket C override (bottom-anchored). Java only
+ * computes X via {@link BossbarHUD}'s negative-space shifting.</p>
+ *
+ * <p>The held-food nutrient preview is no longer rendered through this HUD;
+ * it is sent directly to the action bar by {@code NutritionPreviewController}.</p>
  */
 public final class AboveActionBarHUD {
 
     private static final String GROUP_ID = "aboveactionbar_group";
 
-    private static final String PREVIEW_ID = "aboveactionbar_preview";
-
-    private boolean previewActive = false;
-
-    private final int centerX;
-    private final int iconWidth;
-    private final int iconSpacing;
-    private final int offset1;
-    private final int offset2;
-    private final int offset3;
-
-    // -------------------------------------------------------------------------
-    // Slot definitions — enum order = left-to-right display order
-    // -------------------------------------------------------------------------
     public enum Slot {
-        WETNESS ("\uE8B0"),
-        PROTEIN ("\uE8B1"),
-        CARBS   ("\uE8B2"),
-        FAT     ("\uE8B3");
+        WETNESS (""),
+        PROTEIN (""),
+        CARBS   (""),
+        FAT     ("");
 
         final String codepoint;
         Slot(String codepoint) { this.codepoint = codepoint; }
     }
 
-    // -------------------------------------------------------------------------
     private final BossbarHUD hud;
+    private final int centerX;
+    private final int iconWidth;
+    private final int iconSpacing;
     private final Map<Slot, Boolean> visibility = new EnumMap<>(Slot.class);
 
-    public AboveActionBarHUD(BossbarHUD hud, int centerX, int iconWidth, int iconSpacing,
-                             int offset1, int offset2, int offset3) {
+    public AboveActionBarHUD(BossbarHUD hud, int centerX, int iconWidth, int iconSpacing) {
         this.hud = hud;
         this.centerX = centerX;
         this.iconWidth = iconWidth;
         this.iconSpacing = iconSpacing;
-        this.offset1 = offset1;
-        this.offset2 = offset2;
-        this.offset3 = offset3;
         for (Slot s : Slot.values()) visibility.put(s, false);
-    }
-
-    public AboveActionBarHUD(BossbarHUD hud, int centerX, int iconWidth) {
-        this(hud, centerX, iconWidth, 0, 0, 0, 0);
     }
 
     /** Show or hide a slot. Recalculates all X positions immediately. */
     public void setVisible(Slot slot, boolean visible) {
-        if (visibility.get(slot) == visible) return; // no-op guard
+        if (visibility.get(slot) == visible) return;
         visibility.put(slot, visible);
         relayout();
-    }
-
-    // -------------------------------------------------------------------------
-    /**
-     * Activates preview mode and renders the given row at the icon group's center X.
-     * While active, the P/C/F slots are excluded from the group element; the WETNESS
-     * slot continues to render normally (it shares the group but is unaffected by
-     * the preview-mode gate).
-     *
-     * @param rowContent    the full preview row Component (built by NutritionPreviewLayout)
-     * @param totalAdvance  pixel advance width of the row, used for X centering
-     */
-    public void setPreviewContent(Component rowContent, int totalAdvance) {
-        this.previewActive = true;
-        int effectiveCenterX = centerX + offsetForCount(3); // preview always has 3 cells
-        int startX = effectiveCenterX - totalAdvance / 2;
-        hud.setElement(PREVIEW_ID, startX, rowContent, totalAdvance);
-        relayout();
-    }
-
-    /** Deactivates preview mode. Low-icon state is restored from the stored visibility map. */
-    public void clearPreview() {
-        if (!previewActive) return;
-        this.previewActive = false;
-        hud.removeElement(PREVIEW_ID);
-        relayout();
-    }
-
-    /** Testing / introspection only. */
-    public boolean isPreviewActive() {
-        return previewActive;
     }
 
     private void relayout() {
         Slot[] all = Slot.values();
 
-        // Clean up any stale per-slot elements from the old implementation.
+        // Clean up any stale per-slot elements from the old per-slot impl.
         for (Slot s : all) {
             hud.removeElement("aboveactionbar_" + s.name().toLowerCase());
         }
 
-        // Collect visible slots in enum order, excluding P/C/F when preview is active.
         java.util.List<Slot> visible = new java.util.ArrayList<>();
         for (Slot s : all) {
-            if (!visibility.get(s)) continue;
-            if (previewActive && (s == Slot.PROTEIN || s == Slot.CARBS || s == Slot.FAT)) continue;
-            visible.add(s);
+            if (visibility.get(s)) visible.add(s);
         }
 
         int visibleCount = visible.size();
@@ -145,18 +96,8 @@ public final class AboveActionBarHUD {
             }
         }
 
-        int effectiveCenterX = centerX + offsetForCount(visibleCount);
         int totalWidth = visibleCount * iconWidth + Math.max(0, visibleCount - 1) * iconSpacing;
-        int startX = effectiveCenterX - totalWidth / 2;
+        int startX = centerX - totalWidth / 2;
         hud.setElement(GROUP_ID, startX, content, totalWidth);
-    }
-
-    private int offsetForCount(int n) {
-        switch (n) {
-            case 1: return offset1;
-            case 2: return offset2;
-            case 3: return offset3;
-            default: return 0;
-        }
     }
 }
