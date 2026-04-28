@@ -2,26 +2,27 @@ package cz.hashiri.harshlands.foodexpansion;
 
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.foodexpansion.items.CustomFoodRegistry;
-import cz.hashiri.harshlands.foodexpansion.items.CustomFoodDefinition;
 import cz.hashiri.harshlands.locale.Messages;
-import cz.hashiri.harshlands.utils.AboveActionBarHUD;
 
-import org.bukkit.GameMode;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Per-player task that decides whether to show the three-cell nutrient preview
- * strip based on the player's currently-held main-hand item. Runs on a fixed tick
- * cadence (configurable via {@code FoodExpansion.HUD.Preview.RefreshTicks}).
+ * Per-player task that decides whether to send the three-cell nutrient preview
+ * to the action bar based on the player's currently-held main-hand item. Runs
+ * on a fixed tick cadence (configurable via {@code FoodExpansion.HUD.Preview.RefreshTicks}).
+ *
+ * <p>The companion check on the receiving side is in {@link FoodPreviewState#isActive(Player)};
+ * {@code DisplayTask} consults the same predicate to suppress its own action-bar send when
+ * the preview is active, so exactly one writer drives the action bar in any given tick.</p>
  */
 public class NutritionPreviewController extends BukkitRunnable {
 
     private final Player player;
     private final FoodExpansionModule module;
-    private AboveActionBarHUD aboveHud; // lazily obtained
     private String lastSignature = null; // no-op guard
 
     private final int cellSpacing;
@@ -39,35 +40,13 @@ public class NutritionPreviewController extends BukkitRunnable {
             cancel();
             return;
         }
-        if (!module.isEnabled(player)) {
+        if (!FoodPreviewState.isActive(player)) {
             clear();
             return;
         }
-        GameMode mode = player.getGameMode();
-        if (mode == GameMode.CREATIVE || mode == GameMode.SPECTATOR) {
-            clear();
-            return;
-        }
-        // Hide during active eating — isHandRaised() is true during the right-click-hold
-        // animation. Comparing the active item to the main-hand stack avoids hiding if the
-        // player is, say, raising a shield in the off-hand.
+
         ItemStack mainHand = player.getInventory().getItemInMainHand();
-        if (player.isHandRaised() && player.getItemInUse() != null
-                && player.getItemInUse().isSimilar(mainHand)) {
-            clear();
-            return;
-        }
-        if (mainHand == null || mainHand.getType() == Material.AIR) {
-            clear();
-            return;
-        }
         CustomFoodRegistry cfRegistry = module.getCustomFoodRegistry();
-        boolean isEdible = mainHand.getType().isEdible()
-                || (cfRegistry != null && cfRegistry.isCustomFood(mainHand));
-        if (!isEdible) {
-            clear();
-            return;
-        }
         String itemKey;
         if (cfRegistry != null && cfRegistry.isCustomFood(mainHand)) {
             itemKey = cfRegistry.getFoodId(mainHand);
@@ -75,12 +54,10 @@ public class NutritionPreviewController extends BukkitRunnable {
             itemKey = mainHand.getType().name();
         }
         NutrientProfile profile = module.getNutrientProfile(itemKey);
-        if (profile == null) {
-            clear();
-            return;
-        }
+        // FoodPreviewState.isActive already guarantees profile != null, but defensive null-check
+        // protects against config reloads racing the tick.
+        if (profile == null) { clear(); return; }
 
-        // Pull current nutrition data
         HLPlayer hl = HLPlayer.getPlayers().get(player.getUniqueId());
         if (hl == null) { clear(); return; }
         cz.hashiri.harshlands.data.foodexpansion.DataModule dm = hl.getNutritionDataModule();
@@ -89,7 +66,6 @@ public class NutritionPreviewController extends BukkitRunnable {
 
         double comfort = module.getComfortMultiplier(player);
 
-        // No-op guard: build a cheap signature and bail if nothing meaningful changed.
         String sig = itemKey + "|" + (int) data.getProtein() + "|" + (int) data.getCarbs()
                 + "|" + (int) data.getFats() + "|" + comfort
                 + "|" + profile.protein() + "|" + profile.carbs() + "|" + profile.fats();
@@ -107,21 +83,13 @@ public class NutritionPreviewController extends BukkitRunnable {
                 Messages.get("foodexpansion.food_expansion.preview.fat"),
                 cellSpacing);
 
-        if (aboveHud == null) {
-            aboveHud = module.getOrCreateAboveActionBarHud(player);
-        }
-        aboveHud.setPreviewContent(row.component(), row.advance());
+        ((Audience) player).sendActionBar(row.component());
     }
 
-    /** Clear the preview (used by gating failures and on shutdown). */
+    /** Reset the no-op guard. The action bar is not actively cleared — Mojang fades it out
+     *  on its own once we stop sending, and {@link cz.hashiri.harshlands.utils.DisplayTask}
+     *  will resume sending its thirst/temp/fear text on its next tick. */
     public void clear() {
         lastSignature = null;
-        if (aboveHud == null) {
-            // Avoid creating a HUD just to clear it if one never existed.
-            aboveHud = module.getOrCreateAboveActionBarHud(player);
-        }
-        if (aboveHud.isPreviewActive()) {
-            aboveHud.clearPreview();
-        }
     }
 }
