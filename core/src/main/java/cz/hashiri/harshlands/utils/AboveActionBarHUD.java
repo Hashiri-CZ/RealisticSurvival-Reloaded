@@ -71,11 +71,6 @@ public final class AboveActionBarHUD {
     private void relayout() {
         Slot[] all = Slot.values();
 
-        // Clean up any stale per-slot elements from the old per-slot impl.
-        for (Slot s : all) {
-            hud.removeElement("aboveactionbar_" + s.name().toLowerCase());
-        }
-
         java.util.List<Slot> visible = new java.util.ArrayList<>();
         for (Slot s : all) {
             if (visibility.get(s)) visible.add(s);

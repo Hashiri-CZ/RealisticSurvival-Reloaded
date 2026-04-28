@@ -74,10 +74,6 @@ FoodExpansion:
     IconWidth: 32
     # Horizontal gap (pixels) inserted between adjacent icons. Set to 0 for flush-packed icons.
     IconSpacing: 16
-    # Optional per-count fine-tune offsets (pixels). Leave at 0 unless icons still need nudging after calibration.
-    IconCenterXOffset1: 0
-    IconCenterXOffset2: 0
-    IconCenterXOffset3: 0
     Preview:
       # Master switch. When false, holding food never triggers the preview and
       # the low-warning icons behave as they did before this feature.
