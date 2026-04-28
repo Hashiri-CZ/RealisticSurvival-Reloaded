@@ -143,3 +143,6 @@ docs/superpowers/
 
 # Local-only store listing draft
 STORE_LISTING.md
+
+# Local-only scratch tools (e.g. atlas generators). Never committed.
+tools/
