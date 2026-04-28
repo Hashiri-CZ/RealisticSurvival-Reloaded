@@ -35,6 +35,18 @@ of `preview_text.json`:
 }
 ```
 
+> **Note (2026-04-28):** As of the preview-text fixed-Y change, the ASCII provider
+> uses `ascent: -13000` and `height: 8`, pointing at `harshlands:font/preview_atlas.png`
+> (a single-row 95-glyph atlas). The shader's Bucket D screen-pins ASCII glyphs
+> regardless of bossbar slot. If you add a unifont fallback with matching `ascent: -13000`,
+> CJK glyphs will fall into Bucket D too — but because unifont is a multi-row atlas,
+> the `UV0.y` top/bottom disambiguation does not work, and CJK glyphs will render at the
+> wrong Y (the override produces a degenerate quad). For correct CJK rendering, leave
+> the unifont fallback at its **own** ascent (e.g., -8217) so it falls into Bucket A
+> (legacy slot-relative path) and behaves as before — drifting with slot Y but at least
+> visible. The "last resort" path below remains the recommended approach for non-Latin
+> labels.
+
 ## Last resort
 
 If neither provider preserves the ascent shift, the plugin still
