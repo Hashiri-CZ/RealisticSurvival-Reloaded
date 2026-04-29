@@ -70,7 +70,7 @@ public class GuideListener implements Listener {
             PlayerInventory inv = player.getInventory();
             if (inv.firstEmpty() == -1) {
                 if (dropIfFull) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), book);
+                    player.getWorld().dropItemNaturally(player.getLocation(), book.clone());
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&f[&5Harshlands&f] &7» &fThe guide is at your feet — your inventory is full."));
                 } else {
@@ -78,13 +78,14 @@ public class GuideListener implements Listener {
                         "&f[&5Harshlands&f] &7» &fInventory full — run &e/hl guide give&f when ready."));
                 }
             } else {
-                inv.addItem(book);
+                inv.addItem(book.clone());
             }
         }
 
         if (open) {
+            ItemStack openCopy = book.clone();
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (player.isOnline()) player.openBook(module.buildBook());
+                if (player.isOnline()) player.openBook(openCopy);
             }, openDelayTicks);
         }
 
