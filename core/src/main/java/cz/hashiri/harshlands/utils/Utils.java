@@ -1582,50 +1582,82 @@ public class Utils {
         return normalized;
     }
 
+    /**
+     * Pure-function form of the canteen lore line update logic. Returns a
+     * new list with translated durability / drink lines substituted in
+     * place of any matching lines from {@code lore}. Used by
+     * {@link #updateLore(ItemStack, int)} and by tests that need to
+     * exercise the matcher without a Bukkit server.
+     *
+     * <p>Match-and-replace is locale-safe: prefixes and suffixes are
+     * derived from the bound translation templates via
+     * {@link #valueTemplateParts(String, String...)}, not hardcoded
+     * English. A line that does not match any template (e.g. because it
+     * came from a different locale than the currently-bound one) is
+     * passed through untouched.</p>
+     *
+     * @param lore           current lore lines (defensive-copied).
+     * @param newDurability  durability value to render into the line.
+     * @param maxDurability  max-durability value to render into the line.
+     * @param drink          NBT drink string; ignored if {@code !isJuice}.
+     * @param isJuice        whether the item has an {@code hldrink} NBT tag.
+     */
+    public static java.util.List<String> computeUpdatedCanteenLore(
+            java.util.List<String> lore,
+            int newDurability,
+            int maxDurability,
+            String drink,
+            boolean isJuice) {
+        java.util.List<String> result = new java.util.ArrayList<>(lore);
+
+        TemplateParts dur = valueTemplateParts(
+                "items.toughasnails.canteen.durability_line", "CURRENT", "MAX");
+        TemplateParts drk = valueTemplateParts(
+                "items.toughasnails.canteen.drink_line", "DRINK");
+
+        boolean changedDurability = false;
+        boolean changedDrink = false;
+        for (int i = 0; i < result.size(); i++) {
+            String line = result.get(i);
+            if (!changedDurability && dur.matches(line)) {
+                result.set(i, cz.hashiri.harshlands.locale.Messages.get(
+                        "items.toughasnails.canteen.durability_line",
+                        java.util.Map.of(
+                                "CURRENT", String.valueOf(newDurability),
+                                "MAX", String.valueOf(maxDurability))));
+                changedDurability = true;
+                continue;
+            }
+            if (isJuice && !changedDrink && drk.matches(line)) {
+                result.set(i, cz.hashiri.harshlands.locale.Messages.get(
+                        "items.toughasnails.canteen.drink_line",
+                        java.util.Map.of("DRINK", drink == null ? "" : drink)));
+                changedDrink = true;
+            }
+            if (changedDurability && (!isJuice || changedDrink)) break;
+        }
+        return result;
+    }
+
     @Nonnull
     public static ItemStack updateLore(@Nonnull ItemStack item, int newDurability) {
-        if (hasCustomDurability(item)) {
-            ItemMeta meta = item.getItemMeta();
-            List<String> lore = meta.getLore();
+        if (!hasCustomDurability(item)) return item;
 
-            if (!(lore == null || lore.isEmpty())) {
-                int maxDurability = getMaxCustomDurability(item);
+        ItemMeta meta = item.getItemMeta();
+        java.util.List<String> lore = meta.getLore();
+        if (lore == null || lore.isEmpty()) return item;
 
-                boolean changedDurability = false;
-                boolean isJuice = hasNbtTag(item, "hldrink");
-                boolean changedJuice = false;
+        int maxDurability = getMaxCustomDurability(item);
+        boolean isJuice = hasNbtTag(item, "hldrink");
+        String drink = isJuice
+                ? getNbtTag(item, "hldrink", PersistentDataType.STRING)
+                : null;
 
-                for (int i = 0; i < lore.size(); i++) {
-                    if (lore.get(i).contains("Durability:")) {
-                        lore.set(i, LegacyComponentSerializer.legacySection().serialize(
-                                Component.text("Durability: " + newDurability + "/" + maxDurability, NamedTextColor.GRAY)));
-                        changedDurability = true;
-                    }
-                    if (isJuice) {
-                        if (lore.get(i).contains("Drink: ")) {
-                            lore.set(i, LegacyComponentSerializer.legacySection().serialize(
-                                    Component.text("Drink: " + getNbtTag(item, "hldrink", PersistentDataType.STRING), NamedTextColor.GRAY)));
-                            changedJuice = true;
-                        }
-                    }
+        java.util.List<String> updated = computeUpdatedCanteenLore(
+                lore, newDurability, maxDurability, drink, isJuice);
 
-                    if (isJuice) {
-                        if (changedJuice && changedDurability) {
-                            break;
-                        }
-                    }
-                    else {
-                        if (changedDurability) {
-                            break;
-                        }
-                    }
-
-                }
-
-                meta.setLore(lore);
-                item.setItemMeta(meta);
-            }
-        }
+        meta.setLore(updated);
+        item.setItemMeta(meta);
         return item;
     }
 
