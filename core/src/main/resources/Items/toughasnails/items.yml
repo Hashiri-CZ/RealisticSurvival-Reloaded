@@ -235,8 +235,7 @@ canteen_empty:
   CustomModelData: 83650
   ItemModel: "DEFAULT"
   Lore:
-    - "&7Drink: None"
-    - "&7Durability: 0/5"
+    - "i18n:items.toughasnails.canteen_empty.lore"
   NBTTags:
     hldrink: "None"
     hldurability: 0
@@ -247,8 +246,7 @@ canteen_filled:
   CustomModelData: 83663
   ItemModel: "DEFAULT"
   Lore:
-    - "&7Drink: Unpurified Water"
-    - "&7Durability: 5/5"
+    - "i18n:items.toughasnails.canteen_filled.lore"
   ItemFlags:
     - "HIDE_POTION_EFFECTS"
   NBTTags:

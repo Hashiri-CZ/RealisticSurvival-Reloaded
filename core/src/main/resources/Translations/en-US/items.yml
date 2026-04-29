@@ -77,8 +77,17 @@ items:
       display_name: "&fCharcoal Filter"
     canteen_empty:
       display_name: "&fEmpty Canteen"
+      lore:
+        - "&7Drink: None"
+        - "&7Durability: 0/5"
     canteen_filled:
       display_name: "&fFilled Canteen"
+      lore:
+        - "&7Drink: Unpurified Water"
+        - "&7Durability: 5/5"
+    canteen:
+      drink_line: "&7Drink: %DRINK%"
+      durability_line: "&7Durability: %CURRENT%/%MAX%"
   notreepunching:
     flint_shard:
       display_name: "&fFlint Shard"
