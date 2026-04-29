@@ -10,6 +10,11 @@ public interface HudManager {
     /** @return the hud registered under {@code id}, or {@code null}. */
     Hud getHud(String id);
 
-    /** @return all registered huds. */
+    /**
+     * @return an unmodifiable snapshot of all currently-registered huds.
+     *         Safe to iterate without external synchronization; reflects the
+     *         registration state at call time and does not update if huds
+     *         are added or removed afterwards.
+     */
     Collection<Hud> getHuds();
 }

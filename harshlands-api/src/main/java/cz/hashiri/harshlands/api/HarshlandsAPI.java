@@ -13,6 +13,11 @@ import java.io.File;
  * Returns {@code null} if Harshlands is not loaded or the relevant module is
  * disabled in config — consumers MUST null-check.</p>
  *
+ * <p><b>Lifecycle:</b> the instance returned by {@link #inst()} is replaced or
+ * cleared on plugin reload and shutdown. Do NOT cache the result across a
+ * {@link cz.hashiri.harshlands.api.bukkit.event.PluginReloadedEvent} — re-fetch
+ * after each reload. A non-null return is valid for the current tick.</p>
+ *
  * <p>Harshlands core calls {@link #register(HarshlandsAPI)} once during
  * {@code onEnable()}. Internal use only.</p>
  */
@@ -20,6 +25,11 @@ public abstract class HarshlandsAPI {
 
     private static volatile HarshlandsAPI instance;
 
+    /**
+     * @return the currently registered API implementation, or {@code null} if
+     *         Harshlands is not loaded or the BodyHealth module is disabled.
+     *         Consumers MUST null-check before chained calls.
+     */
     public static HarshlandsAPI inst() {
         return instance;
     }
