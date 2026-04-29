@@ -1,0 +1,321 @@
+{ "providers": [
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_head.png",
+      "ascent": -4275,
+      "height": 8,
+      "chars": ["\uE000"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_head.png",
+      "ascent": -4275,
+      "height": 8,
+      "chars": ["\uE001"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_head.png",
+      "ascent": -4275,
+      "height": 8,
+      "chars": ["\uE002"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_head.png",
+      "ascent": -4275,
+      "height": 8,
+      "chars": ["\uE003"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_head.png",
+      "ascent": -4275,
+      "height": 8,
+      "chars": ["\uE004"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_torso.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE005"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_torso.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE006"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_torso.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE007"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_torso.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE008"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_torso.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE009"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_arm_left.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE00A"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_arm_left.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE00B"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_arm_left.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE00C"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_arm_left.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE00D"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_arm_left.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE00E"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_arm_right.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE00F"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_arm_right.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE010"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_arm_right.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE011"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_arm_right.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE012"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_arm_right.png",
+      "ascent": -4295,
+      "height": 8,
+      "chars": ["\uE013"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_leg_left.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE014"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_leg_left.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE015"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_leg_left.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE016"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_leg_left.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE017"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_leg_left.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE018"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_leg_right.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE019"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_leg_right.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE01A"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_leg_right.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE01B"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_leg_right.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE01C"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_leg_right.png",
+      "ascent": -4315,
+      "height": 8,
+      "chars": ["\uE01D"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_foot_left.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE01E"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_foot_left.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE01F"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_foot_left.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE020"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_foot_left.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE021"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_foot_left.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE022"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_full_foot_right.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE023"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_nearly_full_foot_right.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE024"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_intermediate_foot_right.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE025"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_damaged_foot_right.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE026"]
+    }
+,
+    {
+      "type": "bitmap",
+      "file": "harshlands:bodyhealth/bodyhealth_broken_foot_right.png",
+      "ascent": -4331,
+      "height": 8,
+      "chars": ["\uE027"]
+    }
+]}

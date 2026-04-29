@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.commands;
 
+import cz.hashiri.harshlands.api.bukkit.event.PluginReloadedEvent;
 import cz.hashiri.harshlands.data.HLConfig;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.data.HLPlayer;
@@ -237,6 +238,8 @@ public class Commands implements CommandExecutor {
                     if (gm instanceof cz.hashiri.harshlands.guide.GuideModule guideMod) {
                         guideMod.clearCache();
                     }
+
+                    Bukkit.getPluginManager().callEvent(new PluginReloadedEvent());
 
                     if (config.getBoolean("Reload.CorrectExecution.Enabled"))
                         Messages.of("commands.reload.correct_execution.message").send(sender);

@@ -19,6 +19,7 @@ package cz.hashiri.harshlands;
 import cz.hashiri.harshlands.migration.FolderLayoutMigration;
 import cz.hashiri.harshlands.debug.DebugManager;
 import cz.hashiri.harshlands.baubles.BaubleModule;
+import cz.hashiri.harshlands.bodyhealth.BodyHealthModule;
 import cz.hashiri.harshlands.comfort.ComfortModule;
 import cz.hashiri.harshlands.commands.Commands;
 import cz.hashiri.harshlands.commands.Tab;
@@ -294,6 +295,10 @@ public class HLPlugin extends JavaPlugin {
         GuideModule guideModule = new GuideModule(this);
         if (guideModule.isGloballyEnabled())
             guideModule.initialize();
+
+        BodyHealthModule bodyHealthModule = new BodyHealthModule(this);
+        if (bodyHealthModule.isGloballyEnabled())
+            bodyHealthModule.initialize();
 
         new BukkitRunnable() {
             @Override

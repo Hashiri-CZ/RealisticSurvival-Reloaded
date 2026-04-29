@@ -1,0 +1,5 @@
+bodyhealth:
+  initialize:
+    message: "&fInitializing %name% module"
+  shutdown:
+    message: "&fShutting down %name% module"
