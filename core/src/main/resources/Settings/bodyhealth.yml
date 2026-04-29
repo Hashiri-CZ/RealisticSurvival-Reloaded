@@ -1,0 +1,16 @@
+ConfigId: "1.3.2-RELEASE"
+
+BodyHealth:
+  HUD:
+    # X anchor relative to the bossbar canvas center. Range [-200, +200].
+    # Positive = right side. The body silhouette is ~32px wide, so
+    # values up to +168 keep it on-screen with a small margin.
+    AnchorX: 160
+
+    # Render task period in ticks. 5 ticks = 4Hz refresh.
+    TickPeriod: 5
+
+  Debug:
+    # When true, logs unrecognized %bodyhealth_state_*% placeholder values
+    # at WARNING level (one entry per (player, part) per session).
+    LogPlaceholderParseFailures: false
