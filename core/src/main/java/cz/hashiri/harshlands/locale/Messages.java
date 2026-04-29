@@ -89,7 +89,8 @@ public final class Messages {
         }
 
         public void send(CommandSender recipient) {
-            if (recipient != null) recipient.sendMessage(build());
+            java.util.Objects.requireNonNull(recipient, "recipient");
+            recipient.sendMessage(build());
         }
     }
 }

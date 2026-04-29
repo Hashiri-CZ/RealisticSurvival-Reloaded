@@ -122,6 +122,9 @@ public class HLPlugin extends JavaPlugin {
         return true;
     }
 
+    // TODO(post-RP-migration): When all resource packs migrate to the
+    // "harshlands" namespace, drop the MODEL_NAMESPACE_REALISTIC_SURVIVAL
+    // branch here and in ensureResourcePackDefaults() below.
     /**
      * Resource-pack namespace whitelist check. Runs after config load.
      * The default shipped by ensureResourcePackDefaults() is
@@ -727,6 +730,9 @@ public class HLPlugin extends JavaPlugin {
         }
     }
 
+    // TODO(post-RP-migration): The default below preserves compatibility
+    // with the long-lived Realistic Survival resource pack namespace. Drop
+    // once all packs have migrated.
     private void ensureResourcePackDefaults() {
         FileConfiguration cfg = getConfig();
         boolean changed = false;

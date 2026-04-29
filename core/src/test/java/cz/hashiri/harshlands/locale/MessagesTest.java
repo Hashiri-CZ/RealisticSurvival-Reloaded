@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MessagesTest {
 
@@ -75,8 +76,8 @@ class MessagesTest {
     }
 
     @Test
-    void builder_send_on_null_recipient_is_a_noop() {
-        Messages.of("any.key").send(null); // must not throw
+    void builder_send_on_null_recipient_throws() {
+        assertThrows(NullPointerException.class, () -> Messages.of("any.key").send(null));
     }
 
     @Test

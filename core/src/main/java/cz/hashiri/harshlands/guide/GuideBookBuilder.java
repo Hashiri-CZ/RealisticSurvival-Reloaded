@@ -33,7 +33,7 @@ public final class GuideBookBuilder {
         if (meta == null) return book;
 
         String rawTitle = cfg.getString("guide.Title", "Harshlands Field Manual");
-        String plainTitle = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', rawTitle));
+        String plainTitle = ChatColor.stripColor(legacy(rawTitle));
         if (plainTitle.length() > 32) plainTitle = plainTitle.substring(0, 32);
         meta.setTitle(plainTitle);
 
@@ -107,7 +107,7 @@ public final class GuideBookBuilder {
     }
 
     private static BaseComponent[] fallbackPage(String message, String itemTagTemplate, String clickHint) {
-        String translated = ChatColor.translateAlternateColorCodes('&', message);
+        String translated = legacy(message);
         return HintSender.renderClickable(translated, itemTagTemplate, clickHint);
     }
 
@@ -119,14 +119,14 @@ public final class GuideBookBuilder {
 
     private static BaseComponent[] buildTocPage(String heading, List<ChapterResolved> chapters) {
         ComponentBuilder builder = new ComponentBuilder();
-        String translatedHeading = ChatColor.translateAlternateColorCodes('&', heading);
+        String translatedHeading = legacy(heading);
         for (BaseComponent bc : TextComponent.fromLegacyText(translatedHeading + "\n\n")) {
             builder.append(bc, ComponentBuilder.FormatRetention.NONE);
         }
 
         for (ChapterResolved ch : chapters) {
             TextComponent link = new TextComponent();
-            String translatedLabel = ChatColor.translateAlternateColorCodes('&', ch.label);
+            String translatedLabel = legacy(ch.label);
             for (BaseComponent bc : TextComponent.fromLegacyText(translatedLabel)) {
                 link.addExtra(bc);
             }
@@ -143,7 +143,7 @@ public final class GuideBookBuilder {
         // YAML pipe-literal "|" preserves a trailing newline; strip it so we don't stack blanks.
         String normalized = raw.replaceAll("\\s+$", "");
         // Translate & color codes before feeding to fromLegacyText / HintSender.
-        String translated = ChatColor.translateAlternateColorCodes('&', normalized);
+        String translated = legacy(normalized);
         // Use the hints renderer to parse %item_<key>% tokens into clickable tags.
         BaseComponent[] body = HintSender.renderClickable(translated, itemTagTemplate, clickHint);
 
@@ -154,7 +154,7 @@ public final class GuideBookBuilder {
         builder.append("\n\n", ComponentBuilder.FormatRetention.NONE);
 
         TextComponent back = new TextComponent();
-        String translatedBack = ChatColor.translateAlternateColorCodes('&', trailingBackLabel);
+        String translatedBack = legacy(trailingBackLabel);
         for (BaseComponent bc : TextComponent.fromLegacyText(translatedBack)) {
             back.addExtra(bc);
         }
@@ -166,6 +166,11 @@ public final class GuideBookBuilder {
 
     private static String joinLines(List<String> lines) {
         return String.join("\n", lines);
+    }
+
+    /** Translates &-style legacy color codes. Used at every page-render boundary. */
+    private static String legacy(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
     private record ChapterResolved(String key, String label, List<String> pages, int startPage) {}
