@@ -77,24 +77,59 @@ public class Utils {
     private static final Pattern CRAFT_SOUND_RESOURCE_KEY_PATTERN = Pattern.compile("sound_event\\s*/\\s*([a-z0-9_:.]+)");
 
     /**
-     * Splits a {@code %VALUE%}-templated translation into its prefix and suffix
-     * around the placeholder. Used to match a localized lore line by structure
-     * rather than by the (locale-dependent) value substring.
+     * Decompose a translation template into match-and-replace segments.
      *
-     * <p>Example: template {@code "&sect;2 %VALUE% Attack Damage"} &rarr; prefix {@code "&sect;2 "},
-     * suffix {@code " Attack Damage"}. For Chinese the suffix would be {@code " 攻击伤害"}.</p>
+     * <p>Renders the template at {@code key} with each named placeholder
+     * substituted by a unique sentinel, then splits the rendered string
+     * around the sentinels. The result is a list of literal segments —
+     * the text that appears between placeholders, in order.</p>
+     *
+     * <p>Used so cross-locale code can match lore lines structurally
+     * (by literal prefix / interstitials / suffix) rather than by a
+     * locale-dependent value substring. Example: template
+     * {@code "&2 %VALUE% Attack Damage"} → segments {@code ["&sect;2 ", " Attack Damage"]}.
+     * For Chinese the suffix would be {@code " 攻击伤害"}.</p>
+     *
+     * <p>Defensive: if the translator dropped a placeholder, the missing
+     * sentinel is not found in the rendered string. Its segment becomes
+     * empty and parsing continues; the resulting {@link TemplateParts} is
+     * still usable (its {@link TemplateParts#matches} just becomes more
+     * permissive) and will not throw.</p>
      */
-    private static String[] valueTemplateParts(String key) {
-        // Render with a marker that won't appear naturally in any line.
-        String marker = "\u0001";  // SOH control char, not used in lore
-        String rendered = cz.hashiri.harshlands.locale.Messages.get(
-                key, java.util.Map.of("VALUE", marker));
-        int idx = rendered.indexOf(marker);
-        if (idx < 0) {
-            // Defensive: translator dropped %VALUE%. Treat whole string as prefix.
-            return new String[]{ rendered, "" };
+    public static TemplateParts valueTemplateParts(String key, String... placeholderNames) {
+        // Use a distinct sentinel per placeholder so we can split the rendered
+        // string in order without ambiguity. SOH (\u0001) is not used in any
+        // legitimate translation text, and bracketing each index with SOH
+        // ensures the marker substring won't collide with any digit literal
+        // that happens to appear elsewhere in the surrounding template (e.g.
+        // a literal "0" in "Damage: 100% +%VALUE%").
+        java.util.LinkedHashMap<String, Object> sentinels = new java.util.LinkedHashMap<>();
+        String[] markers = new String[placeholderNames.length];
+        for (int i = 0; i < placeholderNames.length; i++) {
+            markers[i] = "\u0001" + i + "\u0001";
+            sentinels.put(placeholderNames[i], markers[i]);
         }
-        return new String[]{ rendered.substring(0, idx), rendered.substring(idx + marker.length()) };
+        String rendered = cz.hashiri.harshlands.locale.Messages.get(key, sentinels);
+
+        if (placeholderNames.length == 0) {
+            return new TemplateParts(java.util.List.of(rendered));
+        }
+
+        java.util.List<String> segments = new java.util.ArrayList<>(placeholderNames.length + 1);
+        int cursor = 0;
+        for (String marker : markers) {
+            int idx = rendered.indexOf(marker, cursor);
+            if (idx < 0) {
+                // Translator dropped this placeholder. Treat its slot as empty
+                // and keep parsing; subsequent markers may still match.
+                segments.add("");
+                continue;
+            }
+            segments.add(rendered.substring(cursor, idx));
+            cursor = idx + marker.length();
+        }
+        segments.add(rendered.substring(cursor));
+        return new TemplateParts(segments);
     }
 
     private final HLPlugin plugin;
@@ -492,12 +527,9 @@ public class Utils {
                         int len = lore.size();
                         int index = -1;
 
-                        String[] parts = valueTemplateParts("item_stats.attack_damage");
-                        String prefix = parts[0];
-                        String suffix = parts[1];
+                        TemplateParts parts = valueTemplateParts("item_stats.attack_damage", "VALUE");
                         for (int i = 0 ; i < len; i++) {
-                            String line = lore.get(i);
-                            if (line.startsWith(prefix) && line.endsWith(suffix)) {
+                            if (parts.matches(lore.get(i))) {
                                 index = i;
                                 break;
                             }

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Regression test for the cross-locale damage-line lookup used by Sharpness
  * recompute. The implementation in Utils derives prefix/suffix from the
  * translation template; this test exercises that derivation in two locales
- * by reflectively invoking the private helper.
+ * via the public {@link Utils#valueTemplateParts(String, String...)} API.
  *
  * <p>Bukkit must be mocked because Utils has a static initializer that calls
  * {@link org.bukkit.Bukkit#getServer()} to load the NMS internals provider.
@@ -57,9 +56,10 @@ class UtilsDamageLoreI18nTest {
         Messages.bind(new LocaleManager(root, "en-US"));
         Messages.reload();
 
-        String[] parts = invokeTemplateParts("item_stats.attack_damage");
-        assertEquals("\u00A72 ", parts[0]);
-        assertEquals(" Attack Damage", parts[1]);
+        TemplateParts parts = Utils.valueTemplateParts("item_stats.attack_damage", "VALUE");
+        assertEquals(2, parts.segments().size());
+        assertEquals("§2 ", parts.segments().get(0));
+        assertEquals(" Attack Damage", parts.segments().get(1));
     }
 
     @Test
@@ -68,23 +68,17 @@ class UtilsDamageLoreI18nTest {
         Files.createDirectories(zh);
         Files.writeString(zh.resolve("item_stats.yml"), """
                 item_stats:
-                  attack_damage: "&2 %VALUE% \u653B\u51FB\u4F24\u5BB3"
+                  attack_damage: "&2 %VALUE% 攻击伤害"
                 """);
         Messages.bind(new LocaleManager(root, "zh-CN"));
         Messages.reload();
 
-        String[] parts = invokeTemplateParts("item_stats.attack_damage");
-        assertEquals("\u00A72 ", parts[0]);
-        assertEquals(" \u653B\u51FB\u4F24\u5BB3", parts[1]);
+        TemplateParts parts = Utils.valueTemplateParts("item_stats.attack_damage", "VALUE");
+        assertEquals(2, parts.segments().size());
+        assertEquals("§2 ", parts.segments().get(0));
+        assertEquals(" 攻击伤害", parts.segments().get(1));
         // Sanity: the Chinese suffix must NOT match the English literal — the bug we're guarding against.
-        assertNotEquals(" Attack Damage", parts[1]);
-        assertTrue(parts[1].contains("\u653B\u51FB"));
-    }
-
-    /** Reflectively invokes the private static {@code Utils.valueTemplateParts(String)}. */
-    private static String[] invokeTemplateParts(String key) throws Exception {
-        Method m = Utils.class.getDeclaredMethod("valueTemplateParts", String.class);
-        m.setAccessible(true);
-        return (String[]) m.invoke(null, key);
+        assertNotEquals(" Attack Damage", parts.segments().get(1));
+        assertTrue(parts.segments().get(1).contains("攻击"));
     }
 }
