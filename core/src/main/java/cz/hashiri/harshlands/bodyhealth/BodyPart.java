@@ -1,5 +1,7 @@
 package cz.hashiri.harshlands.bodyhealth;
 
+import java.util.Locale;
+
 /**
  * The eight body parts BodyHealth tracks. Iteration order matches the
  * vertical render order of the silhouette (top to bottom, left then right).
@@ -16,6 +18,6 @@ public enum BodyPart {
 
     /** Lowercase suffix used in PlaceholderAPI placeholder names (e.g. arm_left). */
     public String placeholderSuffix() {
-        return name().toLowerCase(java.util.Locale.ROOT);
+        return name().toLowerCase(Locale.ROOT);
     }
 }
