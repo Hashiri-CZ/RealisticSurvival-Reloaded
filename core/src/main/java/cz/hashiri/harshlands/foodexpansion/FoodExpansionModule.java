@@ -249,11 +249,8 @@ public class FoodExpansionModule extends HLModule {
         }
         // No TAN — create one wrapping our standalone BossbarHUD
         BossbarHUD hud = getOrCreateHud(player);
-        FileConfiguration feConfig = getUserConfig().getConfig();
-        int centerX = feConfig.getInt("FoodExpansion.HUD.IconCenterX", 0);
-        int iconW = feConfig.getInt("FoodExpansion.HUD.IconWidth", 32);
-        int iconSpacing = feConfig.getInt("FoodExpansion.HUD.IconSpacing", 16);
-        return standaloneAboveActionBarHuds.computeIfAbsent(uuid, u -> new AboveActionBarHUD(hud, centerX, iconW, iconSpacing));
+        return standaloneAboveActionBarHuds.computeIfAbsent(uuid,
+                u -> new AboveActionBarHUD(hud, hudCenterX, hudIconWidth, hudIconSpacing));
     }
 
     /**
