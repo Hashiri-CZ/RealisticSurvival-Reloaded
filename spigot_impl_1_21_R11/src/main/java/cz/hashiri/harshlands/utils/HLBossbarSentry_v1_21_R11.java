@@ -5,88 +5,71 @@
 package cz.hashiri.harshlands.utils;
 
 import cz.hashiri.harshlands.HLPlugin;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
 
-/**
- * Read-only outbound packet observer. For each ClientboundBossEventPacket
- * with op=ADD whose UUID is not the player's anchor, schedules a debounced
- * reshow via {@link BossbarReorderScheduler}. Never modifies any packet.
- *
- * <p>Pipeline name: {@code harshlands_bossbar_sentry}. Inserted before the
- * Connection handler.</p>
- */
-public final class HLBossbarSentry_v1_21_R11 extends ChannelDuplexHandler {
+public final class HLBossbarSentry_v1_21_R11 extends BossbarSentry {
 
-    private static final Field ID_FIELD;
-    private static final Field OPERATION_FIELD;
+    private static final Field ID_FIELD = locateIdField();
+    private static final Field OPERATION_FIELD = locateOperationField();
 
-    static {
-        Field id = null;
-        Field op = null;
-        for (Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
-            Class<?> t = f.getType();
-            if (t == java.util.UUID.class && id == null) {
-                f.setAccessible(true);
-                id = f;
-            } else if (t.isInterface() && id != null && op == null) {
-                // Operation is a sealed interface in current Mojang mappings.
-                f.setAccessible(true);
-                op = f;
-            } else if (t.isEnum() && op == null) {
-                // Older mappings: Operation is an inner enum.
-                f.setAccessible(true);
-                op = f;
+    private static Field locateIdField() {
+        try {
+            Field f = ClientboundBossEventPacket.class.getDeclaredField("id");
+            f.setAccessible(true);
+            return f;
+        } catch (NoSuchFieldException primary) {
+            // Fall back to type scan if Mojang ever renames the field.
+            for (Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
+                if (f.getType() == UUID.class) {
+                    f.setAccessible(true);
+                    return f;
+                }
             }
-        }
-        if (id == null || op == null) {
             throw new IllegalStateException(
-                    "Could not locate ClientboundBossEventPacket id/operation fields");
+                    "Could not locate UUID field on ClientboundBossEventPacket", primary);
         }
-        ID_FIELD = id;
-        OPERATION_FIELD = op;
     }
 
-    private final UUID playerUuid;
-    private final HLPlugin plugin;
+    private static Field locateOperationField() {
+        try {
+            Field f = ClientboundBossEventPacket.class.getDeclaredField("operation");
+            f.setAccessible(true);
+            return f;
+        } catch (NoSuchFieldException primary) {
+            // Fall back: first non-UUID, non-primitive object field that is an
+            // interface or enum (matches both sealed-interface and legacy-enum mappings).
+            for (Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
+                Class<?> t = f.getType();
+                if (t == UUID.class) continue;
+                if (t.isInterface() || t.isEnum()) {
+                    f.setAccessible(true);
+                    return f;
+                }
+            }
+            throw new IllegalStateException(
+                    "Could not locate operation field on ClientboundBossEventPacket", primary);
+        }
+    }
 
     public HLBossbarSentry_v1_21_R11(HLPlugin plugin, UUID playerUuid) {
-        this.plugin = plugin;
-        this.playerUuid = playerUuid;
+        super(plugin, playerUuid);
     }
 
     @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        if (msg instanceof ClientboundBossEventPacket pkt) {
-            try {
-                inspect(pkt);
-            } catch (Throwable t) {
-                plugin.getLogger().fine("Bossbar sentry inspection failed: " + t);
-            }
+    protected UUID parseAddUuid(Object msg) {
+        if (!(msg instanceof ClientboundBossEventPacket pkt)) return null;
+        try {
+            Object op = OPERATION_FIELD.get(pkt);
+            if (op == null) return null;
+            boolean isAdd = "AddOperation".equals(op.getClass().getSimpleName())
+                    || (op instanceof Enum<?> e && "ADD".equals(e.name()));
+            if (!isAdd) return null;
+            return (UUID) ID_FIELD.get(pkt);
+        } catch (IllegalAccessException ex) {
+            return null;
         }
-        super.write(ctx, msg, promise);
-    }
-
-    private void inspect(ClientboundBossEventPacket pkt) throws IllegalAccessException {
-        Object op = OPERATION_FIELD.get(pkt);
-        if (op == null) return;
-        // Match by simple name on the operation's class. ADD ops are `AddOperation`
-        // (sealed-interface mappings) or the `ADD` enum constant (legacy mappings).
-        boolean isAdd = "AddOperation".equals(op.getClass().getSimpleName())
-                || (op instanceof Enum<?> e && "ADD".equals(e.name()));
-        if (!isAdd) return;
-
-        UUID uuid = (UUID) ID_FIELD.get(pkt);
-
-        AnchorRegistry registry = plugin.getAnchorRegistry();
-        if (registry.tryConsumeMarker(playerUuid, uuid)) return;
-        if (registry.isAnchor(playerUuid, uuid)) return;
-
-        plugin.getBossbarReorderScheduler().requestReshow(playerUuid);
     }
 }
