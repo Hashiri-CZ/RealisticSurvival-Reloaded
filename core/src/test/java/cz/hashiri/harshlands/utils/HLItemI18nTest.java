@@ -57,4 +57,32 @@ class HLItemI18nTest {
         assertEquals("[items.test.unknown]",
                 HLItem.resolveI18n("i18n:items.test.unknown"));
     }
+
+    @Test
+    void i18n_prefix_with_list_value_resolves_to_full_list(@TempDir Path root) throws IOException {
+        Path en = root.resolve("en-US");
+        Files.createDirectories(en);
+        Files.writeString(en.resolve("items.yml"), """
+                items:
+                  test:
+                    sample_item:
+                      lore:
+                        - "&7First line"
+                        - "&7Second line"
+                        - ""
+                        - "&6Footer"
+                """);
+        Messages.bind(new LocaleManager(root, "en-US"));
+        Messages.reload();
+
+        // Messages.getList runs ChatColor.translateAlternateColorCodes('&', ...) on each entry.
+        java.util.List<String> resolved = cz.hashiri.harshlands.locale.Messages.getList(
+                "items.test.sample_item.lore");
+
+        assertEquals(4, resolved.size());
+        assertEquals("§7First line", resolved.get(0));
+        assertEquals("§7Second line", resolved.get(1));
+        assertEquals("", resolved.get(2));
+        assertEquals("§6Footer", resolved.get(3));
+    }
 }
