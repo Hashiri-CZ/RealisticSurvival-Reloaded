@@ -39,11 +39,22 @@ public final class BookLineMetrics {
         int width = 0;
         for (int i = 0; i < stripped.length(); i++) {
             char c = stripped.charAt(i);
-            int glyph = (c < 128) ? ASCII_WIDTHS[c] : 6;
-            width += glyph + 1; // +1 for the spacing after each glyph
+            if (c > 'ÿ') {
+                // Vanilla renders non-Latin codepoints via unifont. Use the same
+                // 12-px advance that NutritionPreviewLayout.measureTextAdvance
+                // applies, which over-estimates slightly to keep the book-line
+                // validator on the safe side (better a false warn than overflow).
+                width += 12; // unifont advance already includes its trailing space
+            } else {
+                width += ASCII_WIDTHS[c] + 1; // +1 spacing after each ASCII glyph
+            }
         }
-        // The last glyph's trailing spacing doesn't render; subtract it.
-        return Math.max(0, width - 1);
+        // The last ASCII glyph's trailing spacing doesn't render; subtract it,
+        // but only if the string ended on an ASCII char.
+        if (!stripped.isEmpty() && stripped.charAt(stripped.length() - 1) <= 'ÿ') {
+            width = Math.max(0, width - 1);
+        }
+        return width;
     }
 
     public static boolean exceedsBookLine(String text) {
