@@ -9,12 +9,14 @@
 out/
 
 # My stupidly stupid stuff
-apache-maven-3.9.6
-BuildData
-Bukkit
-CraftBukkit
-Spigot
-work
+# Anchored so they only match top-level upstream-source-checkout directories,
+# not Java packages like cz.hashiri.harshlands.api.bukkit.event.
+/apache-maven-3.9.6/
+/BuildData/
+/Bukkit/
+/CraftBukkit/
+/Spigot/
+/work/
 
 # Compiled class file
 *.class

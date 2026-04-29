@@ -2,7 +2,6 @@ package cz.hashiri.harshlands.api.bukkit.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Fired after {@code /hl reload} completes. Mirrors BetterHud's
@@ -21,7 +20,7 @@ public class PluginReloadedEvent extends Event {
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 
