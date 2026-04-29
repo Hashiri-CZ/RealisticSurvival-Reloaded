@@ -9,10 +9,23 @@ items:
   firstaid:
     bandage:
       display_name: "&fBandage"
+      lore:
+        - "&7A rough strip of cloth for stopping bleeding."
+        - "&7Restores 2 HP to a damaged arm or leg when used."
+        - "&8&o(Healing active once BodyHealth integration lands.)"
     splint:
       display_name: "&fSplint"
+      lore:
+        - "&7Sticks and string lashed for bracing a broken leg."
+        - "&7Restores 4 HP to a leg when used."
+        - "&8&o(Healing active once BodyHealth integration lands.)"
     medical_kit:
       display_name: "&fMedical Kit"
+      lore:
+        - "&7Bandages, splints, and clean cloth in a leather pouch."
+        - "&7Fully restores every damaged body part when used."
+        - "&7Rare. Consumed on use."
+        - "&8&o(Healing active once BodyHealth integration lands.)"
   toughasnails:
     ice_cube:
       display_name: "&fIce Cube"
