@@ -124,7 +124,7 @@ DynamicSurroundings:
     world_nether: true
     world_the_end: true
 # Renders the BodyHealth plugin's per-body-part HUD via Harshlands' BossbarHUD.
-# Requires the BodyHealth plugin AND PlaceholderAPI (with BodyHealth's expansion)
+# Requires the BodyHealth plugin AND PlaceholderAPI
 # to be installed. Without those, this module stays disabled and logs a one-time
 # WARNING on startup.
 BodyHealth:
