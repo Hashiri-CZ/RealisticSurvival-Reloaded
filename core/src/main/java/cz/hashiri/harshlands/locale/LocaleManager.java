@@ -16,7 +16,7 @@ public class LocaleManager {
     private final Path translationsRoot;
     private final String locale;
     private final Logger logger;
-    private Map<String, Object> flatMap = new HashMap<>();
+    private volatile Map<String, Object> flatMap = new HashMap<>();
     private final java.util.Set<String> reportedMissingKeys = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     public LocaleManager(Path translationsRoot, String locale) {
@@ -67,8 +67,14 @@ public class LocaleManager {
             Object value = section.get(key);
             if (value instanceof ConfigurationSection subsection) {
                 flatten(subsection, fullKey, out);
-            } else {
-                out.put(fullKey, value);
+            } else if (value instanceof List<?> list) {
+                List<String> translated = new ArrayList<>(list.size());
+                for (Object item : list) {
+                    translated.add(org.bukkit.ChatColor.translateAlternateColorCodes('&', String.valueOf(item)));
+                }
+                out.put(fullKey, java.util.Collections.unmodifiableList(translated));
+            } else if (value != null) {
+                out.put(fullKey, org.bukkit.ChatColor.translateAlternateColorCodes('&', value.toString()));
             }
         }
     }
@@ -81,7 +87,7 @@ public class LocaleManager {
             }
             return "[" + key + "]";
         }
-        return org.bukkit.ChatColor.translateAlternateColorCodes('&', value.toString());
+        return value.toString();
     }
 
     public List<String> getList(String key) {
@@ -94,10 +100,8 @@ public class LocaleManager {
             }
             return List.of();
         }
-        List<String> translated = new ArrayList<>(raw.size());
-        for (Object item : raw) {
-            translated.add(org.bukkit.ChatColor.translateAlternateColorCodes('&', String.valueOf(item)));
-        }
-        return translated;
+        @SuppressWarnings("unchecked")
+        List<String> typed = (List<String>) raw;
+        return typed;
     }
 }
