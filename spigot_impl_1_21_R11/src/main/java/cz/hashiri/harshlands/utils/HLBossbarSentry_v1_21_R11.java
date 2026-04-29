@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 /**
@@ -22,13 +23,13 @@ import java.util.UUID;
  */
 public final class HLBossbarSentry_v1_21_R11 extends ChannelDuplexHandler {
 
-    private static final java.lang.reflect.Field ID_FIELD;
-    private static final java.lang.reflect.Field OPERATION_FIELD;
+    private static final Field ID_FIELD;
+    private static final Field OPERATION_FIELD;
 
     static {
-        java.lang.reflect.Field id = null;
-        java.lang.reflect.Field op = null;
-        for (java.lang.reflect.Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
+        Field id = null;
+        Field op = null;
+        for (Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
             Class<?> t = f.getType();
             if (t == java.util.UUID.class && id == null) {
                 f.setAccessible(true);
@@ -76,13 +77,11 @@ public final class HLBossbarSentry_v1_21_R11 extends ChannelDuplexHandler {
         if (op == null) return;
         // Match by simple name on the operation's class. ADD ops are `AddOperation`
         // (sealed-interface mappings) or the `ADD` enum constant (legacy mappings).
-        String opName = op.getClass().getSimpleName();
-        boolean isAdd = "AddOperation".equals(opName)
+        boolean isAdd = "AddOperation".equals(op.getClass().getSimpleName())
                 || (op instanceof Enum<?> e && "ADD".equals(e.name()));
         if (!isAdd) return;
 
         UUID uuid = (UUID) ID_FIELD.get(pkt);
-        if (uuid == null) return;
 
         AnchorRegistry registry = plugin.getAnchorRegistry();
         if (registry.tryConsumeMarker(playerUuid, uuid)) return;
