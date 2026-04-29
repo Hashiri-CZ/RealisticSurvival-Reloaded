@@ -12,14 +12,12 @@ class AnchorRegistryTest {
 
     private AnchorRegistry registry;
     private UUID player;
-    private UUID instanceTag;
     private UUID inflightUuid;
 
     @BeforeEach
     void setUp() {
         registry = new AnchorRegistry();
         player = UUID.randomUUID();
-        instanceTag = UUID.randomUUID();
         inflightUuid = UUID.randomUUID();
     }
 
@@ -33,7 +31,7 @@ class AnchorRegistryTest {
     @Nested
     class MarkPending {
         @Test void no_capture_until_first_consume() {
-            registry.markPending(player, instanceTag);
+            registry.markPending(player);
             assertTrue(registry.getAnchor(player).isEmpty());
         }
     }
@@ -41,7 +39,7 @@ class AnchorRegistryTest {
     @Nested
     class TryConsumeMarker {
         @Test void returns_true_and_stores_uuid_when_marker_pending() {
-            registry.markPending(player, instanceTag);
+            registry.markPending(player);
             assertTrue(registry.tryConsumeMarker(player, inflightUuid));
             assertEquals(inflightUuid, registry.getAnchor(player).orElseThrow());
         }
@@ -52,7 +50,7 @@ class AnchorRegistryTest {
         }
 
         @Test void second_consume_returns_false() {
-            registry.markPending(player, instanceTag);
+            registry.markPending(player);
             assertTrue(registry.tryConsumeMarker(player, inflightUuid));
             UUID secondAttempt = UUID.randomUUID();
             assertFalse(registry.tryConsumeMarker(player, secondAttempt));
@@ -63,13 +61,13 @@ class AnchorRegistryTest {
     @Nested
     class IsAnchor {
         @Test void true_for_stored_anchor() {
-            registry.markPending(player, instanceTag);
+            registry.markPending(player);
             registry.tryConsumeMarker(player, inflightUuid);
             assertTrue(registry.isAnchor(player, inflightUuid));
         }
 
         @Test void false_for_unknown_uuid() {
-            registry.markPending(player, instanceTag);
+            registry.markPending(player);
             registry.tryConsumeMarker(player, inflightUuid);
             assertFalse(registry.isAnchor(player, UUID.randomUUID()));
         }
@@ -82,7 +80,7 @@ class AnchorRegistryTest {
     @Nested
     class Clear {
         @Test void removes_anchor_and_marker() {
-            registry.markPending(player, instanceTag);
+            registry.markPending(player);
             registry.tryConsumeMarker(player, inflightUuid);
             registry.clear(player);
             assertTrue(registry.getAnchor(player).isEmpty());

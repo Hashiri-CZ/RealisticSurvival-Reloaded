@@ -17,12 +17,13 @@
 package cz.hashiri.harshlands.utils;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Per-player registry pairing an Adventure-internal bossbar UUID with our
- * anchor instance tag. Used by the bossbar Sentry to distinguish our anchor's
+ * anchor instance. Used by the bossbar Sentry to distinguish our anchor's
  * outbound ADD packet from foreign plugins' bossbar packets.
  *
  * <p>Workflow: {@link #markPending} is called on the Bukkit main thread just
@@ -36,11 +37,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AnchorRegistry {
 
     private final ConcurrentHashMap<UUID, UUID> anchorByPlayer = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<UUID, UUID> markerByPlayer = new ConcurrentHashMap<>();
+    private final Set<UUID> pendingMarkers = ConcurrentHashMap.newKeySet();
 
     /** Mark that the next ADD packet observed for this player should be paired with our anchor. */
-    public void markPending(UUID playerUuid, UUID instanceTag) {
-        markerByPlayer.put(playerUuid, instanceTag);
+    public void markPending(UUID playerUuid) {
+        pendingMarkers.add(playerUuid);
     }
 
     /**
@@ -50,8 +51,7 @@ public class AnchorRegistry {
      * @return true if a marker was pending and the UUID was stored
      */
     public boolean tryConsumeMarker(UUID playerUuid, UUID inflightUuid) {
-        UUID removed = markerByPlayer.remove(playerUuid);
-        if (removed == null) return false;
+        if (!pendingMarkers.remove(playerUuid)) return false;
         anchorByPlayer.put(playerUuid, inflightUuid);
         return true;
     }
@@ -70,6 +70,6 @@ public class AnchorRegistry {
     /** Drop both anchor and marker for a player (e.g. on quit). */
     public void clear(UUID playerUuid) {
         anchorByPlayer.remove(playerUuid);
-        markerByPlayer.remove(playerUuid);
+        pendingMarkers.remove(playerUuid);
     }
 }

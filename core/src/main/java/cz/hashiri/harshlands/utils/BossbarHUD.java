@@ -58,7 +58,6 @@ public class BossbarHUD {
 
     private final Audience audience;
     private final BossBar mainBar;
-    private final UUID instanceTag = UUID.randomUUID();
     private final UUID playerUuid; // null when caller did not opt into anchor tracking
     // Insertion-order preserved; sorted by X when building the title
     private final Map<String, HudElement> elements = new LinkedHashMap<>();
@@ -103,7 +102,7 @@ public class BossbarHUD {
     public void show() {
         if (playerUuid != null) {
             cz.hashiri.harshlands.HLPlugin.getPlugin().getAnchorRegistry()
-                    .markPending(playerUuid, instanceTag);
+                    .markPending(playerUuid);
         }
         audience.showBossBar(mainBar);
     }
