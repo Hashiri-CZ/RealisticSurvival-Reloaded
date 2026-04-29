@@ -14,6 +14,7 @@
     <url>https://github.com/Hashiri/Harshlands</url>
 
     <modules>
+        <module>harshlands-api</module>
         <module>core</module>
         <module>spigot_impl_1_21_R11</module>
         <module>spigot_impl_26_1_R1</module>
