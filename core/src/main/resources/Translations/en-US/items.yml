@@ -195,132 +195,406 @@ items:
   baubles:
     dragons_eye:
       display_name: "&fDragon's Eye"
+      lore:
+        - "&7Night Vision On"
+        - "&7Current Target: None"
+        - ""
+        - "&6Bauble (Head)"
     poison_stone:
       display_name: "&fPoison Stone"
+      lore:
+        - "&7Poisons enemies on contact. If the target is already poisoned,"
+        - "&7your strikes deal additional damage."
+        - ""
+        - "&6Bauble (Any)"
     potion_ring:
       display_name: "&fPotion Ring"
+      lore:
+        - "&7Crafting component for the specialized potion rings."
+        - ""
+        - "&6Bauble (Ring)"
     potion_ring_resistance:
       display_name: "&fPotion Ring of Resistance"
+      lore:
+        - "&7Continuously applies Resistance while worn."
+        - "&7Effect grows stronger when multiple rings are equipped."
+        - ""
+        - "&6Bauble (Ring)"
     potion_ring_regeneration:
       display_name: "&fPotion Ring of Regeneration"
+      lore:
+        - "&7Continuously applies Regeneration while worn."
+        - "&7Effect grows stronger when multiple rings are equipped."
+        - ""
+        - "&6Bauble (Ring)"
     potion_ring_haste:
       display_name: "&fPotion Ring of Haste"
+      lore:
+        - "&7Continuously applies Haste while worn."
+        - "&7Effect grows stronger when multiple rings are equipped."
+        - ""
+        - "&6Bauble (Ring)"
     potion_ring_strength:
       display_name: "&fPotion Ring of Strength"
+      lore:
+        - "&7Continuously applies Strength while worn."
+        - "&7Effect grows stronger when multiple rings are equipped."
+        - ""
+        - "&6Bauble (Ring)"
     potion_ring_speed:
       display_name: "&fPotion Ring of Speed"
+      lore:
+        - "&7Continuously applies Speed while worn."
+        - "&7Effect grows stronger when multiple rings are equipped."
+        - ""
+        - "&6Bauble (Ring)"
     potion_ring_jump_boost:
       display_name: "&fPotion Ring of Jump Boost"
+      lore:
+        - "&7Continuously applies Jump Boost while worn."
+        - "&7Effect grows stronger when multiple rings are equipped."
+        - ""
+        - "&6Bauble (Ring)"
     ender_queens_crown:
       display_name: "&bEnder Queen's Crown"
+      lore:
+        - "&7Endermen will not aggro on sight. When you take damage, nearby"
+        - "&7endermen are claimed as allies to fight for you."
+        - "&7Contact with water deals damage while worn."
+        - ""
+        - "&6Bauble (Head)"
     sunglasses:
       display_name: "&fSunglasses"
+      lore:
+        - "&9Grants immunity to blindness."
+        - "&aCool guys don't look at explosions."
+        - ""
+        - "&6Bauble (Head)"
     balloon:
       display_name: "&fBalloon"
+      lore:
+        - "&9Increases jump height and negates some fall damage."
+        - ""
+        - "&6Bauble (Any)"
     cobalt_shield:
       display_name: "&fCobalt Shield"
+      lore:
+        - "&9Grants immunity to knockback when held or equipped in bauble slot."
+        - ""
+        - "&6Bauble (Any)"
     obsidian_skull:
       display_name: "&fObsidian Skull"
+      lore:
+        - "&9Grants immunity to burning and 50% resistance to fire damage. (Does not."
+        - "&9protect against lava)"
+        - "&aHolding this makes you feel vaguely nervous."
+        - ""
+        - "&6Bauble (Any)"
     obsidian_shield:
       display_name: "&fObsidian Shield"
+      lore:
+        - "&9Grants partial fire resistance and immunity to knockback when held or equipped"
+        - "&9in bauble slot"
+        - ""
+        - "&6Bauble (Any)"
     forbidden_fruit:
       display_name: "&fForbidden Fruit"
+      lore:
+        - "&9Grants immunity to hunger status effect, and nausea."
+        - ""
+        - "&6Bauble (Any)"
     vitamins:
       display_name: "&fVitamins"
+      lore:
+        - "&9Grants immunity to weakness and mining fatigue."
+        - ""
+        - "&6Bauble (Any)"
     ring_overclocking:
       display_name: "&fRing of Overclocking"
+      lore:
+        - "&9Grants immunity to slowness and +7% move speed."
+        - "&aEveryone knows that blue LEDs make your PC run faster."
+        - ""
+        - "&6Bauble (Ring)"
     shulker_heart:
       display_name: "&fShulker Heart"
+      lore:
+        - "&9Grants immunity to levitation"
+        - "&aIt's squishy..."
+        - ""
+        - "&6Bauble (Any)"
     ring_free_action:
       display_name: "&fRing of Free Action"
+      lore:
+        - "&9Grants immunity to slowness and levitation and allows free movement through"
+        - "&9cobwebs"
+        - ""
+        - "&6Bauble (Ring)"
     bezoar:
       display_name: "&fBezoar"
+      lore:
+        - "&9Grants immunity to poison."
+        - ""
+        - "&6Bauble (Any)"
     ender_dragonscale:
       display_name: "&fEnder Dragon Scale"
+      lore:
+        - "&7A scale shed by an ender dragon. Crafting material."
+        - "&7Can be forged into dragonscale baubles."
     cracked_black_dragonscale:
       display_name: "&fCracked Black Dragon Scale"
+      lore:
+        - "&aBlack dragon scales are said to protect against withering. Perhaps this broken one"
+        - "&acould be repaired?"
     black_dragonscale_bauble:
       display_name: "&fBlack Dragon Scale"
+      lore:
+        - "&9Grants immunity to withering."
+        - ""
+        - "&6Bauble (Any)"
     mixed_color_dragonscale:
       display_name: "&fMixed Color Dragon Scale"
+      lore:
+        - "&9Grants immunity to poison and withering."
+        - "&aInterestingly, the bezoar has fused with the scale and made it appear to"
+        - "&abe two different colors."
+        - ""
+        - "&6Bauble (Any)"
     ankh_charm:
       display_name: "&fAnkh Charm"
+      lore:
+        - "&9Grants immunity to most negative status effects."
+        - ""
+        - "&6Bauble (Any)"
     ankh_shield:
       display_name: "&fAnkh Shield"
+      lore:
+        - "&9Grants partial fire resistance and immunity to knockback and most negative"
+        - "&9status effects when held or equipped in bauble slot."
+        - ""
+        - "&6Bauble (Any)"
     iron_ring:
       display_name: "&fIron Ring"
+      lore:
+        - "&9Crafting component"
     magic_mirror:
       display_name: "&fMagic Mirror"
+      lore:
+        - "&9Teleports you to your spawn point."
+        - "&aIt may bend space at will, but it can't make ugly things beautiful,"
+        - "&aunfortunately for you."
     recall_potion:
       display_name: "&fRecall Potion"
+      lore:
+        - "&9Teleports you to your spawn point."
     wormhole_mirror:
       display_name: "&fWormhole Mirror"
+      lore:
+        - "&9Right click to teleport to your spawn point."
+        - "&9Right click while sneaking to teleport to another player."
+        - "&aYou can feel the void staring back at you."
     wormhole_potion:
       display_name: "&fWormhole Potion"
+      lore:
+        - "&9Teleports you to other players."
+        - "&aYou suddenly feel very alone."
     lucky_horseshoe:
       display_name: "&fLucky Horseshoe"
+      lore:
+        - "&9Negates fall damage."
+        - "&aWhy did the horse need this?"
+        - ""
+        - "&6Bauble (Any)"
     scarlite_ring:
       display_name: "&fScarlite Ring"
+      lore:
+        - "&7Slowly restores health"
+        - ""
+        - "&6Bauble (Ring)"
     spectral_silt:
       display_name: "&fSpectral Silt"
+      lore:
+        - "&9Crafting component"
     disintegration_tablet:
       display_name: "&fDisintegration Tablet"
+      lore:
+        - "&9Craft with dungeon loot to convert it into spectral silt"
     broken_heart:
       display_name: "&fBroken Heart"
+      lore:
+        - "&7Durability: 3/3"
+        - "&9Lethal damage destroys empty heart containers instead."
+        - "&9Sleep to regenerate heart containers."
+        - "&aHow did this happen?"
+        - ""
+        - "&6Bauble (Any)"
     cross_necklace:
       display_name: "&fCross Necklace"
+      lore:
+        - "&9Increases length of invicibility when damaged."
+        - ""
+        - "&6Bauble (Amulet)"
     wrath_pendant:
       display_name: "&fWrath Pendant"
+      lore:
+        - "&7Carved from obsidian and anger."
+        - "&7+2 damage on hit. Strength I while worn."
+        - ""
+        - "&6Bauble (Amulet)"
     pride_pendant:
       display_name: "&fPride Pendant"
+      lore:
+        - "&7Forged from vanity and spite."
+        - "&7Reflects 15% of incoming damage back to attackers."
+        - "&7Resistance I while worn. Stacks, max 50% reflection."
+        - ""
+        - "&6Bauble (Amulet)"
     gluttony_pendant:
       display_name: "&fGluttony Pendant"
+      lore:
+        - "&7Born of insatiable hunger."
+        - "&7Saturation I while worn. Reduces hunger exhaustion drain."
+        - ""
+        - "&6Bauble (Amulet)"
     sin_pendant:
       display_name: "&fSin Pendant"
+      lore:
+        - "&7A convergence of wrath, pride, and gluttony."
+        - "&7Combines all three sin pendant effects."
+        - "&7Does not stack with individual sin pendants."
+        - ""
+        - "&6Bauble (Amulet)"
     golden_crown:
       display_name: "&fGolden Crown"
+      lore:
+        - "&7A crown fit for the merciless. Provides bonus armor"
+        - "&7when worn in the head slot."
+        - "&7Durability: 275/275"
     flare_gun:
       display_name: "&fFlare Gun"
+      lore:
+        - "&9Exactly what it sounds like"
+        - "&aShine a light on the situation!"
+        - "&7Durability: 384/384"
     flare:
       display_name: "&fFlare"
+      lore:
+        - "&9Ammo for the Flare Gun."
     phytoprostasia_amulet:
       display_name: "&fPhytoprostasia Amulet"
+      lore:
+        - "&7Protects from cactus and berry bush damage"
+        - ""
+        - "&6Bauble (Amulet)"
     emerald_ring:
       display_name: "&fEmerald Ring"
+      lore:
+        - "&7Crafting component. No active effect in 1.3.1 — mechanic pending."
+        - ""
+        - "&6Bauble (Ring)"
     emerald_amulet:
       display_name: "&fEmerald Amulet"
+      lore:
+        - "&7Crafting component. No active effect in 1.3.1 — mechanic pending."
+        - ""
+        - "&6Bauble (Amulet)"
     glowing_ingot:
       display_name: "&fGlowing Ingot"
+      lore:
+        - "&7Crafting component. Can be ground into glowing powder."
     glowing_powder:
       display_name: "&fGlowing Powder"
+      lore:
+        - "&7Crafting component. Refined from glowing ingots."
     glowing_gem:
       display_name: "&fGlowing Gem"
+      lore:
+        - "&7Crafting component. Used in advanced bauble recipes."
     dwarf_stout:
       display_name: "&fDwarf Stout"
+      lore:
+        - "&7A tonic brewed from the Ring of the Dwarves."
+        - "&7Drinking it may relieve whatever that ring has done to you."
+        - "&7No active effect in 1.3.1 — mechanic pending."
     fairy_dew:
       display_name: "&fFairy Dew"
+      lore:
+        - "&7An elixir distilled from the Ring of the Fairies."
+        - "&7Drinking it may undo whatever curse the ring left behind."
+        - "&7No active effect in 1.3.1 — mechanic pending."
     stone_negative_gravity:
       display_name: "&bStone of Negative Gravity"
+      lore:
+        - "&7Suspends gravity while in the bauble slot. Left-click in hand"
+        - "&7to thrust upward; sneak and left-click to descend."
+        - ""
+        - "&6Bauble (Any)"
     stone_inertia_null:
       display_name: "&bStone of Inertia Null"
+      lore:
+        - "&7Completely negates knockback and fall damage."
+        - ""
+        - "&6Bauble (Any)"
     stone_greater_inertia:
       display_name: "&bStone of Greater Inertia"
+      lore:
+        - "&7Boosts walk speed and jump height. Reduces fall damage and"
+        - "&7softens some knockback. Heavier than it looks."
+        - ""
+        - "&6Bauble (Any)"
     ring_enchanted_eyes:
       display_name: "&bRing of Enchanted Eyes"
+      lore:
+        - "&7No active effect in 1.3.1 — mechanic pending."
+        - ""
+        - "&6Bauble (Any)"
     stone_sea:
       display_name: "&bStone of the Sea"
+      lore:
+        - "&7Grants water breathing and night vision underwater."
+        - "&7Dramatically increases swim speed."
+        - ""
+        - "&6Bauble (Amulet)"
     polarized_stone:
       display_name: "&bPolarized Stone"
+      lore:
+        - "&7Magnetization On"
+        - "&6Repell Off"
+        - ""
+        - "&6Bauble (Amulet)"
     ring_fairies:
       display_name: "&bRing of the Fairies"
+      lore:
+        - "&7A fey curse bound in metal. No active effect in 1.3.1 — mechanic pending."
+        - "&7Required to brew Fairy Dew."
+        - ""
+        - "&6Bauble (Ring)"
     ring_dwarves:
       display_name: "&bRing of the Dwarves"
+      lore:
+        - "&7Ancient dwarven craft, sealed with runes. No active effect in 1.3.1 — mechanic pending."
+        - "&7Required to brew Dwarf Stout."
+        - ""
+        - "&6Bauble (Ring)"
     wither_ring:
       display_name: "&bWither Ring"
+      lore:
+        - "&7Grants immunity to the Wither effect."
+        - ""
+        - "&6Bauble (Ring)"
     shield_honor:
       display_name: "&bShield of Honor"
+      lore:
+        - "&7Continuously applies Resistance while worn."
+        - "&7Reduces explosion damage."
+        - ""
+        - "&6Bauble (Body)"
     miners_ring:
       display_name: "&bMiner's Ring"
+      lore:
+        - "&7Continuously applies Haste while worn."
+        - ""
+        - "&6Bauble (Ring)"
     warped_scroll:
       display_name: "&fWarped Scroll"
     bound_scroll:
@@ -341,14 +615,22 @@ items:
       display_name: "&7 "
     phantom_prism:
       display_name: "&fPhantom Prism"
+      lore:
+        - "&7Toggles visibility of some armor."
+        - ""
+        - "&6Bauble (Any)"
     gui_glass:
       display_name: "&7 "
     bauble_bag:
       display_name: "&fBauble Bag"
     next_page:
       display_name: "&eNext Page"
+      lore:
+        - "&eClick to go the next page."
     back_page:
       display_name: "&eBack Page"
+      lore:
+        - "&eClick to go back."
   spartanweaponry:
     handle:
       display_name: "&fHandle"
