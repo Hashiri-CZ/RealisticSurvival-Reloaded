@@ -72,6 +72,20 @@ public class BossbarHUD {
             this.content = content;
             this.advance = advance;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof HudElement other)) return false;
+            return x == other.x
+                    && advance == other.advance
+                    && content.equals(other.content);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(x, advance, content);
+        }
     }
 
     /** Backward-compatible constructor for callers that do not need anchor tracking. */
@@ -144,7 +158,10 @@ public class BossbarHUD {
      * @param advance   natural font advance width (in pixels) of {@code content}'s glyphs
      */
     public void setElement(String elementId, int xPixels, Component content, int advance) {
-        elements.put(elementId, new HudElement(xPixels, content, advance));
+        HudElement next = new HudElement(xPixels, content, advance);
+        HudElement prev = elements.get(elementId);
+        if (next.equals(prev)) return; // identical placement+content; nothing to redraw
+        elements.put(elementId, next);
         mainBar.name(rebuildTitle());
     }
 
