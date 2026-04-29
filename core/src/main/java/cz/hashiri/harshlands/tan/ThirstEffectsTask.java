@@ -130,15 +130,24 @@ public class ThirstEffectsTask extends BukkitRunnable implements HLTask {
     @Override
     public void run() {
         Player bukkitPlayer = this.player.getPlayer();
-
-        if (!conditionsMet(bukkitPlayer)) {
+        if (bukkitPlayer == null || !globalConditionsMet(bukkitPlayer)
+                || bukkitPlayer.isDead()
+                || !allowedWorlds.contains(bukkitPlayer.getWorld().getName())) {
             stop();
             return;
         }
 
         double thirst = manager.getThirst(bukkitPlayer);
+        if (thirst > thirstyThreshold) {
+            stop();
+            return;
+        }
+
         Tier active = selectTier(thirst, dehydratedThreshold, parchedThreshold, thirstyThreshold);
         if (active == null) {
+            // selectTier(...) cannot return null when thirst <= thirstyThreshold
+            // (the condition above), but be defensive in case a misconfigured
+            // threshold ordering breaks the invariant.
             stop();
             return;
         }
