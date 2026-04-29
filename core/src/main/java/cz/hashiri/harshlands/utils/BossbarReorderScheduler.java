@@ -24,10 +24,11 @@ public final class BossbarReorderScheduler {
     private final PendingReshow pending = new PendingReshow();
     private long lastWarnNanos = 0L;
     private int observedReshowsThisWindow = 0;
-    private long windowStartNanos = 0L;
+    private long windowStartNanos;
 
     public BossbarReorderScheduler(HLPlugin plugin) {
         this.plugin = plugin;
+        this.windowStartNanos = System.nanoTime();
     }
 
     /**
@@ -60,7 +61,7 @@ public final class BossbarReorderScheduler {
     /** Emits a WARN log at most once per minute if reshow rate exceeds 5/sec sustained. */
     private void recordReshowForRateWarning() {
         long now = System.nanoTime();
-        if (windowStartNanos == 0L || now - windowStartNanos > 10_000_000_000L) {
+        if (now - windowStartNanos > 10_000_000_000L) {
             windowStartNanos = now;
             observedReshowsThisWindow = 1;
             return;
