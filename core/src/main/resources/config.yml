@@ -123,6 +123,9 @@ DynamicSurroundings:
     world: true
     world_nether: true
     world_the_end: true
+BodyHealth:
+  Enabled: true
+  Worlds: {}
 
 ####################################
 #          Miscellaneous           #
