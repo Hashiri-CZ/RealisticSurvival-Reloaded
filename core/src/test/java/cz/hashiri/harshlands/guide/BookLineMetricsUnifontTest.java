@@ -34,4 +34,25 @@ class BookLineMetricsUnifontTest {
         int width = BookLineMetrics.pixelWidth("Hi");
         assertTrue(width >= 6 && width <= 14, "ASCII width unchanged: " + width);
     }
+
+    @Test
+    void latin1_chars_do_not_crash() {
+        // Latin-1 supplement chars (128..255) — '«' (0xAB), '»' (0xBB), accented
+        // letters used in Czech/French/etc. — must NOT throw
+        // ArrayIndexOutOfBoundsException. The ASCII_WIDTHS table is sized 128,
+        // so any path that indexes it with a Latin-1 codepoint blows up at
+        // plugin startup during guide validation. Single-char widths are
+        // 6 px (default glyph) — the trailing 1-px spacing is subtracted.
+        assertEquals(6, BookLineMetrics.pixelWidth("«"));
+        assertEquals(6, BookLineMetrics.pixelWidth("é"));
+        assertEquals(6, BookLineMetrics.pixelWidth("ÿ")); // boundary: U+00FF
+    }
+
+    @Test
+    void mixed_ascii_and_latin1_string() {
+        // A plausible localized phrase mixing ASCII and Latin-1 must measure
+        // without throwing.
+        int width = BookLineMetrics.pixelWidth("«hello»");
+        assertTrue(width > 0);
+    }
 }

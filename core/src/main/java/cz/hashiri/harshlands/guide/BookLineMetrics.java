@@ -46,7 +46,11 @@ public final class BookLineMetrics {
                 // validator on the safe side (better a false warn than overflow).
                 width += 12; // unifont advance already includes its trailing space
             } else {
-                width += ASCII_WIDTHS[c] + 1; // +1 spacing after each ASCII glyph
+                // ASCII (0..127) reads from the table; Latin-1 supplement
+                // (128..255) defaults to vanilla's 6-px glyph since those chars
+                // share the default font atlas, not unifont.
+                int glyph = (c < 128) ? ASCII_WIDTHS[c] : 6;
+                width += glyph + 1; // +1 spacing after each glyph
             }
         }
         // The last ASCII glyph's trailing spacing doesn't render; subtract it,
