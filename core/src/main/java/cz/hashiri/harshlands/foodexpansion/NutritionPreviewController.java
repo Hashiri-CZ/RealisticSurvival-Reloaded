@@ -23,7 +23,9 @@ public class NutritionPreviewController extends BukkitRunnable {
 
     private final Player player;
     private final FoodExpansionModule module;
-    private String lastSignature = null; // no-op guard
+    private long lastSignatureHash = 0L;
+    private String lastSignatureKey = null;
+    private boolean hasLastSignature = false;
 
     private final int cellSpacing;
 
@@ -66,11 +68,21 @@ public class NutritionPreviewController extends BukkitRunnable {
 
         double comfort = module.getComfortMultiplier(player);
 
-        String sig = itemKey + "|" + (int) data.getProtein() + "|" + (int) data.getCarbs()
-                + "|" + (int) data.getFats() + "|" + comfort
-                + "|" + profile.protein() + "|" + profile.carbs() + "|" + profile.fats();
-        if (sig.equals(lastSignature)) return;
-        lastSignature = sig;
+        // Bit-pack the four ints (each fits in one byte for [0,100] macros) plus
+        // a hashed comfort multiplier into a single long. Compare against the
+        // previous tick's hash to skip the layout build when nothing changed.
+        long sig = packSignature(
+                (int) data.getProtein(), (int) data.getCarbs(), (int) data.getFats(),
+                comfort,
+                profile.protein(), profile.carbs(), profile.fats());
+        if (hasLastSignature
+                && sig == lastSignatureHash
+                && itemKey.equals(lastSignatureKey)) {
+            return;
+        }
+        lastSignatureHash = sig;
+        lastSignatureKey = itemKey;
+        hasLastSignature = true;
 
         NutritionPreviewLayout.Row row = NutritionPreviewLayout.buildRow(
                 profile,
@@ -90,6 +102,26 @@ public class NutritionPreviewController extends BukkitRunnable {
      *  on its own once we stop sending, and {@link cz.hashiri.harshlands.utils.DisplayTask}
      *  will resume sending its thirst/temp/fear text on its next tick. */
     public void clear() {
-        lastSignature = null;
+        lastSignatureHash = 0L;
+        lastSignatureKey = null;
+        hasLastSignature = false;
+    }
+
+    private static long packSignature(int curP, int curC, int curF,
+                                      double comfort,
+                                      double rawP, double rawC, double rawF) {
+        // Macros are clamped to [0, 100] so 7 bits each is plenty (we use 8 each
+        // for headroom). Comfort is folded in via Double.hashCode which is fast
+        // and stable. Profile macros (rawP/C/F) likewise — they only change on
+        // config reload, but include them so reloads invalidate the cache.
+        long packed = ((long) (curP & 0xFF) << 56)
+                    | ((long) (curC & 0xFF) << 48)
+                    | ((long) (curF & 0xFF) << 40);
+        long doublesHash = Double.hashCode(comfort);
+        doublesHash = doublesHash * 31 + Double.hashCode(rawP);
+        doublesHash = doublesHash * 31 + Double.hashCode(rawC);
+        doublesHash = doublesHash * 31 + Double.hashCode(rawF);
+        // Bottom 40 bits hold the doubles hash; top 24 hold the packed macros.
+        return packed | (doublesHash & 0x000000FFFFFFFFFFL);
     }
 }
