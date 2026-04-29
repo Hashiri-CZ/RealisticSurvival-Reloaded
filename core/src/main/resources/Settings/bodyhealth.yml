@@ -9,8 +9,3 @@ BodyHealth:
 
     # Render task period in ticks. 5 ticks = 4Hz refresh.
     TickPeriod: 5
-
-  Debug:
-    # When true, logs unrecognized %bodyhealth_state_*% placeholder values
-    # at WARNING level (one entry per (player, part) per session).
-    LogPlaceholderParseFailures: false
