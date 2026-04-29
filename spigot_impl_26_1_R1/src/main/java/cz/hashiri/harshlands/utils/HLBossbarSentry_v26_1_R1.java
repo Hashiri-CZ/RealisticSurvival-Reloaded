@@ -5,14 +5,12 @@
 package cz.hashiri.harshlands.utils;
 
 import cz.hashiri.harshlands.HLPlugin;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 /**
@@ -25,23 +23,33 @@ import java.util.UUID;
  */
 public final class HLBossbarSentry_v26_1_R1 extends ChannelDuplexHandler {
 
-    private static final Class<?> OPERATION_ENUM_CLASS;
-    private static final Object OP_ADD;
+    private static final Field ID_FIELD;
+    private static final Field OPERATION_FIELD;
 
     static {
-        Class<?> opClass = null;
-        Object addOp = null;
-        for (Class<?> inner : ClientboundBossEventPacket.class.getDeclaredClasses()) {
-            if (inner.isEnum()) {
-                opClass = inner;
-                addOp = inner.getEnumConstants()[0]; // ordinal 0 = ADD
-                break;
+        Field id = null;
+        Field op = null;
+        for (Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
+            Class<?> t = f.getType();
+            if (t == java.util.UUID.class && id == null) {
+                f.setAccessible(true);
+                id = f;
+            } else if (t.isInterface() && id != null && op == null) {
+                // Operation is a sealed interface in current Mojang mappings.
+                f.setAccessible(true);
+                op = f;
+            } else if (t.isEnum() && op == null) {
+                // Older mappings: Operation is an inner enum.
+                f.setAccessible(true);
+                op = f;
             }
         }
-        if (opClass == null) throw new IllegalStateException(
-                "Could not locate ClientboundBossEventPacket Operation enum");
-        OPERATION_ENUM_CLASS = opClass;
-        OP_ADD = addOp;
+        if (id == null || op == null) {
+            throw new IllegalStateException(
+                    "Could not locate ClientboundBossEventPacket id/operation fields");
+        }
+        ID_FIELD = id;
+        OPERATION_FIELD = op;
     }
 
     private final UUID playerUuid;
@@ -64,22 +72,21 @@ public final class HLBossbarSentry_v26_1_R1 extends ChannelDuplexHandler {
         super.write(ctx, msg, promise);
     }
 
-    private void inspect(ClientboundBossEventPacket pkt) {
-        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), RegistryAccess.EMPTY);
-        try {
-            ClientboundBossEventPacket.STREAM_CODEC.encode(buf, pkt);
-            buf.readerIndex(0);
-            UUID uuid = buf.readUUID();
-            Object op = buf.readEnum(OPERATION_ENUM_CLASS.asSubclass(Enum.class));
-            if (op != OP_ADD) return;
+    private void inspect(ClientboundBossEventPacket pkt) throws IllegalAccessException {
+        Object op = OPERATION_FIELD.get(pkt);
+        if (op == null) return;
+        // Match by simple name on the operation's class. ADD ops are `AddOperation`
+        // (sealed-interface mappings) or the `ADD` enum constant (legacy mappings).
+        boolean isAdd = "AddOperation".equals(op.getClass().getSimpleName())
+                || (op instanceof Enum<?> e && "ADD".equals(e.name()));
+        if (!isAdd) return;
 
-            AnchorRegistry registry = plugin.getAnchorRegistry();
-            if (registry.tryConsumeMarker(playerUuid, uuid)) return; // our own anchor's first ADD
-            if (registry.isAnchor(playerUuid, uuid)) return;          // our anchor re-adding (after reshow)
+        UUID uuid = (UUID) ID_FIELD.get(pkt);
 
-            plugin.getBossbarReorderScheduler().requestReshow(playerUuid);
-        } finally {
-            buf.release();
-        }
+        AnchorRegistry registry = plugin.getAnchorRegistry();
+        if (registry.tryConsumeMarker(playerUuid, uuid)) return;
+        if (registry.isAnchor(playerUuid, uuid)) return;
+
+        plugin.getBossbarReorderScheduler().requestReshow(playerUuid);
     }
 }
