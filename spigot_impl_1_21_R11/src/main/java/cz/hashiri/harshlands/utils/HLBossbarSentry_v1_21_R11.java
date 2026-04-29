@@ -10,6 +10,17 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
+/**
+ * Per-version bossbar Sentry. Contains only NMS-touching reflection;
+ * dispatch logic lives in the {@link BossbarSentry} core base class.
+ *
+ * <p>The static {@code locateIdField} / {@code locateOperationField}
+ * helpers are byte-identical across the two {@code spigot_impl_*}
+ * modules. They cannot share a source file because each module
+ * resolves {@code ClientboundBossEventPacket} from its own NMS jar.
+ * Treat the duplication as architectural, not accidental — keep the
+ * two files in lockstep.</p>
+ */
 public final class HLBossbarSentry_v1_21_R11 extends BossbarSentry {
 
     private static final Field ID_FIELD = locateIdField();
@@ -39,12 +50,18 @@ public final class HLBossbarSentry_v1_21_R11 extends BossbarSentry {
             f.setAccessible(true);
             return f;
         } catch (NoSuchFieldException primary) {
-            // Fall back: first non-UUID, non-primitive object field that is an
-            // interface or enum (matches both sealed-interface and legacy-enum mappings).
+            // Fall back: first interface- or enum-typed field that appears AFTER
+            // the UUID field in declared order. The ordering guard avoids a false
+            // positive on a hypothetical future packet field of object type that
+            // lands earlier than `id` in the layout.
+            boolean seenUuid = false;
             for (Field f : ClientboundBossEventPacket.class.getDeclaredFields()) {
                 Class<?> t = f.getType();
-                if (t == UUID.class) continue;
-                if (t.isInterface() || t.isEnum()) {
+                if (t == UUID.class) {
+                    seenUuid = true;
+                    continue;
+                }
+                if (seenUuid && (t.isInterface() || t.isEnum())) {
                     f.setAccessible(true);
                     return f;
                 }
@@ -59,17 +76,13 @@ public final class HLBossbarSentry_v1_21_R11 extends BossbarSentry {
     }
 
     @Override
-    protected UUID parseAddUuid(Object msg) {
+    protected UUID parseAddUuid(Object msg) throws IllegalAccessException {
         if (!(msg instanceof ClientboundBossEventPacket pkt)) return null;
-        try {
-            Object op = OPERATION_FIELD.get(pkt);
-            if (op == null) return null;
-            boolean isAdd = "AddOperation".equals(op.getClass().getSimpleName())
-                    || (op instanceof Enum<?> e && "ADD".equals(e.name()));
-            if (!isAdd) return null;
-            return (UUID) ID_FIELD.get(pkt);
-        } catch (IllegalAccessException ex) {
-            return null;
-        }
+        Object op = OPERATION_FIELD.get(pkt);
+        if (op == null) return null;
+        boolean isAdd = "AddOperation".equals(op.getClass().getSimpleName())
+                || (op instanceof Enum<?> e && "ADD".equals(e.name()));
+        if (!isAdd) return null;
+        return (UUID) ID_FIELD.get(pkt);
     }
 }

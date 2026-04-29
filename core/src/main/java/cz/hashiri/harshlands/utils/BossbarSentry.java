@@ -19,6 +19,10 @@ import java.util.UUID;
  * <p>For each ADD whose UUID is not the player's anchor, this base
  * schedules a debounced reshow via {@link BossbarReorderScheduler}.
  * Never modifies any packet.</p>
+ *
+ * <p>Pipeline key (when installed by the per-version
+ * {@code InternalsProvider#installBossbarSentry} impl): {@code harshlands_bossbar_sentry}.
+ * Inserted before the Mojang {@code Connection} handler.</p>
  */
 public abstract class BossbarSentry extends ChannelDuplexHandler {
 
@@ -46,7 +50,7 @@ public abstract class BossbarSentry extends ChannelDuplexHandler {
      * @return UUID of the bossbar ADD, or {@code null} if {@code msg} is not
      *         an outbound bossbar ADD packet
      */
-    protected abstract UUID parseAddUuid(Object msg);
+    protected abstract UUID parseAddUuid(Object msg) throws Throwable;
 
     private void handleAdd(UUID uuid) {
         AnchorRegistry registry = plugin.getAnchorRegistry();
