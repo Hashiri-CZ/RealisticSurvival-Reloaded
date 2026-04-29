@@ -103,15 +103,9 @@ public class DisplayTask extends BukkitRunnable implements HLTask {
         bossbarHud.show();
         cz.hashiri.harshlands.foodexpansion.FoodExpansionModule fem =
             (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule) HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
-        int centerX = 0;
-        int iconW = 32;
-        int iconSpacing = 16;
-        if (fem != null && fem.getUserConfig() != null) {
-            org.bukkit.configuration.file.FileConfiguration feConfig = fem.getUserConfig().getConfig();
-            centerX = feConfig.getInt("FoodExpansion.HUD.IconCenterX", 0);
-            iconW = feConfig.getInt("FoodExpansion.HUD.IconWidth", 32);
-            iconSpacing = feConfig.getInt("FoodExpansion.HUD.IconSpacing", 16);
-        }
+        int centerX = fem != null ? fem.getHudCenterX() : 0;
+        int iconW = fem != null ? fem.getHudIconWidth() : 32;
+        int iconSpacing = fem != null ? fem.getHudIconSpacing() : 16;
         this.aboveActionBarHud = new AboveActionBarHUD(bossbarHud, centerX, iconW, iconSpacing);
 
         sirenChangeScreenEnabled       = ifConfig  != null && ifConfig.getBoolean("Siren.ChangeScreen.Enabled");

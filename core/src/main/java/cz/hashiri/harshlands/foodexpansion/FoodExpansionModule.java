@@ -60,6 +60,11 @@ public class FoodExpansionModule extends HLModule {
     private String comfortMinTier;
     private double comfortAbsorptionBonus;
 
+    // Cached HUD config (read once at initialize, used by DisplayTask).
+    private int hudCenterX;
+    private int hudIconWidth;
+    private int hudIconSpacing;
+
     public FoodExpansionModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of()); // No hard deps, soft deps handled at runtime
         this.plugin = plugin;
@@ -68,6 +73,10 @@ public class FoodExpansionModule extends HLModule {
     @Override
     public void initialize() {
         setUserConfig(new HLConfig(plugin, "Settings/foodexpansion.yml"));
+        FileConfiguration feConfig = getUserConfig().getConfig();
+        this.hudCenterX = feConfig.getInt("FoodExpansion.HUD.IconCenterX", 0);
+        this.hudIconWidth = feConfig.getInt("FoodExpansion.HUD.IconWidth", 32);
+        this.hudIconSpacing = feConfig.getInt("FoodExpansion.HUD.IconSpacing", 16);
         Utils.logModuleInit("foodexpansion", NAME);
 
         // Create shared attribute modifier keys
@@ -98,7 +107,6 @@ public class FoodExpansionModule extends HLModule {
         this.comfortAbsorptionBonus = thresholdCfg.getDouble("FoodExpansion.Comfort.AbsorptionBonus", 0.10);
 
         // Custom foods
-        FileConfiguration feConfig = getUserConfig().getConfig();
         ConfigurationSection customFoodsSec = feConfig.getConfigurationSection("FoodExpansion.CustomFoods");
         customFoodRegistry = new CustomFoodRegistry(customFoodsSec, plugin.getLogger());
 
@@ -287,6 +295,10 @@ public class FoodExpansionModule extends HLModule {
     public double getMalnourishedThreshold() { return malnourishedThreshold; }
     public double getWellNourishedThreshold() { return wellNourishedThreshold; }
     public double getPeakThreshold() { return peakThreshold; }
+
+    public int getHudCenterX()      { return hudCenterX; }
+    public int getHudIconWidth()    { return hudIconWidth; }
+    public int getHudIconSpacing()  { return hudIconSpacing; }
 
     /**
      * Current comfort absorption multiplier for the player. Returns 1.0 when comfort is
