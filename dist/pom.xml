@@ -45,6 +45,7 @@
                             </filters>
                             <artifactSet>
                                 <includes>
+                                    <include>cz.hashiri.harshlands:harshlands-api</include>
                                     <include>cz.hashiri.harshlands:harshlands-core</include>
                                     <include>cz.hashiri.harshlands:harshlands-spigot_impl_1_21_R11</include>
                                     <include>cz.hashiri.harshlands:harshlands-spigot_impl_26_1_R1</include>
@@ -70,6 +71,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>cz.hashiri.harshlands</groupId>
+            <artifactId>harshlands-api</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>cz.hashiri.harshlands</groupId>
             <artifactId>harshlands-core</artifactId>
