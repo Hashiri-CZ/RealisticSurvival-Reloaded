@@ -9,6 +9,9 @@ public final class Messages {
 
     private static volatile LocaleManager manager;
 
+    private static final java.util.regex.Pattern PLACEHOLDER_PATTERN =
+            java.util.regex.Pattern.compile("%([A-Za-z0-9_]+)%");
+
     private Messages() {}
 
     public static void bind(LocaleManager m) {
@@ -33,13 +36,29 @@ public final class Messages {
     public static String get(String key, Map<String, ?> placeholders) {
         String raw = get(key);
         if (placeholders == null || placeholders.isEmpty()) return raw;
-        String out = raw;
+
+        // Build a case-insensitive lookup for the substitution map.
+        java.util.Map<String, String> lookup = new java.util.HashMap<>(placeholders.size() * 2);
         for (Map.Entry<String, ?> e : placeholders.entrySet()) {
-            String pattern = "(?i)%" + java.util.regex.Pattern.quote(e.getKey()) + "%";
-            String replacement = java.util.regex.Matcher.quoteReplacement(String.valueOf(e.getValue()));
-            out = out.replaceAll(pattern, replacement);
+            lookup.put(e.getKey().toLowerCase(java.util.Locale.ROOT), String.valueOf(e.getValue()));
         }
-        return out;
+
+        java.util.regex.Matcher m = PLACEHOLDER_PATTERN.matcher(raw);
+        StringBuilder out = new StringBuilder(raw.length());
+        int last = 0;
+        boolean replaced = false;
+        while (m.find()) {
+            String name = m.group(1).toLowerCase(java.util.Locale.ROOT);
+            String value = lookup.get(name);
+            if (value == null) continue; // leave unknown placeholders intact
+            out.append(raw, last, m.start());
+            out.append(value);
+            last = m.end();
+            replaced = true;
+        }
+        if (!replaced) return raw;
+        out.append(raw, last, raw.length());
+        return out.toString();
     }
 
     public static List<String> getList(String key) {
