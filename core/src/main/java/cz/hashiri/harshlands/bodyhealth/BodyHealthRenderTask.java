@@ -36,8 +36,9 @@ final class BodyHealthRenderTask extends BukkitRunnable {
         for (UUID uuid : shownNow) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null || !player.isOnline()) {
+                // markHidden also schedules lastRenderedStates.remove() on the main thread
+                // — no separate clearLastRendered() call needed here.
                 module.markHidden(uuid);
-                module.clearLastRendered(uuid);
                 continue;
             }
 

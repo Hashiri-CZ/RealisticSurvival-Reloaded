@@ -50,14 +50,15 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
         setUserConfig(new HLConfig(plugin, "Settings/bodyhealth.yml"));
         FileConfiguration cfg = getUserConfig().getConfig();
         this.anchorX    = cfg.getInt("BodyHealth.HUD.AnchorX", 160);
-        this.tickPeriod = cfg.getInt("BodyHealth.HUD.TickPeriod", 5);
+        // Floor at 1 — runTaskTimer rejects 0 and a negative period would crash the scheduler.
+        this.tickPeriod = Math.max(1, cfg.getInt("BodyHealth.HUD.TickPeriod", 5));
+
+        Utils.logModuleInit("bodyhealth", NAME);
 
         if (!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             warnPapiMissing();
             return;
         }
-
-        Utils.logModuleInit("bodyhealth", NAME);
 
         this.hud = new HudImpl("bodyhealth", this);
         Map<String, Hud> huds = Map.of("bodyhealth", hud);
@@ -96,11 +97,15 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
             quitListener = null;
         }
 
+        // Direct lookup — never go through resolveHud() during shutdown, since that
+        // would create-and-show a fresh standalone bossbar just to immediately strip
+        // an element from it. Existing HUDs are the only thing worth touching.
         for (UUID uuid : shownPlayers) {
             Player p = Bukkit.getPlayer(uuid);
             if (p == null) continue;
-            BossbarHUD hudInst = resolveHud(p);
-            hudInst.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+            DisplayTask dt = DisplayTask.getTasks().get(uuid);
+            BossbarHUD existing = (dt != null) ? dt.getBossbarHud() : standaloneHuds.get(uuid);
+            if (existing != null) existing.removeElement(BodyHealthRenderTask.ELEMENT_ID);
         }
         for (BossbarHUD h : standaloneHuds.values()) h.hide();
         standaloneHuds.clear();
