@@ -75,6 +75,13 @@ items:
       display_name: "&fPurified Water Bottle"
     charcoal_filter:
       display_name: "&fCharcoal Filter"
+    # Canteen lore is two-layered: per-variant `lore:` lists below hold the
+    # rendered initial-state lines (shown on /hl give canteen_empty); the
+    # shared `canteen:` block further down holds runtime templates with
+    # placeholders (used by Utils.updateLore when the player refills or
+    # drinks). Keep them structurally aligned — same color codes, same
+    # prefix/suffix — or the runtime matcher will silently miss after a
+    # locale change and lore lines will not update.
     canteen_empty:
       display_name: "&fEmpty Canteen"
       lore:
