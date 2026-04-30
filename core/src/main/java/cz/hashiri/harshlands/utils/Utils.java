@@ -28,8 +28,6 @@ import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.spartanweaponry.KbTask;
 import cz.hashiri.harshlands.utils.ToolHandler.Tool;
 import cz.hashiri.harshlands.utils.recipe.HLRecipe;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -77,24 +75,60 @@ public class Utils {
     private static final Pattern CRAFT_SOUND_RESOURCE_KEY_PATTERN = Pattern.compile("sound_event\\s*/\\s*([a-z0-9_:.]+)");
 
     /**
-     * Splits a {@code %VALUE%}-templated translation into its prefix and suffix
-     * around the placeholder. Used to match a localized lore line by structure
-     * rather than by the (locale-dependent) value substring.
+     * Decompose a translation template into match-and-replace segments.
      *
-     * <p>Example: template {@code "&sect;2 %VALUE% Attack Damage"} &rarr; prefix {@code "&sect;2 "},
-     * suffix {@code " Attack Damage"}. For Chinese the suffix would be {@code " 攻击伤害"}.</p>
+     * <p>Renders the template at {@code key} with each named placeholder
+     * substituted by a unique sentinel, then splits the rendered string
+     * around the sentinels. The result is a list of literal segments —
+     * the text that appears between placeholders, in order.</p>
+     *
+     * <p>Used so cross-locale code can match lore lines structurally
+     * (by literal prefix / interstitials / suffix) rather than by a
+     * locale-dependent value substring. Example: template
+     * {@code "&2 %VALUE% Attack Damage"} → segments {@code ["&sect;2 ", " Attack Damage"]}.
+     * For Chinese the suffix would be {@code " 攻击伤害"}.</p>
+     *
+     * <p>Defensive: if the translator dropped a placeholder, the missing
+     * sentinel is not found in the rendered string. Its segment becomes
+     * empty and parsing continues; the resulting {@link TemplateParts} is
+     * still usable (its {@link TemplateParts#matches} just becomes more
+     * permissive) and will not throw.</p>
      */
-    private static String[] valueTemplateParts(String key) {
-        // Render with a marker that won't appear naturally in any line.
-        String marker = "\u0001";  // SOH control char, not used in lore
-        String rendered = cz.hashiri.harshlands.locale.Messages.get(
-                key, java.util.Map.of("VALUE", marker));
-        int idx = rendered.indexOf(marker);
-        if (idx < 0) {
-            // Defensive: translator dropped %VALUE%. Treat whole string as prefix.
-            return new String[]{ rendered, "" };
+    @Nonnull
+    public static TemplateParts valueTemplateParts(@Nonnull String key, @Nonnull String... placeholderNames) {
+        // Use a distinct sentinel per placeholder so we can split the rendered
+        // string in order without ambiguity. SOH (\u0001) is not used in any
+        // legitimate translation text, and bracketing each index with SOH
+        // ensures the marker substring won't collide with any digit literal
+        // that happens to appear elsewhere in the surrounding template (e.g.
+        // a literal "0" in "Damage: 100% +%VALUE%").
+        LinkedHashMap<String, Object> sentinels = new LinkedHashMap<>();
+        String[] markers = new String[placeholderNames.length];
+        for (int i = 0; i < placeholderNames.length; i++) {
+            markers[i] = "\u0001" + i + "\u0001";
+            sentinels.put(placeholderNames[i], markers[i]);
         }
-        return new String[]{ rendered.substring(0, idx), rendered.substring(idx + marker.length()) };
+        String rendered = Messages.get(key, sentinels);
+
+        if (placeholderNames.length == 0) {
+            return new TemplateParts(List.of(rendered));
+        }
+
+        List<String> segments = new ArrayList<>(placeholderNames.length + 1);
+        int cursor = 0;
+        for (String marker : markers) {
+            int idx = rendered.indexOf(marker, cursor);
+            if (idx < 0) {
+                // Translator dropped this placeholder. Treat its slot as empty
+                // and keep parsing; subsequent markers may still match.
+                segments.add("");
+                continue;
+            }
+            segments.add(rendered.substring(cursor, idx));
+            cursor = idx + marker.length();
+        }
+        segments.add(rendered.substring(cursor));
+        return new TemplateParts(segments);
     }
 
     private final HLPlugin plugin;
@@ -492,12 +526,9 @@ public class Utils {
                         int len = lore.size();
                         int index = -1;
 
-                        String[] parts = valueTemplateParts("item_stats.attack_damage");
-                        String prefix = parts[0];
-                        String suffix = parts[1];
+                        TemplateParts parts = valueTemplateParts("item_stats.attack_damage", "VALUE");
                         for (int i = 0 ; i < len; i++) {
-                            String line = lore.get(i);
-                            if (line.startsWith(prefix) && line.endsWith(suffix)) {
+                            if (parts.matches(lore.get(i))) {
                                 index = i;
                                 break;
                             }
@@ -1550,50 +1581,83 @@ public class Utils {
         return normalized;
     }
 
+    /**
+     * Pure-function form of the canteen lore line update logic. Returns a
+     * new list with translated durability / drink lines substituted in
+     * place of any matching lines from {@code lore}. Used by
+     * {@link #updateLore(ItemStack, int)} and by tests that need to
+     * exercise the matcher without a Bukkit server.
+     *
+     * <p>Match-and-replace is locale-safe: prefixes and suffixes are
+     * derived from the bound translation templates via
+     * {@link #valueTemplateParts(String, String...)}, not hardcoded
+     * English. A line that does not match any template (e.g. because it
+     * came from a different locale than the currently-bound one) is
+     * passed through untouched.</p>
+     *
+     * @param lore           current lore lines (defensive-copied).
+     * @param newDurability  durability value to render into the line.
+     * @param maxDurability  max-durability value to render into the line.
+     * @param drink          NBT drink string; ignored if {@code !isJuice}.
+     * @param isJuice        whether the item has an {@code hldrink} NBT tag.
+     */
+    @Nonnull
+    public static List<String> computeUpdatedCanteenLore(
+            @Nonnull List<String> lore,
+            int newDurability,
+            int maxDurability,
+            @Nullable String drink,
+            boolean isJuice) {
+        List<String> result = new ArrayList<>(lore);
+
+        TemplateParts dur = valueTemplateParts(
+                "items.toughasnails.canteen.durability_line", "CURRENT", "MAX");
+        TemplateParts drk = valueTemplateParts(
+                "items.toughasnails.canteen.drink_line", "DRINK");
+
+        boolean changedDurability = false;
+        boolean changedDrink = false;
+        for (int i = 0; i < result.size(); i++) {
+            String line = result.get(i);
+            if (!changedDurability && dur.matches(line)) {
+                result.set(i, Messages.get(
+                        "items.toughasnails.canteen.durability_line",
+                        Map.of(
+                                "CURRENT", String.valueOf(newDurability),
+                                "MAX", String.valueOf(maxDurability))));
+                changedDurability = true;
+                continue;
+            }
+            if (isJuice && !changedDrink && drk.matches(line)) {
+                result.set(i, Messages.get(
+                        "items.toughasnails.canteen.drink_line",
+                        Map.of("DRINK", drink == null ? "" : drink)));
+                changedDrink = true;
+            }
+            if (changedDurability && (!isJuice || changedDrink)) break;
+        }
+        return result;
+    }
+
     @Nonnull
     public static ItemStack updateLore(@Nonnull ItemStack item, int newDurability) {
-        if (hasCustomDurability(item)) {
-            ItemMeta meta = item.getItemMeta();
-            List<String> lore = meta.getLore();
+        if (!hasCustomDurability(item)) return item;
 
-            if (!(lore == null || lore.isEmpty())) {
-                int maxDurability = getMaxCustomDurability(item);
+        ItemMeta meta = item.getItemMeta();
+        java.util.List<String> lore = meta.getLore();
+        if (lore == null || lore.isEmpty()) return item;
 
-                boolean changedDurability = false;
-                boolean isJuice = hasNbtTag(item, "hldrink");
-                boolean changedJuice = false;
+        int maxDurability = getMaxCustomDurability(item);
+        boolean isJuice = hasNbtTag(item, "hldrink");
+        String drink = isJuice
+                ? getNbtTag(item, "hldrink", PersistentDataType.STRING)
+                : null;
 
-                for (int i = 0; i < lore.size(); i++) {
-                    if (lore.get(i).contains("Durability:")) {
-                        lore.set(i, LegacyComponentSerializer.legacySection().serialize(
-                                Component.text("Durability: " + newDurability + "/" + maxDurability, NamedTextColor.GRAY)));
-                        changedDurability = true;
-                    }
-                    if (isJuice) {
-                        if (lore.get(i).contains("Drink: ")) {
-                            lore.set(i, LegacyComponentSerializer.legacySection().serialize(
-                                    Component.text("Drink: " + getNbtTag(item, "hldrink", PersistentDataType.STRING), NamedTextColor.GRAY)));
-                            changedJuice = true;
-                        }
-                    }
+        java.util.List<String> updated = computeUpdatedCanteenLore(
+                lore, newDurability, maxDurability, drink, isJuice);
 
-                    if (isJuice) {
-                        if (changedJuice && changedDurability) {
-                            break;
-                        }
-                    }
-                    else {
-                        if (changedDurability) {
-                            break;
-                        }
-                    }
-
-                }
-
-                meta.setLore(lore);
-                item.setItemMeta(meta);
-            }
-        }
+        meta.setLore(updated);
+        item.setItemMeta(meta);
         return item;
     }
 
