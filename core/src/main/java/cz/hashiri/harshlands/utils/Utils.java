@@ -28,8 +28,6 @@ import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.spartanweaponry.KbTask;
 import cz.hashiri.harshlands.utils.ToolHandler.Tool;
 import cz.hashiri.harshlands.utils.recipe.HLRecipe;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -96,26 +94,27 @@ public class Utils {
      * still usable (its {@link TemplateParts#matches} just becomes more
      * permissive) and will not throw.</p>
      */
-    public static TemplateParts valueTemplateParts(String key, String... placeholderNames) {
+    @Nonnull
+    public static TemplateParts valueTemplateParts(@Nonnull String key, @Nonnull String... placeholderNames) {
         // Use a distinct sentinel per placeholder so we can split the rendered
         // string in order without ambiguity. SOH (\u0001) is not used in any
         // legitimate translation text, and bracketing each index with SOH
         // ensures the marker substring won't collide with any digit literal
         // that happens to appear elsewhere in the surrounding template (e.g.
         // a literal "0" in "Damage: 100% +%VALUE%").
-        java.util.LinkedHashMap<String, Object> sentinels = new java.util.LinkedHashMap<>();
+        LinkedHashMap<String, Object> sentinels = new LinkedHashMap<>();
         String[] markers = new String[placeholderNames.length];
         for (int i = 0; i < placeholderNames.length; i++) {
             markers[i] = "\u0001" + i + "\u0001";
             sentinels.put(placeholderNames[i], markers[i]);
         }
-        String rendered = cz.hashiri.harshlands.locale.Messages.get(key, sentinels);
+        String rendered = Messages.get(key, sentinels);
 
         if (placeholderNames.length == 0) {
-            return new TemplateParts(java.util.List.of(rendered));
+            return new TemplateParts(List.of(rendered));
         }
 
-        java.util.List<String> segments = new java.util.ArrayList<>(placeholderNames.length + 1);
+        List<String> segments = new ArrayList<>(placeholderNames.length + 1);
         int cursor = 0;
         for (String marker : markers) {
             int idx = rendered.indexOf(marker, cursor);
@@ -1602,13 +1601,14 @@ public class Utils {
      * @param drink          NBT drink string; ignored if {@code !isJuice}.
      * @param isJuice        whether the item has an {@code hldrink} NBT tag.
      */
-    public static java.util.List<String> computeUpdatedCanteenLore(
-            java.util.List<String> lore,
+    @Nonnull
+    public static List<String> computeUpdatedCanteenLore(
+            @Nonnull List<String> lore,
             int newDurability,
             int maxDurability,
-            String drink,
+            @Nullable String drink,
             boolean isJuice) {
-        java.util.List<String> result = new java.util.ArrayList<>(lore);
+        List<String> result = new ArrayList<>(lore);
 
         TemplateParts dur = valueTemplateParts(
                 "items.toughasnails.canteen.durability_line", "CURRENT", "MAX");
@@ -1620,18 +1620,18 @@ public class Utils {
         for (int i = 0; i < result.size(); i++) {
             String line = result.get(i);
             if (!changedDurability && dur.matches(line)) {
-                result.set(i, cz.hashiri.harshlands.locale.Messages.get(
+                result.set(i, Messages.get(
                         "items.toughasnails.canteen.durability_line",
-                        java.util.Map.of(
+                        Map.of(
                                 "CURRENT", String.valueOf(newDurability),
                                 "MAX", String.valueOf(maxDurability))));
                 changedDurability = true;
                 continue;
             }
             if (isJuice && !changedDrink && drk.matches(line)) {
-                result.set(i, cz.hashiri.harshlands.locale.Messages.get(
+                result.set(i, Messages.get(
                         "items.toughasnails.canteen.drink_line",
-                        java.util.Map.of("DRINK", drink == null ? "" : drink)));
+                        Map.of("DRINK", drink == null ? "" : drink)));
                 changedDrink = true;
             }
             if (changedDurability && (!isJuice || changedDrink)) break;

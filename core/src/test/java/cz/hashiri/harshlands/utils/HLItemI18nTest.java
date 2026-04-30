@@ -80,9 +80,9 @@ class HLItemI18nTest {
                 "items.test.sample_item.lore");
 
         assertEquals(4, resolved.size());
-        assertEquals("§7First line", resolved.get(0));
-        assertEquals("§7Second line", resolved.get(1));
+        assertEquals("\u00A77First line", resolved.get(0));
+        assertEquals("\u00A77Second line", resolved.get(1));
         assertEquals("", resolved.get(2));
-        assertEquals("§6Footer", resolved.get(3));
+        assertEquals("\u00A76Footer", resolved.get(3));
     }
 }
