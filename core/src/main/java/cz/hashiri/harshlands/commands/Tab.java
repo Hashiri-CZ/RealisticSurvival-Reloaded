@@ -83,7 +83,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide", "baubles"));
             }
 
             if (mobs.isEmpty()) {
@@ -172,6 +172,20 @@ public class Tab implements TabCompleter {
                         }
                         if (sender.hasPermission("harshlands.command.guide.reset") && "reset".startsWith(args[1].toLowerCase())) {
                             result.add("reset");
+                        }
+                    }
+                    case "baubles" -> {
+                        if (sender.hasPermission("harshlands.command.baubles.others")) {
+                            String prefix = args[1].toLowerCase();
+                            for (Player online : Bukkit.getOnlinePlayers()) {
+                                if (online.getName().toLowerCase().startsWith(prefix)) {
+                                    result.add(online.getName());
+                                }
+                            }
+                        } else if (sender.hasPermission("harshlands.command.baubles")
+                                && sender instanceof Player p
+                                && p.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                            result.add(p.getName());
                         }
                     }
                     case "obtain" -> {
