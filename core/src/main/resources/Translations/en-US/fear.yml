@@ -20,3 +20,5 @@ fear:
     fear_arrow_up: "\uE84B"
     fear_arrow_down: "\uE84A"
     fear_arrow_stable: ""
+  nightmare:
+    name: "&4&lNightmare"
