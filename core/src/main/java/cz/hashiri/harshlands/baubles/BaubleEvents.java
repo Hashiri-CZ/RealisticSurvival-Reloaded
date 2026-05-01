@@ -42,6 +42,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.inventory.*;
@@ -513,6 +514,30 @@ public class BaubleEvents extends ModuleEvents implements Listener {
                     }
                 }
             }
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Read-only spectate guard for drags. {@link InventoryClickEvent} does not cover drag operations
+     * (left-drag splits a stack across slots, right-drag places one copy per slot), so a foreign
+     * viewer holding an item could drag-deposit into another player's BaubleInventory without this
+     * handler. Cancels any drag that touches at least one slot in a BaubleInventory whose owner is
+     * not the dragger.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDrag(InventoryDragEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player && shouldEventBeRan(player)))
+            return;
+
+        Inventory topInv = event.getView().getTopInventory();
+        ItemStack topCorner = topInv.getItem(0);
+        boolean isBaubleInventory = HLItem.isHLItem(topCorner)
+                && "gui_glass".equals(HLItem.getNameFromItem(topCorner));
+        if (isBaubleInventory
+                && topInv.getHolder() instanceof Player owner
+                && !owner.getUniqueId().equals(player.getUniqueId())
+                && !event.getInventorySlots().isEmpty()) {
             event.setCancelled(true);
         }
     }
