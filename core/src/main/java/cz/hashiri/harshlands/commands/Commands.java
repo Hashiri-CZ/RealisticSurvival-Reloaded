@@ -1059,7 +1059,7 @@ public class Commands implements CommandExecutor {
                         }
                         HLPlayer hl = HLPlayer.getPlayers().get(p.getUniqueId());
                         if (hl == null || hl.getBaubleDataModule() == null) {
-                            sendInvalidTargetMsg(sender);
+                            Messages.of("commands.baubles.player_not_found").send(sender);
                             return true;
                         }
                         p.openInventory(hl.getBaubleDataModule().getBaubleBag().getInventory());
@@ -1070,6 +1070,10 @@ public class Commands implements CommandExecutor {
                         sendNoPermissionMessage(sender);
                         return true;
                     }
+                    if (!(sender instanceof Player viewer)) {
+                        sendIncompleteCommandMsg(sender);
+                        return true;
+                    }
                     Player baubleTarget = Bukkit.getPlayer(args[1]);
                     if (baubleTarget == null) {
                         Messages.of("commands.baubles.player_not_found").send(sender);
@@ -1078,10 +1082,6 @@ public class Commands implements CommandExecutor {
                     HLPlayer hlBaubleTarget = HLPlayer.getPlayers().get(baubleTarget.getUniqueId());
                     if (hlBaubleTarget == null || hlBaubleTarget.getBaubleDataModule() == null) {
                         Messages.of("commands.baubles.player_not_found").send(sender);
-                        return true;
-                    }
-                    if (!(sender instanceof Player viewer)) {
-                        sendIncompleteCommandMsg(sender);
                         return true;
                     }
                     viewer.openInventory(hlBaubleTarget.getBaubleDataModule().getBaubleBag().getInventory());
