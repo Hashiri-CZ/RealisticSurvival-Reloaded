@@ -6,9 +6,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class LocaleManager {
@@ -17,7 +20,7 @@ public class LocaleManager {
     private final String locale;
     private final Logger logger;
     private volatile Map<String, Object> flatMap = new HashMap<>();
-    private final java.util.Set<String> reportedMissingKeys = java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<String> reportedMissingKeys = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     public LocaleManager(Path translationsRoot, String locale) {
         this(translationsRoot, locale, Logger.getLogger(LocaleManager.class.getName()));
@@ -72,7 +75,7 @@ public class LocaleManager {
                 for (Object item : list) {
                     translated.add(org.bukkit.ChatColor.translateAlternateColorCodes('&', String.valueOf(item)));
                 }
-                out.put(fullKey, java.util.Collections.unmodifiableList(translated));
+                out.put(fullKey, Collections.unmodifiableList(translated));
             } else if (value != null) {
                 out.put(fullKey, org.bukkit.ChatColor.translateAlternateColorCodes('&', value.toString()));
             }
@@ -113,10 +116,10 @@ public class LocaleManager {
      *
      * <p>Returns an empty set if the prefix matches no keys or if it points to a leaf.
      */
-    public java.util.Set<String> getKeys(String prefix) {
-        if (prefix == null || prefix.isEmpty()) return java.util.Set.of();
+    public Set<String> getKeys(String prefix) {
+        if (prefix == null || prefix.isEmpty()) return Set.of();
         String dottedPrefix = prefix + ".";
-        java.util.Set<String> children = new java.util.HashSet<>();
+        Set<String> children = new HashSet<>();
         for (String key : flatMap.keySet()) {
             if (!key.startsWith(dottedPrefix)) continue;
             int nextDot = key.indexOf('.', dottedPrefix.length());
@@ -125,6 +128,6 @@ public class LocaleManager {
                     : key.substring(dottedPrefix.length());
             children.add(child);
         }
-        return children;
+        return Collections.unmodifiableSet(children);
     }
 }

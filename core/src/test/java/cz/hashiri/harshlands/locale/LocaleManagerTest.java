@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -169,8 +170,8 @@ class LocaleManagerTest {
         LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
         mgr.load();
 
-        java.util.Set<String> children = mgr.getKeys("hints.Obtain");
-        assertEquals(java.util.Set.of("axe", "bauble_bag", "saw"), children);
+        Set<String> children = mgr.getKeys("hints.Obtain");
+        assertEquals(Set.of("axe", "bauble_bag", "saw"), children);
     }
 
     @Test
@@ -182,7 +183,7 @@ class LocaleManagerTest {
         LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
         mgr.load();
 
-        assertEquals(java.util.Set.of(), mgr.getKeys("does.not.exist"));
+        assertEquals(Set.of(), mgr.getKeys("does.not.exist"));
     }
 
     @Test
@@ -198,6 +199,6 @@ class LocaleManagerTest {
         mgr.load();
 
         // top.leaf is a leaf, so it has no children of its own
-        assertEquals(java.util.Set.of(), mgr.getKeys("top.leaf"));
+        assertEquals(Set.of(), mgr.getKeys("top.leaf"));
     }
 }
