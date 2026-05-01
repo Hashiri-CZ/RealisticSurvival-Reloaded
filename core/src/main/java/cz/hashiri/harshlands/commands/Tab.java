@@ -175,8 +175,8 @@ public class Tab implements TabCompleter {
                         }
                     }
                     case "baubles" -> {
+                        String prefix = args[1].toLowerCase();
                         if (sender.hasPermission("harshlands.command.baubles.others")) {
-                            String prefix = args[1].toLowerCase();
                             for (Player online : Bukkit.getOnlinePlayers()) {
                                 if (online.getName().toLowerCase().startsWith(prefix)) {
                                     result.add(online.getName());
@@ -184,7 +184,7 @@ public class Tab implements TabCompleter {
                             }
                         } else if (sender.hasPermission("harshlands.command.baubles")
                                 && sender instanceof Player p
-                                && p.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                                && p.getName().toLowerCase().startsWith(prefix)) {
                             result.add(p.getName());
                         }
                     }
