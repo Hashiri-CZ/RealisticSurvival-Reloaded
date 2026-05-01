@@ -67,6 +67,12 @@ public final class Messages {
         return m.getList(key);
     }
 
+    public static java.util.Set<String> getKeys(String prefix) {
+        LocaleManager m = manager;
+        if (m == null) return java.util.Set.of();
+        return m.getKeys(prefix);
+    }
+
     public static Builder of(String key) {
         return new Builder(key);
     }

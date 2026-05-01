@@ -104,4 +104,27 @@ public class LocaleManager {
         List<String> typed = (List<String>) raw;
         return typed;
     }
+
+    /**
+     * Returns the immediate child segment names of the given dotted prefix.
+     * Example: with flat keys {@code hints.Obtain.axe.Name, hints.Obtain.axe.Lines,
+     * hints.Obtain.saw.Name}, calling {@code getKeys("hints.Obtain")} returns
+     * {@code {"axe", "saw"}}.
+     *
+     * <p>Returns an empty set if the prefix matches no keys or if it points to a leaf.
+     */
+    public java.util.Set<String> getKeys(String prefix) {
+        if (prefix == null || prefix.isEmpty()) return java.util.Set.of();
+        String dottedPrefix = prefix + ".";
+        java.util.Set<String> children = new java.util.HashSet<>();
+        for (String key : flatMap.keySet()) {
+            if (!key.startsWith(dottedPrefix)) continue;
+            int nextDot = key.indexOf('.', dottedPrefix.length());
+            String child = (nextDot >= 0)
+                    ? key.substring(dottedPrefix.length(), nextDot)
+                    : key.substring(dottedPrefix.length());
+            children.add(child);
+        }
+        return children;
+    }
 }

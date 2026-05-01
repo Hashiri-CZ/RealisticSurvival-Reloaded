@@ -146,4 +146,58 @@ class LocaleManagerTest {
         assertEquals("keep", mgr.get("a"));
         assertEquals("[b]", mgr.get("b"));
     }
+
+    @Test
+    void get_keys_returns_immediate_children_of_prefix(@TempDir Path translationsRoot) throws IOException {
+        Path enUS = translationsRoot.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("hints.yml"), """
+                hints:
+                  Obtain:
+                    axe:
+                      Name: "Axe"
+                      Lines:
+                        - "line a"
+                    bauble_bag:
+                      Name: "Bauble Bag"
+                      Lines:
+                        - "line b"
+                    saw:
+                      Name: "Saw"
+                """);
+
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
+        mgr.load();
+
+        java.util.Set<String> children = mgr.getKeys("hints.Obtain");
+        assertEquals(java.util.Set.of("axe", "bauble_bag", "saw"), children);
+    }
+
+    @Test
+    void get_keys_on_unknown_prefix_returns_empty_set(@TempDir Path translationsRoot) throws IOException {
+        Path enUS = translationsRoot.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("x.yml"), "key: \"value\"\n");
+
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
+        mgr.load();
+
+        assertEquals(java.util.Set.of(), mgr.getKeys("does.not.exist"));
+    }
+
+    @Test
+    void get_keys_on_leaf_returns_empty_set(@TempDir Path translationsRoot) throws IOException {
+        Path enUS = translationsRoot.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("x.yml"), """
+                top:
+                  leaf: "value"
+                """);
+
+        LocaleManager mgr = new LocaleManager(translationsRoot, "en-US");
+        mgr.load();
+
+        // top.leaf is a leaf, so it has no children of its own
+        assertEquals(java.util.Set.of(), mgr.getKeys("top.leaf"));
+    }
 }
