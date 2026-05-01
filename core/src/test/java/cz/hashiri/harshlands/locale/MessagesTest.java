@@ -119,4 +119,28 @@ class MessagesTest {
         assertEquals("cost $5.00", Messages.get("line", Map.of("amount", "$5.00")));
         assertEquals("cost a\\b", Messages.get("line", Map.of("amount", "a\\b")));
     }
+
+    @Test
+    void get_keys_returns_empty_when_not_bound() {
+        Messages.reset();
+        assertEquals(java.util.Set.of(), Messages.getKeys("hints.Obtain"));
+    }
+
+    @Test
+    void get_keys_delegates_to_bound_locale_manager(@TempDir Path root) throws IOException {
+        Path enUS = root.resolve("en-US");
+        Files.createDirectories(enUS);
+        Files.writeString(enUS.resolve("hints.yml"), """
+                hints:
+                  Obtain:
+                    axe:
+                      Name: "Axe"
+                    saw:
+                      Name: "Saw"
+                """);
+        Messages.bind(new LocaleManager(root, "en-US"));
+        Messages.reload();
+
+        assertEquals(java.util.Set.of("axe", "saw"), Messages.getKeys("hints.Obtain"));
+    }
 }
