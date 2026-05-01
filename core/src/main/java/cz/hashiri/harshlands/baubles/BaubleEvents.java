@@ -374,6 +374,22 @@ public class BaubleEvents extends ModuleEvents implements Listener {
         if (!(shouldEventBeRan(player) && event.getClickedInventory() != null))
             return;
 
+        // Read-only spectate guard: when /hl baubles <other> opens another player's
+        // BaubleInventory, cancel every click made by the spectator. The bag's
+        // InventoryHolder is the owning Player (set in GUI.java:31 via
+        // Bukkit.createInventory(player, ...)), and we additionally tracer-check the
+        // gui_glass corner item so non-bauble player-held inventories aren't affected.
+        Inventory topInv = event.getView().getTopInventory();
+        ItemStack topCorner = topInv.getItem(0);
+        boolean isBaubleInventory = HLItem.isHLItem(topCorner)
+                && "gui_glass".equals(HLItem.getNameFromItem(topCorner));
+        if (isBaubleInventory
+                && topInv.getHolder() instanceof Player owner
+                && !owner.getUniqueId().equals(player.getUniqueId())) {
+            event.setCancelled(true);
+            return;
+        }
+
         ItemStack cursor = event.getCursor();
 
         ItemStack corner = event.getClickedInventory().getItem(0);
