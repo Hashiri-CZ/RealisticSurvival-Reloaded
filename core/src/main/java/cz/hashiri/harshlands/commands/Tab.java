@@ -253,8 +253,17 @@ public class Tab implements TabCompleter {
                     }
                     case "obtain" -> {
                         String prefix = args[1].toLowerCase();
-                        for (String key : List.of("axe", "flint_hatchet", "flint_shard", "flint", "plant_string", "plant_fiber", "dagger", "knife", "stick", "log", "plank", "saw")) {
-                            if (key.startsWith(prefix)) result.add(key);
+                        java.util.Set<String> obtainKeys =
+                                cz.hashiri.harshlands.locale.Messages.getKeys("hints.Obtain");
+                        if (obtainKeys.isEmpty()) {
+                            // Defensive fallback: locale not yet bound or hints.Obtain missing.
+                            obtainKeys = java.util.Set.of(
+                                    "axe", "flint_hatchet", "flint_shard", "flint",
+                                    "plant_string", "plant_fiber", "dagger", "knife",
+                                    "stick", "log", "plank", "saw");
+                        }
+                        for (String key : obtainKeys) {
+                            if (key.toLowerCase().startsWith(prefix)) result.add(key);
                         }
                     }
                 }
