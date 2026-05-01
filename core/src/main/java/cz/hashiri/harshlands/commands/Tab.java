@@ -119,9 +119,71 @@ public class Tab implements TabCompleter {
             // if 2 arguments were typed
             else if (args.length == 2) {
                 switch (args[0].toLowerCase()) {
-                    case "fear", "setfear", "give", "thirst", "temperature", "resetitem", "updateitem" -> {
-                        if (sender instanceof Player player) {
-                            result.add(player.getName());
+                    case "fear" -> {
+                        String fp = args[1].toLowerCase();
+                        if (sender.hasPermission("harshlands.command.fear.others")) {
+                            for (Player online : Bukkit.getOnlinePlayers()) {
+                                if (online.getName().toLowerCase().startsWith(fp)) {
+                                    result.add(online.getName());
+                                }
+                            }
+                        } else if (sender instanceof Player p
+                                && p.getName().toLowerCase().startsWith(fp)) {
+                            result.add(p.getName());
+                        }
+                    }
+                    case "setfear" -> {
+                        if (!sender.hasPermission("harshlands.command.fear.set")) break;
+                        String sfp = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(sfp)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "give" -> {
+                        if (!sender.hasPermission("harshlands.command.give")) break;
+                        String gp = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(gp)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "thirst" -> {
+                        if (!sender.hasPermission("harshlands.command.thirst")) break;
+                        String tp = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(tp)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "temperature" -> {
+                        if (!sender.hasPermission("harshlands.command.temperature")) break;
+                        String tep = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(tep)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "resetitem" -> {
+                        if (!sender.hasPermission("harshlands.command.resetitem")) break;
+                        String rp = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(rp)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "updateitem" -> {
+                        if (!sender.hasPermission("harshlands.command.updateitem")) break;
+                        String up = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(up)) {
+                                result.add(online.getName());
+                            }
                         }
                     }
                     case "spawnitem" -> {
