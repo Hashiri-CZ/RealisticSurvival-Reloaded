@@ -13,6 +13,8 @@ commands:
     correct_execution:
       single_target_message: "&fGave %value% [%display_name%] to %player_name%"
       multiple_target_message: "&fGave %value% [%display_name%]"
+  baubles:
+    player_not_found: "&cPlayer not found or offline."
   help:
     - "&6&l» Harshlands commands «"
     - "&7Survival tools"

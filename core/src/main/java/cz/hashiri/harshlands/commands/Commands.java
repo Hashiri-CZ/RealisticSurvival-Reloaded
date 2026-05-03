@@ -1045,6 +1045,48 @@ public class Commands implements CommandExecutor {
                     }
                     return true;
                 }
+                case "baubles" -> {
+                    // /hl baubles               → open your own bag (requires harshlands.command.baubles)
+                    // /hl baubles <player>      → read-only spectate (requires harshlands.command.baubles.others)
+                    if (args.length == 1) {
+                        if (!sender.hasPermission("harshlands.command.baubles")) {
+                            sendNoPermissionMessage(sender);
+                            return true;
+                        }
+                        if (!(sender instanceof Player p)) {
+                            sendIncompleteCommandMsg(sender);
+                            return true;
+                        }
+                        HLPlayer hl = HLPlayer.getPlayers().get(p.getUniqueId());
+                        if (hl == null || hl.getBaubleDataModule() == null) {
+                            Messages.of("commands.baubles.player_not_found").send(sender);
+                            return true;
+                        }
+                        p.openInventory(hl.getBaubleDataModule().getBaubleBag().getInventory());
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("harshlands.command.baubles.others")) {
+                        sendNoPermissionMessage(sender);
+                        return true;
+                    }
+                    if (!(sender instanceof Player viewer)) {
+                        sendIncompleteCommandMsg(sender);
+                        return true;
+                    }
+                    Player baubleTarget = Bukkit.getPlayer(args[1]);
+                    if (baubleTarget == null) {
+                        Messages.of("commands.baubles.player_not_found").send(sender);
+                        return true;
+                    }
+                    HLPlayer hlBaubleTarget = HLPlayer.getPlayers().get(baubleTarget.getUniqueId());
+                    if (hlBaubleTarget == null || hlBaubleTarget.getBaubleDataModule() == null) {
+                        Messages.of("commands.baubles.player_not_found").send(sender);
+                        return true;
+                    }
+                    viewer.openInventory(hlBaubleTarget.getBaubleDataModule().getBaubleBag().getInventory());
+                    return true;
+                }
                 case "help" -> {
                     if (!sender.hasPermission("harshlands.command.help")) {
                         // send the player a message explaining that he/she does not have permission to execute the command

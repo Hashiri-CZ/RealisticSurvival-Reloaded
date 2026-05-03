@@ -83,7 +83,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide", "baubles"));
             }
 
             if (mobs.isEmpty()) {
@@ -119,9 +119,72 @@ public class Tab implements TabCompleter {
             // if 2 arguments were typed
             else if (args.length == 2) {
                 switch (args[0].toLowerCase()) {
-                    case "fear", "setfear", "give", "thirst", "temperature", "resetitem", "updateitem" -> {
-                        if (sender instanceof Player player) {
-                            result.add(player.getName());
+                    // fear has default:true base perm — regular players see their own name; .others holders see all
+                    case "fear" -> {
+                        String prefix = args[1].toLowerCase();
+                        if (sender.hasPermission("harshlands.command.fear.others")) {
+                            for (Player online : Bukkit.getOnlinePlayers()) {
+                                if (online.getName().toLowerCase().startsWith(prefix)) {
+                                    result.add(online.getName());
+                                }
+                            }
+                        } else if (sender instanceof Player p
+                                && p.getName().toLowerCase().startsWith(prefix)) {
+                            result.add(p.getName());
+                        }
+                    }
+                    case "setfear" -> {
+                        if (!sender.hasPermission("harshlands.command.fear.set")) break;
+                        String prefix = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "give" -> {
+                        if (!sender.hasPermission("harshlands.command.give")) break;
+                        String prefix = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "thirst" -> {
+                        if (!sender.hasPermission("harshlands.command.thirst")) break;
+                        String prefix = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "temperature" -> {
+                        if (!sender.hasPermission("harshlands.command.temperature")) break;
+                        String prefix = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "resetitem" -> {
+                        if (!sender.hasPermission("harshlands.command.resetitem")) break;
+                        String prefix = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
+                    case "updateitem" -> {
+                        if (!sender.hasPermission("harshlands.command.updateitem")) break;
+                        String prefix = args[1].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
                         }
                     }
                     case "spawnitem" -> {
@@ -174,10 +237,33 @@ public class Tab implements TabCompleter {
                             result.add("reset");
                         }
                     }
+                    case "baubles" -> {
+                        String prefix = args[1].toLowerCase();
+                        if (sender.hasPermission("harshlands.command.baubles.others")) {
+                            for (Player online : Bukkit.getOnlinePlayers()) {
+                                if (online.getName().toLowerCase().startsWith(prefix)) {
+                                    result.add(online.getName());
+                                }
+                            }
+                        } else if (sender.hasPermission("harshlands.command.baubles")
+                                && sender instanceof Player p
+                                && p.getName().toLowerCase().startsWith(prefix)) {
+                            result.add(p.getName());
+                        }
+                    }
                     case "obtain" -> {
                         String prefix = args[1].toLowerCase();
-                        for (String key : List.of("axe", "flint_hatchet", "flint_shard", "flint", "plant_string", "plant_fiber", "dagger", "knife", "stick", "log", "plank", "saw")) {
-                            if (key.startsWith(prefix)) result.add(key);
+                        Set<String> obtainKeys =
+                                cz.hashiri.harshlands.locale.Messages.getKeys("hints.Obtain");
+                        if (obtainKeys.isEmpty()) {
+                            // Defensive fallback: locale not yet bound or hints.Obtain missing.
+                            obtainKeys = Set.of(
+                                    "axe", "flint_hatchet", "flint_shard", "flint",
+                                    "plant_string", "plant_fiber", "dagger", "knife",
+                                    "stick", "log", "plank", "saw");
+                        }
+                        for (String key : obtainKeys) {
+                            if (key.toLowerCase().startsWith(prefix)) result.add(key);
                         }
                     }
                 }

@@ -20,11 +20,9 @@ import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.data.HLModule;
 import cz.hashiri.harshlands.hints.HintKey;
 import cz.hashiri.harshlands.hints.HintsModule;
+import cz.hashiri.harshlands.locale.Messages;
 import org.bukkit.Bukkit;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -117,9 +115,9 @@ public class NightmareManager {
         // Persist ownership so we can recover it after a crash
         enderman.getPersistentDataContainer().set(nightmareKey, PersistentDataType.STRING, player.getUniqueId().toString());
 
-        // Name and appearance
-        enderman.setCustomName(LegacyComponentSerializer.legacySection().serialize(
-                Component.text("Nightmare", NamedTextColor.DARK_RED, TextDecoration.BOLD)));
+        // Name and appearance — pulled from locale so translation packs can override
+        String rawName = Messages.get("fear.nightmare.name");
+        enderman.setCustomName(ChatColor.translateAlternateColorCodes('&', rawName));
         enderman.setCustomNameVisible(true);
 
         // Carved pumpkin head — doesn't drop on death

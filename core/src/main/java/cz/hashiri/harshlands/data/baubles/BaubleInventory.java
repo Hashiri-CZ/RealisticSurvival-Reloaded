@@ -16,9 +16,11 @@
  */
 package cz.hashiri.harshlands.data.baubles;
 
+import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.utils.HLItem;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -31,7 +33,8 @@ import java.util.Collection;
 public class BaubleInventory extends GUI {
 
     public BaubleInventory(Player player) {
-        super(player, 54, "Bauble Bag");
+        super(player, 54, ChatColor.translateAlternateColorCodes(
+                '&', Messages.get("items.baubles.bauble_bag.display_name")));
 
         Inventory inv = getInventory();
 

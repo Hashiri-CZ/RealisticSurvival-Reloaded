@@ -187,6 +187,12 @@ permissions:
   harshlands.command.guide.reset:
     description: Allows resetting a player's guide-seen state
     default: op
+  harshlands.command.baubles:
+    description: Allows opening your own bauble bag
+    default: op
+  harshlands.command.baubles.others:
+    description: Allows viewing another player's bauble bag (read-only)
+    default: op
   harshlands.command.*:
     description: Wildcard permission
     default: op
@@ -216,4 +222,6 @@ permissions:
       harshlands.command.guide: true
       harshlands.command.guide.give: true
       harshlands.command.guide.reset: true
+      harshlands.command.baubles: true
+      harshlands.command.baubles.others: true
 

@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class Messages {
 
@@ -65,6 +66,12 @@ public final class Messages {
         LocaleManager m = manager;
         if (m == null) return List.of();
         return m.getList(key);
+    }
+
+    public static Set<String> getKeys(String prefix) {
+        LocaleManager m = manager;
+        if (m == null) return Set.of();
+        return m.getKeys(prefix);
     }
 
     public static Builder of(String key) {
