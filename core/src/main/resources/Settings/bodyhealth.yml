@@ -3,14 +3,16 @@ ConfigId: "1.3.2-RELEASE"
 BodyHealth:
   HUD:
     # X anchor relative to the bossbar canvas center. Range [-200, +200].
-    # Positive = right side. The body silhouette is 32 px wide and is bottom-
-    # anchored to the screen by the rendertype_text shader (Bucket E,
-    # ascent -14500 → top = ui.y - 76, bottom = ui.y - 12), so vertical
-    # position is fixed regardless of GUI scale. Default 184 keeps the
-    # silhouette tight against the right side of the bossbar canvas, ~16 px
-    # past its right edge but still inside the player's viewport on any
-    # reasonable aspect ratio. Use lower values (e.g. 152, 168) to pull it
-    # back toward screen center.
+    # Positive = right side. The silhouette is a 32-wide virtual canvas; each
+    # body part renders at its own X within that canvas via per-row shader
+    # buckets E_HEAD / E_TORSO / E_LEG / E_FOOT (see
+    # docs/resource_pack/SHADER_BUCKETS.md). Vertical position is bottom-pinned
+    # (ui.y - 76 to ui.y - 12) and resolution / GUI-scale independent.
+    # AnchorX=184 puts the right edge of the 32-wide silhouette at canvas X=216,
+    # i.e. 16 px past the bossbar canvas's +200 right edge — still inside the
+    # player's viewport at any reasonable aspect ratio. Use 168 to keep the
+    # silhouette entirely inside the canvas, or lower (152, 160) to pull back
+    # toward screen center.
     AnchorX: 184
 
     # Render task period in ticks. 5 ticks = 4Hz refresh.

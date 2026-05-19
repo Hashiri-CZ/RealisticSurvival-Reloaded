@@ -112,6 +112,11 @@ public class BossbarHUD {
     // Lifecycle
     // -------------------------------------------------------------------------
 
+    /** Diagnostic accessor: current bossbar title as a Component. */
+    public Component currentTitle() {
+        return mainBar.name();
+    }
+
     /** Show the HUD bossbar to the player. */
     public void show() {
         if (playerUuid != null) {
@@ -205,8 +210,13 @@ public class BossbarHUD {
             if (shift != 0) {
                 result = result.append(NegativeSpaceHelper.shift(shift));
             }
-            // Reset font to minecraft:default so content does not inherit negative_space font
-            Component safeContent = el.content.style(el.content.style().font(DEFAULT_FONT));
+            // Only reset font to minecraft:default when the content has no explicit
+            // font of its own. Elements that DO set a font (e.g. bodyhealth glyphs
+            // styled with harshlands:bodyhealth) must keep theirs; otherwise the
+            // root-font replacement clobbers it and the glyph renders as missing.
+            Component safeContent = el.content.style().font() == null
+                    ? el.content.style(el.content.style().font(DEFAULT_FONT))
+                    : el.content;
             result = result.append(safeContent);
             cursor = el.x + el.advance;
         }

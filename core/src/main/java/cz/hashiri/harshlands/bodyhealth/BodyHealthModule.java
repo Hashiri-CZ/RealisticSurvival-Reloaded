@@ -36,6 +36,7 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
     private int anchorX;
     private int tickPeriod;
     private BukkitTask renderTask;
+    private BodyHealthRenderTask renderTaskImpl;
     private BodyHealthQuitListener quitListener;
     private HudImpl hud;
     private boolean active;
@@ -76,16 +77,25 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
                 new HudManagerImpl(huds),
                 plugin.getDataFolder()));
 
-        this.quitListener = new BodyHealthQuitListener(uuid -> {
-            shownPlayers.remove(uuid);
-            lastRenderedStates.remove(uuid);
-            BossbarHUD removed = standaloneHuds.remove(uuid);
-            if (removed != null) removed.hide();
-        });
+        this.quitListener = new BodyHealthQuitListener(
+            uuid -> {
+                shownPlayers.remove(uuid);
+                lastRenderedStates.remove(uuid);
+                BossbarHUD removed = standaloneHuds.remove(uuid);
+                if (removed != null) removed.hide();
+            },
+            uuid -> {
+                // Mojang clears bossbars client-side on respawn. Drop the cached
+                // state so the next render-task tick re-emits the full title, and
+                // forget the first-frame log marker so we re-log the re-emit too.
+                lastRenderedStates.remove(uuid);
+                if (renderTaskImpl != null) renderTaskImpl.forgetFirstFrame(uuid);
+            }
+        );
         Bukkit.getPluginManager().registerEvents(quitListener, plugin);
 
-        BodyHealthRenderTask task = new BodyHealthRenderTask(this, anchorX, this::resolveHud);
-        this.renderTask = task.runTaskTimer(plugin, 0L, tickPeriod);
+        this.renderTaskImpl = new BodyHealthRenderTask(this, anchorX, this::resolveHud);
+        this.renderTask = renderTaskImpl.runTaskTimer(plugin, 0L, tickPeriod);
 
         plugin.getDebugManager().registerProvider(new DebugProvider() {
             @Override public String getModuleName() { return NAME; }
@@ -101,6 +111,7 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
         active = false;
 
         if (renderTask != null) { renderTask.cancel(); renderTask = null; }
+        renderTaskImpl = null;
         if (quitListener != null) {
             HandlerList.unregisterAll(quitListener);
             quitListener = null;
@@ -114,7 +125,13 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
             if (p == null) continue;
             DisplayTask dt = DisplayTask.getTasks().get(uuid);
             BossbarHUD existing = (dt != null) ? dt.getBossbarHud() : standaloneHuds.get(uuid);
-            if (existing != null) existing.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+            if (existing != null) {
+                // Scrub legacy single-element id plus the new per-part ids.
+                existing.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                for (BodyPart part : BodyPart.values()) {
+                    existing.removeElement(BodyHealthRenderState.elementId(part));
+                }
+            }
         }
         for (BossbarHUD h : standaloneHuds.values()) h.hide();
         standaloneHuds.clear();
@@ -130,7 +147,13 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
     // -------------------------------------------------------------------------
 
     @Override public boolean markShown(UUID uuid) {
-        return shownPlayers.add(uuid);
+        boolean added = shownPlayers.add(uuid);
+        if (added) {
+            Player p = Bukkit.getPlayer(uuid);
+            String name = p != null ? p.getName() : uuid.toString();
+            plugin.getLogger().info("BodyHealth HUD enabled for " + name);
+        }
+        return added;
     }
 
     @Override public boolean markHidden(UUID uuid) {
@@ -139,7 +162,13 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
             // Schedule main-thread element removal so we don't touch Bukkit objects off-thread.
             Bukkit.getScheduler().runTask(plugin, () -> {
                 Player p = Bukkit.getPlayer(uuid);
-                if (p != null) resolveHud(p).removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                if (p != null) {
+                    BossbarHUD hud = resolveHud(p);
+                    hud.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                    for (BodyPart part : BodyPart.values()) {
+                        hud.removeElement(BodyHealthRenderState.elementId(part));
+                    }
+                }
                 lastRenderedStates.remove(uuid);
             });
         }
@@ -157,7 +186,6 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
     Set<UUID> shownPlayers()                                          { return shownPlayers; }
     Map<BodyPart, BodyPartState> lastRendered(UUID uuid)              { return lastRenderedStates.get(uuid); }
     void putLastRendered(UUID uuid, Map<BodyPart, BodyPartState> m)   { lastRenderedStates.put(uuid, m); }
-    void clearLastRendered(UUID uuid)                                  { lastRenderedStates.remove(uuid); }
 
     // -------------------------------------------------------------------------
     // BossbarHUD resolution — same precedence pattern as FoodExpansionModule.
