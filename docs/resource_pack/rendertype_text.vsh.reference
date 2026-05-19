@@ -1,0 +1,77 @@
+// Reference copy of the rendertype_text.vsh shader Harshlands ships in its
+// ItemsAdder resource pack. The live files are:
+//
+//   <ia-contents>/Harshlands/assets/minecraft/shaders/core/rendertype_text.vsh
+//   <ia-contents>/Harshlands/overlay_84/assets/minecraft/shaders/core/rendertype_text.vsh
+//
+// They differ only in the lightmap sampling call (Mojang renamed the helper
+// from texelFetch(Sampler2, UV2/16, 0) to sample_lightmap(Sampler2, UV2) in
+// 26.1.2). The vertex-position bucket logic below is identical in both.
+//
+// This file is the in-repo source of truth for the bucket layout. The deployed
+// .vsh files MUST match. Update both when buckets change, then /iazip + reload.
+//
+// See SHADER_BUCKETS.md in this directory for the bucket table.
+
+#version 330
+
+#moj_import <minecraft:fog.glsl>
+#moj_import <minecraft:dynamictransforms.glsl>
+#moj_import <minecraft:projection.glsl>
+
+in vec3 Position;
+in vec4 Color;
+in vec2 UV0;
+in ivec2 UV2;
+
+uniform sampler2D Sampler2;
+
+out float sphericalVertexDistance;
+out float cylindricalVertexDistance;
+out vec4 vertexColor;
+out vec2 texCoord0;
+
+const float ADD_HEIGHT_TOP    = 4095.0;
+const float ADD_HEIGHT_BOTTOM = 8192.0;
+const float ICON_FROM_BOTTOM  = 65.0;
+
+void main() {
+    vec3 pos = Position;
+
+    if (ProjMat[3].x < -0.99) {
+        vec2 ui = ceil(2.0 / vec2(ProjMat[0][0], -ProjMat[1][1]));
+
+        if (pos.y >= ADD_HEIGHT_BOTTOM) {
+            bool is_top = UV0.y < 0.5;
+            if (pos.y < 9000.0) {
+                // Bucket A — atlas font (preview_text). Legacy slot-relative math.
+                pos.y += ui.y - 2.0 * ICON_FROM_BOTTOM - ADD_HEIGHT_BOTTOM;
+                pos.y -= ModelViewMat[3].y;
+            } else if (pos.y < 10000.0) {
+                // Bucket B — blank-space placeholder, height 9.
+                pos.y = is_top ? (ui.y - 75.0) : (ui.y - 75.0 + 9.0);
+            } else if (pos.y < 11000.0) {
+                // Bucket C — macronutrient icons, height 32.
+                pos.y = is_top ? (ui.y - 105.0) : (ui.y - 105.0 + 32.0);
+            } else if (pos.y < 14000.0) {
+                // Bucket D — preview text single-row atlas, height 8.
+                pos.y = is_top ? (ui.y - 105.0) : (ui.y - 105.0 + 8.0);
+            } else if (pos.y < 18000.0) {
+                // Bucket E — bodyhealth silhouette, height 64.
+                pos.y = is_top ? (ui.y - 76.0) : (ui.y - 76.0 + 64.0);
+            }
+        } else if (pos.y >= ui.y) {
+            // Top-anchored fallback (currently unused).
+            pos.y -= ADD_HEIGHT_TOP;
+            pos.y -= ModelViewMat[3].y;
+        }
+    }
+
+    gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
+    sphericalVertexDistance = fog_spherical_distance(pos);
+    cylindricalVertexDistance = fog_cylindrical_distance(pos);
+    // Base shader: vertexColor = Color * texelFetch(Sampler2, UV2 / 16, 0);
+    // 26.1.2 overlay: vertexColor = Color * sample_lightmap(Sampler2, UV2);
+    vertexColor = Color * texelFetch(Sampler2, UV2 / 16, 0);
+    texCoord0 = UV0;
+}
