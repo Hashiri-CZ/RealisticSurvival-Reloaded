@@ -42,8 +42,8 @@ silhouette region pinned 12 px from the screen bottom.
 
 ## `bodyhealth.json` contract
 
-For a bodyhealth glyph to render, its `font/bodyhealth.json` entry MUST
-satisfy:
+`bodyhealth.json` contains 40 `bitmap` providers — one per body-part ×
+state. There is **no** `space` provider. Each bitmap entry MUST satisfy:
 
 | Field   | Value                |
 |---------|----------------------|
@@ -55,8 +55,36 @@ The PNG is a transparent 32×64 canvas; the body part's visible pixels sit
 at their natural (x, y) within the canvas. All 40 providers share these
 values — there is no per-row differentiation.
 
+### Advance-marker invariant
+
+Every bodyhealth PNG MUST have at least one non-transparent pixel in
+**column x = 31** (the last column of the 32-wide canvas).
+
+Mojang's `bitmap` font provider computes a glyph's cursor advance from the
+rightmost non-transparent pixel column, **not** from the declared canvas
+width. The body parts have visible content ending at different columns
+(arm_left at x=7, foot/leg at x=15, head/torso at x=23, arm_right at x=31),
+so without a marker Mojang assigns each codepoint a different advance
+(8, 16, 24, 32).
+
+`BossbarHUD.rebuildTitle` assumes every bodyhealth element advances exactly
+`BodyHealthRenderState.CANVAS_WIDTH_PX = 32` px and emits negative-space
+shifts between the eight parts on that assumption. If Mojang's real advance
+is smaller, each shift overshoots by `(32 - real_advance)` per glyph and the
+parts scatter across the bossbar title — the "only one part visible" bug.
+
+The marker pixel at x=31 forces Mojang's advance to `31 + 1 = 32` for every
+glyph, making BossbarHUD's assumption true. It is stamped at 1/255 (~0.4%)
+opacity — imperceptible — and does not affect rendering: Mojang draws the
+full 32-wide cell at the cursor regardless of content, so only the advance
+changes. This mirrors BetterHud's model (a fixed, known per-glyph advance
+plus HUD-driven shifts), achieved here via canvas-width PNGs instead of
+runtime width bookkeeping.
+
+`.scripts/stamp_bodyhealth_advance.py` re-applies the marker to every PNG
+and is idempotent — run it after any bodyhealth art change.
 `.scripts/regen_bodyhealth_font.py` regenerates `bodyhealth.json` from the
-part / state list; if you edit the part list, run the script and verify
+part / state list; if you edit the part list, run both scripts and verify
 with `BodyHealthRenderStateTest`.
 
 ## Why single bucket E
