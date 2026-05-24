@@ -17,3 +17,9 @@ BodyHealth:
 
     # Render task period in ticks. 5 ticks = 4Hz refresh.
     TickPeriod: 5
+
+  # When true, the render task emits per-tick [BHD] diagnostic log lines covering
+  # hud-instance identity, element-map size, placeholder values, and setElement
+  # outcomes. Default false. Permanent debug knob — leave off in production.
+  Debug:
+    Render: false
