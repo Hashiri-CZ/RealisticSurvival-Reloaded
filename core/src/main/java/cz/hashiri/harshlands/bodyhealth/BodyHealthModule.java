@@ -210,6 +210,12 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
     Set<UUID> shownPlayers()                                          { return shownPlayers; }
     Map<BodyPart, BodyPartState> lastRendered(UUID uuid)              { return lastRenderedStates.get(uuid); }
     void putLastRendered(UUID uuid, Map<BodyPart, BodyPartState> m)   { lastRenderedStates.put(uuid, m); }
+    void clearLastRendered(UUID uuid)                                  { lastRenderedStates.remove(uuid); }
+
+    /** Diagnostic — see {@link BodyHealthRenderTask#setDebugOnlyPart} for details. */
+    public void setDebugOnlyPart(BodyPart only) {
+        BodyHealthRenderTask.setDebugOnlyPart(only, this);
+    }
 
     // -------------------------------------------------------------------------
     // BossbarHUD resolution — same precedence pattern as FoodExpansionModule.

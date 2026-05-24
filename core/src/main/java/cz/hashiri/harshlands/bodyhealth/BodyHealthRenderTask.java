@@ -20,6 +20,13 @@ final class BodyHealthRenderTask extends BukkitRunnable {
     /** Legacy element-id prefix kept for backwards-compatible removeElement scrubs. */
     static final String ELEMENT_ID = BodyHealthRenderState.ELEMENT_ID_PREFIX;
 
+    /**
+     * Diagnostic: when non-null, only this body part's glyph is emitted per
+     * render tick; the other seven elements are removed from the bossbar.
+     * {@code null} = normal multi-part rendering.
+     */
+    static volatile BodyPart debugOnlyPart = null;
+
     private final BodyHealthModule module;
     private final int anchorX;
     private final Function<Player, BossbarHUD> hudResolver;
@@ -35,6 +42,27 @@ final class BodyHealthRenderTask extends BukkitRunnable {
      *  fresh render emits the diagnostic again (used on respawn). */
     void forgetFirstFrame(java.util.UUID uuid) {
         firstFrameLogged.remove(uuid);
+    }
+
+    /**
+     * Diagnostic helper for /hl bdh onlypart — public so the command class in
+     * another package can invoke it via {@link BodyHealthModule#setDebugOnlyPart}.
+     * <p>
+     * Emit only one body part's glyph per render, removing the other seven from
+     * each shown player's bossbar. Pass {@code null} to restore normal multi-part
+     * rendering.
+     * <p>
+     * Side-effect: clears per-player last-rendered state so the change takes
+     * effect within one tick period.
+     */
+    static void setDebugOnlyPart(BodyPart only, BodyHealthModule module) {
+        BodyPart prev = debugOnlyPart;
+        debugOnlyPart = only;
+        BHDLogger.logf("debugOnlyPart %s -> %s", prev, only);
+        // Force the next render to re-evaluate by clearing per-player state.
+        for (java.util.UUID uuid : module.shownPlayers()) {
+            module.clearLastRendered(uuid);
+        }
     }
 
     @Override
@@ -74,6 +102,15 @@ final class BodyHealthRenderTask extends BukkitRunnable {
                 // Emit one BossbarHUD element per body part. (Phase 1 keeps the existing
                 // 8-element shape — Phase 2 collapses to a single element.)
                 for (BodyPart part : BodyPart.values()) {
+                    if (debugOnlyPart != null && part != debugOnlyPart) {
+                        // Filter is active and this part is excluded — remove its element.
+                        boolean removed = hud.removeElement(BodyHealthRenderState.elementId(part));
+                        if (BHDLogger.isEnabled() && removed) {
+                            BHDLogger.logf("debugOnlyPart filter removed id=%s",
+                                           BodyHealthRenderState.elementId(part));
+                        }
+                        continue;
+                    }
                     BodyPartState st = states.getOrDefault(part, BodyPartState.FULL);
                     Component glyph = BodyHealthRenderState.glyphFor(part, st);
                     BossbarHUD.SetElementOutcome outcome =
