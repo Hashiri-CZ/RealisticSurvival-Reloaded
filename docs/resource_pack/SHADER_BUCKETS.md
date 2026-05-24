@@ -80,9 +80,9 @@ Why only this one marker is needed:
    font provider is constructed with `width=cellW` and `height=cellH` —
    i.e., the FULL PNG cell dimensions (32×64), NOT the trimmed bbox of
    opaque pixels. The rendered quad always covers the entire cell.
-   Verified against `BitmapFont.Loader.load` in Mojang's 1.21.1 source
-   (`BitmapFontGlyph(scale, image, p*k, m*l, k, l, advance, ascent)`
-   where `k = cellW = 32` and `l = cellH = 64`). The historical
+   Verified against `BitmapFont.Loader.load` in Mojang's 1.21.1 source:
+   the 5th and 6th arguments of the `BitmapFontGlyph` constructor are
+   `cellW` and `cellH`, not the bbox of opaque pixels. The historical
    dual-marker scheme that added a second pixel at (0, 63) was based on
    a misreading of this code and was actively harmful: its presence
    triggered glyph-atlas re-packs that masked a separate shader bug
@@ -149,20 +149,23 @@ both vertices' `UV0.y` land on the same side of `0.5` unless the atlas
 slot.y happens to be in approximately (64, 128). When both are on the
 same side, `is_top = UV0.y < 0.5` evaluates the same for both vertices
 and the shader pins them to the same screen y — collapsing the quad to
-zero height and making the glyph invisible. Atlas placement is
-non-deterministic across pack reloads, which produced the
-"some-bodyhealth-parts-render-some-don't" symptom that the offset-based
-approach fully eliminates.
+zero height and making the glyph invisible. Atlas slot.y is deterministic
+for a given pack but any change to the atlas contents (adding a marker
+pixel, retexturing a glyph, font-merge ordering, even an OptiFine
+reload) can reshuffle slots, so relying on a "lucky" slot.y is fragile.
+This is what produced the "some-bodyhealth-parts-render-some-don't"
+symptom that the offset-based approach fully eliminates.
 
 ### Known caveat for buckets B, C, D
 
 Buckets B (blank-space placeholder, 9 px), C (macronutrient icons,
 32 px), and D (preview text, 8 px) still use the `is_top = UV0.y < 0.5`
 heuristic. They currently render correctly because their atlas slots
-have been stable. If any of them ever breaks the same way bucket E did,
-the fix is to apply the same offset-based pattern shown above, with the
-appropriate bucket-base constant (9000 / 10000 / 11000) and screen-top
-constant (75 / 105 / 105).
+land in lucky positions for the current pack contents. As soon as the
+atlas reshuffles (see explanation above) they can break the same way
+bucket E did. The fix is to apply the same offset-based pattern shown
+above, with the appropriate bucket-base constant (9000 / 10000 / 11000)
+and screen-top constant (75 / 105 / 105).
 
 ## Updating the shader
 
