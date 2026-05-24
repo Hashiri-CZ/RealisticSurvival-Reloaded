@@ -88,6 +88,9 @@ public class BossbarHUD {
         }
     }
 
+    /** Outcome of {@link #setElement} — diagnostic signal for callers that want to log. */
+    public enum SetElementOutcome { ADD, UPDATE, KEEP_EQUAL }
+
     /** Backward-compatible constructor for callers that do not need anchor tracking. */
     public BossbarHUD(Audience audience) {
         this(audience, null);
@@ -146,8 +149,8 @@ public class BossbarHUD {
      * @param xPixels   horizontal pixel position from the left edge of the bossbar
      * @param content   component containing the codepoint(s) to display
      */
-    public void setElement(String elementId, int xPixels, Component content) {
-        setElement(elementId, xPixels, content, 0);
+    public SetElementOutcome setElement(String elementId, int xPixels, Component content) {
+        return setElement(elementId, xPixels, content, 0);
     }
 
     /**
@@ -162,12 +165,14 @@ public class BossbarHUD {
      * @param content   component containing the codepoint(s) to display
      * @param advance   natural font advance width (in pixels) of {@code content}'s glyphs
      */
-    public void setElement(String elementId, int xPixels, Component content, int advance) {
+    public SetElementOutcome setElement(String elementId, int xPixels, Component content, int advance) {
         HudElement next = new HudElement(xPixels, content, advance);
         HudElement prev = elements.get(elementId);
-        if (next.equals(prev)) return; // identical placement+content; nothing to redraw
+        if (next.equals(prev)) return SetElementOutcome.KEEP_EQUAL;
+        SetElementOutcome outcome = (prev == null) ? SetElementOutcome.ADD : SetElementOutcome.UPDATE;
         elements.put(elementId, next);
         mainBar.name(rebuildTitle());
+        return outcome;
     }
 
     /**
@@ -175,9 +180,17 @@ public class BossbarHUD {
      *
      * @param elementId the ID passed to {@link #setElement}
      */
-    public void removeElement(String elementId) {
-        elements.remove(elementId);
-        mainBar.name(elements.isEmpty() ? Component.empty() : rebuildTitle());
+    public boolean removeElement(String elementId) {
+        boolean wasPresent = elements.remove(elementId) != null;
+        if (wasPresent) {
+            mainBar.name(elements.isEmpty() ? Component.empty() : rebuildTitle());
+        }
+        return wasPresent;
+    }
+
+    /** Current number of registered elements. Diagnostic accessor. */
+    public int elementCount() {
+        return elements.size();
     }
 
     // -------------------------------------------------------------------------
