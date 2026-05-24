@@ -53,26 +53,43 @@ final class BodyHealthRenderTask extends BukkitRunnable {
             try {
                 Map<BodyPart, BodyPartState> states = readPlaceholders(player);
                 Map<BodyPart, BodyPartState> last = module.lastRendered(uuid);
-                if (states.equals(last)) {
+                boolean shortCircuit = states.equals(last);
+
+                BossbarHUD hud = hudResolver.apply(player);
+
+                if (BHDLogger.isEnabled()) {
+                    BHDLogger.logf("tick player=%s hudId=%d mapSize=%d short_circuit=%s states=%s last=%s",
+                                   player.getName(),
+                                   System.identityHashCode(hud),
+                                   hud.elementCount(),
+                                   shortCircuit,
+                                   compactStates(states),
+                                   last == null ? "null" : compactStates(last));
+                }
+
+                if (shortCircuit) {
                     continue;
                 }
 
-                BossbarHUD hud = hudResolver.apply(player);
-                // Emit one BossbarHUD element per body part. Each element is a single
-                // glyph wrapped in an empty-styled parent (so BossbarHUD's root-font
-                // replacement step does not strip the bodyhealth font from the child).
-                // BossbarHUD.rebuildTitle sorts elements by X and emits the negative-
-                // space shifts between them — we do NOT pre-bake shifts here. This
-                // avoids the multi-glyph nested-Component path that turned out to
-                // render only one part on the client.
+                // Emit one BossbarHUD element per body part. (Phase 1 keeps the existing
+                // 8-element shape — Phase 2 collapses to a single element.)
                 for (BodyPart part : BodyPart.values()) {
                     BodyPartState st = states.getOrDefault(part, BodyPartState.FULL);
                     Component glyph = BodyHealthRenderState.glyphFor(part, st);
-                    // BetterHud-mirror: every part anchors at the same X.
-                    // Transparent padding inside each PNG positions the visible pixels.
-                    hud.setElement(BodyHealthRenderState.elementId(part), anchorX, glyph,
-                                   BodyHealthRenderState.GLYPH_ADVANCE_PX);
+                    BossbarHUD.SetElementOutcome outcome =
+                        hud.setElement(BodyHealthRenderState.elementId(part), anchorX, glyph,
+                                       BodyHealthRenderState.GLYPH_ADVANCE_PX);
+                    if (BHDLogger.isEnabled()) {
+                        BHDLogger.logf("setElement player=%s id=%s x=%d advance=%d outcome=%s mapSize=%d",
+                                       player.getName(),
+                                       BodyHealthRenderState.elementId(part),
+                                       anchorX,
+                                       BodyHealthRenderState.GLYPH_ADVANCE_PX,
+                                       outcome,
+                                       hud.elementCount());
+                    }
                 }
+
                 boolean firstFrame = (last == null) && firstFrameLogged.add(uuid);
                 module.putLastRendered(uuid, states);
                 if (firstFrame) {
@@ -92,6 +109,21 @@ final class BodyHealthRenderTask extends BukkitRunnable {
                 t.printStackTrace();
             }
         }
+    }
+
+    /** Compact one-line representation of a states map for diagnostic logging. */
+    private static String compactStates(Map<BodyPart, BodyPartState> states) {
+        StringBuilder sb = new StringBuilder("{");
+        boolean first = true;
+        for (BodyPart part : BodyPart.values()) {
+            if (!first) sb.append(',');
+            sb.append(part.name(), 0, 1)
+              .append(part.name().length() > 4 ? part.name().substring(part.name().length() - 1) : "")
+              .append(':')
+              .append(states.getOrDefault(part, BodyPartState.FULL).name().charAt(0));
+            first = false;
+        }
+        return sb.append('}').toString();
     }
 
     private Map<BodyPart, BodyPartState> readPlaceholders(Player p) {
