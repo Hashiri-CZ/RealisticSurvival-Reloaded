@@ -28,8 +28,19 @@ final class BodyHealthRenderState {
     /** First codepoint in the bodyhealth glyph block (HEAD/FULL). U+E000 in the Private Use Area. */
     static final char BASE_CODEPOINT = '';
 
-    /** Width of the silhouette canvas in pixels — also the per-element advance. */
-    static final int CANVAS_WIDTH_PX = 32;
+    /**
+     * Per-element glyph advance in pixels — the value passed to
+     * {@code BossbarHUD.setElement} for every bodyhealth part.
+     *
+     * <p>Each part PNG is a 32 px-wide canvas with an opaque marker pixel in its
+     * last column (x=31), stamped by {@code .scripts/stamp_bodyhealth_advance.py},
+     * so Mojang's bitmap font measures a uniform drawn width of 32 for every
+     * glyph. Mojang then adds a 1 px trailing gap to every bitmap glyph, so the
+     * real cursor advance is 32 + 1 = 33. BossbarHUD must be told 33; if it is
+     * told 32 each of the eight same-anchor parts drifts 1 px and the silhouette
+     * shears apart.
+     */
+    static final int GLYPH_ADVANCE_PX = 33;
 
     /** BossbarHUD element id prefix; per-part ids are this + "_" + part.name(). */
     static final String ELEMENT_ID_PREFIX = "bodyhealth";

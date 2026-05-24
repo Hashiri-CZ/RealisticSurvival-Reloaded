@@ -60,26 +60,31 @@ values — there is no per-row differentiation.
 Every bodyhealth PNG MUST have at least one non-transparent pixel in
 **column x = 31** (the last column of the 32-wide canvas).
 
-Mojang's `bitmap` font provider computes a glyph's cursor advance from the
-rightmost non-transparent pixel column, **not** from the declared canvas
-width. The body parts have visible content ending at different columns
-(arm_left at x=7, foot/leg at x=15, head/torso at x=23, arm_right at x=31),
-so without a marker Mojang assigns each codepoint a different advance
-(8, 16, 24, 32).
+Mojang's `bitmap` font provider derives a glyph's cursor advance from the
+**rightmost non-transparent pixel column**, not from the declared canvas
+width — then adds a **1 px trailing gap** to every bitmap glyph. Without a
+marker the body parts' visible content ends at different columns (arm_left
+at x=7, foot/leg at x=15, head/torso at x=23, arm_right at x=31), so Mojang
+assigns each codepoint a different advance.
 
-`BossbarHUD.rebuildTitle` assumes every bodyhealth element advances exactly
-`BodyHealthRenderState.CANVAS_WIDTH_PX = 32` px and emits negative-space
-shifts between the eight parts on that assumption. If Mojang's real advance
-is smaller, each shift overshoots by `(32 - real_advance)` per glyph and the
-parts scatter across the bossbar title — the "only one part visible" bug.
+The marker pixel at x=31 makes the rightmost opaque column 31 for every
+glyph, so Mojang measures a uniform **drawn width of 32**. With the 1 px
+trailing gap, the **real cursor advance is 32 + 1 = 33** for every glyph.
 
-The marker pixel at x=31 forces Mojang's advance to `31 + 1 = 32` for every
-glyph, making BossbarHUD's assumption true. It is stamped at 1/255 (~0.4%)
-opacity — imperceptible — and does not affect rendering: Mojang draws the
-full 32-wide cell at the cursor regardless of content, so only the advance
-changes. This mirrors BetterHud's model (a fixed, known per-glyph advance
-plus HUD-driven shifts), achieved here via canvas-width PNGs instead of
-runtime width bookkeeping.
+`BossbarHUD.rebuildTitle` emits a negative-space shift between each of the
+eight same-anchor parts to cancel the previous glyph's advance, using the
+value passed to `BossbarHUD.setElement`. That value MUST be
+`BodyHealthRenderState.GLYPH_ADVANCE_PX = 33` (32 drawn + 1 trailing). If it
+is 32 each shift under-cancels by 1 px and the silhouette shears apart; and
+if the deployed pack is missing the marker the advances revert to their
+natural per-part values and the parts scatter across the bossbar title (the
+"only one part visible" bug).
+
+The marker is stamped at 1/255 (~0.4%) opacity — imperceptible — and does
+not affect rendering: Mojang draws the full 32-wide cell at the cursor
+regardless of content, so only the advance changes. This mirrors BetterHud's
+model (a fixed, known per-glyph advance plus HUD-driven shifts), achieved
+here via canvas-width PNGs instead of runtime width bookkeeping.
 
 `.scripts/stamp_bodyhealth_advance.py` re-applies the marker to every PNG
 and is idempotent — run it after any bodyhealth art change.

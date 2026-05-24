@@ -71,7 +71,7 @@ final class BodyHealthRenderTask extends BukkitRunnable {
                     // BetterHud-mirror: every part anchors at the same X.
                     // Transparent padding inside each PNG positions the visible pixels.
                     hud.setElement(BodyHealthRenderState.elementId(part), anchorX, glyph,
-                                   BodyHealthRenderState.CANVAS_WIDTH_PX);
+                                   BodyHealthRenderState.GLYPH_ADVANCE_PX);
                 }
                 boolean firstFrame = (last == null) && firstFrameLogged.add(uuid);
                 module.putLastRendered(uuid, states);

@@ -1,24 +1,20 @@
 """
 Stamp a 1-px advance marker into every bodyhealth part PNG.
 
-Mojang's `bitmap` font provider computes a glyph's cursor advance from the
-rightmost non-transparent pixel column of the bitmap, NOT from the bitmap's
-declared width. Our 32x64 part canvases have visible content ending at
-different x columns (arm_left at x=7, foot_left/leg_left at x=15,
-head/torso at x=23, arm_right at x=31), so Mojang assigns each codepoint a
-different advance (8, 16, 24, 32).
-
-BossbarHUD.rebuildTitle assumes every bodyhealth element advances exactly
-BodyHealthRenderState.CANVAS_WIDTH_PX = 32 px and emits negative-space
-shifts between the eight parts on that assumption. When Mojang's real
-advance is smaller, each shift overshoots by (32 - real_advance) per glyph
-and the parts scatter across the bossbar title -- the "only one part
-visible" bug.
+Mojang's `bitmap` font provider derives a glyph's cursor advance from the
+rightmost non-transparent pixel column of the bitmap (NOT the declared
+width), then adds a 1 px trailing gap. Our 32x64 part canvases have visible
+content ending at different x columns (arm_left at x=7, foot_left/leg_left
+at x=15, head/torso at x=23, arm_right at x=31), so without a marker Mojang
+assigns each codepoint a different advance and the eight same-anchor parts
+scatter across the bossbar title -- the "only one part visible" bug.
 
 Fix: stamp one near-invisible pixel (alpha = 1) into column x = 31 (the
-last column of the 32-wide canvas) of every part PNG. Mojang then computes
-advance = 31 + 1 = 32 for every glyph, which is exactly what BossbarHUD
-already assumes. The pixel is at 1/255 (~0.4%) opacity -- imperceptible --
+last column of the 32-wide canvas) of every part PNG. Mojang then measures
+a uniform drawn width of 32 for every glyph. With the 1 px trailing gap the
+real cursor advance is 32 + 1 = 33; the Java side declares that value as
+BodyHealthRenderState.GLYPH_ADVANCE_PX so BossbarHUD's per-element shifts
+cancel exactly. The pixel is at 1/255 (~0.4%) opacity -- imperceptible --
 and does not change rendering: Mojang draws the full 32-wide cell at the
 cursor regardless of content, so only the advance changes.
 
