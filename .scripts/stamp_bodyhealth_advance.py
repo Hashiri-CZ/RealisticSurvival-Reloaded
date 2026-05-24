@@ -43,12 +43,19 @@ Run from repo root: python .scripts/stamp_bodyhealth_advance.py
 """
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from PIL import Image
 
 REPO = Path(__file__).resolve().parents[1]
-PNG_DIR = REPO / "core" / "src" / "main" / "resources" / "assets" / "harshlands" / "textures" / "bodyhealth"
+# Default target: the in-repo asset source (used by Java JAR resources).
+# Pass an explicit directory as argv[1] to stamp the deployed ItemsAdder pack
+# (which is what actually ships to the client — the deployed pack is built from
+# `…\Server\plugins\ItemsAdder\contents\Harshlands\assets\harshlands\textures\bodyhealth\`,
+# NOT from the repo source).
+DEFAULT_PNG_DIR = REPO / "core" / "src" / "main" / "resources" / "assets" / "harshlands" / "textures" / "bodyhealth"
+PNG_DIR = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_PNG_DIR
 
 CANVAS_W = 32     # must match BodyHealthRenderState.CANVAS_WIDTH_PX
 CANVAS_H = 64
