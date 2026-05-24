@@ -1,26 +1,43 @@
 """
-Stamp a 1-px advance marker into every bodyhealth part PNG.
+Stamp 1-px markers into every bodyhealth part PNG to pin both the cursor
+advance AND the rendered glyph's bounding box to a uniform 32x64 rect.
 
-Mojang's `bitmap` font provider derives a glyph's cursor advance from the
-rightmost non-transparent pixel column of the bitmap (NOT the declared
-width), then adds a 1 px trailing gap. Our 32x64 part canvases have visible
-content ending at different x columns (arm_left at x=7, foot_left/leg_left
-at x=15, head/torso at x=23, arm_right at x=31), so without a marker Mojang
-assigns each codepoint a different advance and the eight same-anchor parts
-scatter across the bossbar title -- the "only one part visible" bug.
+Two distinct problems this script solves:
 
-Fix: stamp one near-invisible pixel (alpha = 1) into column x = 31 (the
-last column of the 32-wide canvas) of every part PNG. Mojang then measures
-a uniform drawn width of 32 for every glyph. With the 1 px trailing gap the
-real cursor advance is 32 + 1 = 33; the Java side declares that value as
-BodyHealthRenderState.GLYPH_ADVANCE_PX so BossbarHUD's per-element shifts
-cancel exactly. The pixel is at 1/255 (~0.4%) opacity -- imperceptible --
-and does not change rendering: Mojang draws the full 32-wide cell at the
-cursor regardless of content, so only the advance changes.
+1. **Cursor advance.** Mojang's `bitmap` font provider derives a glyph's
+   advance from the rightmost non-transparent pixel column of the bitmap
+   (NOT the declared width), then adds a 1 px trailing gap. Our 32x64 part
+   canvases have visible content ending at different x columns (arm_left at
+   x=7, foot/leg_left at x=15, head/torso at x=23, arm_right at x=31), so
+   without an anchor at x=31 Mojang assigns each codepoint a different
+   advance and the eight same-anchor parts scatter across the bossbar title
+   -- the "only one part visible" bug.
 
-Idempotent: if column 31 already has a non-transparent pixel, the file is
-left byte-identical (not re-encoded), so re-running produces no spurious
-git diff.
+   Fix: stamp a near-invisible (alpha=1) pixel at (31, 0). Mojang then
+   measures a uniform drawn width of 32; with the 1 px trailing gap the
+   real cursor advance is 33 (matches BodyHealthRenderState.GLYPH_ADVANCE_PX).
+
+2. **Glyph bounding box.** Mojang's bitmap glyph also has a vertical bbox
+   derived from the topmost and bottommost non-transparent rows. The shader
+   in bucket E (ui.y-76 to ui.y-12) expects the quad to span the full 64 rows
+   of the canvas. Parts whose natural content doesn't reach row 0 or row 63
+   (arm_right at y=16-39, leg_right at y=40-55, head at y=0-15, etc.) end up
+   with smaller quads that the bucket-E shader can't position consistently --
+   some parts render off-screen or at the wrong Y.
+
+   Fix: stamp a second alpha=1 marker at (0, 63). Combined with the (31, 0)
+   marker this pins the bbox to the full (0, 0) -> (31, 63) rect for every
+   glyph, regardless of where its natural content sits.
+
+Both markers are at 1/255 (~0.4%) opacity -- imperceptible visually.
+
+Idempotency: the script checks each exact marker pixel (not the whole row or
+column). If both (31, 0) and (0, 63) are already non-transparent in a given
+PNG, the file is left byte-identical and re-running produces no spurious git
+diff. This is stricter than the previous "any opaque pixel in column 31"
+check, which incorrectly skipped arm_right (whose natural arm content fills
+column 31 at rows 16-39, so the previous check left arm_right with no marker
+at row 0 -- producing a 8x24 bbox instead of 32x64).
 
 Run from repo root: python .scripts/stamp_bodyhealth_advance.py
 """
@@ -35,18 +52,11 @@ PNG_DIR = REPO / "core" / "src" / "main" / "resources" / "assets" / "harshlands"
 
 CANVAS_W = 32     # must match BodyHealthRenderState.CANVAS_WIDTH_PX
 CANVAS_H = 64
-MARKER_X = 31     # last column -> Mojang advance = MARKER_X + 1 = 32
-MARKER_Y = 0      # any row works; the pixel is invisible at alpha=1
 MARKER_RGBA = (255, 255, 255, 1)  # alpha=1 -> counted by Mojang, ~0.4% opacity
 
-
-def column_has_opaque(img: Image.Image, x: int) -> bool:
-    px = img.load()
-    _, h = img.size
-    for y in range(h):
-        if px[x, y][3] != 0:
-            return True
-    return False
+# Two anchor markers per PNG. (31, 0) pins the advance + top-right bbox corner;
+# (0, 63) pins the bottom-left bbox corner. Together they force bbox=(0,0,32,64).
+MARKERS = ((31, 0), (0, 63))
 
 
 def stamp() -> None:
@@ -58,13 +68,15 @@ def stamp() -> None:
         img = Image.open(path).convert("RGBA")
         if img.size != (CANVAS_W, CANVAS_H):
             raise SystemExit(f"{path.name}: expected {CANVAS_W}x{CANVAS_H}, got {img.size[0]}x{img.size[1]}")
-        if column_has_opaque(img, MARKER_X):
+        missing = [(x, y) for (x, y) in MARKERS if img.getpixel((x, y))[3] == 0]
+        if not missing:
             already += 1
             continue
-        img.putpixel((MARKER_X, MARKER_Y), MARKER_RGBA)
+        for (x, y) in missing:
+            img.putpixel((x, y), MARKER_RGBA)
         img.save(path)
         stamped += 1
-    print(f"[stamp] {stamped} stamped, {already} already had an x={MARKER_X} marker ({len(pngs)} total)")
+    print(f"[stamp] {stamped} stamped, {already} already had both markers ({len(pngs)} total)")
 
 
 if __name__ == "__main__":

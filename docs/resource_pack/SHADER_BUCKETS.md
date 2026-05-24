@@ -55,21 +55,36 @@ The PNG is a transparent 32×64 canvas; the body part's visible pixels sit
 at their natural (x, y) within the canvas. All 40 providers share these
 values — there is no per-row differentiation.
 
-### Advance-marker invariant
+### Advance + bbox marker invariant
 
-Every bodyhealth PNG MUST have at least one non-transparent pixel in
-**column x = 31** (the last column of the 32-wide canvas).
+Every bodyhealth PNG MUST have two anchor markers (1/255 opacity, imperceptible):
 
-Mojang's `bitmap` font provider derives a glyph's cursor advance from the
-**rightmost non-transparent pixel column**, not from the declared canvas
-width — then adds a **1 px trailing gap** to every bitmap glyph. Without a
-marker the body parts' visible content ends at different columns (arm_left
-at x=7, foot/leg at x=15, head/torso at x=23, arm_right at x=31), so Mojang
-assigns each codepoint a different advance.
+- One at **(31, 0)** — top-right corner of the 32-wide canvas. Pins the
+  cursor advance AND the top-right corner of the glyph's bbox.
+- One at **(0, 63)** — bottom-left corner. Pins the bottom-left corner of
+  the bbox so every glyph's bbox is uniformly **(0, 0, 32, 64)** regardless
+  of where its natural visible content sits.
 
-The marker pixel at x=31 makes the rightmost opaque column 31 for every
-glyph, so Mojang measures a uniform **drawn width of 32**. With the 1 px
-trailing gap, the **real cursor advance is 32 + 1 = 33** for every glyph.
+Why both markers are needed:
+
+1. **Advance.** Mojang's `bitmap` font provider derives a glyph's cursor
+   advance from the rightmost non-transparent pixel column, not from the
+   declared canvas width — then adds a 1 px trailing gap. Without a marker
+   at x=31 the body parts' visible content ends at different columns
+   (arm_left at x=7, foot/leg at x=15, head/torso at x=23, arm_right at
+   x=31), so Mojang would assign each codepoint a different advance. The
+   marker at (31, 0) pins the rightmost opaque column to 31 for every
+   glyph → uniform drawn width 32 → real cursor advance 32 + 1 = **33**.
+
+2. **Glyph bbox.** Mojang also derives the glyph's vertical bbox from the
+   topmost and bottommost non-transparent rows, and the bucket-E shader
+   (ui.y-76 → ui.y-12, 64 px tall) expects the quad to span the full
+   canvas. Parts whose natural content doesn't reach row 0 OR row 63
+   (head 0-15, arm_right 16-39, leg_right 40-55, etc.) would produce
+   smaller quads that the bucket-E shader cannot position consistently —
+   manifesting as parts that simply don't render in the silhouette. The
+   marker at (0, 63) anchors the bottom-left of the bbox, so combined
+   with the (31, 0) marker every glyph's bbox is **(0, 0, 32, 64)**.
 
 `BossbarHUD.rebuildTitle` emits a negative-space shift between each of the
 eight same-anchor parts to cancel the previous glyph's advance, using the
