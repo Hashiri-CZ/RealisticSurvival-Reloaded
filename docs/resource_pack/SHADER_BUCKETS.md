@@ -52,39 +52,41 @@ state. There is **no** `space` provider. Each bitmap entry MUST satisfy:
 | PNG size| 32 × 64              |
 
 The PNG is a transparent 32×64 canvas; the body part's visible pixels sit
-at their natural (x, y) within the canvas. All 40 providers share these
-values — there is no per-row differentiation.
+at their natural (x, y) within the canvas. Mojang renders the full 32×64
+cell as the glyph quad regardless of where the opaque pixels sit, so no
+per-PNG bbox uniformity is needed. All 40 providers share these JSON
+field values — there is no per-row differentiation.
 
-### Advance + bbox marker invariant
+### Advance marker invariant
 
-Every bodyhealth PNG MUST have two anchor markers (1/255 opacity, imperceptible):
+Every bodyhealth PNG MUST have one anchor marker (1/255 opacity, imperceptible):
 
 - One at **(31, 0)** — top-right corner of the 32-wide canvas. Pins the
-  cursor advance AND the top-right corner of the glyph's bbox.
-- One at **(0, 63)** — bottom-left corner. Pins the bottom-left corner of
-  the bbox so every glyph's bbox is uniformly **(0, 0, 32, 64)** regardless
-  of where its natural visible content sits.
+  cursor advance to a uniform 33 px for every bodyhealth glyph.
 
-Why both markers are needed:
+Why only this one marker is needed:
 
 1. **Advance.** Mojang's `bitmap` font provider derives a glyph's cursor
    advance from the rightmost non-transparent pixel column, not from the
-   declared canvas width — then adds a 1 px trailing gap. Without a marker
-   at x=31 the body parts' visible content ends at different columns
-   (arm_left at x=7, foot/leg at x=15, head/torso at x=23, arm_right at
-   x=31), so Mojang would assign each codepoint a different advance. The
-   marker at (31, 0) pins the rightmost opaque column to 31 for every
-   glyph → uniform drawn width 32 → real cursor advance 32 + 1 = **33**.
+   declared canvas width — then adds a 1 px trailing gap. Without an
+   anchor at x=31 the body parts' visible content ends at different
+   columns (arm_left at x=7, foot/leg at x=15, head/torso at x=23,
+   arm_right at x=31), so Mojang would assign each codepoint a different
+   advance. The marker at (31, 0) pins the rightmost opaque column to 31
+   for every glyph → uniform drawn width 32 → real cursor advance
+   32 + 1 = **33**.
 
-2. **Glyph bbox.** Mojang also derives the glyph's vertical bbox from the
-   topmost and bottommost non-transparent rows, and the bucket-E shader
-   (ui.y-76 → ui.y-12, 64 px tall) expects the quad to span the full
-   canvas. Parts whose natural content doesn't reach row 0 OR row 63
-   (head 0-15, arm_right 16-39, leg_right 40-55, etc.) would produce
-   smaller quads that the bucket-E shader cannot position consistently —
-   manifesting as parts that simply don't render in the silhouette. The
-   marker at (0, 63) anchors the bottom-left of the bbox, so combined
-   with the (31, 0) marker every glyph's bbox is **(0, 0, 32, 64)**.
+2. **No bbox uniformity is needed.** Mojang's `BakedGlyph` for a bitmap
+   font provider is constructed with `width=cellW` and `height=cellH` —
+   i.e., the FULL PNG cell dimensions (32×64), NOT the trimmed bbox of
+   opaque pixels. The rendered quad always covers the entire cell.
+   Verified against `BitmapFont.Loader.load` in Mojang's 1.21.1 source
+   (`BitmapFontGlyph(scale, image, p*k, m*l, k, l, advance, ascent)`
+   where `k = cellW = 32` and `l = cellH = 64`). The historical
+   dual-marker scheme that added a second pixel at (0, 63) was based on
+   a misreading of this code and was actively harmful: its presence
+   triggered glyph-atlas re-packs that masked a separate shader bug
+   (see "Bucket E rendering" below).
 
 `BossbarHUD.rebuildTitle` emits a negative-space shift between each of the
 eight same-anchor parts to cancel the previous glyph's advance, using the
@@ -95,11 +97,12 @@ if the deployed pack is missing the marker the advances revert to their
 natural per-part values and the parts scatter across the bossbar title (the
 "only one part visible" bug).
 
-The marker is stamped at 1/255 (~0.4%) opacity — imperceptible — and does
-not affect rendering: Mojang draws the full 32-wide cell at the cursor
-regardless of content, so only the advance changes. This mirrors BetterHud's
-model (a fixed, known per-glyph advance plus HUD-driven shifts), achieved
-here via canvas-width PNGs instead of runtime width bookkeeping.
+The (31, 0) marker is stamped at 1/255 (~0.4%) opacity — imperceptible —
+and does not affect rendering: Mojang draws the full 32×64 cell at the
+cursor regardless of content, so only the advance changes. This mirrors
+BetterHud's model (a fixed, known per-glyph advance plus HUD-driven
+shifts), achieved here via canvas-width PNGs instead of runtime width
+bookkeeping.
 
 `.scripts/stamp_bodyhealth_advance.py` re-applies the marker to every PNG
 and is idempotent — run it after any bodyhealth art change.
@@ -116,6 +119,50 @@ sub-buckets and per-part canvas-X math (the prior design) added complexity
 without buying anything that the BetterHud canvas approach doesn't get
 intrinsically — and the failure mode of pixel-off bucket boundaries was
 hard to debug.
+
+## Bucket E rendering: offset-based, atlas-independent
+
+The bucket E branch uses **offset-based pos.y math**, not the
+`UV0.y < 0.5` top/bottom heuristic that buckets B/C/D use. The math:
+
+```glsl
+} else if (pos.y < 18000.0) {
+    // Local pos.y at this point: top vertex = -ascent = 14000;
+    //                            bottom vertex = -ascent + glyph_height = 14064.
+    // Offset to screen-anchored: top -> ui.y - 76, bottom -> ui.y - 12.
+    // Cancel slot translate that ModelViewMat will re-apply at gl_Position.
+    pos.y += ui.y - 76.0 - 14000.0;
+    pos.y -= ModelViewMat[3].y;
+}
+```
+
+The single constant `ui.y - 76.0 - 14000.0` shifts both vertices by the
+same amount; the natural 64 px difference between top and bottom
+vertices is preserved, so they land at `ui.y - 76` and `ui.y - 12`
+respectively. No top/bottom-vertex discrimination is needed.
+
+### Why offset-based and not `UV0.y < 0.5`
+
+`UV0.y` in the vertex shader is atlas-relative — it's the glyph's
+position within the 256×256 `GlyphAtlasTexture`. For a 32×64 glyph,
+both vertices' `UV0.y` land on the same side of `0.5` unless the atlas
+slot.y happens to be in approximately (64, 128). When both are on the
+same side, `is_top = UV0.y < 0.5` evaluates the same for both vertices
+and the shader pins them to the same screen y — collapsing the quad to
+zero height and making the glyph invisible. Atlas placement is
+non-deterministic across pack reloads, which produced the
+"some-bodyhealth-parts-render-some-don't" symptom that the offset-based
+approach fully eliminates.
+
+### Known caveat for buckets B, C, D
+
+Buckets B (blank-space placeholder, 9 px), C (macronutrient icons,
+32 px), and D (preview text, 8 px) still use the `is_top = UV0.y < 0.5`
+heuristic. They currently render correctly because their atlas slots
+have been stable. If any of them ever breaks the same way bucket E did,
+the fix is to apply the same offset-based pattern shown above, with the
+appropriate bucket-base constant (9000 / 10000 / 11000) and screen-top
+constant (75 / 105 / 105).
 
 ## Updating the shader
 
