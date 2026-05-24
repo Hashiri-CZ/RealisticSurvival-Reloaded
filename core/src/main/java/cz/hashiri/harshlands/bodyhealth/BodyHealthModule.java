@@ -32,6 +32,7 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
     private final Set<UUID> shownPlayers = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Map<BodyPart, BodyPartState>> lastRenderedStates = new ConcurrentHashMap<>();
     private final Map<UUID, BossbarHUD> standaloneHuds = new HashMap<>();
+    private final Map<UUID, Integer> lastResolvedHudIdentity = new ConcurrentHashMap<>();
 
     private int anchorX;
     private int tickPeriod;
@@ -53,6 +54,11 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
         this.anchorX    = cfg.getInt("BodyHealth.HUD.AnchorX", 160);
         // Floor at 1 — runTaskTimer rejects 0 and a negative period would crash the scheduler.
         this.tickPeriod = Math.max(1, cfg.getInt("BodyHealth.HUD.TickPeriod", 5));
+        boolean debugRender = cfg.getBoolean("BodyHealth.Debug.Render", false);
+        BHDLogger.enable(debugRender, plugin.getLogger());
+        if (debugRender) {
+            plugin.getLogger().info("[BHD] BodyHealth render diagnostics ENABLED");
+        }
 
         Utils.logModuleInit("bodyhealth", NAME);
 
@@ -126,10 +132,17 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
             DisplayTask dt = DisplayTask.getTasks().get(uuid);
             BossbarHUD existing = (dt != null) ? dt.getBossbarHud() : standaloneHuds.get(uuid);
             if (existing != null) {
-                // Scrub legacy single-element id plus the new per-part ids.
-                existing.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                int sizeBefore = existing.elementCount();
+                boolean legacyRemoved = existing.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                int perPartRemoved = 0;
                 for (BodyPart part : BodyPart.values()) {
-                    existing.removeElement(BodyHealthRenderState.elementId(part));
+                    if (existing.removeElement(BodyHealthRenderState.elementId(part))) perPartRemoved++;
+                }
+                if (BHDLogger.isEnabled()) {
+                    BHDLogger.logf("shutdown player=%s hudId=%d sizeBefore=%d "
+                                   + "legacyRemoved=%s perPartRemoved=%d sizeAfter=%d",
+                                   p.getName(), System.identityHashCode(existing),
+                                   sizeBefore, legacyRemoved, perPartRemoved, existing.elementCount());
                 }
             }
         }
@@ -137,9 +150,11 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
         standaloneHuds.clear();
         shownPlayers.clear();
         lastRenderedStates.clear();
+        lastResolvedHudIdentity.clear();
 
         HarshlandsAPI.register(null);
         Utils.logModuleShutdown("bodyhealth", NAME);
+        BHDLogger.enable(false, null);
     }
 
     // -------------------------------------------------------------------------
@@ -164,12 +179,21 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
                 Player p = Bukkit.getPlayer(uuid);
                 if (p != null) {
                     BossbarHUD hud = resolveHud(p);
-                    hud.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                    int sizeBefore = hud.elementCount();
+                    boolean legacyRemoved = hud.removeElement(BodyHealthRenderTask.ELEMENT_ID);
+                    int perPartRemoved = 0;
                     for (BodyPart part : BodyPart.values()) {
-                        hud.removeElement(BodyHealthRenderState.elementId(part));
+                        if (hud.removeElement(BodyHealthRenderState.elementId(part))) perPartRemoved++;
+                    }
+                    if (BHDLogger.isEnabled()) {
+                        BHDLogger.logf("markHidden player=%s hudId=%d sizeBefore=%d "
+                                       + "legacyRemoved=%s perPartRemoved=%d sizeAfter=%d",
+                                       p.getName(), System.identityHashCode(hud),
+                                       sizeBefore, legacyRemoved, perPartRemoved, hud.elementCount());
                     }
                 }
                 lastRenderedStates.remove(uuid);
+                lastResolvedHudIdentity.remove(uuid);
             });
         }
         return changed;
@@ -193,26 +217,43 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
 
     private BossbarHUD resolveHud(Player player) {
         UUID uuid = player.getUniqueId();
+        String branch;
+        BossbarHUD resolved;
+
         DisplayTask dt = DisplayTask.getTasks().get(uuid);
         if (dt != null) {
-            BossbarHUD shared = dt.getBossbarHud();
+            resolved = dt.getBossbarHud();
             BossbarHUD prev = standaloneHuds.remove(uuid);
-            if (prev != null && prev != shared) prev.hide();
-            return shared;
+            if (prev != null && prev != resolved) prev.hide();
+            branch = "TAN-shared";
+        } else {
+            cz.hashiri.harshlands.foodexpansion.FoodExpansionModule fem =
+                    (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule)
+                            HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
+            if (fem != null && fem.isGloballyEnabled()) {
+                resolved = fem.getOrCreateHud(player);
+                branch = "FoodExpansion";
+            } else {
+                resolved = standaloneHuds.computeIfAbsent(uuid, u -> {
+                    BossbarHUD h = new BossbarHUD((Audience) player);
+                    h.show();
+                    return h;
+                });
+                branch = "standalone";
+            }
         }
-        // No TAN — try FoodExpansion's already-created HUD.
-        cz.hashiri.harshlands.foodexpansion.FoodExpansionModule fem =
-                (cz.hashiri.harshlands.foodexpansion.FoodExpansionModule)
-                        HLModule.getModule(cz.hashiri.harshlands.foodexpansion.FoodExpansionModule.NAME);
-        if (fem != null && fem.isGloballyEnabled()) {
-            return fem.getOrCreateHud(player);
+
+        if (BHDLogger.isEnabled()) {
+            int newId = System.identityHashCode(resolved);
+            Integer oldId = lastResolvedHudIdentity.put(uuid, newId);
+            if (oldId == null || oldId != newId) {
+                BHDLogger.logf("resolveHud player=%s branch=%s old=%s new=%d",
+                               player.getName(), branch,
+                               oldId == null ? "null" : oldId.toString(), newId);
+            }
         }
-        // Standalone fallback — module-owned, hidden during shutdown/quit.
-        return standaloneHuds.computeIfAbsent(uuid, u -> {
-            BossbarHUD h = new BossbarHUD((Audience) player);
-            h.show();
-            return h;
-        });
+
+        return resolved;
     }
 
     private void warnPapiMissing() {
