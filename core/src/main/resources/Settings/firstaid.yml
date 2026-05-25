@@ -2,7 +2,7 @@
 #          First Aid                  #
 #######################################
 
-ConfigId: "1.3.2-RELEASE" # Used for config syncing purposes, do NOT edit
+ConfigId: "1.4.0-DEV" # Used for config syncing purposes, do NOT edit
 
 # Customize messages
 Initialize:
@@ -208,17 +208,53 @@ BodyParts:
             Duration: 270
 
 # Customize weapon and armor traits of the First Aid items
+#
+# RestoreAmount: HP units restored on use (max HP per part is set in BodyParts above; default 6.0).
+#                A bandage (2.0) on a 6 HP part restores ~33%; medical_kit (6.0) is a full heal of one part.
+# AffectsParts:  Which BodyHealth body parts this item may heal. Names must match
+#                bodyhealth.core.BodyPart values (HEAD, TORSO, ARM_LEFT, ARM_RIGHT,
+#                LEG_LEFT, LEG_RIGHT, FOOT_LEFT, FOOT_RIGHT).
+#                On use, the most-injured allowed part is healed first.
+# Sound:         Bukkit Sound enum name played on a successful heal. "" disables.
 
 Items:
   bandage:
     Enabled:
       Enabled_1_21_11: true
+    RestoreAmount: 2.0
+    AffectsParts:
+      - TORSO
+      - ARM_LEFT
+      - ARM_RIGHT
+      - LEG_LEFT
+      - LEG_RIGHT
+      - FOOT_LEFT
+      - FOOT_RIGHT
+    Sound: "ITEM_ARMOR_EQUIP_LEATHER"
   splint:
     Enabled:
       Enabled_1_21_11: true
+    RestoreAmount: 4.0
+    AffectsParts:
+      - LEG_LEFT
+      - LEG_RIGHT
+      - FOOT_LEFT
+      - FOOT_RIGHT
+    Sound: "ITEM_ARMOR_EQUIP_LEATHER"
   medical_kit:
     Enabled:
       Enabled_1_21_11: true
+    RestoreAmount: 6.0
+    AffectsParts:
+      - HEAD
+      - TORSO
+      - ARM_LEFT
+      - ARM_RIGHT
+      - LEG_LEFT
+      - LEG_RIGHT
+      - FOOT_LEFT
+      - FOOT_RIGHT
+    Sound: "ITEM_ARMOR_EQUIP_LEATHER"
 
 # Customize recipes
 # Requires restart upon changing
