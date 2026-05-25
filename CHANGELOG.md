@@ -1,5 +1,17 @@
 # Harshlands Changelog
 
+## [Unreleased]
+
+### Added
+
+- First Aid items now actually heal. Right-clicking a bandage, splint, or medical_kit calls into the BodyHealth plugin (`Settings/firstaid.yml` → `Items.<name>.RestoreAmount` + `AffectsParts` + `Sound`) and restores HP to the most-injured allowed body part. Items are consumed only on a successful heal. When the BodyHealth plugin is not installed or `BodyHealth.Enabled: false`, a chat message tells the player and the item is not consumed.
+- `firstaid.use.no_injury` and `firstaid.use.bodyhealth_unavailable` translation keys for the new use-result messages.
+
+### Changed
+
+- `Settings/firstaid.yml` `Items.<name>` blocks extended with `RestoreAmount` (HP units), `AffectsParts` (list of BodyHealth body-part names), and `Sound`. `ConfigId` bumped to `1.4.0-DEV` so user configs pick up the new keys on next load.
+- First Aid item lore corrected: bandage now lists torso/arm/leg/foot (not just arm/leg); splint now lists leg/foot (not just leg); medical_kit now describes healing the most-damaged body part (was incorrectly "fully restores every damaged body part"). Stale "Healing active once BodyHealth integration lands" placeholder removed from all three.
+
 ## 1.3.2 — BodyHealth, Guide & i18n
 
 Headline release delivering the BodyHealth HUD integration deferred from 1.3.1, a first-join Survival Guide book, and a full item-lore translation pipeline across nine module groups. A new public `harshlands-api` Maven module exposes HUD / player surfaces so the companion BodyHealth plugin (and any future third-party) can drive the Harshlands HUD, and a bossbar Sentry keeps the Harshlands HUD anchor pinned when other bossbar plugins reshuffle the stack. New resource pack required: `Harshlands_RP_1.3.2_1.zip`.
