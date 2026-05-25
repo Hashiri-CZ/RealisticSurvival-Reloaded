@@ -3,7 +3,6 @@ package cz.hashiri.harshlands.bodyhealth;
 import cz.hashiri.harshlands.utils.BossbarHUD;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,18 +29,11 @@ final class BodyHealthRenderTask extends BukkitRunnable {
     private final BodyHealthModule module;
     private final int anchorX;
     private final Function<Player, BossbarHUD> hudResolver;
-    private final Set<UUID> firstFrameLogged = new HashSet<>();
 
     BodyHealthRenderTask(BodyHealthModule module, int anchorX, Function<Player, BossbarHUD> hudResolver) {
         this.module = module;
         this.anchorX = anchorX;
         this.hudResolver = hudResolver;
-    }
-
-    /** Forget that we've logged the first frame for this UUID, so the next
-     *  fresh render emits the diagnostic again (used on respawn). */
-    void forgetFirstFrame(java.util.UUID uuid) {
-        firstFrameLogged.remove(uuid);
     }
 
     /**
@@ -74,7 +66,6 @@ final class BodyHealthRenderTask extends BukkitRunnable {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null || !player.isOnline()) {
                 module.markHidden(uuid);
-                firstFrameLogged.remove(uuid);
                 continue;
             }
 
@@ -127,19 +118,7 @@ final class BodyHealthRenderTask extends BukkitRunnable {
                     }
                 }
 
-                boolean firstFrame = (last == null) && firstFrameLogged.add(uuid);
                 module.putLastRendered(uuid, states);
-                if (firstFrame) {
-                    String titleJson = GsonComponentSerializer.gson().serialize(hud.currentTitle());
-                    cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
-                            .info("BodyHealth HUD first frame emitted for " + player.getName()
-                                  + " (anchorX=" + anchorX
-                                  + ", parts=" + BodyPart.values().length
-                                  + ", hud=" + hud.getClass().getSimpleName()
-                                  + ", title-len=" + titleJson.length() + ")");
-                    cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
-                            .info("BodyHealth full title JSON: " + titleJson);
-                }
             } catch (Throwable t) {
                 cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
                         .warning("BodyHealth render failed for " + player.getName() + ": " + t);

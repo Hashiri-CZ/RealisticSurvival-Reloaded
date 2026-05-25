@@ -92,10 +92,8 @@ public final class BodyHealthModule extends HLModule implements HudImpl.State {
             },
             uuid -> {
                 // Mojang clears bossbars client-side on respawn. Drop the cached
-                // state so the next render-task tick re-emits the full title, and
-                // forget the first-frame log marker so we re-log the re-emit too.
+                // state so the next render-task tick re-emits the full title.
                 lastRenderedStates.remove(uuid);
-                if (renderTaskImpl != null) renderTaskImpl.forgetFirstFrame(uuid);
             }
         );
         Bukkit.getPluginManager().registerEvents(quitListener, plugin);
