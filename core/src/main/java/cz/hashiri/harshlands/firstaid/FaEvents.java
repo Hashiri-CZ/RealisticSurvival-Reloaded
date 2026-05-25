@@ -73,8 +73,9 @@ public class FaEvents extends ModuleEvents implements Listener {
         Action action = event.getAction();
         if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
-        // Avoid double-firing for both hands on the same physical click.
-        if (event.getHand() != EquipmentSlot.HAND && event.getHand() != EquipmentSlot.OFF_HAND) return;
+        // Bukkit fires PlayerInteractEvent once per hand when both hands hold items.
+        // Restrict to HAND to avoid double-firing the heal; off-hand-only heal items require swapping hands first (matches vanilla food UX).
+        if (event.getHand() != EquipmentSlot.HAND) return;
 
         Player player = event.getPlayer();
         GameMode mode = player.getGameMode();
