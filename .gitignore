@@ -137,8 +137,8 @@ Downloads
 # Common working directory
 run/
 
-# Superpowers design docs (local only)
-docs/superpowers/
+# All docs are local-only (specs, plans, postmortems, resource-pack notes).
+docs/
 
 # Git worktrees
 .worktrees/
@@ -148,6 +148,3 @@ STORE_LISTING.md
 
 # Local-only scratch tools (e.g. atlas generators). Never committed.
 tools/
-
-# Local-only debug postmortems (kept for own reference).
-docs/resource_pack/POSTMORTEM_*.md
