@@ -15,3 +15,5 @@ firstaid:
     right_foot_broken: "&eYour right foot is shredded."
   use:
     patch_success: "&7You patch up your wounds."
+    no_injury: "&7Your wounds don't need tending right now."
+    bodyhealth_unavailable: "&7This item needs the BodyHealth plugin to take effect."
