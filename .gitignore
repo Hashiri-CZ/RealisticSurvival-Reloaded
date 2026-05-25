@@ -148,3 +148,6 @@ STORE_LISTING.md
 
 # Local-only scratch tools (e.g. atlas generators). Never committed.
 tools/
+
+# Local-only build / asset scripts (e.g. font regeneration, advance stamping).
+.scripts/
