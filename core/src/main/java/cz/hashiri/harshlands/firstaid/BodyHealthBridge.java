@@ -33,11 +33,12 @@ public class BodyHealthBridge {
     private final @Nullable Method mHealPart;
     private final @Nullable Method mGetHealth;
     private final @Nullable Method mGetMaxHealth;
+    private final @Nullable Method mIsSystemEnabled;
     private final @Nullable Class<?> partEnum;
 
     public BodyHealthBridge() {
         Object inst = null;
-        Method heal = null, get = null, max = null;
+        Method heal = null, get = null, max = null, enabled = null;
         Class<?> part = null;
         boolean ok = false;
         try {
@@ -47,16 +48,18 @@ public class BodyHealthBridge {
             heal = apiClass.getMethod("healPlayer", Player.class, part, double.class);
             get  = apiClass.getMethod("getHealth", Player.class, part);
             max  = apiClass.getMethod("getMaxPartHealth", Player.class, part);
+            enabled = apiClass.getMethod("isSystemEnabled", Player.class);
             ok = true;
         } catch (ReflectiveOperationException ignored) {
             // BodyHealth not on the classpath, or API shape changed. Bridge stays unavailable.
         }
-        this.apiInstance   = inst;
-        this.mHealPart     = heal;
-        this.mGetHealth    = get;
-        this.mGetMaxHealth = max;
-        this.partEnum      = part;
-        this.available     = ok;
+        this.apiInstance      = inst;
+        this.mHealPart        = heal;
+        this.mGetHealth       = get;
+        this.mGetMaxHealth    = max;
+        this.mIsSystemEnabled = enabled;
+        this.partEnum         = part;
+        this.available        = ok;
     }
 
     public boolean isAvailable() {
@@ -68,6 +71,7 @@ public class BodyHealthBridge {
         if (!available || player == null) return false;
         Object partValue = partValueOf(partName);
         if (partValue == null) return false;
+        if (!isSystemEnabledFor(player)) return false;
         try {
             mHealPart.invoke(apiInstance, player, partValue, amount);
             return true;
@@ -97,6 +101,15 @@ public class BodyHealthBridge {
             return (double) mGetMaxHealth.invoke(apiInstance, player, partValue);
         } catch (ReflectiveOperationException ex) {
             return -1;
+        }
+    }
+
+    private boolean isSystemEnabledFor(Player player) {
+        if (mIsSystemEnabled == null) return true; // older BodyHealth without the gate — assume enabled
+        try {
+            return (boolean) mIsSystemEnabled.invoke(apiInstance, player);
+        } catch (ReflectiveOperationException ex) {
+            return false;
         }
     }
 

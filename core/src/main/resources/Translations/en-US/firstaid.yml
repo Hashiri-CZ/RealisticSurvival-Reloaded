@@ -16,4 +16,4 @@ firstaid:
   use:
     patch_success: "&7You patch up your wounds."
     no_injury: "&7Your wounds don't need tending right now."
-    bodyhealth_unavailable: "&7This item needs the BodyHealth plugin to take effect."
+    bodyhealth_unavailable: "&7This item has no effect here — the BodyHealth system isn't active in this world."
