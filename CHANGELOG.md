@@ -1,5 +1,61 @@
 # Harshlands Changelog
 
+## 1.3.2 — BodyHealth, Guide & i18n
+
+Headline release delivering the BodyHealth HUD integration deferred from 1.3.1, a first-join Survival Guide book, and a full item-lore translation pipeline across nine module groups. A new public `harshlands-api` Maven module exposes HUD / player surfaces so the companion BodyHealth plugin (and any future third-party) can drive the Harshlands HUD, and a bossbar Sentry keeps the Harshlands HUD anchor pinned when other bossbar plugins reshuffle the stack. New resource pack required: `Harshlands_RP_1.3.2_1.zip`.
+
+### Added
+
+- BodyHealth HUD integration — per-body-part HP rendered in the bottom-right corner via a vendored sprite font + BetterHud bridge. Ships the display, render task, silhouette composer, and the cross-plugin hook that the companion BodyHealth plugin populates with live HP state. `BodyHealth.Enabled` defaults to `false`, so existing servers don't change behavior; flip on after installing BodyHealth + BetterHud.
+- `Settings/bodyhealth.yml` for HUD configuration and `BodyHealth.Debug.Render` flag for diagnostic logging when troubleshooting render issues.
+- `/hl bdh onlypart <NAME>` — per-part render-bisection helper for BodyHealth HUD debugging.
+- `harshlands-api` Maven module — public, un-relocated API surface for third-party plugins. Exposes `HarshlandsAPI` singleton, `HudManager`, `PlayerManager`, `HudPlayer`, `Hud`, and `PluginReloadedEvent` (fired on `/hl reload`).
+- First-Join Survival Guide book — delivered automatically on first join and on version bump. New `/hl guide`, `/hl guide give <player>`, `/hl guide reset <player>` commands. Per-(locale, version) book cache; clickable table of contents with item-detail tags. `hl_guide_seen` DB table records delivery.
+- `Settings/guide.yml` content (en-US authoritative); book width validated at 114px / 14 lines per page.
+- Tiered thirst effects (`Thirst.Effects` config block) — Damp / Thirsty / Dehydrated / Parched apply scaled slowness and damage tiers instead of a single hard threshold. First-thirst hint now fires at Thirsty tier entry and explains the slowness.
+- `/hl baubles [player]` — players can open their own bauble bag without holding the item; admins can view another player's. Tab-completes online players. Foreign-viewer clicks and drag-deposits are cancelled to prevent moving someone else's baubles while watching them.
+- `harshlands.command.baubles` (default `true`) and `harshlands.command.guide` (default `true`) permissions; wildcard `harshlands.*` covers the admin guide subcommands.
+- `item_stats.*` translation keys — armor / damage / attribute lore lines now route through `Messages` so non-English locales translate cleanly.
+- `BossBar.SentryMode` config + bossbar Sentry — pinning system that protects the Harshlands HUD anchor when other bossbar plugins (BetterHud, etc.) reorder the stack. `AnchorRegistry` captures per-player anchor UUIDs; `BossbarReorderScheduler` debounces re-shows. Sentry installers wired for both `spigot_impl_1_21_R11` and `spigot_impl_26_1_R1`.
+
+### Changed
+
+- Food preview moved from a custom bossbar slot to the action bar. `DisplayTask` now suppresses its own action-bar send while preview is active. `AboveActionBarHUD` and the `harshlands:preview_text` font cells removed from the preview path; `preview_text` font reworked to `ascent -13000` + Bucket D for the surviving fallback uses.
+- `Thirst.Dehydration` config block replaced by `Thirst.Effects`; `DehydrationTask` superseded by `ThirstEffectsTask` (cancels on player quit, points DisplayTask screen-tinting at the new key).
+- Item `DisplayName` and `Lore` for nine module groups migrated to locale keys — baubles, firstaid, fear, toughasnails, notreepunching, iceandfire, spartanandfire, spartanweaponry, canteen. Lore presets moved into translations; the `i18n:` prefix is resolved at item-build time. Canteen runtime updater rewritten locale-safe so re-fills don't blow away translated lore. Damage-lore lines now matched by template rather than English literal.
+- Default `ResourcePack.Url` bumped to `Harshlands_RP_1.3.2_1.zip` — required for BodyHealth HUD sprites and the `preview_text` unifont fallback.
+- Locale loader translates `&`-codes once at load instead of per `get()` call; placeholder substitution now single-pass. Translation files and embedded-resource YAML readers force UTF-8 (fixes mojibake on Windows servers and non-Latin locales).
+- `Messages` gains `getKeys(prefix)` for enumerating immediate child segments; `valueTemplateParts` extended to a multi-placeholder `TemplateParts` API. `Messages.getList` list-expansion path pinned by tests.
+- Bossbar HUD title rebuild now short-circuited when `setElement` is a no-op; sentry inspection skips the full-packet encode path. Dead `first-call` branch in rate-warn removed.
+- Food preview signature bitpacked into a `long` (cheaper equality + dirty-check) and `FoodPreviewState` shared predicate added so isCustomFood is called once per evaluation.
+- `ThirstEffectsTask` reads thirst once per tick instead of multiple times per effect application.
+- HUD config cached on the foodexpansion module rather than constructed per `DisplayTask` invocation.
+- Guide delivery book built once at module load and cloned per `openBook` call.
+- Bauble bag inventory title and Nightmare custom mob name now pulled from locale keys instead of hardcoded English.
+
+### Fixed
+
+- Empty thirst bar showed in worlds where the TAN module was disabled.
+- Baubles slot counter counted bauble-bag slots toward the equipped count; slot names showed an incorrect identifier; JSON parsing emitted a warning for legacy player data.
+- `CustomFoodRecipes` registration broke for items whose result was a Harshlands custom food.
+- Guide book pages mis-measured non-ASCII characters at default-font width — now measured at unifont width so multi-byte locales fit the 114px line limit.
+- Guide book `&`-codes in page content and tag templates were left raw — now translated; clickable tags restyled for the parchment book texture; "Pure Water" entry shortened to fit the 14-line book limit; trailing YAML newline stripped from page content.
+- `/hl guide` tab-completion missing; guide module enabled by default; wildcard permission and help entry added.
+- 1.3.1 → 1.3.2 translation migration (locale keys renamed / repathed) now applies on first load instead of silently leaving old keys in place. `lore.yml` `ConfigId` kept pinned at 1.3.1 until the explicit translation bump so user customizations aren't regenerated.
+- `BodyHealthHook` initialized in `onLoad` so the API is exposed before dependent plugins call into it.
+- Incorrect book checks producing false-positives on non-guide books.
+
+### Known backlog (deferred to later releases)
+
+- First Aid `bandage` / `splint` / `medical_kit` heal mechanics and `firstaid.damage.*` chat messages — still un-wired, waiting on the consumer side that calls into the BodyHealth API. The items remain inventory-only in 1.3.2; the HUD displays HP but the items don't yet restore it.
+- Pet-origin tracking for `FIRST_PET_EATEN` hint — requires stamping an NBT flag on tamed-origin meat drops.
+- `#17` IsLethal on legs / arms — needs design playtest.
+- `#14` Golden Feast cost / benefit rebalance.
+- `#25` Nightmare recovery panic ledge.
+- `#49-50` Dynamic Surroundings hosting + enablement decision.
+- Translation extraction for Ice and Fire, Spartan and Fire, Dynamic Surroundings beyond DisplayNames (Lore + ability text still partially English).
+- Text-mode HUD fallback — not planned; the resource pack remains required.
+
 ## 1.3.1 — Polish Update
 
 Player-experience polish pass addressing 130 findings from the 1.3.0 review. Focus on new-player onboarding, translation coverage, balance tuning, and tone consistency. No new gameplay systems. Resource pack remains required.

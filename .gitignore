@@ -148,3 +148,6 @@ STORE_LISTING.md
 
 # Local-only scratch tools (e.g. atlas generators). Never committed.
 tools/
+
+# Local-only debug postmortems (kept for own reference).
+docs/resource_pack/POSTMORTEM_*.md

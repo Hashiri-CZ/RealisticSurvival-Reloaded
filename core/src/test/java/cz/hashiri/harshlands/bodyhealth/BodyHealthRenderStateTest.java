@@ -2,92 +2,73 @@ package cz.hashiri.harshlands.bodyhealth;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.junit.jupiter.api.Test;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BodyHealthRenderStateTest {
 
-    private static final Key BODYHEALTH_FONT  = Key.key("harshlands", "bodyhealth");
-    private static final Key NEGATIVE_SPACE   = Key.key("harshlands", "negative_space");
+    private static final Key BODYHEALTH_FONT = Key.key("harshlands", "bodyhealth");
 
-    /**
-     * Build the expected bodyhealth-glyph string for a given per-part state map by
-     * mirroring the same codepoint math {@link BodyHealthRenderState#compose} uses.
-     * Authored via explicit char casts (not literal Private-Use-Area chars in source)
-     * to keep the test file ASCII-safe across editor/encoding pipelines.
-     */
-    private static String expectedGlyphs(Map<BodyPart, BodyPartState> states) {
-        StringBuilder sb = new StringBuilder();
+    @Test void glyphFor_is_a_depth_1_leaf() {
+        // Shape contract: a flat TextComponent with no children. Font is
+        // pinned exhaustively by all_glyphs_share_the_same_font below.
+        Component c = BodyHealthRenderState.glyphFor(BodyPart.HEAD, BodyPartState.FULL);
+        assertEquals(0, c.children().size(), "glyph should have no children (depth-1 leaf)");
+        assertInstanceOf(TextComponent.class, c);
+    }
+
+    @Test void glyphFor_codepoint_matches_row_major_table() {
         for (BodyPart part : BodyPart.values()) {
-            BodyPartState st = states.getOrDefault(part, BodyPartState.FULL);
-            int offset = part.ordinal() * BodyPartState.values().length + st.ordinal();
-            sb.append((char) (BodyHealthRenderState.BASE_CODEPOINT + offset));
-        }
-        return sb.toString();
-    }
-
-    private static String bodyhealthChildrenText(Component c) {
-        StringBuilder sb = new StringBuilder();
-        for (Component child : c.children()) {
-            if (BODYHEALTH_FONT.equals(child.style().font())) {
-                sb.append(PlainTextComponentSerializer.plainText().serialize(child));
+            for (BodyPartState state : BodyPartState.values()) {
+                int expectedOffset = part.ordinal() * BodyPartState.values().length + state.ordinal();
+                char expectedCp = (char) (BodyHealthRenderState.BASE_CODEPOINT + expectedOffset);
+                Component c = BodyHealthRenderState.glyphFor(part, state);
+                String actual = PlainTextComponentSerializer.plainText().serialize(c);
+                assertEquals(String.valueOf(expectedCp), actual,
+                        () -> part + "/" + state + " should map to codepoint U+"
+                              + String.format("%04X", (int) expectedCp));
             }
         }
-        return sb.toString();
     }
 
-    @Test void all_full_emits_eight_full_codepoints() {
-        Map<BodyPart, BodyPartState> states = new EnumMap<>(BodyPart.class);
-        for (BodyPart p : BodyPart.values()) states.put(p, BodyPartState.FULL);
-
-        Component c = BodyHealthRenderState.compose(states);
-        // compose() interleaves negative-space shifts between body-part glyphs, so
-        // the bodyhealth glyphs themselves are non-adjacent children. Filter to the
-        // bodyhealth-font children to get just the 8 FULL codepoints.
-        assertEquals(expectedGlyphs(states), bodyhealthChildrenText(c));
+    @Test void elementId_is_stable_and_unique_per_part() {
+        Set<String> ids = new HashSet<>();
+        for (BodyPart part : BodyPart.values()) {
+            String id = BodyHealthRenderState.elementId(part);
+            assertTrue(id.startsWith(BodyHealthRenderState.ELEMENT_ID_PREFIX),
+                    () -> "element id should start with prefix: " + id);
+            assertTrue(id.contains(part.name()),
+                    () -> "element id should mention the part: " + id);
+            assertTrue(ids.add(id), () -> "duplicate element id across parts: " + id);
+        }
+        assertEquals(BodyPart.values().length, ids.size());
     }
 
-    @Test void single_damaged_picks_offset_codepoint() {
-        Map<BodyPart, BodyPartState> states = new EnumMap<>(BodyPart.class);
-        for (BodyPart p : BodyPart.values()) states.put(p, BodyPartState.FULL);
-        states.put(BodyPart.HEAD, BodyPartState.DAMAGED);
-
-        Component c = BodyHealthRenderState.compose(states);
-        // HEAD codepoint shifts +3 (FULL=0, NEARLY_FULL=1, INTERMEDIATE=2, DAMAGED=3, BROKEN=4);
-        // other 7 parts remain at their FULL codepoint.
-        assertEquals(expectedGlyphs(states), bodyhealthChildrenText(c));
+    @Test void bodyPart_has_no_canvas_offset_api() {
+        // BetterHud-mirror invariant: every part draws at the same anchor X,
+        // so BodyPart no longer exposes per-part X/width offsets.
+        for (java.lang.reflect.Method m : BodyPart.class.getDeclaredMethods()) {
+            String n = m.getName();
+            assertNotEquals("canvasX", n, "canvasX should be removed");
+            assertNotEquals("canvasWidth", n, "canvasWidth should be removed");
+        }
     }
 
-    @Test void glyph_children_use_bodyhealth_font_shifts_use_negative_space() {
-        Map<BodyPart, BodyPartState> states = new EnumMap<>(BodyPart.class);
-        for (BodyPart p : BodyPart.values()) states.put(p, BodyPartState.FULL);
-
-        Component c = BodyHealthRenderState.compose(states);
-        int glyphCount = 0;
-        int shiftCount = 0;
-        for (Component child : c.children()) {
-            Key font = child.style().font();
-            if (BODYHEALTH_FONT.equals(font)) {
-                glyphCount++;
-            } else if (NEGATIVE_SPACE.equals(font)) {
-                shiftCount++;
-            } else {
-                fail("Unexpected font on child: " + font);
+    @Test void all_glyphs_share_the_same_font() {
+        // Exhaustive: every (part, state) pair builds a glyph in the
+        // harshlands:bodyhealth font.
+        for (BodyPart part : BodyPart.values()) {
+            for (BodyPartState st : BodyPartState.values()) {
+                assertEquals(BODYHEALTH_FONT,
+                        BodyHealthRenderState.glyphFor(part, st).style().font(),
+                        () -> "glyph " + part + "/" + st + " font mismatch");
             }
         }
-        assertEquals(BodyPart.values().length, glyphCount, "one bodyhealth glyph per part");
-        assertTrue(shiftCount >= BodyPart.values().length - 1,
-                "expected at least one negative-space shift between adjacent glyphs");
-    }
-
-    @Test void totalAdvance_is_single_glyph_wide() {
-        // All 8 parts overlay at the same X via the in-component shifts, so the
-        // silhouette's effective width is one glyph (PART_WIDTH_PX), not 8.
-        assertEquals(BodyHealthRenderState.PART_WIDTH_PX, BodyHealthRenderState.totalAdvance());
     }
 }

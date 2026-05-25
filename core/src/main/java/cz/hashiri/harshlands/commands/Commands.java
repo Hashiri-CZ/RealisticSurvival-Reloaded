@@ -1469,6 +1469,50 @@ public class Commands implements CommandExecutor {
                     sendInvalidArgumentMsg(sender);
                     return true;
                 }
+                case "bdh" -> {
+                    if (!sender.hasPermission("harshlands.command.debug")) {
+                        sendNoPermissionMessage(sender);
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage("§eUsage: /hl bdh onlypart <HEAD|TORSO|ARM_LEFT|ARM_RIGHT|LEG_LEFT|LEG_RIGHT|FOOT_LEFT|FOOT_RIGHT|ALL>");
+                        return true;
+                    }
+                    if (!args[1].equalsIgnoreCase("onlypart")) {
+                        sender.sendMessage("§cUnknown bdh subcommand. Available: onlypart");
+                        return true;
+                    }
+                    if (args.length < 3) {
+                        sender.sendMessage("§eUsage: /hl bdh onlypart <HEAD|TORSO|ARM_LEFT|ARM_RIGHT|LEG_LEFT|LEG_RIGHT|FOOT_LEFT|FOOT_RIGHT|ALL>");
+                        return true;
+                    }
+                    cz.hashiri.harshlands.bodyhealth.BodyHealthModule bdhMod =
+                        (cz.hashiri.harshlands.bodyhealth.BodyHealthModule)
+                            cz.hashiri.harshlands.data.HLModule.getModule(
+                                cz.hashiri.harshlands.bodyhealth.BodyHealthModule.NAME);
+                    if (bdhMod == null) {
+                        sender.sendMessage("§cBodyHealth module is not loaded.");
+                        return true;
+                    }
+                    String partName = args[2].toUpperCase();
+                    if (partName.equals("ALL") || partName.equals("OFF") || partName.equals("NONE")) {
+                        bdhMod.setDebugOnlyPart(null);
+                        sender.sendMessage("§aBodyHealth onlypart filter cleared — emitting all 8 parts.");
+                        return true;
+                    }
+                    cz.hashiri.harshlands.bodyhealth.BodyPart selected;
+                    try {
+                        selected = cz.hashiri.harshlands.bodyhealth.BodyPart.valueOf(partName);
+                    } catch (IllegalArgumentException ex) {
+                        sender.sendMessage("§cUnknown body part: " + args[2]
+                            + ". Valid: HEAD, TORSO, ARM_LEFT, ARM_RIGHT, LEG_LEFT, LEG_RIGHT, FOOT_LEFT, FOOT_RIGHT, ALL");
+                        return true;
+                    }
+                    bdhMod.setDebugOnlyPart(selected);
+                    sender.sendMessage("§aBodyHealth onlypart filter → " + selected.name()
+                        + " — emitting only this part on next tick.");
+                    return true;
+                }
                 default -> {
                     return true;
                 }
