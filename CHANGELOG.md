@@ -1,15 +1,17 @@
 # Harshlands Changelog
 
-## [Unreleased]
+## 1.3.3 — First Aid Heal Mechanics
+
+Wires the bandage / splint / medical_kit items shipped in 1.3.1 to actually restore HP via the BodyHealth plugin's API. Items were inventory-only before this release; right-clicking now picks the most-injured allowed body part, caps the heal at missing HP, plays a sound, and consumes one item on success. Closes the largest promise-vs-reality gap in the project.
 
 ### Added
 
-- First Aid items now actually heal. Right-clicking a bandage, splint, or medical_kit calls into the BodyHealth plugin (`Settings/firstaid.yml` → `Items.<name>.RestoreAmount` + `AffectsParts` + `Sound`) and restores HP to the most-injured allowed body part. Items are consumed only on a successful heal. When the BodyHealth plugin is not installed or `BodyHealth.Enabled: false`, a chat message tells the player and the item is not consumed.
+- First Aid items now actually heal. Right-clicking a bandage, splint, or medical_kit calls into the BodyHealth plugin (`Settings/firstaid.yml` → `Items.<name>.RestoreAmount` + `AffectsParts` + `Sound`) and restores HP to the most-injured allowed body part. Items are consumed only on a successful heal. When the BodyHealth plugin is not installed, disabled, or inactive in the player's world, a chat message tells the player and the item is not consumed.
 - `firstaid.use.no_injury` and `firstaid.use.bodyhealth_unavailable` translation keys for the new use-result messages.
 
 ### Changed
 
-- `Settings/firstaid.yml` `Items.<name>` blocks extended with `RestoreAmount` (HP units), `AffectsParts` (list of BodyHealth body-part names), and `Sound`. `ConfigId` bumped to `1.4.0-DEV` so user configs pick up the new keys on next load.
+- `Settings/firstaid.yml` `Items.<name>` blocks extended with `RestoreAmount` (HP units), `AffectsParts` (list of BodyHealth body-part names — `HEAD`, `TORSO`, `ARM_LEFT`, `ARM_RIGHT`, `LEG_LEFT`, `LEG_RIGHT`, `FOOT_LEFT`, `FOOT_RIGHT`), and `Sound`. `ConfigId` bumped to `1.3.3-RELEASE` so user configs pick up the new keys on next load.
 - First Aid item lore corrected: bandage now lists torso/arm/leg/foot (not just arm/leg); splint now lists leg/foot (not just leg); medical_kit now describes healing the most-damaged body part (was incorrectly "fully restores every damaged body part"). Stale "Healing active once BodyHealth integration lands" placeholder removed from all three.
 
 ## 1.3.2 — BodyHealth, Guide & i18n
