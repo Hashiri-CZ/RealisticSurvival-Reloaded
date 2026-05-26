@@ -366,6 +366,11 @@ public class FearModule extends HLModule {
             changed = true;
         }
 
+        if (!config.contains("FearMeter.CaveMultiplier")) {
+            config.set("FearMeter.CaveMultiplier", 1.5);
+            changed = true;
+        }
+
         if (changed) {
             try {
                 config.save(getUserConfig().getFile());

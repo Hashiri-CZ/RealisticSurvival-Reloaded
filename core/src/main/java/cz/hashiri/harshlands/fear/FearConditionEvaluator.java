@@ -88,9 +88,11 @@ public class FearConditionEvaluator {
     public void evaluate(Player player, DataModule dm) {
         NearbySnapshot snapshot = scanNearby(player);
 
+        double caveMul = config.getDouble("FearMeter.CaveMultiplier", 1.5);
+
         double darkness     = config.getBoolean("FearMeter.Conditions.Darkness.Enabled", true)         ? evalDarkness(player)            : 0.0;
-        double cave         = config.getBoolean("FearMeter.Conditions.Cave.Enabled", true)             ? evalCave(player)                : 0.0;
-        double underground  = config.getBoolean("FearMeter.Conditions.AloneUnderground.Enabled", true) ? evalAloneUnderground(player, snapshot) : 0.0;
+        double cave         = config.getBoolean("FearMeter.Conditions.Cave.Enabled", true)             ? evalCave(player) * caveMul      : 0.0;
+        double underground  = config.getBoolean("FearMeter.Conditions.AloneUnderground.Enabled", true) ? evalAloneUnderground(player, snapshot) * caveMul : 0.0;
         double lowHealth    = config.getBoolean("FearMeter.Conditions.LowHealth.Enabled", true)        ? evalLowHealth(player, dm)       : 0.0;
         double enemies      = config.getBoolean("FearMeter.Conditions.NearbyEnemies.Enabled", true)    ? evalNearbyEnemies(snapshot)     : 0.0;
         double cold         = config.getBoolean("FearMeter.Conditions.Cold.Enabled", true)             ? evalCold(player)                : 0.0;
