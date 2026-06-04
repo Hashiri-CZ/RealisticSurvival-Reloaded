@@ -45,6 +45,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.SmithingInventory;
@@ -413,6 +414,22 @@ public class v26_1_R1 extends InternalsProvider {
         } catch (Throwable t) {
             cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
                     .warning("Failed to uninstall bossbar sentry for " + player.getName() + ": " + t);
+        }
+    }
+
+    // Spigot 26.1.x keeps the legacy nested enum TimeSkipEvent.SkipReason; Paper/Purpur 26.1.x
+    // refactored the event so getSkipReason() is inherited from a new ClockTimeSkipEvent parent
+    // and returns ClockTimeSkipEvent.SkipReason. We compile against Spigot here but the target
+    // runtime is Purpur, so a direct call would produce NoSuchMethodError on the deployed jar.
+    // Reflective lookup-by-name resolves either declared or inherited method and avoids tying
+    // the bytecode to a specific return type.
+    @Override
+    public boolean isNightSkip(TimeSkipEvent event) {
+        try {
+            Object reason = event.getClass().getMethod("getSkipReason").invoke(event);
+            return reason instanceof Enum<?> e && "NIGHT_SKIP".equals(e.name());
+        } catch (ReflectiveOperationException ex) {
+            return false;
         }
     }
 }

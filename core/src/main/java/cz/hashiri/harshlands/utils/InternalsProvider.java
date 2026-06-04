@@ -27,6 +27,7 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -101,6 +102,16 @@ public abstract class InternalsProvider {
             @javax.annotation.Nullable EquipmentSlot equippableSlot);
 
     public abstract boolean assignInvestigateNoiseGoal(org.bukkit.entity.Mob mob, Location target);
+
+    /**
+     * Returns true if the given {@link TimeSkipEvent} represents a night-skip
+     * (player sleep). The enum that carries this state was relocated in MC 26.1
+     * from a nested {@code TimeSkipEvent.SkipReason} to a new
+     * {@code ClockTimeSkipEvent.SkipReason} parent type, so the comparison must
+     * be performed in the version-specific impl that compiles against the
+     * matching API to avoid a {@link NoSuchMethodError} at runtime.
+     */
+    public abstract boolean isNightSkip(TimeSkipEvent event);
 
     /**
      * Installs the version-specific recipe display patcher that fixes the recipe

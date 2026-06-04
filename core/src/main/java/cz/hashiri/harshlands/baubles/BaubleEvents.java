@@ -838,7 +838,7 @@ public class BaubleEvents extends ModuleEvents implements Listener {
     public void onSkip(TimeSkipEvent event) {
         World world = event.getWorld();
 
-        if (!(shouldEventBeRan(world) && event.getSkipReason() == TimeSkipEvent.SkipReason.NIGHT_SKIP && config.getBoolean("Items.broken_heart.SleepRepair.Enabled")))
+        if (!(shouldEventBeRan(world) && Utils.isNightSkip(event) && config.getBoolean("Items.broken_heart.SleepRepair.Enabled")))
             return;
 
         Collection<UUID> ids = module.getBrokenHeartPlayers();

@@ -863,6 +863,10 @@ public class Utils {
         return internals.isNetheriteRecipe(inv);
     }
 
+    public static boolean isNightSkip(@Nonnull org.bukkit.event.world.TimeSkipEvent event) {
+        return internals.isNightSkip(event);
+    }
+
     public static void installRecipeDisplayPatcher(@Nonnull HLPlugin plugin,
                                                    @Nonnull cz.hashiri.harshlands.utils.recipe.RecipeDisplayRegistry registry) {
         if (internals != null) {

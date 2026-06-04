@@ -42,6 +42,7 @@ import org.bukkit.craftbukkit.v1_21_R7.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.SmithingInventory;
@@ -380,6 +381,11 @@ public class v1_21_R11 extends InternalsProvider {
             cz.hashiri.harshlands.HLPlugin.getPlugin().getLogger()
                     .warning("Failed to install bossbar sentry for " + player.getName() + ": " + t);
         }
+    }
+
+    @Override
+    public boolean isNightSkip(TimeSkipEvent event) {
+        return event.getSkipReason() == TimeSkipEvent.SkipReason.NIGHT_SKIP;
     }
 
     @Override
