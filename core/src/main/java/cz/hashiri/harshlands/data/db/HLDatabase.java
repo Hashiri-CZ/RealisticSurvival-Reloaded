@@ -12,8 +12,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -913,9 +915,9 @@ public class HLDatabase {
 
     // ── Disease Data ──────────────────────────────────────────────────────────
 
-    public CompletableFuture<java.util.List<DiseaseInfectionRow>> loadDiseaseInfections(UUID uuid) {
+    public CompletableFuture<List<DiseaseInfectionRow>> loadDiseaseInfections(UUID uuid) {
         return scheduler.supplyAsync(() -> {
-            java.util.List<DiseaseInfectionRow> rows = new java.util.ArrayList<>();
+            List<DiseaseInfectionRow> rows = new ArrayList<>();
             String sql = "SELECT disease_id, stage, ticks_in_stage, incubation_left, contracted_at"
                 + " FROM hl_disease_data WHERE uuid = ?";
             try (Connection conn = dataSource.getConnection();
@@ -949,6 +951,8 @@ public class HLDatabase {
                         del.executeUpdate();
                     }
                     if (!rows.isEmpty()) {
+                        // Plain INSERT (no isMysql upsert branch) is safe: we deleted all rows
+                        // for this uuid in the same transaction above, so there are no PK collisions.
                         String sql = "INSERT INTO hl_disease_data"
                             + " (uuid, disease_id, stage, ticks_in_stage, incubation_left, contracted_at)"
                             + " VALUES (?, ?, ?, ?, ?, ?)";
@@ -1007,6 +1011,8 @@ public class HLDatabase {
                         del.executeUpdate();
                     }
                     if (!immunity.isEmpty()) {
+                        // Plain INSERT (no isMysql upsert branch) is safe: we deleted all rows
+                        // for this uuid in the same transaction above, so there are no PK collisions.
                         String sql = "INSERT INTO hl_disease_immunity (uuid, disease_id, immune_until) VALUES (?, ?, ?)";
                         try (PreparedStatement ps = conn.prepareStatement(sql)) {
                             for (Map.Entry<String, Long> e : immunity.entrySet()) {
