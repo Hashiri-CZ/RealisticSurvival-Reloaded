@@ -73,6 +73,10 @@ public final class DiseaseEvents implements Listener {
         event.setCancelled(true);
         module.clearAllSymptoms(player, cured);
         dm.removeInfection(cured.id());
+        if (cured.immunityDurationTicks() > 0) {
+            // Mirror the natural-cure immunity grant in DiseaseProgressionTask (ticks→ms).
+            dm.grantImmunity(cured.id(), System.currentTimeMillis() + cured.immunityDurationTicks() * 50L);
+        }
         consumeOne(player, item);
         player.sendMessage("§aYou treated your " + cured.displayName() + ".");
     }
