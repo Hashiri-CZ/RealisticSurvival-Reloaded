@@ -1,3 +1,19 @@
+/*
+    Copyright (C) 2026  Hashiri_
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package cz.hashiri.harshlands.data.disease;
 
 import cz.hashiri.harshlands.HLPlugin;
@@ -23,8 +39,6 @@ public class DataModule implements HLDataModule {
         this.id = player.getUniqueId();
         this.database = HLPlugin.getPlugin().getDatabase();
     }
-
-    public UUID getId() { return id; }
 
     public java.util.Collection<ActiveInfection> getActiveInfections() { return infections.values(); }
 
@@ -60,18 +74,33 @@ public class DataModule implements HLDataModule {
 
     @Override
     public void retrieveData() {
-        database.loadDiseaseInfections(id).thenAccept(rows -> {
-            infections.clear();
-            for (HLDatabase.DiseaseInfectionRow r : rows) {
-                infections.put(r.diseaseId(), new ActiveInfection(
-                    r.diseaseId(), r.stage(), r.ticksInStage(), r.incubationLeft(), r.contractedAt()));
-            }
-            dirty = false;
-        });
-        database.loadDiseaseImmunity(id).thenAccept(map -> {
-            immunity.clear();
-            immunity.putAll(map);
-        });
+        java.util.concurrent.CompletableFuture<Void> infectionsLoad =
+            database.loadDiseaseInfections(id).thenAccept(rows -> {
+                Map<String, ActiveInfection> fresh = new HashMap<>();
+                for (HLDatabase.DiseaseInfectionRow r : rows) {
+                    fresh.put(r.diseaseId(), new ActiveInfection(
+                        r.diseaseId(), r.stage(), r.ticksInStage(), r.incubationLeft(), r.contractedAt()));
+                }
+                // Build into a local map first, then swap in one pass to minimise the window
+                // during which a reader could observe a partially-populated map.
+                infections.clear();
+                infections.putAll(fresh);
+            });
+
+        java.util.concurrent.CompletableFuture<Void> immunityLoad =
+            database.loadDiseaseImmunity(id).thenAccept(map -> {
+                Map<String, Long> fresh = new HashMap<>(map);
+                immunity.clear();
+                immunity.putAll(fresh);
+            });
+
+        java.util.concurrent.CompletableFuture.allOf(infectionsLoad, immunityLoad)
+            .thenRun(() -> dirty = false)
+            .exceptionally(ex -> {
+                HLPlugin.getPlugin().getLogger().warning(
+                    "[Disease] Failed to load disease data for " + id + ": " + ex.getMessage());
+                return null;
+            });
     }
 
     @Override
