@@ -22,5 +22,5 @@ cold_remedy:
     Amount: 1
   Ingredients:
     - "|BROWN_MUSHROOM|"
-    - "HONEY_BOTTLE|(SUGAR)|HONEY_BOTTLE"
+    - "HONEY_BOTTLE|SUGAR|HONEY_BOTTLE"
     - "|BROWN_MUSHROOM|"
