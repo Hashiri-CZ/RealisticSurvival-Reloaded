@@ -24,7 +24,7 @@ public final class DiseaseRegistry {
         }
     }
 
-    public Collection<Disease> all() { return byId.values(); }
+    public Collection<Disease> all() { return List.copyOf(byId.values()); }
 
     public Disease get(String id) { return byId.get(id); }
 
@@ -64,15 +64,7 @@ public final class DiseaseRegistry {
                         for (Object symEntry : rawSymptoms) {
                             ConfigurationSection symSec = sectionFromListEntry(symEntry);
                             String handler = symSec.getString("Handler", "");
-                            // Bukkit may store the Params map as a raw Map rather than
-                            // a child ConfigurationSection; materialise it explicitly.
                             ConfigurationSection params = symSec.getConfigurationSection("Params");
-                            if (params == null) {
-                                Object rawParams = symSec.get("Params");
-                                if (rawParams instanceof Map<?, ?> paramsMap) {
-                                    params = sectionFromListEntry(paramsMap);
-                                }
-                            }
                             symptoms.add(new SymptomSpec(handler, params));
                         }
                     }
@@ -80,6 +72,7 @@ public final class DiseaseRegistry {
                 }
             }
 
+            // enabled is always true here: disabled diseases were filtered out above.
             result.add(new Disease(id, displayName, true, incubation, immunity,
                     cureItem, mitigation, Collections.unmodifiableList(stages)));
         }
@@ -94,6 +87,9 @@ public final class DiseaseRegistry {
      * <p>
      * Values that are themselves Maps are recursively materialised as child sections so
      * that {@code getConfigurationSection("Params")} works even for inline-map values.
+     * <p>
+     * Note: List-of-map values are stored raw and are NOT recursively materialised into
+     * sections; the current disease schema only nests scalar Params, so this is sufficient.
      */
     @SuppressWarnings("unchecked")
     private static ConfigurationSection sectionFromListEntry(Object entry) {
