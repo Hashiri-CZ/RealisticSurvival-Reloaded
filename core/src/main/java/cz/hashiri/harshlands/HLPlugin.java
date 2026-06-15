@@ -236,6 +236,7 @@ public class HLPlugin extends JavaPlugin {
         this.toolUtils.initMap();
         ensureFearDefaults();
         ensureDynamicSurroundingsDefaults();
+        ensureDiseaseDefaults();
 
         this.miscItems = new MiscItems(this);
         this.recipeDisplayRegistry = new RecipeDisplayRegistry();
@@ -731,6 +732,39 @@ public class HLPlugin extends JavaPlugin {
                 cfg.save(getConfigFile());
             } catch (IOException exception) {
                 getLogger().warning("Failed to write Comfort defaults to config.yml: " + exception.getMessage());
+            }
+        }
+    }
+
+    private void ensureDiseaseDefaults() {
+        FileConfiguration cfg = getConfig();
+        boolean changed = false;
+
+        if (!cfg.contains("Disease.Enabled")) {
+            cfg.set("Disease.Enabled", true);
+            changed = true;
+        }
+
+        String worldsPath = "Disease.Worlds";
+        if (!cfg.contains(worldsPath)) {
+            cfg.createSection(worldsPath);
+            changed = true;
+        }
+
+        boolean autoEnableWorlds = cfg.getBoolean("AutomaticallyEnableWorlds");
+        for (String world : Utils.getAllWorldNames()) {
+            String path = worldsPath + "." + world;
+            if (!cfg.contains(path)) {
+                cfg.set(path, autoEnableWorlds);
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            try {
+                cfg.save(getConfigFile());
+            } catch (IOException exception) {
+                getLogger().warning("Failed to write Disease defaults to config.yml: " + exception.getMessage());
             }
         }
     }

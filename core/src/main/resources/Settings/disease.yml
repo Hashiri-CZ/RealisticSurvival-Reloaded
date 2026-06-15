@@ -1,0 +1,45 @@
+# Harshlands — Disease module settings.
+Initialize:
+  Enabled: true
+Shutdown:
+  Enabled: true
+
+# Ticks between progression checks (also the effect re-apply cadence).
+CheckIntervalTicks: 60
+
+Diseases:
+  respiratory_infection:
+    Enabled: true
+    DisplayName: "Respiratory Infection"
+    IncubationTicks: 1200          # 60s before stage 1
+    Immunity:
+      DurationTicks: 0             # no immunity after cure
+    Cure:
+      ItemId: cold_remedy
+    Mitigation:
+      Type: TAN_WARM_DRY
+      TemperatureAtLeast: 12.0     # TAN temperature units; tune to your TAN scale
+    Stages:
+      - DurationTicks: 2400        # stage 1: 2 min untreated -> stage 2
+        Symptoms:
+          - Handler: PlaySound
+            Params: { Sound: ENTITY_PLAYER_HURT, Volume: 0.5, Pitch: 1.3 }
+      - DurationTicks: 2400        # stage 2 -> stage 3
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: SLOW, Amplifier: 0, DurationTicks: 100 }
+          - Handler: PotionEffect
+            Params: { Effect: SLOW_DIGGING, Amplifier: 0, DurationTicks: 100 }
+      - DurationTicks: 0           # stage 3: terminal
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 100 }
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
+Triggers:
+  ColdExposure:
+    Disease: respiratory_infection
+    TemperatureBelow: 4.0          # TAN temperature units
+    RequireWet: true
+    ChancePerCheck: 0.02
