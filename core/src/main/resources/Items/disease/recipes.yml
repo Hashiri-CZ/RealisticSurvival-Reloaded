@@ -1,0 +1,26 @@
+#######################################
+#           Disease Recipes           #
+#######################################
+
+ConfigId: "1.3.4-RELEASE" # Used for config syncing purposes, do NOT edit
+
+# Edit carefully, following the Harshlands-Reloaded wiki recipe guide.
+
+medical_kit:
+  Type: "Shaped"
+  Result:
+    Item: "medical_kit"
+    Amount: 1
+  Ingredients:
+    - "PAPER|STRING|PAPER"
+    - "STRING|WHITE_WOOL|STRING"
+    - "PAPER|STRING|PAPER"
+cold_remedy:
+  Type: "Shaped"
+  Result:
+    Item: "cold_remedy"
+    Amount: 1
+  Ingredients:
+    - "|BROWN_MUSHROOM|"
+    - "HONEY_BOTTLE|(SUGAR)|HONEY_BOTTLE"
+    - "|BROWN_MUSHROOM|"

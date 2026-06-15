@@ -76,7 +76,7 @@ public class HLPlayer {
             ? new cz.hashiri.harshlands.data.guide.DataModule(player)
             : null;
 
-        HLModule diseaseMod = HLModule.getModule("Disease");
+        HLModule diseaseMod = HLModule.getModule(cz.hashiri.harshlands.disease.DiseaseModule.NAME);
         this.diseaseDataModule = (diseaseMod != null && diseaseMod.isGloballyEnabled())
             ? new cz.hashiri.harshlands.data.disease.DataModule(player)
             : null;

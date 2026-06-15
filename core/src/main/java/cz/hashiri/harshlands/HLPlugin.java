@@ -26,6 +26,7 @@ import cz.hashiri.harshlands.commands.Tab;
 import cz.hashiri.harshlands.data.*;
 import cz.hashiri.harshlands.data.db.HLDatabase;
 import cz.hashiri.harshlands.dynamicsurroundings.DynamicSurroundingsModule;
+import cz.hashiri.harshlands.disease.DiseaseModule;
 import cz.hashiri.harshlands.fear.FearModule;
 import cz.hashiri.harshlands.foodexpansion.FoodExpansionModule;
 import cz.hashiri.harshlands.hints.HintsModule;
@@ -274,6 +275,11 @@ public class HLPlugin extends JavaPlugin {
         FearModule fearModule = new FearModule(this);
         if (fearModule.isGloballyEnabled()) {
             fearModule.initialize();
+        }
+
+        DiseaseModule diseaseModule = new DiseaseModule(this);
+        if (diseaseModule.isGloballyEnabled()) {
+            diseaseModule.initialize();
         }
 
         DynamicSurroundingsModule dynamicSurroundingsModule = new DynamicSurroundingsModule(this);
