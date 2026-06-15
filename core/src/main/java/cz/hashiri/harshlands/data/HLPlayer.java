@@ -42,6 +42,7 @@ public class HLPlayer {
     private final cz.hashiri.harshlands.data.foodexpansion.DataModule nutritionDataModule;
     private final cz.hashiri.harshlands.data.hints.DataModule hintsDataModule;
     private final cz.hashiri.harshlands.data.guide.DataModule guideDataModule;
+    private final cz.hashiri.harshlands.data.disease.DataModule diseaseDataModule;
     private static final Map<UUID, HLPlayer> players = new ConcurrentHashMap<>();
 
     public HLPlayer(Player player) {
@@ -73,6 +74,11 @@ public class HLPlayer {
         HLModule guideMod = HLModule.getModule(cz.hashiri.harshlands.guide.GuideModule.NAME);
         this.guideDataModule = (guideMod != null && guideMod.isGloballyEnabled())
             ? new cz.hashiri.harshlands.data.guide.DataModule(player)
+            : null;
+
+        HLModule diseaseMod = HLModule.getModule("Disease");
+        this.diseaseDataModule = (diseaseMod != null && diseaseMod.isGloballyEnabled())
+            ? new cz.hashiri.harshlands.data.disease.DataModule(player)
             : null;
 
         players.put(uuid, this);
@@ -110,6 +116,9 @@ public class HLPlayer {
         if (guideDataModule != null) {
             guideDataModule.retrieveData();
         }
+        if (diseaseDataModule != null) {
+            diseaseDataModule.retrieveData();
+        }
     }
 
     public void saveData() {
@@ -133,6 +142,9 @@ public class HLPlayer {
         }
         if (guideDataModule != null) {
             guideDataModule.saveData();
+        }
+        if (diseaseDataModule != null) {
+            diseaseDataModule.saveData();
         }
     }
 
@@ -169,6 +181,11 @@ public class HLPlayer {
     @Nullable
     public cz.hashiri.harshlands.data.guide.DataModule getGuideDataModule() {
         return guideDataModule;
+    }
+
+    @Nullable
+    public cz.hashiri.harshlands.data.disease.DataModule getDiseaseDataModule() {
+        return diseaseDataModule;
     }
 
     public static boolean isValidPlayer(@Nullable Player player) {
