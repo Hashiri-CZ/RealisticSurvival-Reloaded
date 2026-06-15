@@ -1,6 +1,5 @@
 package cz.hashiri.harshlands.disease;
 
-import cz.hashiri.harshlands.HLPlugin;
 import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.disease.ActiveInfection;
 import cz.hashiri.harshlands.data.disease.DataModule;
@@ -35,8 +34,8 @@ public final class DiseaseProgressionTask implements Runnable {
 
     @Override
     public void run() {
-        if (HLPlugin.getPlugin().getServer().getWorlds().isEmpty()) return;
-        long now = HLPlugin.getPlugin().getServer().getWorlds().get(0).getFullTime();
+        // Wall-clock millis: immunity expiry must survive /time set and be world-agnostic.
+        long now = System.currentTimeMillis();
         for (HLPlayer hlPlayer : new ArrayList<>(HLPlayer.getPlayers().values())) {
             Player p = hlPlayer.getPlayer();
             if (p == null || !p.isOnline() || p.isDead()) continue;
@@ -87,7 +86,8 @@ public final class DiseaseProgressionTask implements Runnable {
             clearSymptoms(p, disease, inf.getStage());
             dm.removeInfection(disease.id());
             if (disease.immunityDurationTicks() > 0) {
-                dm.grantImmunity(disease.id(), now + disease.immunityDurationTicks());
+                // immunityDurationTicks is in game ticks; convert to ms to match the wall clock.
+                dm.grantImmunity(disease.id(), now + disease.immunityDurationTicks() * 50L);
             }
             return;
         }

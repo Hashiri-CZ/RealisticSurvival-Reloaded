@@ -26,9 +26,10 @@ package cz.hashiri.harshlands.data.disease;
  */
 public final class ActiveInfection {
     private final String diseaseId;
-    private int stage;
-    private long ticksInStage;
-    private long incubationLeft;
+    // volatile: read on the async autosave thread, written on the main thread.
+    private volatile int stage;
+    private volatile long ticksInStage;
+    private volatile long incubationLeft;
     private final long contractedAt;
 
     public ActiveInfection(String diseaseId, int stage, long ticksInStage,

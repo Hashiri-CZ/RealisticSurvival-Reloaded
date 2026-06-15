@@ -80,6 +80,9 @@ public final class DiseaseModule extends HLModule {
                 String type = diseases.getString(id + ".Mitigation.Type", "");
                 if ("TAN_WARM_DRY".equals(type)) {
                     double atLeast = diseases.getDouble(id + ".Mitigation.TemperatureAtLeast", 12.0);
+                    // NOTE: mitigations are keyed by type, not disease id. Diseases sharing a
+                    // mitigation type currently share one threshold (last-loaded wins). Revisit
+                    // when a second disease uses TAN_WARM_DRY with a different threshold.
                     mitigations.put(type, new TanWarmDryMitigation(atLeast));
                 }
             }
@@ -118,8 +121,7 @@ public final class DiseaseModule extends HLModule {
 
     @Override
     public void shutdown() {
-        FileConfiguration cfg = getUserConfig().getConfig();
-        if (cfg.getBoolean("Shutdown.Enabled")) {
+        if (getUserConfig() != null && getUserConfig().getConfig().getBoolean("Shutdown.Enabled")) {
             Utils.logModuleShutdown("disease", NAME);
         }
         if (progressionTask != null) { progressionTask.cancel(); progressionTask = null; }

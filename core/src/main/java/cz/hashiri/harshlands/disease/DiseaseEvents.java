@@ -17,10 +17,12 @@ public final class DiseaseEvents implements Listener {
 
     private final DiseaseModule module;
     private final DiseaseRegistry registry;
+    private final DiagnosisService diagnosisService;
 
     public DiseaseEvents(DiseaseModule module, DiseaseRegistry registry) {
         this.module = module;
         this.registry = registry;
+        this.diagnosisService = new DiagnosisService(registry);
     }
 
     @EventHandler
@@ -37,21 +39,22 @@ public final class DiseaseEvents implements Listener {
         Player player = event.getPlayer();
 
         if (DIAGNOSTIC_ITEM_ID.equals(id)) {
-            new DiagnosisService(registry).diagnose(player);
+            diagnosisService.diagnose(player);
             event.setCancelled(true);
             return;
         }
 
         Disease cured = registry.byCureItem(id);
         if (cured == null) return;
-        event.setCancelled(true);
 
         HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
         DataModule dm = hlPlayer != null ? hlPlayer.getDiseaseDataModule() : null;
         if (dm == null || !dm.hasInfection(cured.id())) {
+            // Don't cancel — let normal block interaction through when there's nothing to cure.
             player.sendMessage("§7Nothing happens — you don't have " + cured.displayName() + ".");
             return;
         }
+        event.setCancelled(true);
         module.clearAllSymptoms(player, cured);
         dm.removeInfection(cured.id());
         consumeOne(player, item);
