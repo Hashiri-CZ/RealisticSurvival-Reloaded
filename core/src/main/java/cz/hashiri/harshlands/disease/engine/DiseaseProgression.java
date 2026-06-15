@@ -5,13 +5,24 @@ public final class DiseaseProgression {
 
     private DiseaseProgression() {}
 
-    /** Result of one stage tick. {@code cured} means the infection should be removed. */
+    /**
+     * Result of one stage tick.
+     * @param stage        the new stage; 0 only when {@code cured} is true
+     * @param ticksInStage accumulated ticks in the new stage
+     * @param cured        true if the infection should be removed from the player entirely
+     */
     public record StageResult(int stage, long ticksInStage, boolean cured) {}
 
+    /** Decrement remaining incubation by one check interval, floored at zero. */
     public static long decrementIncubation(long incubationLeft, long ticksPerCheck) {
         return Math.max(0L, incubationLeft - ticksPerCheck);
     }
 
+    /**
+     * True when this check interval brings incubation to (or below) zero.
+     * Pass the value BEFORE decrementing — i.e. the currently-stored incubationLeft.
+     * Callers must only invoke this while the infection is still incubating (stage 0).
+     */
     public static boolean incubationComplete(long incubationLeft, long ticksPerCheck) {
         return incubationLeft - ticksPerCheck <= 0L;
     }
@@ -29,6 +40,9 @@ public final class DiseaseProgression {
     public static StageResult progressStage(int stage, long ticksInStage, long ticksPerCheck,
                                             long stageDurationTicks, int maxStage,
                                             boolean mitigationActive) {
+        if (stage < 1) {
+            throw new IllegalArgumentException("progressStage requires stage >= 1, got " + stage);
+        }
         long delta = mitigationActive ? -ticksPerCheck : ticksPerCheck;
         long t = ticksInStage + delta;
 
