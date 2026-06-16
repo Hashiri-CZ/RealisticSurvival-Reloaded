@@ -53,7 +53,10 @@ public final class LimbInjuryTrigger implements DiseaseTrigger {
         return worst != null && injuredStates.contains(worst);
     }
 
-    /** Pure: the most severe (highest-ordinal) state in the collection; FULL if empty/null. */
+    /**
+     * Pure: the most severe (highest-ordinal) state in the collection; FULL if empty/null.
+     * Called by {@link PapiLimbStateReader} to reduce the eight per-limb states into one.
+     */
     public static BodyPartState worstSeverity(Collection<BodyPartState> states) {
         BodyPartState worst = BodyPartState.FULL;
         if (states == null) return worst;
