@@ -271,6 +271,9 @@ public class TanEvents extends ModuleEvents implements Listener {
                             thirstManager.addThirst(player, thirstPoints);
                             thirstManager.addSaturation(player, saturationPoints);
 
+                            // Signal a raw/unpurified water drink for the disease module (Dysentery).
+                            Bukkit.getPluginManager().callEvent(new RawWaterDrinkEvent(player));
+
                             if (config.getBoolean("Thirst.SaturationRestoration.Drinking.Sound.Enabled")) {
                                 String soundName = config.getString("Thirst.SaturationRestoration.Drinking.Sound.Sound");
                                 float volume = (float) config.getDouble("Thirst.SaturationRestoration.Drinking.Sound.Volume");
