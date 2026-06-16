@@ -23,6 +23,7 @@ import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.ModuleItems;
 import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.data.disease.DataModule;
+import cz.hashiri.harshlands.disease.mitigation.DietMitigation;
 import cz.hashiri.harshlands.disease.mitigation.InjuryHealMitigation;
 import cz.hashiri.harshlands.disease.mitigation.Mitigation;
 import cz.hashiri.harshlands.disease.mitigation.TanWarmDryMitigation;
@@ -33,6 +34,7 @@ import cz.hashiri.harshlands.disease.symptom.SymptomContext;
 import cz.hashiri.harshlands.disease.symptom.SymptomHandler;
 import cz.hashiri.harshlands.disease.symptom.SymptomHandlers;
 import cz.hashiri.harshlands.disease.symptom.builtin.DamageOverTimeHandler;
+import cz.hashiri.harshlands.disease.symptom.builtin.HungerDrainHandler;
 import cz.hashiri.harshlands.disease.symptom.builtin.PlaySoundHandler;
 import cz.hashiri.harshlands.disease.symptom.builtin.PotionEffectHandler;
 import cz.hashiri.harshlands.disease.mitigation.NoExposureMitigation;
@@ -40,17 +42,22 @@ import cz.hashiri.harshlands.disease.symptom.special.BlockEatingHandler;
 import cz.hashiri.harshlands.disease.symptom.special.BlockNaturalRegenHandler;
 import cz.hashiri.harshlands.disease.symptom.special.ImmuneSuppressionHandler;
 import cz.hashiri.harshlands.disease.symptom.special.ItemUseFailureHandler;
+import cz.hashiri.harshlands.disease.symptom.special.MaxHealthReductionHandler;
 import cz.hashiri.harshlands.disease.symptom.special.RandomTeleportHandler;
 import cz.hashiri.harshlands.disease.symptom.special.SpecialSymptomTracker;
 import cz.hashiri.harshlands.disease.trigger.ColdExposureTrigger;
+import cz.hashiri.harshlands.disease.trigger.DietTrigger;
 import cz.hashiri.harshlands.disease.trigger.DiseaseTrigger;
 import cz.hashiri.harshlands.disease.trigger.EnderExposureTrigger;
 import cz.hashiri.harshlands.disease.trigger.InfectedItemTrigger;
 import cz.hashiri.harshlands.disease.trigger.LimbInjuryTrigger;
 import cz.hashiri.harshlands.disease.trigger.LimbStateReader;
+import cz.hashiri.harshlands.disease.trigger.NutrientTierReader;
+import cz.hashiri.harshlands.disease.trigger.NutritionTierReader;
 import cz.hashiri.harshlands.disease.trigger.PapiLimbStateReader;
 import cz.hashiri.harshlands.disease.trigger.RadiationTrigger;
 import cz.hashiri.harshlands.disease.trigger.RustySourceTrigger;
+import cz.hashiri.harshlands.disease.trigger.UnpurifiedWaterTrigger;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.Bukkit;
@@ -110,6 +117,7 @@ public final class DiseaseModule extends HLModule {
         handlers.register("PotionEffect", new PotionEffectHandler());
         handlers.register("PlaySound", new PlaySoundHandler());
         handlers.register("DamageOverTime", new DamageOverTimeHandler());
+        handlers.register("HungerDrain", new HungerDrainHandler());
 
         long interval = cfg.getLong("CheckIntervalTicks", 60L);
 
@@ -126,6 +134,13 @@ public final class DiseaseModule extends HLModule {
         BlockEatingHandler blockEating = new BlockEatingHandler(symptomTracker, ttlMs);
         handlers.register("BlockEating", blockEating);
 
+        // MaxHealthReduction is also a Listener (strips its orphaned attribute modifier on join).
+        MaxHealthReductionHandler maxHealthReduction = new MaxHealthReductionHandler();
+        handlers.register("MaxHealthReduction", maxHealthReduction);
+
+        // Shared nutrition-tier read for Malnutrition's trigger + mitigation (FoodExpansion-backed).
+        NutrientTierReader tierReader = new NutritionTierReader();
+
         // Shared limb-state read for Festering Wound's trigger + mitigation (PlaceholderAPI-backed).
         LimbStateReader limbReader = new PapiLimbStateReader();
 
@@ -141,6 +156,11 @@ public final class DiseaseModule extends HLModule {
                     mitigations.put(id, new InjuryHealMitigation(
                         LimbInjuryTrigger.parseStates(diseases.getStringList(id + ".Mitigation.InjuredStates")),
                         limbReader));
+                }
+                if ("DIET".equals(type)) {
+                    mitigations.put(id, new DietMitigation(
+                        DietTrigger.parseTiers(diseases.getStringList(id + ".Mitigation.MalnourishedTiers")),
+                        tierReader));
                 }
             }
         }
@@ -210,6 +230,26 @@ public final class DiseaseModule extends HLModule {
             }
         }
 
+        ConfigurationSection diet = cfg.getConfigurationSection("Triggers.Diet");
+        if (diet != null) {
+            triggers.add(new DietTrigger(
+                diet.getString("Disease", ""),
+                DietTrigger.parseTiers(diet.getStringList("MalnourishedTiers")),
+                diet.getInt("SustainChecks", 5),
+                diet.getDouble("ChancePerCheck", 0.05),
+                tierReader));
+        }
+
+        ConfigurationSection water = cfg.getConfigurationSection("Triggers.UnpurifiedWater");
+        if (water != null) {
+            UnpurifiedWaterTrigger waterTrigger = new UnpurifiedWaterTrigger(
+                water.getString("Disease", ""),
+                water.getDouble("ChancePerCheck", 0.25),
+                ttlMs);
+            triggers.add(waterTrigger);
+            specialListeners.add(waterTrigger);
+        }
+
         // NO_EXPOSURE mitigations wrap the disease's own triggers; build after triggers exist.
         if (diseases != null) {
             for (String id : diseases.getKeys(false)) {
@@ -239,6 +279,7 @@ public final class DiseaseModule extends HLModule {
         specialListeners.add(itemUseFailure);
         specialListeners.add(blockRegen);
         specialListeners.add(blockEating);
+        specialListeners.add(maxHealthReduction);
         for (Listener l : specialListeners) {
             Bukkit.getPluginManager().registerEvents(l, plugin);
         }
