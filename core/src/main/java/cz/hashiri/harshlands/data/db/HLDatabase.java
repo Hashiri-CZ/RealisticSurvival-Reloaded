@@ -12,8 +12,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -59,6 +61,14 @@ public class HLDatabase {
     public record HintsDataRow(String seenHintsCsv) {}
 
     public record GuideDataRow(int lastSeenVersion, long lastOpenedAt) {}
+
+    public record DiseaseInfectionRow(
+        String diseaseId,
+        int stage,
+        long ticksInStage,
+        long incubationLeft,
+        long contractedAt
+    ) {}
 
     private HikariDataSource dataSource;
     private final HLPlugin plugin;
@@ -230,6 +240,21 @@ public class HLDatabase {
                 + "uuid VARCHAR(36) PRIMARY KEY,"
                 + "last_seen_version INT NOT NULL,"
                 + "last_opened_at BIGINT NOT NULL"
+                + ")");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS hl_disease_data ("
+                + "uuid VARCHAR(36) NOT NULL,"
+                + "disease_id VARCHAR(64) NOT NULL,"
+                + "stage INT NOT NULL,"
+                + "ticks_in_stage BIGINT NOT NULL,"
+                + "incubation_left BIGINT NOT NULL,"
+                + "contracted_at BIGINT NOT NULL,"
+                + "PRIMARY KEY (uuid, disease_id)"
+                + ")");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS hl_disease_immunity ("
+                + "uuid VARCHAR(36) NOT NULL,"
+                + "disease_id VARCHAR(64) NOT NULL,"
+                + "immune_until BIGINT NOT NULL,"
+                + "PRIMARY KEY (uuid, disease_id)"
                 + ")");
             startupInfo("Schema is ready.");
         } catch (SQLException e) {
@@ -884,6 +909,130 @@ public class HLDatabase {
                 ps.executeUpdate();
             } catch (SQLException e) {
                 logger.warning("[HLDatabase] Failed to save guide data for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    // ── Disease Data ──────────────────────────────────────────────────────────
+
+    public CompletableFuture<List<DiseaseInfectionRow>> loadDiseaseInfections(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            List<DiseaseInfectionRow> rows = new ArrayList<>();
+            String sql = "SELECT disease_id, stage, ticks_in_stage, incubation_left, contracted_at"
+                + " FROM hl_disease_data WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        rows.add(new DiseaseInfectionRow(
+                            rs.getString("disease_id"),
+                            rs.getInt("stage"),
+                            rs.getLong("ticks_in_stage"),
+                            rs.getLong("incubation_left"),
+                            rs.getLong("contracted_at")));
+                    }
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load disease data for " + uuid + ": " + e.getMessage());
+            }
+            return rows;
+        });
+    }
+
+    /** Full replace of a player's infection rows (delete-all + insert), in one transaction. */
+    public CompletableFuture<Void> saveDiseaseInfections(UUID uuid, java.util.Collection<DiseaseInfectionRow> rows) {
+        return scheduler.runAsync(() -> {
+            try (Connection conn = dataSource.getConnection()) {
+                conn.setAutoCommit(false);
+                try {
+                    try (PreparedStatement del = conn.prepareStatement("DELETE FROM hl_disease_data WHERE uuid = ?")) {
+                        del.setString(1, uuid.toString());
+                        del.executeUpdate();
+                    }
+                    if (!rows.isEmpty()) {
+                        // Plain INSERT (no isMysql upsert branch) is safe: we deleted all rows
+                        // for this uuid in the same transaction above, so there are no PK collisions.
+                        String sql = "INSERT INTO hl_disease_data"
+                            + " (uuid, disease_id, stage, ticks_in_stage, incubation_left, contracted_at)"
+                            + " VALUES (?, ?, ?, ?, ?, ?)";
+                        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                            for (DiseaseInfectionRow row : rows) {
+                                ps.setString(1, uuid.toString());
+                                ps.setString(2, row.diseaseId());
+                                ps.setInt(3, row.stage());
+                                ps.setLong(4, row.ticksInStage());
+                                ps.setLong(5, row.incubationLeft());
+                                ps.setLong(6, row.contractedAt());
+                                ps.addBatch();
+                            }
+                            ps.executeBatch();
+                        }
+                    }
+                    conn.commit();
+                } catch (SQLException e) {
+                    try { conn.rollback(); } catch (SQLException ignored) {}
+                    throw e;
+                } finally {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save disease data for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    public CompletableFuture<Map<String, Long>> loadDiseaseImmunity(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            Map<String, Long> result = new HashMap<>();
+            String sql = "SELECT disease_id, immune_until FROM hl_disease_immunity WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        result.put(rs.getString("disease_id"), rs.getLong("immune_until"));
+                    }
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load disease immunity for " + uuid + ": " + e.getMessage());
+            }
+            return result;
+        });
+    }
+
+    public CompletableFuture<Void> saveDiseaseImmunity(UUID uuid, Map<String, Long> immunity) {
+        return scheduler.runAsync(() -> {
+            try (Connection conn = dataSource.getConnection()) {
+                conn.setAutoCommit(false);
+                try {
+                    try (PreparedStatement del = conn.prepareStatement("DELETE FROM hl_disease_immunity WHERE uuid = ?")) {
+                        del.setString(1, uuid.toString());
+                        del.executeUpdate();
+                    }
+                    if (!immunity.isEmpty()) {
+                        // Plain INSERT (no isMysql upsert branch) is safe: we deleted all rows
+                        // for this uuid in the same transaction above, so there are no PK collisions.
+                        String sql = "INSERT INTO hl_disease_immunity (uuid, disease_id, immune_until) VALUES (?, ?, ?)";
+                        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                            for (Map.Entry<String, Long> e : immunity.entrySet()) {
+                                ps.setString(1, uuid.toString());
+                                ps.setString(2, e.getKey());
+                                ps.setLong(3, e.getValue());
+                                ps.addBatch();
+                            }
+                            ps.executeBatch();
+                        }
+                    }
+                    conn.commit();
+                } catch (SQLException e) {
+                    try { conn.rollback(); } catch (SQLException ignored) {}
+                    throw e;
+                } finally {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save disease immunity for " + uuid + ": " + e.getMessage());
             }
         });
     }

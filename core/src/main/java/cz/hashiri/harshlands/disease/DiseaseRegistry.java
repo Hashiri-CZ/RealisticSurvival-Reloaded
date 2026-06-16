@@ -1,0 +1,134 @@
+/*
+    Copyright (C) 2026  Hashiri_
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package cz.hashiri.harshlands.disease;
+
+import cz.hashiri.harshlands.disease.model.Disease;
+import cz.hashiri.harshlands.disease.model.DiseaseStage;
+import cz.hashiri.harshlands.disease.model.SymptomSpec;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public final class DiseaseRegistry {
+
+    private final Map<String, Disease> byId = new ConcurrentHashMap<>();
+
+    public void load(ConfigurationSection diseasesSection) {
+        byId.clear();
+        for (Disease d : parse(diseasesSection)) {
+            byId.put(d.id(), d);
+        }
+    }
+
+    public Collection<Disease> all() { return List.copyOf(byId.values()); }
+
+    public Disease get(String id) { return byId.get(id); }
+
+    public Disease byCureItem(String itemId) {
+        if (itemId == null) return null;
+        for (Disease d : byId.values()) {
+            if (itemId.equals(d.cureItemId())) return d;
+        }
+        return null;
+    }
+
+    /** Pure parse — only enabled diseases are returned. Safe to call with null. */
+    public static List<Disease> parse(ConfigurationSection section) {
+        List<Disease> result = new ArrayList<>();
+        if (section == null) return result;
+
+        for (String id : section.getKeys(false)) {
+            ConfigurationSection ds = section.getConfigurationSection(id);
+            if (ds == null) continue;
+            if (!ds.getBoolean("Enabled", true)) continue;
+
+            String displayName = ds.getString("DisplayName", id);
+            long incubation = ds.getLong("IncubationTicks", 0L);
+            long immunity = ds.getLong("Immunity.DurationTicks", 0L);
+            String cureItem = ds.getString("Cure.ItemId", "");
+            String mitigation = ds.getString("Mitigation.Type", "");
+
+            List<DiseaseStage> stages = new ArrayList<>();
+            List<?> rawStages = ds.getList("Stages");
+            if (rawStages != null) {
+                for (Object stageEntry : rawStages) {
+                    ConfigurationSection stageSec = sectionFromListEntry(stageEntry);
+                    long duration = stageSec.getLong("DurationTicks", 0L);
+                    List<SymptomSpec> symptoms = new ArrayList<>();
+                    List<?> rawSymptoms = stageSec.getList("Symptoms");
+                    if (rawSymptoms != null) {
+                        for (Object symEntry : rawSymptoms) {
+                            ConfigurationSection symSec = sectionFromListEntry(symEntry);
+                            String handler = symSec.getString("Handler", "");
+                            ConfigurationSection params = symSec.getConfigurationSection("Params");
+                            symptoms.add(new SymptomSpec(handler, params));
+                        }
+                    }
+                    stages.add(new DiseaseStage(duration, Collections.unmodifiableList(symptoms)));
+                }
+            }
+
+            // enabled is always true here: disabled diseases were filtered out above.
+            result.add(new Disease(id, displayName, true, incubation, immunity,
+                    cureItem, mitigation, Collections.unmodifiableList(stages)));
+        }
+        return result;
+    }
+
+    /**
+     * Bukkit deserialises YAML list entries as Maps, losing ConfigurationSection typing.
+     * Wrap one list entry (a Map) into a MemoryConfiguration so nested getList /
+     * getConfigurationSection calls behave uniformly. Returns an empty section for
+     * non-map entries.
+     * <p>
+     * Values that are themselves Maps are recursively materialised as child sections so
+     * that {@code getConfigurationSection("Params")} works even for inline-map values.
+     * <p>
+     * Note: List-of-map values are stored raw and are NOT recursively materialised into
+     * sections; the current disease schema only nests scalar Params, so this is sufficient.
+     */
+    @SuppressWarnings("unchecked")
+    private static ConfigurationSection sectionFromListEntry(Object entry) {
+        MemoryConfiguration mem = new MemoryConfiguration();
+        if (entry instanceof Map<?, ?> map) {
+            populateSection(mem, (Map<String, Object>) map);
+        }
+        return mem;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void populateSection(ConfigurationSection section, Map<String, Object> map) {
+        for (Map.Entry<String, Object> e : map.entrySet()) {
+            String key = e.getKey();
+            Object value = e.getValue();
+            if (value instanceof Map<?, ?> nested) {
+                // Materialise nested maps as child sections rather than storing raw Maps,
+                // so getConfigurationSection(key) returns a real section (not null).
+                ConfigurationSection child = section.createSection(key);
+                populateSection(child, (Map<String, Object>) nested);
+            } else {
+                section.set(key, value);
+            }
+        }
+    }
+}
