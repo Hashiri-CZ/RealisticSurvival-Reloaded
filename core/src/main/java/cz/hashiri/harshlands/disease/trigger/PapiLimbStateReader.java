@@ -21,6 +21,7 @@ import cz.hashiri.harshlands.bodyhealth.BodyPartState;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,8 @@ public final class PapiLimbStateReader implements LimbStateReader {
     @Override
     public BodyPartState worst(Player player) {
         if (player == null) return BodyPartState.FULL;
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return BodyPartState.FULL;
+        Plugin papi = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+        if (papi == null || !papi.isEnabled()) return BodyPartState.FULL;
         List<BodyPartState> states = new ArrayList<>();
         for (BodyPart part : BodyPart.values()) {
             String key = "%bodyhealth_state_" + part.placeholderSuffix() + "%";
