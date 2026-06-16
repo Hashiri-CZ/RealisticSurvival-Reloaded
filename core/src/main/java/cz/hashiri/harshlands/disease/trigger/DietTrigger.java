@@ -78,7 +78,7 @@ public final class DietTrigger implements DiseaseTrigger {
     }
 
     /**
-     * Deterministic per-call: advance the player's consecutive-malnourished counter and return
+     * Stateful per-call: advances the player's consecutive-malnourished counter and returns
      * the contraction chance — {@code chancePerCheck} once the sustain threshold is reached,
      * else 0. A nourished tier resets the counter.
      */
