@@ -17,7 +17,10 @@
 package cz.hashiri.harshlands.disease;
 
 import cz.hashiri.harshlands.data.HLPlayer;
+import cz.hashiri.harshlands.data.disease.ActiveInfection;
 import cz.hashiri.harshlands.data.disease.DataModule;
+import cz.hashiri.harshlands.disease.engine.DoseMath;
+import cz.hashiri.harshlands.disease.model.CureMode;
 import cz.hashiri.harshlands.disease.model.Disease;
 import cz.hashiri.harshlands.utils.HLItem;
 import org.bukkit.entity.Player;
@@ -71,6 +74,11 @@ public final class DiseaseEvents implements Listener {
             return;
         }
         event.setCancelled(true);
+        if (cured.cureMode() == CureMode.REGRESS_ONE_STAGE) {
+            applyRegressDose(player, item, dm, cured);
+            return;
+        }
+        // CLEAR (default): one use fully clears the infection.
         module.clearAllSymptoms(player, cured);
         dm.removeInfection(cured.id());
         if (cured.immunityDurationTicks() > 0) {
@@ -79,6 +87,35 @@ public final class DiseaseEvents implements Listener {
         }
         consumeOne(player, item);
         player.sendMessage("§aYou treated your " + cured.displayName() + ".");
+    }
+
+    /** REGRESS_ONE_STAGE cure: each off-cooldown dose drops the infection one stage. */
+    private void applyRegressDose(Player player, ItemStack item, DataModule dm, Disease disease) {
+        ActiveInfection inf = dm.getInfection(disease.id());
+        if (inf == null) return; // guarded by hasInfection() in the caller; stay defensive
+        long now = System.currentTimeMillis();
+        long cooldownMs = disease.cureDoseCooldownTicks() * 50L;
+        DoseMath.DoseOutcome outcome =
+            DoseMath.applyDose(inf.getStage(), dm.getLastDoseMs(disease.id()), cooldownMs, now);
+        if (outcome.onCooldown()) {
+            player.sendMessage("§7The treatment hasn't taken hold yet — wait before the next dose.");
+            return;
+        }
+        module.clearAllSymptoms(player, disease);
+        dm.setLastDoseMs(disease.id(), now);
+        consumeOne(player, item);
+        if (outcome.cured()) {
+            dm.removeInfection(disease.id());
+            if (disease.immunityDurationTicks() > 0) {
+                dm.grantImmunity(disease.id(), now + disease.immunityDurationTicks() * 50L);
+            }
+            player.sendMessage("§aYou have fully recovered from " + disease.displayName() + ".");
+        } else {
+            inf.setStage(outcome.newStage());
+            inf.setTicksInStage(0L);
+            dm.markDirty();
+            player.sendMessage("§aThe regimen pushes your " + disease.displayName() + " back a stage.");
+        }
     }
 
     private void consumeOne(Player player, ItemStack item) {
