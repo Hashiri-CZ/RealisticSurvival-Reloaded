@@ -35,6 +35,10 @@ public class DataModule implements HLDataModule {
     private final Map<String, Long> immunity = new ConcurrentHashMap<>();
     private volatile boolean dirty = false;
 
+    // Transient runtime state (NOT persisted): immune-suppression contraction multiplier.
+    private volatile double contractionMultiplier = 1.0;
+    private volatile long contractionMultiplierExpiry = 0L;
+
     public DataModule(org.bukkit.entity.Player player) {
         this.id = player.getUniqueId();
         this.database = HLPlugin.getPlugin().getDatabase();
@@ -71,6 +75,18 @@ public class DataModule implements HLDataModule {
     public void markDirty() { dirty = true; }
 
     public boolean isDirty() { return dirty; }
+
+    /** Record an immune-suppression multiplier active until {@code expiryMs} (wall-clock). */
+    public void setContractionMultiplier(double multiplier, long expiryMs) {
+        this.contractionMultiplier = multiplier;
+        this.contractionMultiplierExpiry = expiryMs;
+    }
+
+    /** Current contraction multiplier given {@code nowMs}; 1.0 if none/expired. */
+    public double getContractionMultiplier(long nowMs) {
+        return cz.hashiri.harshlands.disease.symptom.special.ContractionMath
+            .effectiveMultiplier(contractionMultiplier, contractionMultiplierExpiry, nowMs);
+    }
 
     @Override
     public void retrieveData() {

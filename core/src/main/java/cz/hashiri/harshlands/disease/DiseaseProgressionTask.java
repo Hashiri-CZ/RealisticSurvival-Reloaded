@@ -70,7 +70,7 @@ public final class DiseaseProgressionTask implements Runnable {
 
         if (inf == null) {
             if (dm.isImmune(disease.id(), now)) return;
-            double chance = totalChance(p, disease.id());
+            double chance = totalChance(p, dm, disease.id(), now);
             if (chance > 0 && random.nextDouble() < chance) {
                 dm.contract(disease.id(), disease.incubationTicks(), now);
             }
@@ -93,7 +93,7 @@ public final class DiseaseProgressionTask implements Runnable {
         DiseaseStage stageDef = disease.stage(inf.getStage());
         if (stageDef == null) { dm.removeInfection(disease.id()); return; }
 
-        boolean mitigating = module.mitigationActive(disease.mitigationType(), p);
+        boolean mitigating = module.mitigationActive(disease, p);
         DiseaseProgression.StageResult r = DiseaseProgression.progressStage(
             inf.getStage(), inf.getTicksInStage(), ticksPerCheck,
             stageDef.durationTicks(), disease.maxStage(), mitigating);
@@ -118,14 +118,15 @@ public final class DiseaseProgressionTask implements Runnable {
         applySymptoms(p, disease, inf.getStage());
     }
 
-    private double totalChance(Player p, String diseaseId) {
+    private double totalChance(Player p, DataModule dm, String diseaseId, long now) {
         double sum = 0.0;
         for (DiseaseTrigger trigger : module.getTriggers()) {
             if (trigger.diseaseId().equals(diseaseId)) {
                 sum += Math.max(0.0, trigger.chance(p));
             }
         }
-        return Math.min(1.0, sum);
+        double multiplied = sum * dm.getContractionMultiplier(now);
+        return cz.hashiri.harshlands.disease.symptom.special.ContractionMath.clampChance(multiplied);
     }
 
     private void applySymptoms(Player p, Disease disease, int stage) {
