@@ -43,6 +43,7 @@ import cz.hashiri.harshlands.disease.symptom.special.SpecialSymptomTracker;
 import cz.hashiri.harshlands.disease.trigger.ColdExposureTrigger;
 import cz.hashiri.harshlands.disease.trigger.DiseaseTrigger;
 import cz.hashiri.harshlands.disease.trigger.EnderExposureTrigger;
+import cz.hashiri.harshlands.disease.trigger.InfectedItemTrigger;
 import cz.hashiri.harshlands.disease.trigger.RadiationTrigger;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
@@ -151,6 +152,22 @@ public final class DiseaseModule extends HLModule {
                 toMaterialSet(rad.getStringList("RadioactiveBlocks")),
                 rad.getInt("ScanRadius", 2),
                 rad.getDouble("ChancePerCheck", 0.02)));
+        }
+
+        ConfigurationSection infected = cfg.getConfigurationSection("Triggers.InfectedItem");
+        if (infected != null) {
+            for (String key : infected.getKeys(false)) {
+                ConfigurationSection sec = infected.getConfigurationSection(key);
+                if (sec == null) continue;
+                InfectedItemTrigger t = new InfectedItemTrigger(
+                    sec.getString("Disease", ""),
+                    toMaterialSet(sec.getStringList("InfectedMaterials")),
+                    sec.getBoolean("RequireDiseasedTag", false),
+                    sec.getDouble("ChancePerCheck", 0.25),
+                    ttlMs);
+                triggers.add(t);
+                specialListeners.add(t);
+            }
         }
 
         // NO_EXPOSURE mitigations wrap the disease's own triggers; build after triggers exist.

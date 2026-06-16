@@ -26,6 +26,8 @@ public record Disease(
     long immunityDurationTicks,   // 0 = no immunity after cure
     String cureItemId,            // null/empty = no item cure
     String mitigationType,        // null/empty = no behavioral mitigation
+    CureMode cureMode,            // how a cure item resolves the infection
+    long cureDoseCooldownTicks,   // REGRESS_ONE_STAGE: min ticks between effective doses
     List<DiseaseStage> stages
 ) {
     public int maxStage() { return stages.size(); }

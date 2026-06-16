@@ -39,6 +39,10 @@ public class DataModule implements HLDataModule {
     private volatile double contractionMultiplier = 1.0;
     private volatile long contractionMultiplierExpiry = 0L;
 
+    // Transient runtime state (NOT persisted): wall-clock ms of the last effective cure dose
+    // per disease, for REGRESS_ONE_STAGE multi-dose cures.
+    private final Map<String, Long> lastDoseMs = new ConcurrentHashMap<>();
+
     public DataModule(org.bukkit.entity.Player player) {
         this.id = player.getUniqueId();
         this.database = HLPlugin.getPlugin().getDatabase();
@@ -86,6 +90,16 @@ public class DataModule implements HLDataModule {
     public double getContractionMultiplier(long nowMs) {
         return cz.hashiri.harshlands.disease.symptom.special.ContractionMath
             .effectiveMultiplier(contractionMultiplier, contractionMultiplierExpiry, nowMs);
+    }
+
+    /** Wall-clock ms of the last effective cure dose for {@code diseaseId}; 0 if none. */
+    public long getLastDoseMs(String diseaseId) {
+        return lastDoseMs.getOrDefault(diseaseId, 0L);
+    }
+
+    /** Record an effective cure dose for {@code diseaseId} at {@code nowMs}. */
+    public void setLastDoseMs(String diseaseId, long nowMs) {
+        lastDoseMs.put(diseaseId, nowMs);
     }
 
     @Override

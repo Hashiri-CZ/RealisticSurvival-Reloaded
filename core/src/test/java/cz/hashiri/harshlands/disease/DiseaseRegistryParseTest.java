@@ -100,4 +100,29 @@ class DiseaseRegistryParseTest {
             YamlConfiguration.loadConfiguration(new StringReader(yaml)).getConfigurationSection("Diseases")).get(0);
         assertEquals("", d.cureItemId());
     }
+
+    @Test void cure_mode_defaults_to_clear_with_zero_cooldown() {
+        Disease d = DiseaseRegistry.parse(cfg().getConfigurationSection("Diseases")).get(0);
+        assertEquals(cz.hashiri.harshlands.disease.model.CureMode.CLEAR, d.cureMode());
+        assertEquals(0L, d.cureDoseCooldownTicks());
+    }
+
+    @Test void parses_regress_cure_mode_and_dose_cooldown() {
+        String yaml = String.join("\n",
+            "Diseases:",
+            "  wasting_blight:",
+            "    Enabled: true",
+            "    DisplayName: 'Wasting Blight'",
+            "    Cure:",
+            "      ItemId: antiviral_regimen",
+            "      Mode: REGRESS_ONE_STAGE",
+            "      DoseCooldownTicks: 1200",
+            "    Stages: []");
+        Disease d = DiseaseRegistry.parse(
+            org.bukkit.configuration.file.YamlConfiguration
+                .loadConfiguration(new java.io.StringReader(yaml))
+                .getConfigurationSection("Diseases")).get(0);
+        assertEquals(cz.hashiri.harshlands.disease.model.CureMode.REGRESS_ONE_STAGE, d.cureMode());
+        assertEquals(1200L, d.cureDoseCooldownTicks());
+    }
 }

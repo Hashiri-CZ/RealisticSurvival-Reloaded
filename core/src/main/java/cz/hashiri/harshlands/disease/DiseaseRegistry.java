@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.disease;
 
+import cz.hashiri.harshlands.disease.model.CureMode;
 import cz.hashiri.harshlands.disease.model.Disease;
 import cz.hashiri.harshlands.disease.model.DiseaseStage;
 import cz.hashiri.harshlands.disease.model.SymptomSpec;
@@ -66,6 +67,8 @@ public final class DiseaseRegistry {
             long incubation = ds.getLong("IncubationTicks", 0L);
             long immunity = ds.getLong("Immunity.DurationTicks", 0L);
             String cureItem = ds.getString("Cure.ItemId", "");
+            CureMode cureMode = CureMode.fromConfig(ds.getString("Cure.Mode", "CLEAR"));
+            long cureDoseCooldown = ds.getLong("Cure.DoseCooldownTicks", 0L);
             String mitigation = ds.getString("Mitigation.Type", "");
 
             List<DiseaseStage> stages = new ArrayList<>();
@@ -90,7 +93,8 @@ public final class DiseaseRegistry {
 
             // enabled is always true here: disabled diseases were filtered out above.
             result.add(new Disease(id, displayName, true, incubation, immunity,
-                    cureItem, mitigation, Collections.unmodifiableList(stages)));
+                    cureItem, mitigation, cureMode, cureDoseCooldown,
+                    Collections.unmodifiableList(stages)));
         }
         return result;
     }
