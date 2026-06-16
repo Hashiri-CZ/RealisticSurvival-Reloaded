@@ -22,8 +22,9 @@ import org.bukkit.entity.Player;
 
 /**
  * Periodic hunger loss (Dysentery cramps). Each check drains the player's food level by a
- * config {@code Amount} (default 1), floored at 0. No clear() — natural eating restores it;
- * follows {@code DamageOverTimeHandler}'s apply-only shape (SymptomHandler.clear() is a no-op default).
+ * config {@code Amount}, floored at 0; {@code Amount} defaults to 1 when absent (and the handler
+ * is a no-op for {@code Amount <= 0}). No clear() — natural eating restores it; follows
+ * {@code DamageOverTimeHandler}'s apply-only shape (SymptomHandler.clear() is a no-op default).
  */
 public final class HungerDrainHandler implements SymptomHandler {
     @Override
