@@ -43,3 +43,16 @@ antiviral_regimen:
     - "&7Right-click while afflicted to treat Wasting Blight."
     - "&7A slow cure: one dose per stage, with rest between doses."
   ItemModel: "DEFAULT"
+disinfectant_bandage:
+  Material: "PAPER"
+  DisplayName: "&fDisinfectant & Bandage"
+  Lore:
+    - "&7Right-click while afflicted to treat a Festering Wound."
+  ItemModel: "DEFAULT"
+antitoxin:
+  Material: "GHAST_TEAR"
+  DisplayName: "&fAntitoxin"
+  Lore:
+    - "&7Right-click while afflicted to treat Tetanus."
+    - "&7Acts fast — cure before convulsions set in."
+  ItemModel: "DEFAULT"

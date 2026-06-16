@@ -23,6 +23,7 @@ import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.ModuleItems;
 import cz.hashiri.harshlands.data.ModuleRecipes;
 import cz.hashiri.harshlands.data.disease.DataModule;
+import cz.hashiri.harshlands.disease.mitigation.InjuryHealMitigation;
 import cz.hashiri.harshlands.disease.mitigation.Mitigation;
 import cz.hashiri.harshlands.disease.mitigation.TanWarmDryMitigation;
 import cz.hashiri.harshlands.disease.model.Disease;
@@ -35,6 +36,7 @@ import cz.hashiri.harshlands.disease.symptom.builtin.DamageOverTimeHandler;
 import cz.hashiri.harshlands.disease.symptom.builtin.PlaySoundHandler;
 import cz.hashiri.harshlands.disease.symptom.builtin.PotionEffectHandler;
 import cz.hashiri.harshlands.disease.mitigation.NoExposureMitigation;
+import cz.hashiri.harshlands.disease.symptom.special.BlockEatingHandler;
 import cz.hashiri.harshlands.disease.symptom.special.BlockNaturalRegenHandler;
 import cz.hashiri.harshlands.disease.symptom.special.ImmuneSuppressionHandler;
 import cz.hashiri.harshlands.disease.symptom.special.ItemUseFailureHandler;
@@ -44,7 +46,11 @@ import cz.hashiri.harshlands.disease.trigger.ColdExposureTrigger;
 import cz.hashiri.harshlands.disease.trigger.DiseaseTrigger;
 import cz.hashiri.harshlands.disease.trigger.EnderExposureTrigger;
 import cz.hashiri.harshlands.disease.trigger.InfectedItemTrigger;
+import cz.hashiri.harshlands.disease.trigger.LimbInjuryTrigger;
+import cz.hashiri.harshlands.disease.trigger.LimbStateReader;
+import cz.hashiri.harshlands.disease.trigger.PapiLimbStateReader;
 import cz.hashiri.harshlands.disease.trigger.RadiationTrigger;
+import cz.hashiri.harshlands.disease.trigger.RustySourceTrigger;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.Bukkit;
@@ -117,6 +123,12 @@ public final class DiseaseModule extends HLModule {
         handlers.register("RandomTeleport", new RandomTeleportHandler());
         handlers.register("ImmuneSuppression", new ImmuneSuppressionHandler(ttlMs));
 
+        BlockEatingHandler blockEating = new BlockEatingHandler(symptomTracker, ttlMs);
+        handlers.register("BlockEating", blockEating);
+
+        // Shared limb-state read for Festering Wound's trigger + mitigation (PlaceholderAPI-backed).
+        LimbStateReader limbReader = new PapiLimbStateReader();
+
         ConfigurationSection diseases = cfg.getConfigurationSection("Diseases");
         if (diseases != null) {
             for (String id : diseases.getKeys(false)) {
@@ -124,6 +136,11 @@ public final class DiseaseModule extends HLModule {
                 if ("TAN_WARM_DRY".equals(type)) {
                     double atLeast = diseases.getDouble(id + ".Mitigation.TemperatureAtLeast", 12.0);
                     mitigations.put(id, new TanWarmDryMitigation(atLeast));
+                }
+                if ("INJURY_HEAL".equals(type)) {
+                    mitigations.put(id, new InjuryHealMitigation(
+                        LimbInjuryTrigger.parseStates(diseases.getStringList(id + ".Mitigation.InjuredStates")),
+                        limbReader));
                 }
             }
         }
@@ -170,6 +187,29 @@ public final class DiseaseModule extends HLModule {
             }
         }
 
+        ConfigurationSection injury = cfg.getConfigurationSection("Triggers.Injury");
+        if (injury != null) {
+            ConfigurationSection limb = injury.getConfigurationSection("LimbInjury");
+            if (limb != null) {
+                triggers.add(new LimbInjuryTrigger(
+                    limb.getString("Disease", ""),
+                    LimbInjuryTrigger.parseStates(limb.getStringList("InjuredStates")),
+                    limb.getDouble("ChancePerCheck", 0.03),
+                    limbReader));
+            }
+            ConfigurationSection rusty = injury.getConfigurationSection("RustySource");
+            if (rusty != null) {
+                RustySourceTrigger rustyTrigger = new RustySourceTrigger(
+                    rusty.getString("Disease", ""),
+                    Set.copyOf(rusty.getStringList("RustyCauses")),
+                    toMaterialSet(rusty.getStringList("RustyMaterials")),
+                    rusty.getDouble("ChancePerCheck", 0.30),
+                    ttlMs);
+                triggers.add(rustyTrigger);
+                specialListeners.add(rustyTrigger);
+            }
+        }
+
         // NO_EXPOSURE mitigations wrap the disease's own triggers; build after triggers exist.
         if (diseases != null) {
             for (String id : diseases.getKeys(false)) {
@@ -198,6 +238,7 @@ public final class DiseaseModule extends HLModule {
 
         specialListeners.add(itemUseFailure);
         specialListeners.add(blockRegen);
+        specialListeners.add(blockEating);
         for (Listener l : specialListeners) {
             Bukkit.getPluginManager().registerEvents(l, plugin);
         }

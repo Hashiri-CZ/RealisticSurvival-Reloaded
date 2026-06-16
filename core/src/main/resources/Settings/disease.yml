@@ -145,6 +145,59 @@ Diseases:
           - Handler: PotionEffect
             Params: { Effect: WEAKNESS, Amplifier: 1, DurationTicks: 120 }
 
+  festering_wound:
+    Enabled: true
+    DisplayName: "Festering Wound"
+    IncubationTicks: 1200          # 60s before stage 1
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: disinfectant_bandage # Mode omitted -> CLEAR
+    Mitigation:
+      Type: INJURY_HEAL
+      InjuredStates: [DAMAGED, BROKEN]   # MUST match Triggers.Injury.LimbInjury.InjuredStates
+    Stages:
+      - DurationTicks: 2400        # stage 1: inflammation (mild slowness)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: SLOWNESS, Amplifier: 0, DurationTicks: 100 }
+      - DurationTicks: 2400        # stage 2: infection (poison + mobility loss)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: POISON, Amplifier: 0, DurationTicks: 100 }
+          - Handler: PotionEffect
+            Params: { Effect: SLOWNESS, Amplifier: 0, DurationTicks: 100 }
+      - DurationTicks: 0           # stage 3: sepsis (strong poison + lethal DoT)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: POISON, Amplifier: 1, DurationTicks: 100 }
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
+  tetanus:
+    Enabled: true
+    DisplayName: "Tetanus"
+    IncubationTicks: 1200
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: antitoxin            # Mode omitted -> CLEAR; balanced as time-sensitive
+    Stages:
+      - DurationTicks: 2400        # stage 1: stiffness (intermittent slowness)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: SLOWNESS, Amplifier: 0, DurationTicks: 100 }
+      - DurationTicks: 2400        # stage 2: locked jaw (cannot eat)
+        Symptoms:
+          - Handler: BlockEating
+            Params: { Chance: 1.0 }
+      - DurationTicks: 0           # stage 3: convulsions (weakness + lethal DoT)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 100 }
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
 Triggers:
   ColdExposure:
     Disease: respiratory_infection
@@ -181,3 +234,20 @@ Triggers:
       Disease: wasting_blight
       RequireDiseasedTag: true
       ChancePerCheck: 0.25
+  Injury:
+    LimbInjury:
+      Disease: festering_wound
+      InjuredStates: [DAMAGED, BROKEN]   # MUST match festering_wound Mitigation.InjuredStates
+      ChancePerCheck: 0.03
+    RustySource:
+      Disease: tetanus
+      RustyCauses:                       # org.bukkit EntityDamageEvent.DamageCause names
+        - CONTACT                        # cactus / sweet-berry bush / pointed dripstone
+      RustyMaterials:                    # damaging block, or damager's held item
+        - IRON_BARS
+        - IRON_DOOR
+        - IRON_TRAPDOOR
+        - ANVIL
+        - CHIPPED_ANVIL
+        - DAMAGED_ANVIL
+      ChancePerCheck: 0.10            # placeholder; incidental-contact source — final tuning in Plan 4 balance pass
