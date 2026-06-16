@@ -42,3 +42,21 @@ anti_rad_tablets:
     - "|GHAST_TEAR|"
     - "REDSTONE|GLOWSTONE_DUST|REDSTONE"
     - "|GHAST_TEAR|"
+antibiotics:
+  Type: "Shaped"
+  Result:
+    Item: "antibiotics"
+    Amount: 1
+  Ingredients:
+    - "|BROWN_MUSHROOM|"
+    - "SUGAR|GLASS_BOTTLE|SUGAR"
+    - "|RED_MUSHROOM|"
+antiviral_regimen:
+  Type: "Shaped"
+  Result:
+    Item: "antiviral_regimen"
+    Amount: 1
+  Ingredients:
+    - "|GHAST_TEAR|"
+    - "FERMENTED_SPIDER_EYE|GLASS_BOTTLE|FERMENTED_SPIDER_EYE"
+    - "|GOLDEN_CARROT|"

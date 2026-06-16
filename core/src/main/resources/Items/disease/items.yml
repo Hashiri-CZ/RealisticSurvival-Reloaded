@@ -30,3 +30,16 @@ anti_rad_tablets:
   Lore:
     - "&7Right-click while afflicted to treat Crimson."
   ItemModel: "DEFAULT"
+antibiotics:
+  Material: "GLISTERING_MELON_SLICE"
+  DisplayName: "&fAntibiotics"
+  Lore:
+    - "&7Right-click while ill to treat Septicemia."
+  ItemModel: "DEFAULT"
+antiviral_regimen:
+  Material: "FERMENTED_SPIDER_EYE"
+  DisplayName: "&fAntiviral Regimen"
+  Lore:
+    - "&7Right-click while afflicted to treat Wasting Blight."
+    - "&7A slow cure: one dose per stage, with rest between doses."
+  ItemModel: "DEFAULT"
