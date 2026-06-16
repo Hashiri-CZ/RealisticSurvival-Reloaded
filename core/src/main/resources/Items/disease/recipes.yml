@@ -60,3 +60,21 @@ antiviral_regimen:
     - "|GHAST_TEAR|"
     - "FERMENTED_SPIDER_EYE|GLASS_BOTTLE|FERMENTED_SPIDER_EYE"
     - "|GOLDEN_CARROT|"
+disinfectant_bandage:
+  Type: "Shaped"
+  Result:
+    Item: "disinfectant_bandage"
+    Amount: 1
+  Ingredients:
+    - "|PAPER|"
+    - "STRING|HONEY_BOTTLE|STRING"
+    - "|PAPER|"
+antitoxin:
+  Type: "Shaped"
+  Result:
+    Item: "antitoxin"
+    Amount: 1
+  Ingredients:
+    - "|GHAST_TEAR|"
+    - "FERMENTED_SPIDER_EYE|GLASS_BOTTLE|FERMENTED_SPIDER_EYE"
+    - "|SPIDER_EYE|"
