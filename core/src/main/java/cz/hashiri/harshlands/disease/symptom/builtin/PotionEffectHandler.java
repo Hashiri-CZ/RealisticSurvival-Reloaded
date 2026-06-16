@@ -26,7 +26,7 @@ public final class PotionEffectHandler implements SymptomHandler {
     @Override
     public void apply(Player player, SymptomContext ctx) {
         if (ctx.params() == null) return;
-        PotionEffectType type = resolve(ctx.params().getString("Effect", ""));
+        PotionEffectType type = PotionEffects.resolve(ctx.params().getString("Effect", ""));
         if (type == null) return;
         int amplifier = ctx.params().getInt("Amplifier", 0);
         int duration = ctx.params().getInt("DurationTicks", 100);
@@ -36,12 +36,7 @@ public final class PotionEffectHandler implements SymptomHandler {
     @Override
     public void clear(Player player, SymptomContext ctx) {
         if (ctx.params() == null) return;
-        PotionEffectType type = resolve(ctx.params().getString("Effect", ""));
+        PotionEffectType type = PotionEffects.resolve(ctx.params().getString("Effect", ""));
         if (type != null) player.removePotionEffect(type);
-    }
-
-    private static PotionEffectType resolve(String name) {
-        if (name == null || name.isEmpty()) return null;
-        return PotionEffectType.getByName(name.toUpperCase());
     }
 }
