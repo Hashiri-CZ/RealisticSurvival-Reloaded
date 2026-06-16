@@ -20,6 +20,7 @@ class UnpurifiedWaterTriggerTest {
         UUID p = UUID.randomUUID();
         t.markPending(p, 1000L);
         assertFalse(t.takePending(p, 1000L));
+        assertFalse(t.takePending(p, 1500L)); // entry consumed even when expired
     }
     @Test void unknown_player_has_no_pending() {
         assertFalse(trigger().takePending(UUID.randomUUID(), 0L));
