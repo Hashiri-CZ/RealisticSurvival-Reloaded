@@ -56,3 +56,9 @@ antitoxin:
     - "&7Right-click while afflicted to treat Tetanus."
     - "&7Acts fast — cure before convulsions set in."
   ItemModel: "DEFAULT"
+rehydration_salts:
+  Material: "SUGAR"
+  DisplayName: "&fRehydration Salts"
+  Lore:
+    - "&7Right-click while afflicted to treat Dysentery."
+  ItemModel: "DEFAULT"
