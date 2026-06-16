@@ -28,6 +28,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -56,10 +58,21 @@ public final class RustySourceTrigger implements DiseaseTrigger, Listener {
     public RustySourceTrigger(String diseaseId, Set<String> rustyCauses, Set<Material> rustyMaterials,
                               double chancePerCheck, long ttlMs) {
         this.diseaseId = diseaseId;
-        this.rustyCauses = rustyCauses;
+        this.rustyCauses = normalizeCauses(rustyCauses);
         this.rustyMaterials = rustyMaterials;
         this.chancePerCheck = chancePerCheck;
         this.ttlMs = ttlMs;
+    }
+
+    /** Normalize config cause names to upper case so they match {@code DamageCause.name()}. */
+    private static Set<String> normalizeCauses(Set<String> causes) {
+        Set<String> out = new HashSet<>();
+        if (causes != null) {
+            for (String c : causes) {
+                if (c != null) out.add(c.trim().toUpperCase(Locale.ROOT));
+            }
+        }
+        return out;
     }
 
     @Override public String diseaseId() { return diseaseId; }
