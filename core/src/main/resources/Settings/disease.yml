@@ -250,4 +250,4 @@ Triggers:
         - ANVIL
         - CHIPPED_ANVIL
         - DAMAGED_ANVIL
-      ChancePerCheck: 0.30
+      ChancePerCheck: 0.10            # placeholder; incidental-contact source — final tuning in Plan 4 balance pass
