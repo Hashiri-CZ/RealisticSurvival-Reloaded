@@ -18,3 +18,15 @@ cold_remedy:
   Lore:
     - "&7Right-click while ill to treat a Respiratory Infection."
   ItemModel: "DEFAULT"
+stabilizing_tonic:
+  Material: "DRAGON_BREATH"
+  DisplayName: "&fStabilizing Tonic"
+  Lore:
+    - "&7Right-click while afflicted to treat Endersion."
+  ItemModel: "DEFAULT"
+anti_rad_tablets:
+  Material: "GLOWSTONE_DUST"
+  DisplayName: "&fAnti-Rad Tablets"
+  Lore:
+    - "&7Right-click while afflicted to treat Crimson."
+  ItemModel: "DEFAULT"

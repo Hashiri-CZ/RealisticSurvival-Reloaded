@@ -24,3 +24,21 @@ cold_remedy:
     - "|BROWN_MUSHROOM|"
     - "HONEY_BOTTLE|SUGAR|HONEY_BOTTLE"
     - "|BROWN_MUSHROOM|"
+stabilizing_tonic:
+  Type: "Shaped"
+  Result:
+    Item: "stabilizing_tonic"
+    Amount: 1
+  Ingredients:
+    - "|CHORUS_FRUIT|"
+    - "SUGAR|GLASS_BOTTLE|SUGAR"
+    - "|CHORUS_FRUIT|"
+anti_rad_tablets:
+  Type: "Shaped"
+  Result:
+    Item: "anti_rad_tablets"
+    Amount: 1
+  Ingredients:
+    - "|GHAST_TEAR|"
+    - "REDSTONE|GLOWSTONE_DUST|REDSTONE"
+    - "|GHAST_TEAR|"

@@ -27,13 +27,69 @@ Diseases:
       - DurationTicks: 2400        # stage 2 -> stage 3
         Symptoms:
           - Handler: PotionEffect
-            Params: { Effect: SLOW, Amplifier: 0, DurationTicks: 100 }
+            Params: { Effect: SLOWNESS, Amplifier: 0, DurationTicks: 100 }
           - Handler: PotionEffect
-            Params: { Effect: SLOW_DIGGING, Amplifier: 0, DurationTicks: 100 }
+            Params: { Effect: MINING_FATIGUE, Amplifier: 0, DurationTicks: 100 }
       - DurationTicks: 0           # stage 3: terminal
         Symptoms:
           - Handler: PotionEffect
             Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 100 }
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
+  endersion:
+    Enabled: true
+    DisplayName: "Endersion"
+    IncubationTicks: 1200
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: stabilizing_tonic
+    Mitigation:
+      Type: NO_EXPOSURE
+    Stages:
+      - DurationTicks: 2400        # stage 1: occasional item-use failure
+        Symptoms:
+          - Handler: ItemUseFailure
+            Params: { Chance: 0.15 }
+      - DurationTicks: 2400        # stage 2: frequent failure + nausea
+        Symptoms:
+          - Handler: ItemUseFailure
+            Params: { Chance: 0.40 }
+          - Handler: PotionEffect
+            Params: { Effect: NAUSEA, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 0           # stage 3: random teleports + failure (non-lethal)
+        Symptoms:
+          - Handler: ItemUseFailure
+            Params: { Chance: 0.40 }
+          - Handler: RandomTeleport
+            Params: { Chance: 0.20, MaxRadius: 6 }
+
+  crimson:
+    Enabled: true
+    DisplayName: "Crimson"
+    IncubationTicks: 1200
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: anti_rad_tablets
+    Mitigation:
+      Type: NO_EXPOSURE
+    Stages:
+      - DurationTicks: 2400        # stage 1: nausea
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: NAUSEA, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 2400        # stage 2: blocks natural regen
+        Symptoms:
+          - Handler: BlockNaturalRegen
+            Params: {}
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 0           # stage 3: withering DoT (lethal-if-ignored)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WITHER, Amplifier: 0, DurationTicks: 120 }
           - Handler: DamageOverTime
             Params: { Amount: 1.0 }
 
@@ -42,4 +98,20 @@ Triggers:
     Disease: respiratory_infection
     TemperatureBelow: 4.0          # TAN temperature units
     RequireWet: true
+    ChancePerCheck: 0.02
+  EnderExposure:
+    Disease: endersion
+    EnderItems:
+      - ENDER_PEARL
+      - ENDER_EYE
+      - ENDER_CHEST
+    TheEndCounts: true
+    ChancePerCheck: 0.02
+  Radiation:
+    Disease: crimson
+    RadioactiveBlocks:
+      - MAGMA_BLOCK
+      - SCULK
+      - SCULK_CATALYST
+    ScanRadius: 2
     ChancePerCheck: 0.02
