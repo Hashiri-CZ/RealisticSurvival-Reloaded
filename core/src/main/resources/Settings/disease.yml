@@ -93,6 +93,58 @@ Diseases:
           - Handler: DamageOverTime
             Params: { Amount: 1.0 }
 
+  septicemia:
+    Enabled: true
+    DisplayName: "Septicemia"
+    IncubationTicks: 600           # 30s before stage 1 (acute onset)
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: antibiotics          # Mode omitted -> CLEAR (single-dose)
+    Stages:
+      - DurationTicks: 2400        # stage 1: nausea
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: NAUSEA, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 2400        # stage 2: poison pulses
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: POISON, Amplifier: 0, DurationTicks: 100 }
+      - DurationTicks: 0           # stage 3: strong poison + lethal DoT
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: POISON, Amplifier: 1, DurationTicks: 100 }
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
+  wasting_blight:
+    Enabled: true
+    DisplayName: "Wasting Blight"
+    IncubationTicks: 2400          # 2 min (insidious onset)
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: antiviral_regimen
+      Mode: REGRESS_ONE_STAGE
+      DoseCooldownTicks: 1200      # 60s between effective doses
+    Stages:
+      - DurationTicks: 4800        # stage 1: fatigue
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: MINING_FATIGUE, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 4800        # stage 2: immune suppression + weakness
+        Symptoms:
+          - Handler: ImmuneSuppression
+            Params: { Multiplier: 1.5 }
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 0           # stage 3: severe suppression + strong weakness (indirect lethality)
+        Symptoms:
+          - Handler: ImmuneSuppression
+            Params: { Multiplier: 2.0 }
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 1, DurationTicks: 120 }
+
 Triggers:
   ColdExposure:
     Disease: respiratory_infection
@@ -115,3 +167,17 @@ Triggers:
       - SCULK_CATALYST
     ScanRadius: 2
     ChancePerCheck: 0.02
+  InfectedItem:
+    Septicemia:
+      Disease: septicemia
+      InfectedMaterials:
+        - ROTTEN_FLESH
+        - PUFFERFISH
+        - POISONOUS_POTATO
+        - SPIDER_EYE
+        - CHICKEN              # raw chicken
+      ChancePerCheck: 0.35
+    WastingBlight:
+      Disease: wasting_blight
+      RequireDiseasedTag: true
+      ChancePerCheck: 0.25
