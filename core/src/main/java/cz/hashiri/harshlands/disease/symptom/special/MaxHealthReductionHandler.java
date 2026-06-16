@@ -24,6 +24,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.util.ArrayList;
@@ -35,7 +38,7 @@ import java.util.ArrayList;
  * the original value. {@code apply} is idempotent (removes any prior copy before adding), so
  * re-applying every check never stacks. {@code Hearts} defaults to 2.0 when absent.
  */
-public final class MaxHealthReductionHandler implements SymptomHandler {
+public final class MaxHealthReductionHandler implements SymptomHandler, Listener {
 
     private static final String KEY_NAME = "disease_maxhealth_reduction";
 
@@ -48,12 +51,26 @@ public final class MaxHealthReductionHandler implements SymptomHandler {
         inst.addModifier(new AttributeModifier(key(), modifierAmount(hearts),
             AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
         double max = inst.getValue();
-        if (player.getHealth() > max) player.setHealth(max);
+        // Malnutrition is non-lethal: never clamp to a non-positive max (a misconfigured Hearts
+        // could otherwise drive effective max <= 0 and setHealth(0) would kill the player).
+        if (max > 0 && player.getHealth() > max) player.setHealth(max);
     }
 
     @Override
     public void clear(Player player, SymptomContext ctx) {
         AttributeInstance inst = player.getAttribute(Attribute.MAX_HEALTH);
+        if (inst != null) removeOurModifier(inst);
+    }
+
+    /**
+     * On join, strip any orphaned reduction modifier. Attribute modifiers persist on the entity
+     * across disconnect (unlike potion effects), so a crash or data desync could leave one with
+     * no active infection. If the player is still infected at the malnutrition stage, the next
+     * progression check re-applies it (apply() is idempotent), so unconditional strip is safe.
+     */
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        AttributeInstance inst = event.getPlayer().getAttribute(Attribute.MAX_HEALTH);
         if (inst != null) removeOurModifier(inst);
     }
 
