@@ -16,6 +16,8 @@ class DietMitigationTest {
         assertTrue(new DietMitigation(BAD, fed).isActive(null));
     }
     @Test void mitigating_when_normal() {
+        // NORMAL is also the value NutritionTierReader returns when FoodExpansion is absent,
+        // so this also locks in the graceful-degradation contract: no FoodExpansion -> well-fed -> mitigating.
         NutrientTierReader normal = p -> NutrientTier.NORMAL;
         assertTrue(new DietMitigation(BAD, normal).isActive(null));
     }
