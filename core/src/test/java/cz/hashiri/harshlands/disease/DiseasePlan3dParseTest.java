@@ -32,6 +32,8 @@ class DiseasePlan3dParseTest {
         "      - DurationTicks: 0",
         "        Symptoms:",
         "          - Handler: PotionEffect",
+        "            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }",
+        "          - Handler: PotionEffect",
         "            Params: { Effect: MINING_FATIGUE, Amplifier: 0, DurationTicks: 120 }",
         "  sybok:",
         "    Enabled: true",
@@ -74,6 +76,8 @@ class DiseasePlan3dParseTest {
         assertEquals("NO_EXPOSURE", d.mitigationType());
         assertEquals(3, d.maxStage());
         assertEquals("Jitters", d.stage(1).symptoms().get(0).handlerName());
+        assertEquals(2, d.stage(3).symptoms().size());
+        assertEquals("MINING_FATIGUE", d.stage(3).symptoms().get(1).params().getString("Effect"));
     }
 
     @Test void sybok_fields() {
