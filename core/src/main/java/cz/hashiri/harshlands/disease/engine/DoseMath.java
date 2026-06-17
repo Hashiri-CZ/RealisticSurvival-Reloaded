@@ -36,15 +36,6 @@ public final class DoseMath {
      * @param cooldownMs   minimum ms between effective doses (0 = no cooldown)
      * @param nowMs        current wall-clock ms
      */
-    /**
-     * Pure: may a CLEAR_BEFORE_TERMINAL cure clear an infection at {@code currentStage}? True for
-     * incubation (0) and all pre-terminal stages; false once the infection reaches its terminal
-     * (final) stage. {@code maxStage} is the disease's stage count (terminal stage index, 1-based).
-     */
-    public static boolean clearableBeforeTerminal(int currentStage, int maxStage) {
-        return currentStage < maxStage;
-    }
-
     public static DoseOutcome applyDose(int currentStage, long lastDoseMs, long cooldownMs, long nowMs) {
         if (cooldownMs > 0L && nowMs < lastDoseMs + cooldownMs) {
             return new DoseOutcome(true, currentStage, false);
@@ -54,5 +45,14 @@ public final class DoseMath {
             return new DoseOutcome(false, 0, true);
         }
         return new DoseOutcome(false, newStage, false);
+    }
+
+    /**
+     * Pure: may a CLEAR_BEFORE_TERMINAL cure clear an infection at {@code currentStage}? True for
+     * incubation (0) and all pre-terminal stages; false once the infection reaches its terminal
+     * (final) stage. {@code maxStage} is the disease's stage count (terminal stage index, 1-based).
+     */
+    public static boolean clearableBeforeTerminal(int currentStage, int maxStage) {
+        return currentStage < maxStage;
     }
 }
