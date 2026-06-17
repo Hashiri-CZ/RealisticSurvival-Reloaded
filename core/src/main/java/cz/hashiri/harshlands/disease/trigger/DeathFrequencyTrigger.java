@@ -41,6 +41,9 @@ public final class DeathFrequencyTrigger implements DiseaseTrigger, Listener {
     private final long windowMs;
     private final double chancePerCheck;
 
+    // Main-thread only: onDeath (sync PlayerDeathEvent) and chanceFor (sync progression task) both
+    // run on the server thread, so the inner ArrayLists need no extra synchronization. The
+    // ConcurrentHashMap matches the sibling triggers' per-player map convention.
     private final Map<UUID, List<Long>> deaths = new ConcurrentHashMap<>();
 
     public DeathFrequencyTrigger(String diseaseId, int deathThreshold, long windowMs, double chancePerCheck) {
