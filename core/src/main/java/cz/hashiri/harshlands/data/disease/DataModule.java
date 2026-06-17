@@ -43,6 +43,9 @@ public class DataModule implements HLDataModule {
     // per disease, for REGRESS_ONE_STAGE multi-dose cures.
     private final Map<String, Long> lastDoseMs = new ConcurrentHashMap<>();
 
+    // Persisted: cumulative count of diseases this player has ever contracted (drives Sybok accumulation).
+    private volatile long contractionCount = 0L;
+
     public DataModule(org.bukkit.entity.Player player) {
         this.id = player.getUniqueId();
         this.database = HLPlugin.getPlugin().getDatabase();
@@ -102,6 +105,12 @@ public class DataModule implements HLDataModule {
         lastDoseMs.put(diseaseId, nowMs);
     }
 
+    /** Cumulative number of diseases ever contracted by this player (persisted). */
+    public long getContractionCount() { return contractionCount; }
+
+    /** Increment the cumulative-contraction counter (called once per successful contraction). */
+    public void incrementContractionCount() { contractionCount++; dirty = true; }
+
     @Override
     public void retrieveData() {
         java.util.concurrent.CompletableFuture<Void> infectionsLoad =
@@ -124,7 +133,10 @@ public class DataModule implements HLDataModule {
                 immunity.putAll(fresh);
             });
 
-        java.util.concurrent.CompletableFuture.allOf(infectionsLoad, immunityLoad)
+        java.util.concurrent.CompletableFuture<Void> exposureLoad =
+            database.loadDiseaseExposure(id).thenAccept(count -> contractionCount = count);
+
+        java.util.concurrent.CompletableFuture.allOf(infectionsLoad, immunityLoad, exposureLoad)
             .thenRun(() -> dirty = false)
             .exceptionally(ex -> {
                 HLPlugin.getPlugin().getLogger().warning(
@@ -144,5 +156,6 @@ public class DataModule implements HLDataModule {
         }
         database.saveDiseaseInfections(id, rows);
         database.saveDiseaseImmunity(id, new HashMap<>(immunity));
+        database.saveDiseaseExposure(id, contractionCount);
     }
 }
