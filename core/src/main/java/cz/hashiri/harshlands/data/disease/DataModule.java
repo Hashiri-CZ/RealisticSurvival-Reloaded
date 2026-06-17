@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DataModule implements HLDataModule {
 
@@ -44,7 +45,7 @@ public class DataModule implements HLDataModule {
     private final Map<String, Long> lastDoseMs = new ConcurrentHashMap<>();
 
     // Persisted: cumulative count of diseases this player has ever contracted (drives Sybok accumulation).
-    private volatile long contractionCount = 0L;
+    private final AtomicLong contractionCount = new AtomicLong(0L);
 
     public DataModule(org.bukkit.entity.Player player) {
         this.id = player.getUniqueId();
@@ -106,10 +107,10 @@ public class DataModule implements HLDataModule {
     }
 
     /** Cumulative number of diseases ever contracted by this player (persisted). */
-    public long getContractionCount() { return contractionCount; }
+    public long getContractionCount() { return contractionCount.get(); }
 
     /** Increment the cumulative-contraction counter (called once per successful contraction). */
-    public void incrementContractionCount() { contractionCount++; dirty = true; }
+    public void incrementContractionCount() { contractionCount.incrementAndGet(); dirty = true; }
 
     @Override
     public void retrieveData() {
@@ -134,7 +135,7 @@ public class DataModule implements HLDataModule {
             });
 
         java.util.concurrent.CompletableFuture<Void> exposureLoad =
-            database.loadDiseaseExposure(id).thenAccept(count -> contractionCount = count);
+            database.loadDiseaseExposure(id).thenAccept(contractionCount::set);
 
         java.util.concurrent.CompletableFuture.allOf(infectionsLoad, immunityLoad, exposureLoad)
             .thenRun(() -> dirty = false)
@@ -156,6 +157,6 @@ public class DataModule implements HLDataModule {
         }
         database.saveDiseaseInfections(id, rows);
         database.saveDiseaseImmunity(id, new HashMap<>(immunity));
-        database.saveDiseaseExposure(id, contractionCount);
+        database.saveDiseaseExposure(id, contractionCount.get());
     }
 }
