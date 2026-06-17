@@ -254,6 +254,52 @@ Diseases:
           - Handler: DamageOverTime
             Params: { Amount: 1.0 }
 
+  battle_trauma:
+    Enabled: true
+    DisplayName: "Battle Trauma"
+    IncubationTicks: 600           # 30s before stage 1
+    Immunity:
+      DurationTicks: 0
+    # No cure item — fades on its own once deaths stop (NO_EXPOSURE regress).
+    Mitigation:
+      Type: NO_EXPOSURE
+    Stages:
+      - DurationTicks: 4800        # stage 1: jitters (occasional nausea)
+        Symptoms:
+          - Handler: Jitters
+            Params: { Chance: 0.3, DurationTicks: 60 }
+      - DurationTicks: 4800        # stage 2: attack penalty (weakness); Fear cross-link in Plan 4
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 0           # stage 3: panic (weakness + mining fatigue)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }
+          - Handler: PotionEffect
+            Params: { Effect: MINING_FATIGUE, Amplifier: 0, DurationTicks: 120 }
+
+  sybok:
+    Enabled: true
+    DisplayName: "Sybok"
+    IncubationTicks: 2400          # 2 min latent before stage 1
+    Immunity:
+      DurationTicks: 24000         # 20 min post-cure reprieve (the experimental treatment buys time)
+    Cure:
+      ItemId: experimental_treatment
+      Mode: CLEAR_BEFORE_TERMINAL  # only curable before the terminal stage
+    Stages:
+      - DurationTicks: 9600        # stage 1: latent (no symptoms, slow growth)
+        Symptoms: []
+      - DurationTicks: 9600        # stage 2: pain (intermittent weakness)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 0           # stage 3: chronic lethality (slow unavoidable DoT)
+        Symptoms:
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
 Triggers:
   ColdExposure:
     Disease: respiratory_infection
@@ -315,3 +361,12 @@ Triggers:
   UnpurifiedWater:
     Disease: dysentery
     ChancePerCheck: 0.25           # rolled once per check after a raw-water drink
+  DeathFrequency:
+    Disease: battle_trauma
+    DeathThreshold: 3              # deaths within the window to risk Battle Trauma
+    WindowTicks: 6000              # 5 min rolling window (converted to wall-clock ms)
+    ChancePerCheck: 0.5
+  Sybok:
+    Disease: sybok
+    ThresholdCount: 8              # cumulative disease contractions before Sybok risk
+    ChancePerCheck: 0.05
