@@ -87,3 +87,12 @@ rehydration_salts:
     - "|SUGAR|"
     - "GLASS_BOTTLE|MELON_SLICE|GLASS_BOTTLE"
     - "|SUGAR|"
+experimental_treatment:
+  Type: "Shaped"
+  Result:
+    Item: "experimental_treatment"
+    Amount: 1
+  Ingredients:
+    - "GHAST_TEAR|GOLDEN_APPLE|GHAST_TEAR"
+    - "FERMENTED_SPIDER_EYE|GLISTERING_MELON_SLICE|FERMENTED_SPIDER_EYE"
+    - "GHAST_TEAR|GOLDEN_APPLE|GHAST_TEAR"

@@ -46,4 +46,13 @@ public final class DoseMath {
         }
         return new DoseOutcome(false, newStage, false);
     }
+
+    /**
+     * Pure: may a CLEAR_BEFORE_TERMINAL cure clear an infection at {@code currentStage}? True for
+     * incubation (0) and all pre-terminal stages; false once the infection reaches its terminal
+     * (final) stage. {@code maxStage} is the disease's stage count (terminal stage index, 1-based).
+     */
+    public static boolean clearableBeforeTerminal(int currentStage, int maxStage) {
+        return currentStage < maxStage;
+    }
 }

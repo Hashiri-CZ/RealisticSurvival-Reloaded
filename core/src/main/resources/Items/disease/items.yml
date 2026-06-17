@@ -62,3 +62,10 @@ rehydration_salts:
   Lore:
     - "&7Right-click while afflicted to treat Dysentery."
   ItemModel: "DEFAULT"
+experimental_treatment:
+  Material: "NETHER_STAR"
+  DisplayName: "&fExperimental Treatment"
+  Lore:
+    - "&7Right-click to treat Sybok — but only"
+    - "&7before it reaches its terminal stage."
+  ItemModel: "DEFAULT"

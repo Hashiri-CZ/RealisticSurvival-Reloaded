@@ -58,6 +58,9 @@ import cz.hashiri.harshlands.disease.trigger.PapiLimbStateReader;
 import cz.hashiri.harshlands.disease.trigger.RadiationTrigger;
 import cz.hashiri.harshlands.disease.trigger.RustySourceTrigger;
 import cz.hashiri.harshlands.disease.trigger.UnpurifiedWaterTrigger;
+import cz.hashiri.harshlands.disease.symptom.special.JittersHandler;
+import cz.hashiri.harshlands.disease.trigger.DeathFrequencyTrigger;
+import cz.hashiri.harshlands.disease.trigger.SybokAccumulationTrigger;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.Bukkit;
@@ -118,6 +121,7 @@ public final class DiseaseModule extends HLModule {
         handlers.register("PlaySound", new PlaySoundHandler());
         handlers.register("DamageOverTime", new DamageOverTimeHandler());
         handlers.register("HungerDrain", new HungerDrainHandler());
+        handlers.register("Jitters", new JittersHandler());
 
         long interval = cfg.getLong("CheckIntervalTicks", 60L);
 
@@ -248,6 +252,25 @@ public final class DiseaseModule extends HLModule {
                 ttlMs);
             triggers.add(waterTrigger);
             specialListeners.add(waterTrigger);
+        }
+
+        ConfigurationSection deaths = cfg.getConfigurationSection("Triggers.DeathFrequency");
+        if (deaths != null) {
+            DeathFrequencyTrigger deathTrigger = new DeathFrequencyTrigger(
+                deaths.getString("Disease", ""),
+                deaths.getInt("DeathThreshold", 3),
+                deaths.getLong("WindowTicks", 6000L) * 50L,   // game ticks -> wall-clock ms
+                deaths.getDouble("ChancePerCheck", 0.5));
+            triggers.add(deathTrigger);
+            specialListeners.add(deathTrigger);
+        }
+
+        ConfigurationSection sybok = cfg.getConfigurationSection("Triggers.Sybok");
+        if (sybok != null) {
+            triggers.add(new SybokAccumulationTrigger(
+                sybok.getString("Disease", ""),
+                sybok.getLong("ThresholdCount", 8L),
+                sybok.getDouble("ChancePerCheck", 0.05)));
         }
 
         // NO_EXPOSURE mitigations wrap the disease's own triggers; build after triggers exist.

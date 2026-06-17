@@ -256,6 +256,10 @@ public class HLDatabase {
                 + "immune_until BIGINT NOT NULL,"
                 + "PRIMARY KEY (uuid, disease_id)"
                 + ")");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS hl_disease_exposure ("
+                + "uuid VARCHAR(36) PRIMARY KEY,"
+                + "contraction_count BIGINT NOT NULL"
+                + ")");
             startupInfo("Schema is ready.");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create tables: " + e.getMessage(), e);
@@ -1033,6 +1037,53 @@ public class HLDatabase {
                 }
             } catch (SQLException e) {
                 logger.warning("[HLDatabase] Failed to save disease immunity for " + uuid + ": " + e.getMessage());
+            }
+        });
+    }
+
+    public CompletableFuture<Long> loadDiseaseExposure(UUID uuid) {
+        return scheduler.supplyAsync(() -> {
+            String sql = "SELECT contraction_count FROM hl_disease_exposure WHERE uuid = ?";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return rs.getLong("contraction_count");
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to load disease exposure for " + uuid + ": " + e.getMessage());
+            }
+            return 0L;
+        });
+    }
+
+    public CompletableFuture<Void> saveDiseaseExposure(UUID uuid, long count) {
+        return scheduler.runAsync(() -> {
+            try (Connection conn = dataSource.getConnection()) {
+                conn.setAutoCommit(false);
+                try {
+                    try (PreparedStatement del = conn.prepareStatement("DELETE FROM hl_disease_exposure WHERE uuid = ?")) {
+                        del.setString(1, uuid.toString());
+                        del.executeUpdate();
+                    }
+                    if (count > 0) {
+                        // Plain INSERT after delete in the same transaction — no PK collision possible.
+                        try (PreparedStatement ps = conn.prepareStatement(
+                                "INSERT INTO hl_disease_exposure (uuid, contraction_count) VALUES (?, ?)")) {
+                            ps.setString(1, uuid.toString());
+                            ps.setLong(2, count);
+                            ps.executeUpdate();
+                        }
+                    }
+                    conn.commit();
+                } catch (SQLException e) {
+                    try { conn.rollback(); } catch (SQLException ignored) {}
+                    throw e;
+                } finally {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                logger.warning("[HLDatabase] Failed to save disease exposure for " + uuid + ": " + e.getMessage());
             }
         });
     }
