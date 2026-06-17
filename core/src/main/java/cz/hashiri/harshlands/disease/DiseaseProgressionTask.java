@@ -73,6 +73,7 @@ public final class DiseaseProgressionTask implements Runnable {
             double chance = totalChance(p, dm, disease.id(), now);
             if (chance > 0 && random.nextDouble() < chance) {
                 dm.contract(disease.id(), disease.incubationTicks(), now);
+                dm.incrementContractionCount();
             }
             return;
         }
