@@ -25,8 +25,9 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
- * Fired when a player drinks raw (unpurified) water directly from a world source block via the
- * TAN drink action. Consumed by the disease module's UnpurifiedWaterTrigger (Dysentery).
+ * Fired when a player ingests raw (unpurified) water via TAN — by drinking directly from a world
+ * source block, consuming an unpurified water bottle, or drinking from an unpurified canteen.
+ * Consumed by the disease module's UnpurifiedWaterTrigger (Dysentery).
  */
 public class RawWaterDrinkEvent extends Event {
 
