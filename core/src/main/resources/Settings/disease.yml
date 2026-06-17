@@ -198,6 +198,62 @@ Diseases:
           - Handler: DamageOverTime
             Params: { Amount: 1.0 }
 
+  malnutrition:
+    Enabled: true
+    DisplayName: "Malnutrition"
+    IncubationTicks: 2400          # 2 min before stage 1
+    Immunity:
+      DurationTicks: 0
+    # No cure item — recovered only by eating a balanced diet (DIET mitigation).
+    Mitigation:
+      Type: DIET
+      MalnourishedTiers: [STARVING, SEVERELY_MALNOURISHED, MALNOURISHED]  # MUST match Triggers.Diet.MalnourishedTiers
+    Stages:
+      - DurationTicks: 4800        # stage 1: no natural regen
+        Symptoms:
+          - Handler: BlockNaturalRegen
+            Params: {}
+      - DurationTicks: 4800        # stage 2: reduced max hearts
+        Symptoms:
+          - Handler: MaxHealthReduction
+            Params: { Hearts: 4 }
+      - DurationTicks: 0           # stage 3: weakness + fainting (brief blindness)
+        Symptoms:
+          - Handler: PotionEffect
+            Params: { Effect: WEAKNESS, Amplifier: 0, DurationTicks: 120 }
+          - Handler: PotionEffect
+            Params: { Effect: BLINDNESS, Amplifier: 0, DurationTicks: 60 }
+
+  dysentery:
+    Enabled: true
+    DisplayName: "Dysentery"
+    IncubationTicks: 600           # 30s before stage 1 (acute onset)
+    Immunity:
+      DurationTicks: 0
+    Cure:
+      ItemId: rehydration_salts    # Mode omitted -> CLEAR
+    # NO_EXPOSURE wraps UnpurifiedWaterTrigger: stop drinking raw water -> regress.
+    # Safe with this event-driven trigger: the progression task calls contraction (totalChance)
+    # only when uninfected and the mitigation check only when infected — they never run on the
+    # same tick, so the trigger's one-shot pending is never double-consumed.
+    Mitigation:
+      Type: NO_EXPOSURE
+    Stages:
+      - DurationTicks: 2400        # stage 1: cramps (hunger drain)
+        Symptoms:
+          - Handler: HungerDrain
+            Params: { Amount: 1 }
+      - DurationTicks: 2400        # stage 2: frequent hunger loss + nausea
+        Symptoms:
+          - Handler: HungerDrain
+            Params: { Amount: 2 }
+          - Handler: PotionEffect
+            Params: { Effect: NAUSEA, Amplifier: 0, DurationTicks: 120 }
+      - DurationTicks: 0           # stage 3: dehydration DoT
+        Symptoms:
+          - Handler: DamageOverTime
+            Params: { Amount: 1.0 }
+
 Triggers:
   ColdExposure:
     Disease: respiratory_infection
@@ -251,3 +307,11 @@ Triggers:
         - CHIPPED_ANVIL
         - DAMAGED_ANVIL
       ChancePerCheck: 0.10            # placeholder; incidental-contact source — final tuning in Plan 4 balance pass
+  Diet:
+    Disease: malnutrition
+    MalnourishedTiers: [STARVING, SEVERELY_MALNOURISHED, MALNOURISHED]  # MUST match malnutrition Mitigation.MalnourishedTiers
+    SustainChecks: 5               # consecutive malnourished checks before contraction risk
+    ChancePerCheck: 0.05
+  UnpurifiedWater:
+    Disease: dysentery
+    ChancePerCheck: 0.25           # rolled once per check after a raw-water drink

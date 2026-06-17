@@ -78,3 +78,12 @@ antitoxin:
     - "|GHAST_TEAR|"
     - "FERMENTED_SPIDER_EYE|GLASS_BOTTLE|FERMENTED_SPIDER_EYE"
     - "|SPIDER_EYE|"
+rehydration_salts:
+  Type: "Shaped"
+  Result:
+    Item: "rehydration_salts"
+    Amount: 1
+  Ingredients:
+    - "|SUGAR|"
+    - "GLASS_BOTTLE|MELON_SLICE|GLASS_BOTTLE"
+    - "|SUGAR|"

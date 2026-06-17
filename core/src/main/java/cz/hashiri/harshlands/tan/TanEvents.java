@@ -271,6 +271,9 @@ public class TanEvents extends ModuleEvents implements Listener {
                             thirstManager.addThirst(player, thirstPoints);
                             thirstManager.addSaturation(player, saturationPoints);
 
+                            // Signal a raw/unpurified water drink for the disease module (Dysentery).
+                            Bukkit.getPluginManager().callEvent(new RawWaterDrinkEvent(player));
+
                             if (config.getBoolean("Thirst.SaturationRestoration.Drinking.Sound.Enabled")) {
                                 String soundName = config.getString("Thirst.SaturationRestoration.Drinking.Sound.Sound");
                                 float volume = (float) config.getDouble("Thirst.SaturationRestoration.Drinking.Sound.Volume");
@@ -505,6 +508,8 @@ public class TanEvents extends ModuleEvents implements Listener {
                 HLModule baubleModule = HLModule.getModule(BaubleModule.NAME);
                 if (!(baubleModule.isGloballyEnabled() && baubleModule.getUserConfig().getConfig().getBoolean("Items.stone_sea.ParasiteImmunity") && dataModule != null && dataModule.hasBauble("stone_sea"))) {
                     // unpurified water
+                    // Signal an unpurified-water drink for the disease module (Dysentery).
+                    Bukkit.getPluginManager().callEvent(new RawWaterDrinkEvent(player));
                     if (config.getBoolean("Thirst.Parasites.UnpurifiedWaterBottle.Enabled")) {
                         if (Utils.roll(config.getDouble("Thirst.Parasites.UnpurifiedWaterBottle.Chance"))) {
                             if (!ParasiteTask.hasTask(player.getUniqueId())) {
@@ -538,6 +543,8 @@ public class TanEvents extends ModuleEvents implements Listener {
                     int saturationPoints = config.getInt("Thirst.SaturationRestoration.Foods.POTION.SaturationPoints");
 
                     // unpurified water
+                    // Signal an unpurified-water drink for the disease module (Dysentery).
+                    Bukkit.getPluginManager().callEvent(new RawWaterDrinkEvent(player));
                     if (config.getBoolean("Thirst.Parasites.UnpurifiedWaterBottle.Enabled")) {
                         if (Utils.roll(config.getDouble("Thirst.Parasites.UnpurifiedWaterBottle.Chance"))) {
                             if (!ParasiteTask.hasTask(player.getUniqueId())) {
