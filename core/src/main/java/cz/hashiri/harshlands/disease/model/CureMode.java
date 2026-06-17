@@ -23,7 +23,9 @@ public enum CureMode {
     /** One use fully clears the infection (default; existing behaviour). */
     CLEAR,
     /** Each use regresses the infection by one stage, gated by a per-dose cooldown. */
-    REGRESS_ONE_STAGE;
+    REGRESS_ONE_STAGE,
+    /** One use clears the infection, but only before its terminal stage (Sybok). */
+    CLEAR_BEFORE_TERMINAL;
 
     /** Parse a config string; unknown/blank/null falls back to {@link #CLEAR}. */
     public static CureMode fromConfig(String s) {

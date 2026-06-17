@@ -38,4 +38,12 @@ class DoseMathTest {
         assertFalse(o.onCooldown());
         assertEquals(2, o.newStage());
     }
+    @org.junit.jupiter.api.Test void clearable_before_terminal_for_early_stages() {
+        assertTrue(cz.hashiri.harshlands.disease.engine.DoseMath.clearableBeforeTerminal(0, 3));
+        assertTrue(cz.hashiri.harshlands.disease.engine.DoseMath.clearableBeforeTerminal(1, 3));
+        assertTrue(cz.hashiri.harshlands.disease.engine.DoseMath.clearableBeforeTerminal(2, 3));
+    }
+    @org.junit.jupiter.api.Test void not_clearable_at_terminal_stage() {
+        assertFalse(cz.hashiri.harshlands.disease.engine.DoseMath.clearableBeforeTerminal(3, 3));
+    }
 }

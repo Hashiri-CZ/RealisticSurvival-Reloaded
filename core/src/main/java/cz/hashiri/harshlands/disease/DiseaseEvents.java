@@ -78,7 +78,16 @@ public final class DiseaseEvents implements Listener {
             applyRegressDose(player, item, dm, cured);
             return;
         }
-        // CLEAR (default): one use fully clears the infection.
+        if (cured.cureMode() == CureMode.CLEAR_BEFORE_TERMINAL) {
+            ActiveInfection inf = dm.getInfection(cured.id());
+            int stage = inf != null ? inf.getStage() : 0;
+            if (!DoseMath.clearableBeforeTerminal(stage, cured.maxStage())) {
+                player.sendMessage("§7The " + cured.displayName() + " is too advanced — the treatment can't cure it now.");
+                return; // event already cancelled; do not consume the item
+            }
+            // else fall through to the CLEAR path below
+        }
+        // CLEAR (and CLEAR_BEFORE_TERMINAL before terminal): one use fully clears the infection.
         module.clearAllSymptoms(player, cured);
         dm.removeInfection(cured.id());
         if (cured.immunityDurationTicks() > 0) {
