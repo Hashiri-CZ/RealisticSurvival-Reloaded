@@ -16,6 +16,8 @@
  */
 package cz.hashiri.harshlands.disease.symptom.special;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,8 +28,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link #isActive}/{@link #chance}. Entries carry a wall-clock expiry (ms) so a missed
  * {@link #clear} self-heals within one check interval. Keyed by handler name; if two
  * diseases drive the same handler in one tick, the last mark wins for that cycle.
+ *
+ * <p>Implements {@link PlayerStateCleanup} so {@code DiseaseModule} clears a departing player's
+ * entry on {@code PlayerQuitEvent} (see {@link #clearPlayer}).
  */
-public final class SpecialSymptomTracker {
+public final class SpecialSymptomTracker implements PlayerStateCleanup {
 
     private record Entry(long expiryMs, double chance) {}
 
@@ -58,6 +63,7 @@ public final class SpecialSymptomTracker {
         if (byKey != null) byKey.remove(symptomKey);
     }
 
+    @Override
     public void clearPlayer(UUID player) {
         active.remove(player);
     }

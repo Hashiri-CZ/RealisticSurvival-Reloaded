@@ -52,4 +52,21 @@ class SpecialSymptomTrackerTest {
         t.mark(p, "BlockNaturalRegen", 2000L, 0.0);
         assertTrue(t.isActive(p, "BlockNaturalRegen", 1500L));
     }
+
+    // --- quit cleanup (PlayerStateCleanup): a departing player's entire per-player entry
+    // (every symptom key, not just one) must not linger in the map forever ---
+    @Test void clear_player_drops_every_symptom_key_for_that_player() {
+        SpecialSymptomTracker t = new SpecialSymptomTracker();
+        t.mark(p, "ItemUseFailure", 1000L, 0.5);
+        t.mark(p, "BlockNaturalRegen", 1000L, 0.3);
+
+        t.clearPlayer(p);
+
+        assertFalse(t.isActive(p, "ItemUseFailure", 0L));
+        assertFalse(t.isActive(p, "BlockNaturalRegen", 0L));
+    }
+
+    @Test void implements_player_state_cleanup() {
+        assertTrue(new SpecialSymptomTracker() instanceof cz.hashiri.harshlands.disease.PlayerStateCleanup);
+    }
 }

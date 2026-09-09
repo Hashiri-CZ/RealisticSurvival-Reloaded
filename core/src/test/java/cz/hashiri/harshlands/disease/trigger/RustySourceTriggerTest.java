@@ -46,6 +46,18 @@ class RustySourceTriggerTest {
         assertEquals("tetanus", trigger().diseaseId());
     }
 
+    // --- quit cleanup (PlayerStateCleanup): a departing player's pending exposure must not
+    // linger in the map forever ---
+    @Test void clear_player_drops_pending_exposure() {
+        RustySourceTrigger t = trigger();
+        UUID p = UUID.randomUUID();
+        t.markPending(p, System.currentTimeMillis() + 100_000L);
+
+        t.clearPlayer(p);
+
+        assertFalse(t.takePending(p, System.currentTimeMillis()));
+    }
+
     @Test void lowercase_config_cause_still_matches_after_construction() {
         // Cause names from config may be lower/mixed case; the trigger normalizes them so
         // they match DamageCause.name() (always upper case). Verified via a damage roundtrip

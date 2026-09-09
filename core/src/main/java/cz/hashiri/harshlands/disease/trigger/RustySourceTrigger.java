@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.disease.trigger;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * progression check — keeping the immunity check + immune-suppression multiplier in
  * {@code DiseaseProgressionTask.totalChance} in the loop.
  */
-public final class RustySourceTrigger implements DiseaseTrigger, Listener {
+public final class RustySourceTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 
     private final String diseaseId;
     private final Set<String> rustyCauses;
@@ -124,5 +125,11 @@ public final class RustySourceTrigger implements DiseaseTrigger, Listener {
             }
         }
         return null;
+    }
+
+    /** Drop this player's pending exposure (quit cleanup — see {@link PlayerStateCleanup}). */
+    @Override
+    public void clearPlayer(UUID uuid) {
+        pending.remove(uuid);
     }
 }
