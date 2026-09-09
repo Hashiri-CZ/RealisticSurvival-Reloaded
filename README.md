@@ -139,9 +139,8 @@ Bug reports, ideas, code, translations — all welcome.
 ### Building from source
 
 Harshlands ships one jar that carries a separate NMS implementation module per supported
-Minecraft version. Building the **full** jar therefore needs the Spigot artifacts for **all
-three** versions in your local `~/.m2` repository. Spigot jars are not published to any public
-Maven repository — every developer installs them locally with BuildTools:
+Minecraft version. Spigot jars are not published to any public Maven repository — every
+developer installs them locally with BuildTools:
 
 ```bash
 mkdir -p ~/buildtools && cd ~/buildtools
@@ -149,6 +148,8 @@ curl -sSLO https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/a
 
 java -jar BuildTools.jar --rev 1.21.11 --remapped
 java -jar BuildTools.jar --rev 26.1.2  --remapped
+
+# only needed for the optional mc26_2 profile, see below
 java -jar BuildTools.jar --rev 26.2    --remapped
 ```
 
@@ -178,10 +179,21 @@ mvn clean package -pl core,dist -am
 # -> target/harshlands-<version>.jar
 ```
 
+That default build covers `1.21.11` and `26.1.2`, and needs only those two Spigot artifacts.
+To additionally build and shade the Minecraft 26.2 implementation, activate the `mc26_2`
+profile — which also requires the 26.2 artifact from BuildTools:
+
+```bash
+mvn -Pmc26_2 clean package -pl core,dist -am
+```
+
 > [!NOTE]
-> `spigot_impl_26_2_R1` is wired into the reactor but has **not** yet been compiled against a
-> real Spigot 26.2 artifact — see the comments at the top of `spigot_impl_26_2_R1/pom.xml` for
-> the exact coordinate that still has to be confirmed against BuildTools output.
+> `spigot_impl_26_2_R1` is complete and fully wired, but is kept behind the `mc26_2` profile
+> and has **not** yet been compiled against a real Spigot 26.2 artifact — none exists locally
+> yet. Its Spigot coordinate is an unconfirmed guess; see the comments at the top of
+> `spigot_impl_26_2_R1/pom.xml` for the exact value to reconcile against BuildTools output,
+> and the `mc26_2` profile in the root `pom.xml` for how to promote 26.2 to a default-built
+> version once its artifacts are standard.
 
 ---
 
