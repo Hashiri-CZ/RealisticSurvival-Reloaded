@@ -18,6 +18,7 @@
         <module>core</module>
         <module>spigot_impl_1_21_R11</module>
         <module>spigot_impl_26_1_R1</module>
+        <module>spigot_impl_26_2_R1</module>
         <module>dist</module>
     </modules>
 
@@ -28,5 +29,71 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!--
+                  Shared JDK toolchain definition for the Minecraft 26.x impl modules.
+
+                  WHY: spigot_impl_26_1_R1 and spigot_impl_26_2_R1 compile with
+                  `<release>25</release>`. javac can only emit release-25 bytecode when
+                  javac itself runs on JDK 25 or newer. The rest of the reactor
+                  (harshlands-api, core, spigot_impl_1_21_R11, dist) targets Java 21 and
+                  builds fine on whatever JDK launched Maven — so we do NOT want to force
+                  the whole build onto JDK 25; only these two modules fork onto it.
+
+                  HOW: `select-jdk-toolchain` auto-discovers installed JDKs
+                  (`discoverToolchains` defaults to true). It looks at the running JDK,
+                  JAVA_HOME, JAVA<n>_HOME environment variables, SDKMAN/asdf/jenv
+                  directories and the usual per-OS install locations. Nothing in this
+                  repository — and nothing in ~/.m2/toolchains.xml — needs to hardcode an
+                  absolute JDK path. A machine that has a JDK 25+ installed anywhere
+                  normal simply works.
+
+                  IF THE BUILD FAILS HERE, the message is:
+
+                      Cannot find matching toolchain definitions for the following
+                      toolchain types: jdk [version=[25,)]
+                      Define the required toolchains in your ~/.m2/toolchains.xml file.
+
+                  That means no JDK 25 or newer is installed on this machine. FIX: install
+                  any JDK >= 25 (Temurin / Zulu / Oracle / Corretto ...). No further
+                  configuration is required — discovery finds it on the next build.
+
+                  Useful diagnostics:
+                      mvn org.apache.maven.plugins:maven-toolchains-plugin:3.2.0:display-discovered-jdk-toolchains
+                      mvn org.apache.maven.plugins:maven-toolchains-plugin:3.2.0:generate-jdk-toolchains-xml -Dtoolchain.file=${user.home}/.m2/toolchains.xml
+
+                  Do NOT "fix" a missing JDK 25 by lowering <release> in the 26.x modules —
+                  that silently changes the bytecode level that ships to users.
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <executions>
+                        <execution>
+                            <id>select-jdk-25-or-newer</id>
+                            <goals>
+                                <goal>select-jdk-toolchain</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!--
+                          A version RANGE, not the literal "25". "25" would match JDK 25
+                          only; "[25,)" also accepts 26, 27, ... so the build keeps working
+                          as developers upgrade their JDKs. Any JDK >= 25 can emit
+                          release-25 bytecode.
+                        -->
+                        <version>[25,)</version>
+                        <!-- Explicit for documentation; true is the plugin default. -->
+                        <discoverToolchains>true</discoverToolchains>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

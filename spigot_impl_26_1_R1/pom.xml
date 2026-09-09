@@ -36,19 +36,15 @@
                     <release>25</release>
                 </configuration>
             </plugin>
+            <!--
+                Forks compilation onto a JDK 25+ toolchain. Version, executions and the
+                auto-discovery settings are defined once in the parent pom's
+                <pluginManagement> — see the comment there for the rationale and for what
+                to do when the build reports that no matching JDK toolchain was found.
+            -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-toolchains-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>select-jdk-toolchain</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>25</version>
-                </configuration>
             </plugin>
         </plugins>
     </build>
