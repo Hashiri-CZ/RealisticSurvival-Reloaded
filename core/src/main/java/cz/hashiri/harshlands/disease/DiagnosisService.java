@@ -20,6 +20,7 @@ import cz.hashiri.harshlands.data.HLPlayer;
 import cz.hashiri.harshlands.data.disease.ActiveInfection;
 import cz.hashiri.harshlands.data.disease.DataModule;
 import cz.hashiri.harshlands.disease.model.Disease;
+import cz.hashiri.harshlands.locale.Messages;
 import org.bukkit.entity.Player;
 
 public final class DiagnosisService {
@@ -33,17 +34,20 @@ public final class DiagnosisService {
         HLPlayer hlPlayer = HLPlayer.getPlayers().get(player.getUniqueId());
         DataModule dm = hlPlayer != null ? hlPlayer.getDiseaseDataModule() : null;
         if (dm == null || dm.getActiveInfections().isEmpty()) {
-            player.sendMessage("§7You appear to be in good health.");
+            Messages.of("disease.diagnosis.healthy").send(player);
             return;
         }
-        player.sendMessage("§6Diagnosis:");
+        Messages.of("disease.diagnosis.header").send(player);
         for (ActiveInfection inf : dm.getActiveInfections()) {
             Disease d = registry.get(inf.diseaseId());
             String name = d != null ? d.displayName() : inf.diseaseId();
             if (inf.isIncubating()) {
-                player.sendMessage("§7- " + name + " §8(incubating)");
+                Messages.of("disease.diagnosis.incubating").with("disease", name).send(player);
             } else {
-                player.sendMessage("§c- " + name + " §7(stage " + inf.getStage() + ")");
+                Messages.of("disease.diagnosis.active")
+                        .with("disease", name)
+                        .with("stage", inf.getStage())
+                        .send(player);
             }
         }
     }
