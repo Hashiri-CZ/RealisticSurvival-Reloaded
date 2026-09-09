@@ -30,6 +30,10 @@ import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+// MC 26.2 moved the per-entity EntityType constants (ENDERMAN, ENDER_DRAGON, ...) out of
+// EntityType into this new holder class. EntityType itself still carries the nested
+// Builder/EntityFactory types and the generic EntityType<T> signature, so both imports are needed.
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
@@ -46,12 +50,12 @@ import java.util.Map;
 
 public enum CustomEntities_v26_2_R1 {
 
-    ENDERMAN_ALLY("enderman_ally", -1, EntityType.ENDERMAN, EnderMan.class, EndermanAlly_v26_2_R1.class),
-    FIRE_DRAGON("fire_dragon", -1, EntityType.ENDER_DRAGON, EnderDragon.class, FireDragon_v26_2_R1.class),
-    ICE_DRAGON("ice_dragon", -1, EntityType.ENDER_DRAGON, EnderDragon.class, IceDragon_v26_2_R1.class),
-    LIGHTNING_DRAGON("lightning_dragon", -1, EntityType.ENDER_DRAGON, EnderDragon.class, LightningDragon_v26_2_R1.class),
-    SEA_SERPENT("sea_serpent", -1, EntityType.ELDER_GUARDIAN, ElderGuardian.class, SeaSerpent_v26_2_R1.class),
-    SIREN("siren", -1, EntityType.GUARDIAN, Guardian.class, Siren_v26_2_R1.class);
+    ENDERMAN_ALLY("enderman_ally", -1, EntityTypes.ENDERMAN, EnderMan.class, EndermanAlly_v26_2_R1.class),
+    FIRE_DRAGON("fire_dragon", -1, EntityTypes.ENDER_DRAGON, EnderDragon.class, FireDragon_v26_2_R1.class),
+    ICE_DRAGON("ice_dragon", -1, EntityTypes.ENDER_DRAGON, EnderDragon.class, IceDragon_v26_2_R1.class),
+    LIGHTNING_DRAGON("lightning_dragon", -1, EntityTypes.ENDER_DRAGON, EnderDragon.class, LightningDragon_v26_2_R1.class),
+    SEA_SERPENT("sea_serpent", -1, EntityTypes.ELDER_GUARDIAN, ElderGuardian.class, SeaSerpent_v26_2_R1.class),
+    SIREN("siren", -1, EntityTypes.GUARDIAN, Guardian.class, Siren_v26_2_R1.class);
 
     private final String name;
     private final int id;

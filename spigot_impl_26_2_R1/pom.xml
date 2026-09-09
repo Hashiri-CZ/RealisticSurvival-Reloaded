@@ -15,44 +15,19 @@
 
     <dependencies>
         <!--
-            ############################################################
-            # UNVERIFIED COORDINATE - MUST BE CONFIRMED BEFORE RELEASE  #
-            ############################################################
+            Coordinate CONFIRMED against BuildTools output (2026-09-09): running
+            BuildTools for rev 26.2 installs exactly org.spigotmc:spigot:26.2-R0.1-SNAPSHOT,
+            matching the "<exact MC version>-R0.<n>-SNAPSHOT" shape used by the sibling
+            modules (26.1.2-R0.1-SNAPSHOT, 1.21.11-R0.2-SNAPSHOT).
 
-            No Spigot artifact for Minecraft 26.2 exists in the local ~/.m2 repository,
-            and Spigot jars are not published to any public Maven repository (each
-            developer installs them locally by running BuildTools). The version string
-            below is therefore a GUESS and this module has never been compiled.
+            Like MC 26.1 — and unlike 1.21.11 — the 26.2 artifact ships Mojang-mapped
+            with no remapped-mojang classifier, so this module deliberately carries NO
+            <classifier> and NO specialsource-maven-plugin remap executions. Verified by
+            inspecting the installed artifact: the only jar present is the plain
+            spigot-26.2-R0.1-SNAPSHOT.jar.
 
-            It was extrapolated from the only data point available in this repo:
-              * spigot_impl_26_1_R1 uses  26.1.2-R0.1-SNAPSHOT  for MC 26.1.2
-              * spigot_impl_1_21_R11 uses 1.21.11-R0.2-SNAPSHOT for MC 1.21.11
-            i.e. Spigot's Maven version is "<exact MC version>-R0.<n>-SNAPSHOT".
-
-            "26.2" (no patch component) is used because that is the MC version string
-            for which cz.hashiri.harshlands.utils.Utils#getMinecraftVersion(true)
-            computes the impl class name v26_2_R1 that this module provides. If the
-            first 26.2 release is actually a patch build (e.g. 26.2.1), the coordinate
-            becomes 26.2.1-R0.1-SNAPSHOT and the R-suffix (R0.1 vs R0.2) may differ too.
-
-            TO VERIFY (a human with network access must do this):
-              1. java -jar BuildTools.jar (dash)(dash)rev 26.2 (dash)(dash)remapped
-                 [XML comments may not contain two consecutive hyphens, hence the
-                  "(dash)(dash)" placeholders; type real hyphens on the command line]
-              2. Read the "Saved as .../spigot-<VERSION>.jar" line from its output, or:
-                 ls ~/.m2/repository/org/spigotmc/spigot/
-              3. Replace the <version> below with that exact string.
-              4. Check whether MC 26.2 still ships an unobfuscated (Mojang-mapped)
-                 server like 26.1 does. spigot_impl_26_1_R1 deliberately uses NO
-                 <classifier>remapped-mojang</classifier> and NO specialsource-maven-plugin
-                 remap executions, unlike spigot_impl_1_21_R11 which needs both. This
-                 module mirrors the 26.1 shape on the assumption that 26.2 behaves the
-                 same. If it does not, copy the remap plugin block from
-                 spigot_impl_1_21_R11/pom.xml.
-              5. Run: mvn -pl spigot_impl_26_2_R1 -am clean package
-                 and port any NMS API breakages in src/main/java (see
-                 docs/superpowers/plans/2026-04-12-paper-26.1-support.md Task 6 for the
-                 procedure used when 26.1 support was added).
+            Spigot jars are not published to any public Maven repository — every
+            developer must install this locally with BuildTools (see README.md).
         -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -74,12 +49,11 @@
                 <version>3.14.1</version>
                 <configuration>
                     <!--
-                        Mirrors spigot_impl_26_1_R1. UNVERIFIED for 26.2: the minimum Java
-                        version a Minecraft 26.2 server requires is not known here. 25 is
-                        the level MC 26.1 requires; a later MC release can only raise it,
-                        never lower it, so 25 is a safe floor but may need to be raised.
-                        Confirm against the 26.2 server jar before release. Do not LOWER
-                        this to make the module build on an older JDK.
+                        Mirrors spigot_impl_26_1_R1. The module compiles cleanly against
+                        the real 26.2 artifact at this level. Do NOT lower it to make the
+                        module build on an older JDK — that silently changes the bytecode
+                        level that ships to users. Raising it is fine if a future 26.x
+                        server requires a newer Java.
                     -->
                     <release>25</release>
                 </configuration>

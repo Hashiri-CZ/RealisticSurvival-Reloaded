@@ -21,6 +21,7 @@ import cz.hashiri.harshlands.iceandfire.DragonBreed;
 import cz.hashiri.harshlands.iceandfire.DragonGender;
 import cz.hashiri.harshlands.iceandfire.DragonVariant;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes; // MC 26.2: constants moved off EntityType
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
@@ -56,7 +57,7 @@ public abstract class Dragon_v26_2_R1 extends EnderDragon implements Dragon {
     }
 
     public Dragon_v26_2_R1(Location loc, DragonBreed breed) {
-        super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         List<DragonVariant> enabledVariants = DragonVariant.getEnabledVariants(breed);
@@ -72,7 +73,7 @@ public abstract class Dragon_v26_2_R1 extends EnderDragon implements Dragon {
     }
 
     public Dragon_v26_2_R1(Location loc, DragonBreed breed, DragonVariant variant) {
-        super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         this.variant = variant.isEnabled() && Arrays.asList(breed.getVariants()).contains(variant) ? variant : null;
@@ -86,7 +87,7 @@ public abstract class Dragon_v26_2_R1 extends EnderDragon implements Dragon {
     }
 
     public Dragon_v26_2_R1(Location loc, DragonBreed breed, int stage) {
-        super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         List<DragonVariant> enabledVariants = DragonVariant.getEnabledVariants(breed);
@@ -102,7 +103,7 @@ public abstract class Dragon_v26_2_R1 extends EnderDragon implements Dragon {
     }
 
     public Dragon_v26_2_R1(Location loc, DragonBreed breed, DragonVariant variant, int stage) {
-        super(EntityType.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.ENDER_DRAGON, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         this.variant = variant.isEnabled() && Arrays.asList(breed.getVariants()).contains(variant) ? variant : null;

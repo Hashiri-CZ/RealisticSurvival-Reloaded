@@ -20,6 +20,7 @@ import cz.hashiri.harshlands.iceandfire.SeaSerpent;
 import cz.hashiri.harshlands.iceandfire.SeaSerpentVariant;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes; // MC 26.2: constants moved off EntityType
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
@@ -43,7 +44,7 @@ public class SeaSerpent_v26_2_R1 extends ElderGuardian implements SeaSerpent {
     }
 
     public SeaSerpent_v26_2_R1(Location loc) {
-        super(EntityType.ELDER_GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.ELDER_GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         List<SeaSerpentVariant> enabledVariants = SeaSerpentVariant.getEnabledVariants();
@@ -53,7 +54,7 @@ public class SeaSerpent_v26_2_R1 extends ElderGuardian implements SeaSerpent {
     }
 
     public SeaSerpent_v26_2_R1(Location loc, SeaSerpentVariant variant) {
-        super(EntityType.ELDER_GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.ELDER_GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         this.variant = variant.isEnabled() ? variant : null;

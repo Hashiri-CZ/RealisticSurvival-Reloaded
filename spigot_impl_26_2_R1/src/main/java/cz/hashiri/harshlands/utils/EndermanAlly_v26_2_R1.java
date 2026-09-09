@@ -18,6 +18,7 @@ package cz.hashiri.harshlands.utils;
 
 import cz.hashiri.harshlands.baubles.EndermanAlly;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes; // MC 26.2: constants moved off EntityType
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -44,7 +45,7 @@ public class EndermanAlly_v26_2_R1 extends EnderMan implements EndermanAlly {
     }
 
     public EndermanAlly_v26_2_R1(Player owner, Location loc) {
-        super(EntityType.ENDERMAN, ((CraftWorld)  loc.getWorld()).getHandle());
+        super(EntityTypes.ENDERMAN, ((CraftWorld)  loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
         this.owner = ((CraftPlayer) owner).getHandle();
         addNbtData();

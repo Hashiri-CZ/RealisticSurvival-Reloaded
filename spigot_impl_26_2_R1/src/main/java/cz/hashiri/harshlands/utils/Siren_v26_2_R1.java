@@ -18,6 +18,7 @@ package cz.hashiri.harshlands.utils;
 
 import cz.hashiri.harshlands.iceandfire.Siren;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes; // MC 26.2: constants moved off EntityType
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
@@ -34,7 +35,7 @@ public class Siren_v26_2_R1 extends Guardian implements Siren {
     }
 
     public Siren_v26_2_R1(Location loc) {
-        super(EntityType.GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
+        super(EntityTypes.GUARDIAN, ((CraftWorld) loc.getWorld()).getHandle());
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
 
         setup();
