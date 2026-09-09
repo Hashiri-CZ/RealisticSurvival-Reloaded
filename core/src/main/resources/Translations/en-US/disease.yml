@@ -14,3 +14,5 @@ disease:
   symptom:
     item_use_failure:
       action_bar: "&5Your hands won't cooperate..."
+    block_eating:
+      action_bar: "&eYour jaw locks up — you can't eat."

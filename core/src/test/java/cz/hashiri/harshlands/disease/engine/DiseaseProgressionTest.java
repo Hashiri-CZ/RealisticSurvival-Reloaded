@@ -92,7 +92,7 @@ class DiseaseProgressionTest {
             assertEquals(STAGE_2_DURATION - TICKS_PER_CHECK, r.ticksInStage());
             assertFalse(r.cured());
         }
-        @Test void regressing_out_of_terminal_stage_carries_the_entered_stage_duration() {
+        @Test void mitigating_inside_the_terminal_stage_only_reduces_ticks() {
             DiseaseProgression.StageResult r = DiseaseProgression.progressStage(
                 MAX_STAGE, STAGE_3_DURATION, TICKS_PER_CHECK,
                 STAGE_3_DURATION, STAGE_2_DURATION, MAX_STAGE, true);

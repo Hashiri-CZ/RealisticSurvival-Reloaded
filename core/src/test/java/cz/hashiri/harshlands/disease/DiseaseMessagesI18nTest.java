@@ -152,7 +152,8 @@ class DiseaseMessagesI18nTest {
                 "disease.diagnosis.header",
                 "disease.diagnosis.incubating",
                 "disease.diagnosis.active",
-                "disease.symptom.item_use_failure.action_bar");
+                "disease.symptom.item_use_failure.action_bar",
+                "disease.symptom.block_eating.action_bar");
 
         for (String key : keys) {
             String resolved = Messages.get(key);

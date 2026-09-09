@@ -69,8 +69,9 @@ public final class BlockEatingHandler implements SymptomHandler, Listener {
     }
 
     private void feedback(Player player) {
+        String text = cz.hashiri.harshlands.locale.Messages.get("disease.symptom.block_eating.action_bar");
         ((net.kyori.adventure.audience.Audience) player).sendActionBar(
             net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection()
-                .deserialize("§eYour jaw locks up — you can't eat."));
+                .deserialize(text));
     }
 }

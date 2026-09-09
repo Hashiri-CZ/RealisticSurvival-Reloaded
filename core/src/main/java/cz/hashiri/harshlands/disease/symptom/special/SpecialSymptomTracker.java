@@ -67,4 +67,9 @@ public final class SpecialSymptomTracker implements PlayerStateCleanup {
     public void clearPlayer(UUID player) {
         active.remove(player);
     }
+
+    /** Drop every player's marks (module shutdown/reload — this tracker outlives one lifecycle). */
+    public void clearAll() {
+        active.clear();
+    }
 }

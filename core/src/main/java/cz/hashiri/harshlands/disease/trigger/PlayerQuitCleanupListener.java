@@ -37,7 +37,7 @@ public final class PlayerQuitCleanupListener implements Listener {
     private final List<PlayerStateCleanup> targets;
 
     public PlayerQuitCleanupListener(List<PlayerStateCleanup> targets) {
-        this.targets = targets;
+        this.targets = List.copyOf(targets);
     }
 
     @EventHandler

@@ -21,6 +21,7 @@ import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -89,7 +90,14 @@ public final class InfectedItemTrigger implements DiseaseTrigger, Listener, Play
         return takePending(player.getUniqueId(), System.currentTimeMillis()) ? chancePerCheck : 0.0;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    /**
+     * MONITOR so the exposure is only recorded once the item was actually eaten. At NORMAL this
+     * ran before {@code BlockEatingHandler} (Tetanus "locked jaw") cancelled the consume, so a
+     * blocked bite still infected the player — the same "caught it without eating" defect this
+     * trigger's interact gating fixes. With MONITOR + ignoreCancelled, a cancelled consume is
+     * skipped entirely. Observation only: nothing here mutates the event.
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onConsume(PlayerItemConsumeEvent event) {
         considerItem(event.getPlayer(), event.getItem());
     }

@@ -341,6 +341,9 @@ public final class DiseaseModule extends HLModule {
         specialListeners.clear();
         triggers.clear();
         mitigations.clear();
+        // symptomTracker is final and survives a shutdown/initialize cycle (plugin reload);
+        // its entries would otherwise linger until their TTL against a fresh module instance.
+        symptomTracker.clearAll();
     }
 
     public List<DiseaseTrigger> getTriggers() { return triggers; }
