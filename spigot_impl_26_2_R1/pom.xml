@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>harshlands-spigot_impl_26_2_R1</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>cz.hashiri.harshlands</groupId>
+        <artifactId>harshlands-parent</artifactId>
+        <version>1.3.3</version>
+    </parent>
+
+    <dependencies>
+        <!--
+            ############################################################
+            # UNVERIFIED COORDINATE - MUST BE CONFIRMED BEFORE RELEASE  #
+            ############################################################
+
+            No Spigot artifact for Minecraft 26.2 exists in the local ~/.m2 repository,
+            and Spigot jars are not published to any public Maven repository (each
+            developer installs them locally by running BuildTools). The version string
+            below is therefore a GUESS and this module has never been compiled.
+
+            It was extrapolated from the only data point available in this repo:
+              * spigot_impl_26_1_R1 uses  26.1.2-R0.1-SNAPSHOT  for MC 26.1.2
+              * spigot_impl_1_21_R11 uses 1.21.11-R0.2-SNAPSHOT for MC 1.21.11
+            i.e. Spigot's Maven version is "<exact MC version>-R0.<n>-SNAPSHOT".
+
+            "26.2" (no patch component) is used because that is the MC version string
+            for which cz.hashiri.harshlands.utils.Utils#getMinecraftVersion(true)
+            computes the impl class name v26_2_R1 that this module provides. If the
+            first 26.2 release is actually a patch build (e.g. 26.2.1), the coordinate
+            becomes 26.2.1-R0.1-SNAPSHOT and the R-suffix (R0.1 vs R0.2) may differ too.
+
+            TO VERIFY (a human with network access must do this):
+              1. java -jar BuildTools.jar (dash)(dash)rev 26.2 (dash)(dash)remapped
+                 [XML comments may not contain two consecutive hyphens, hence the
+                  "(dash)(dash)" placeholders; type real hyphens on the command line]
+              2. Read the "Saved as .../spigot-<VERSION>.jar" line from its output, or:
+                 ls ~/.m2/repository/org/spigotmc/spigot/
+              3. Replace the <version> below with that exact string.
+              4. Check whether MC 26.2 still ships an unobfuscated (Mojang-mapped)
+                 server like 26.1 does. spigot_impl_26_1_R1 deliberately uses NO
+                 <classifier>remapped-mojang</classifier> and NO specialsource-maven-plugin
+                 remap executions, unlike spigot_impl_1_21_R11 which needs both. This
+                 module mirrors the 26.1 shape on the assumption that 26.2 behaves the
+                 same. If it does not, copy the remap plugin block from
+                 spigot_impl_1_21_R11/pom.xml.
+              5. Run: mvn -pl spigot_impl_26_2_R1 -am clean package
+                 and port any NMS API breakages in src/main/java (see
+                 docs/superpowers/plans/2026-04-12-paper-26.1-support.md Task 6 for the
+                 procedure used when 26.1 support was added).
+        -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>26.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cz.hashiri.harshlands</groupId>
+            <artifactId>harshlands-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <!--
+                        Mirrors spigot_impl_26_1_R1. UNVERIFIED for 26.2: the minimum Java
+                        version a Minecraft 26.2 server requires is not known here. 25 is
+                        the level MC 26.1 requires; a later MC release can only raise it,
+                        never lower it, so 25 is a safe floor but may need to be raised.
+                        Confirm against the 26.2 server jar before release. Do not LOWER
+                        this to make the module build on an older JDK.
+                    -->
+                    <release>25</release>
+                </configuration>
+            </plugin>
+            <!--
+                Forks compilation onto a JDK 25+ toolchain. Version, executions and the
+                auto-discovery settings are defined once in the parent pom's
+                <pluginManagement> — see the comment there for the rationale and for what
+                to do when the build reports that no matching JDK toolchain was found.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
