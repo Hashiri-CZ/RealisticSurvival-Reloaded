@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * list. Like {@link InfectedItemTrigger}, exposure is an event: the damage callback marks a
  * one-shot pending exposure (with a TTL) that {@link #chance(Player)} consumes on the next
  * progression check — keeping the immunity check + immune-suppression multiplier in
- * {@code DiseaseProgressionTask.totalChance} in the loop.
+ * {@code DiseaseProgressionTask.contractionChance} in the loop.
  */
 public final class RustySourceTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 

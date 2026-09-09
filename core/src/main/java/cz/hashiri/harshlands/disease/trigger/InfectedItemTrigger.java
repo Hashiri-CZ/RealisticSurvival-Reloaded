@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * a one-shot pending exposure (with a TTL that self-heals a missed read), and
  * {@link #chance(Player)} consumes it on the next progression check — which keeps the
  * immunity check and immune-suppression multiplier in
- * {@code DiseaseProgressionTask.totalChance} in the loop.
+ * {@code DiseaseProgressionTask.contractionChance} in the loop.
  */
 public final class InfectedItemTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 

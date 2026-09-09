@@ -30,8 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Dysentery: contraction from drinking raw/unpurified water. Listens for TAN's
  * {@link RawWaterDrinkEvent} and marks a one-shot pending exposure (with a TTL that self-heals
  * a missed read) that {@link #chance(Player)} consumes on the next progression check — keeping
- * the immunity check + immune-suppression multiplier in {@code DiseaseProgressionTask.totalChance}
- * in the loop. Mirrors {@code InfectedItemTrigger}.
+ * the immunity check + immune-suppression multiplier in
+ * {@code DiseaseProgressionTask.contractionChance} in the loop. Mirrors {@code InfectedItemTrigger}.
  */
 public final class UnpurifiedWaterTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 

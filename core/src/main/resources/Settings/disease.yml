@@ -233,7 +233,7 @@ Diseases:
     Cure:
       ItemId: rehydration_salts    # Mode omitted -> CLEAR
     # NO_EXPOSURE wraps UnpurifiedWaterTrigger: stop drinking raw water -> regress.
-    # Safe with this event-driven trigger: the progression task calls contraction (totalChance)
+    # Safe with this event-driven trigger: the progression task calls contraction (contractionChance)
     # only when uninfected and the mitigation check only when infected — they never run on the
     # same tick, so the trigger's one-shot pending is never double-consumed.
     Mitigation:
