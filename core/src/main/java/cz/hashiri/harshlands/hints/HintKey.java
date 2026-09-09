@@ -33,7 +33,13 @@ public enum HintKey {
     // Task 1.8 — baubles & comfort hints
     FIRST_BAUBLE_EQUIPPED("FirstBaubleEquipped", false, 0L, Sound.ITEM_ARMOR_EQUIP_GOLD),
     FIRST_COMFORT_BUFF("FirstComfortBuff", false, 0L, Sound.BLOCK_AMETHYST_BLOCK_CHIME),
-    FIRST_CABIN_FEVER("FirstCabinFever", false, 0L, Sound.AMBIENT_CAVE);
+    FIRST_CABIN_FEVER("FirstCabinFever", false, 0L, Sound.AMBIENT_CAVE),
+    // Disease — one hint per lesson, fired from DiseaseProgressionTask as the infection moves.
+    // Deliberately never name the illness: that is what the diagnostic kit is for.
+    FIRST_SICKNESS_ONSET("FirstSicknessOnset", false, 0L, Sound.UI_TOAST_IN),
+    FIRST_SICKNESS_WORSENED("FirstSicknessWorsened", false, 0L, Sound.ENTITY_PLAYER_HURT),
+    FIRST_SICKNESS_TERMINAL("FirstSicknessTerminal", false, 0L, Sound.ENTITY_WITHER_SPAWN),
+    FIRST_SICKNESS_CURED("FirstSicknessCured", false, 0L, Sound.ENTITY_PLAYER_LEVELUP);
 
     private final String translationKey;
     private final boolean repeating;

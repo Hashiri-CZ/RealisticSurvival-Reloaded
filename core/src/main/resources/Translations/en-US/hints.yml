@@ -31,6 +31,11 @@ hints:
     FirstBaubleEquipped: "&dBauble equipped. &fOpen your bauble bag with &e/hl obtain bauble_bag&f if you haven't crafted one yet."
     FirstComfortBuff: "&aResting paid off. &fSleep near more comfort items for stronger buffs."
     FirstCabinFever: "&8You're restless. &7Too long indoors. Go outside to settle your nerves."
+    # Disease hints never name the illness — craft the %item_diagnostic_kit% for that.
+    FirstSicknessOnset: "&eYou've fallen ill. &fSomething you drank, ate, or bled from. Craft a %item_diagnostic_kit% and right-click it to find out what."
+    FirstSicknessWorsened: "&6It's getting worse. &fEvery illness has its own cure — check with a %item_diagnostic_kit%, then craft the remedy and right-click it."
+    FirstSicknessTerminal: "&cThis will kill you. &fYou're at the last stage. Cure it now, or remove whatever caused it — some illnesses fade once you stop the cause."
+    FirstSicknessCured: "&aYou recovered on your own. &fThe cause stopped, so the illness did too. Not all of them are that forgiving."
   # Obtain instructions — shown on /hl obtain <item>, also previewed in hint hovers.
   # Each entry: Name (pretty display name) + Lines (multi-line description).
   # Lines may contain %item_<key>% placeholders — they render as clickable tags.
@@ -171,5 +176,72 @@ hints:
         - "&7Craft from bandages, splints, and leather."
         - "&7Right-click to fully restore every body part."
         - "&7Consumed on use — reserve for emergencies."
+    # ── Disease module ────────────────────────────────────────────────────────
+    # The diagnostic kit is a separate item from the FirstAid %item_medical_kit%:
+    # that one heals limbs, this one names illnesses.
+    diagnostic_kit:
+      Name: "Diagnostic Kit"
+      Lines:
+        - "&7Craft 4 paper + 4 string around white wool."
+        - "&7Right-click to list every illness you carry,"
+        - "&7including ones still incubating."
+        - "&7Not consumed — keep one on you."
+    cold_remedy:
+      Name: "Cold Remedy"
+      Lines:
+        - "&7Craft 2 honey bottles + sugar + 2 brown mushrooms."
+        - "&7Cures a Respiratory Infection, caught from being"
+        - "&7cold and wet for too long."
+    antibiotics:
+      Name: "Antibiotics"
+      Lines:
+        - "&7Craft a glass bottle + 2 sugar, with a brown"
+        - "&7mushroom above and a red mushroom below."
+        - "&7Cures Septicemia — from eating spoiled food."
+    rehydration_salts:
+      Name: "Rehydration Salts"
+      Lines:
+        - "&7Craft 2 sugar + 2 glass bottles + a melon slice."
+        - "&7Cures Dysentery, caught from drinking"
+        - "&7unpurified water."
+    disinfectant_bandage:
+      Name: "Disinfectant & Bandage"
+      Lines:
+        - "&7Craft 2 paper + 2 string + a honey bottle."
+        - "&7Cures a Festering Wound. Healing the injured"
+        - "&7limb also lets it clear on its own."
+    antitoxin:
+      Name: "Antitoxin"
+      Lines:
+        - "&7Craft a ghast tear, 2 fermented spider eyes,"
+        - "&7a glass bottle and a spider eye."
+        - "&7Cures Tetanus, caught off rusted iron."
+        - "&7Use it early — stage two locks your jaw shut."
+    stabilizing_tonic:
+      Name: "Stabilizing Tonic"
+      Lines:
+        - "&7Craft 2 chorus fruit + 2 sugar + a glass bottle."
+        - "&7Cures Endersion, from handling ender items"
+        - "&7or lingering in the End."
+    anti_rad_tablets:
+      Name: "Anti-Rad Tablets"
+      Lines:
+        - "&7Craft 2 ghast tears + 2 redstone + glowstone dust."
+        - "&7Cures Crimson, caught near magma and sculk."
+    antiviral_regimen:
+      Name: "Antiviral Regimen"
+      Lines:
+        - "&7Craft a ghast tear, 2 fermented spider eyes,"
+        - "&7a glass bottle and a golden carrot."
+        - "&7Treats Wasting Blight, carried on contaminated"
+        - "&7loot. One dose pushes it back a single stage,"
+        - "&7and doses need a minute between them."
+    experimental_treatment:
+      Name: "Experimental Treatment"
+      Lines:
+        - "&7Craft 4 ghast tears, 2 golden apples,"
+        - "&72 fermented spider eyes and a glistering melon."
+        - "&7The only thing that touches Sybok — and only"
+        - "&7before it reaches its final stage."
   # Shown by /hl obtain when the item key is not recognised.
-  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty, bandage, splint, medical_kit, thermometer, bauble_bag."
+  UnknownItem: "&cUnknown item: &e%name%&c. Try one of: axe, flint_hatchet, flint_shard, flint, plant_string, plant_fiber, dagger, knife, stick, log, plank, saw, campfire, jelled_slime, fire_starter, purified_water_bottle, charcoal_filter, canteen_empty, bandage, splint, medical_kit, thermometer, bauble_bag, diagnostic_kit, cold_remedy, antibiotics, rehydration_salts, disinfectant_bandage, antitoxin, stabilizing_tonic, anti_rad_tablets, antiviral_regimen, experimental_treatment."

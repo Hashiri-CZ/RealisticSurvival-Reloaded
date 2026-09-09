@@ -34,7 +34,8 @@ guide:
       - { key: "baubles",     label: "&07. Baubles" }
       - { key: "creatures",   label: "&08. Beware" }
       - { key: "ecology",     label: "&09. Silence" }
-      - { key: "commands",    label: "&010. Commands" }
+      - { key: "disease",     label: "&010. Sickness" }
+      - { key: "commands",    label: "&011. Commands" }
 
   Chapters:
     axe:
@@ -247,6 +248,53 @@ guide:
         &0- sprinting
 
         &0Sneak is quieter.
+    disease:
+      - |
+        &5&lSickness
+
+        &8Foul water. Raw
+        &8meat. Old wounds.
+        &8They catch up.
+
+        &0Illness hides,
+        &0then shows in
+        &0three stages.
+      - |
+        &5&lSickness &7(2/4)
+
+        &0You feel it
+        &0before you name
+        &0it.
+
+        &0Craft a
+        &0%item_diagnostic_kit%
+        &0and right-click
+        &0to learn what
+        &0you have.
+      - |
+        &5&lSickness &7(3/4)
+
+        &0Each illness has
+        &0its own cure.
+        &0Right-click it
+        &0while sick.
+
+        &0%item_cold_remedy%
+        &0%item_antibiotics%
+        &0%item_antitoxin%
+      - |
+        &5&lSickness &7(4/4)
+
+        &0Some fade on
+        &0their own once
+        &0you stop the
+        &0cause: stay warm,
+        &0stay dry, drink
+        &0clean, heal your
+        &0wounds, eat well.
+
+        &8Stage three
+        &8kills.
     commands:
       - |
         &5&lCommands

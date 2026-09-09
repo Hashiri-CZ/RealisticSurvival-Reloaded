@@ -27,6 +27,9 @@ import cz.hashiri.harshlands.disease.symptom.SymptomContext;
 import cz.hashiri.harshlands.disease.symptom.SymptomHandler;
 import cz.hashiri.harshlands.disease.symptom.SymptomHandlers;
 import cz.hashiri.harshlands.disease.trigger.DiseaseTrigger;
+import cz.hashiri.harshlands.data.HLModule;
+import cz.hashiri.harshlands.hints.HintKey;
+import cz.hashiri.harshlands.hints.HintsModule;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -81,6 +84,7 @@ public final class DiseaseProgressionTask implements Runnable {
             if (chance > 0 && random.nextDouble() < chance) {
                 dm.contract(disease.id(), disease.incubationTicks(), now);
                 dm.incrementContractionCount();
+                module.getNotifier().notifyContracted(p);
             }
             return;
         }
@@ -90,6 +94,8 @@ public final class DiseaseProgressionTask implements Runnable {
                 inf.setStage(1);
                 inf.setTicksInStage(0);
                 inf.setIncubationLeft(0);
+                module.getNotifier().notifyStageChange(p, 0, 1);
+                sendHint(p, HintKey.FIRST_SICKNESS_ONSET);
             } else {
                 inf.setIncubationLeft(
                     DiseaseProgression.decrementIncubation(inf.getIncubationLeft(), ticksPerCheck));
@@ -114,11 +120,21 @@ public final class DiseaseProgressionTask implements Runnable {
                 // immunityDurationTicks is in game ticks; convert to ms to match the wall clock.
                 dm.grantImmunity(disease.id(), now + disease.immunityDurationTicks() * 50L);
             }
+            module.getNotifier().notifyNaturalCure(p);
+            sendHint(p, HintKey.FIRST_SICKNESS_CURED);
             return;
         }
 
         if (r.stage() != inf.getStage()) {
             clearSymptoms(p, disease, inf.getStage());
+            module.getNotifier().notifyStageChange(p, inf.getStage(), r.stage());
+            if (r.stage() > inf.getStage()) {
+                // Terminal is the lesson worth its own hint: it is the only stage that
+                // kills, and it is the last point at which curing still helps.
+                sendHint(p, r.stage() == disease.maxStage()
+                    ? HintKey.FIRST_SICKNESS_TERMINAL
+                    : HintKey.FIRST_SICKNESS_WORSENED);
+            }
         }
         inf.setStage(r.stage());
         inf.setTicksInStage(r.ticksInStage());
@@ -158,6 +174,19 @@ public final class DiseaseProgressionTask implements Runnable {
         if (immune) return 0.0; // drained above, but immunity blocks contraction outright
         double multiplied = sum * contractionMultiplier;
         return cz.hashiri.harshlands.disease.symptom.special.ContractionMath.clampChance(multiplied);
+    }
+
+    /**
+     * Fires a one-time teaching hint, if the Hints module is loaded and enabled.
+     *
+     * <p>Looked up per call rather than cached: HintsModule initialises after DiseaseModule
+     * (HLPlugin.onEnable), so a reference captured at construction would always be null.
+     */
+    private void sendHint(Player p, HintKey key) {
+        HLModule hints = HLModule.getModule(HintsModule.NAME);
+        if (hints instanceof HintsModule hintsModule && hints.isGloballyEnabled()) {
+            hintsModule.sendHint(p, key);
+        }
     }
 
     private void applySymptoms(Player p, Disease disease, int stage) {

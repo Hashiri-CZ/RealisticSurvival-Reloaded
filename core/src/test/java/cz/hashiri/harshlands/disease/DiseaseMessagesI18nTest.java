@@ -142,18 +142,52 @@ class DiseaseMessagesI18nTest {
         Messages.reload();
 
         List<String> keys = List.of(
+                // Startup/shutdown banners resolved via Utils.logModuleInit/logModuleShutdown.
+                "disease.initialize.message",
+                "disease.shutdown.message",
                 "disease.messages.no_infection",
                 "disease.messages.too_advanced",
                 "disease.messages.dose_on_cooldown",
                 "disease.messages.treated",
                 "disease.messages.fully_recovered",
                 "disease.messages.regressed_stage",
+                // Optional progression feedback (ProgressionNotifier).
+                "disease.progression.contracted",
+                "disease.progression.onset",
+                "disease.progression.worsened",
+                "disease.progression.eased",
+                "disease.progression.recovered",
                 "disease.diagnosis.healthy",
                 "disease.diagnosis.header",
                 "disease.diagnosis.incubating",
                 "disease.diagnosis.active",
                 "disease.symptom.item_use_failure.action_bar",
-                "disease.symptom.block_eating.action_bar");
+                "disease.symptom.block_eating.action_bar",
+                // /hl disease admin command.
+                "commands.disease.module_disabled",
+                "commands.disease.unknown_disease",
+                "commands.disease.invalid_stage",
+                "commands.disease.invalid_ticks",
+                "commands.disease.no_data",
+                "commands.disease.list.header",
+                "commands.disease.list.entry",
+                "commands.disease.list.no_cure",
+                "commands.disease.status.header",
+                "commands.disease.status.exposure",
+                "commands.disease.status.healthy",
+                "commands.disease.status.incubating",
+                "commands.disease.status.active",
+                "commands.disease.status.immune",
+                "commands.disease.infected",
+                "commands.disease.staged",
+                "commands.disease.cured",
+                "commands.disease.cured_all",
+                "commands.disease.not_infected",
+                "commands.disease.immunity_granted",
+                "commands.disease.immunity_cleared",
+                "commands.disease.tainted",
+                "commands.disease.tainted_already",
+                "commands.disease.no_item");
 
         for (String key : keys) {
             String resolved = Messages.get(key);
@@ -166,6 +200,31 @@ class DiseaseMessagesI18nTest {
                 Messages.of("disease.messages.no_infection").with("disease", "Sybok").build());
         assertEquals("§c- Jitters §7(stage 2)",
                 Messages.of("disease.diagnosis.active").with("disease", "Jitters").with("stage", 2).build());
+
+        // The usage block is a list, not a scalar; getList() returns empty for a missing key.
+        assertFalse(Messages.getList("commands.disease.usage").isEmpty(),
+                "commands.disease.usage must ship as a non-empty list");
+    }
+
+    /**
+     * Progression feedback must never name the disease: the medical kit is the only thing that
+     * identifies an illness, so a %disease% placeholder creeping into these strings would quietly
+     * make the diagnostic item pointless.
+     */
+    @Test
+    void progression_messages_never_name_the_disease() throws IOException, URISyntaxException {
+        java.net.URL url = getClass().getClassLoader().getResource("Translations/en-US/disease.yml");
+        assertTrue(url != null, "disease.yml must ship with en-US (not found on test classpath)");
+        Path enUSDir = Path.of(url.toURI()).getParent();
+
+        Messages.bind(new LocaleManager(enUSDir.getParent(), enUSDir.getFileName().toString()));
+        Messages.reload();
+
+        for (String key : List.of("contracted", "onset", "worsened", "eased", "recovered")) {
+            String resolved = Messages.get("disease.progression." + key);
+            assertFalse(resolved.contains("%disease%"),
+                    "disease.progression." + key + " must not name the disease — that is the medical kit's job");
+        }
     }
 
     private static void bindFakeLocale(Path root, String yaml) throws IOException {

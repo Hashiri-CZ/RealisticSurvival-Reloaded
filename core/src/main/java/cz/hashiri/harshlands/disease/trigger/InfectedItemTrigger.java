@@ -67,6 +67,13 @@ public final class InfectedItemTrigger implements DiseaseTrigger, Listener, Play
 
     @Override public String diseaseId() { return diseaseId; }
 
+    /**
+     * True when this trigger only fires on items carrying the {@code hldiseased} tag.
+     * {@link TaintedItemSource} uses this to work out which diseases are tag-borne, and so
+     * which infected players spread contamination through their drops.
+     */
+    public boolean requiresNbtTag() { return requireNbtTag; }
+
     /** Pure: is this item infectious for this trigger's mode? */
     public static boolean infectious(Material consumed, boolean hasDiseasedTag,
                                      Set<Material> infectedMaterials, boolean requireNbtTag) {

@@ -72,11 +72,13 @@ public class Commands implements CommandExecutor {
      */
     private final HLPlugin plugin;
     private final FileConfiguration config;
+    private final DiseaseCommand diseaseCommand;
 
     // constructing the Commands class
     public Commands(HLPlugin plugin) {
         this.plugin = plugin;
         this.config = plugin.getCommandsConfig();
+        this.diseaseCommand = new DiseaseCommand(plugin);
     }
 
     // -------------------------------------------------------------------------
@@ -1468,6 +1470,9 @@ public class Commands implements CommandExecutor {
 
                     sendInvalidArgumentMsg(sender);
                     return true;
+                }
+                case "disease" -> {
+                    return diseaseCommand.execute(sender, args);
                 }
                 case "bdh" -> {
                     if (!sender.hasPermission("harshlands.command.debug")) {

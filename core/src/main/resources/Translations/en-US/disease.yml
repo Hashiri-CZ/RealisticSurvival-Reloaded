@@ -1,4 +1,8 @@
 disease:
+  initialize:
+    message: "&fInitializing %name% module"
+  shutdown:
+    message: "&fShutting down %name% module"
   messages:
     no_infection: "&7Nothing happens — you don't have %disease%."
     too_advanced: "&7The %disease% is too advanced — the treatment can't cure it now."
@@ -6,6 +10,15 @@ disease:
     treated: "&aYou treated your %disease%."
     fully_recovered: "&aYou have fully recovered from %disease%."
     regressed_stage: "&aThe regimen pushes your %disease% back a stage."
+  # Progression feedback, toggled by Notifications in Settings/disease.yml.
+  # Kept deliberately vague — never name the disease here, or the medical kit
+  # stops being worth crafting.
+  progression:
+    contracted: "&7Something doesn't feel right..."
+    onset: "&eYou start to feel unwell."
+    worsened: "&cYour condition worsens."
+    eased: "&aYour condition eases a little."
+    recovered: "&aYou feel like yourself again."
   diagnosis:
     healthy: "&7You appear to be in good health."
     header: "&6Diagnosis:"

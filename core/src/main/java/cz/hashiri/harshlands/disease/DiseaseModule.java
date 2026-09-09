@@ -58,6 +58,7 @@ import cz.hashiri.harshlands.disease.trigger.PapiLimbStateReader;
 import cz.hashiri.harshlands.disease.trigger.PlayerQuitCleanupListener;
 import cz.hashiri.harshlands.disease.trigger.RadiationTrigger;
 import cz.hashiri.harshlands.disease.trigger.RustySourceTrigger;
+import cz.hashiri.harshlands.disease.trigger.TaintedItemSource;
 import cz.hashiri.harshlands.disease.trigger.UnpurifiedWaterTrigger;
 import cz.hashiri.harshlands.disease.symptom.special.JittersHandler;
 import cz.hashiri.harshlands.disease.trigger.DeathFrequencyTrigger;
@@ -67,6 +68,7 @@ import org.bukkit.Material;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -75,6 +77,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -94,6 +97,7 @@ public final class DiseaseModule extends HLModule {
     private DiseaseEvents events;
     private final SpecialSymptomTracker symptomTracker = new SpecialSymptomTracker();
     private final List<Listener> specialListeners = new ArrayList<>();
+    private ProgressionNotifier notifier = ProgressionNotifier.silent();
 
     public DiseaseModule(HLPlugin plugin) {
         super(NAME, plugin, Map.of(), Map.of());
@@ -274,6 +278,10 @@ public final class DiseaseModule extends HLModule {
                 sybok.getDouble("ChancePerCheck", 0.05)));
         }
 
+        registerTaintedItemSource(cfg);
+
+        notifier = ProgressionNotifier.fromConfig(cfg.getConfigurationSection("Notifications"));
+
         // NO_EXPOSURE mitigations wrap the disease's own triggers; build after triggers exist.
         if (diseases != null) {
             for (String id : diseases.getKeys(false)) {
@@ -349,6 +357,58 @@ public final class DiseaseModule extends HLModule {
     public List<DiseaseTrigger> getTriggers() { return triggers; }
 
     public DiseaseRegistry getRegistry() { return registry; }
+
+    public ProgressionNotifier getNotifier() { return notifier; }
+
+    /**
+     * Wires up the {@code hldiseased} tag sources. Must run after the triggers are built, because
+     * the player-drop vector only applies to diseases whose trigger actually reads the tag.
+     */
+    private void registerTaintedItemSource(FileConfiguration cfg) {
+        Set<String> tagBorne = new HashSet<>();
+        for (DiseaseTrigger t : triggers) {
+            if (t instanceof InfectedItemTrigger infectedTrigger && infectedTrigger.requiresNbtTag()) {
+                tagBorne.add(infectedTrigger.diseaseId());
+            }
+        }
+
+        ConfigurationSection tainted = cfg.getConfigurationSection("TaintedItems");
+        boolean mobEnabled = tainted != null && tainted.getBoolean("MobDrops.Enabled", true);
+        Set<EntityType> mobTypes = mobEnabled
+            ? toEntityTypeSet(tainted.getStringList("MobDrops.Entities"))
+            : Set.of();
+        double mobChance = tainted != null ? tainted.getDouble("MobDrops.Chance", 0.15) : 0.0;
+        boolean playerEnabled = tainted != null && tainted.getBoolean("InfectedPlayerDrops.Enabled", true);
+        double playerChance = tainted != null ? tainted.getDouble("InfectedPlayerDrops.Chance", 0.5) : 0.0;
+
+        TaintedItemSource source = new TaintedItemSource(
+            mobEnabled, mobTypes, mobChance, playerEnabled, playerChance, tagBorne);
+
+        if (source.isInert()) {
+            if (!tagBorne.isEmpty()) {
+                // Silence here would be indistinguishable from a broken trigger in-game: the
+                // disease loads, its trigger runs every check, and it can never once fire.
+                plugin.getLogger().warning("[Disease] No contamination source is active, so "
+                    + tagBorne + " can never be contracted. Enable TaintedItems.MobDrops in "
+                    + "Settings/disease.yml, or apply the tag manually with /hl disease taint.");
+            }
+            return;
+        }
+        specialListeners.add(source);
+    }
+
+    private static Set<EntityType> toEntityTypeSet(List<String> names) {
+        Set<EntityType> set = EnumSet.noneOf(EntityType.class);
+        for (String name : names) {
+            try {
+                set.add(EntityType.valueOf(name.toUpperCase(java.util.Locale.ROOT)));
+            } catch (IllegalArgumentException ignored) {
+                HLPlugin.getPlugin().getLogger().warning(
+                    "[Disease] Unknown entity type in TaintedItems.MobDrops.Entities: " + name);
+            }
+        }
+        return set;
+    }
 
     private static Set<Material> toMaterialSet(List<String> names) {
         Set<Material> set = EnumSet.noneOf(Material.class);

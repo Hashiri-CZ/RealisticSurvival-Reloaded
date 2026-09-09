@@ -1,4 +1,7 @@
 # Harshlands — Disease module settings.
+
+ConfigId: "1.3.3-RELEASE" # Used for config syncing purposes, do NOT edit
+
 Initialize:
   Enabled: true
 Shutdown:
@@ -6,6 +9,47 @@ Shutdown:
 
 # Ticks between progression checks (also the effect re-apply cadence).
 CheckIntervalTicks: 60
+
+# ────────────────────────────────────────────────────────────────────────────
+# Player-facing progression feedback.
+#
+# Messages are deliberately vague — they tell the player that SOMETHING is
+# wrong, never which disease it is. Naming the illness is the medical kit's
+# job, so leaving these on does not make the diagnostic item redundant.
+#
+# OnContract is off by default: it would reveal the exact instant of infection
+# and make incubation pointless. Turn it on when testing so you can see a
+# trigger fire without waiting out the incubation period.
+# ────────────────────────────────────────────────────────────────────────────
+Notifications:
+  OnContract: false        # the moment a trigger succeeds (still incubating)
+  OnStageChange: true      # incubation ends, or the illness worsens / eases
+  OnNaturalCure: true      # mitigation regressed the illness away entirely
+
+# ────────────────────────────────────────────────────────────────────────────
+# Sources of the `hldiseased` item tag — the contamination that any trigger with
+# RequireDiseasedTag (Wasting Blight, below) keys off. Without at least one
+# source enabled here that disease can never be contracted, because nothing
+# else in the plugin ever applies the tag.
+#
+# `/hl disease taint` tags the held item by hand for testing.
+# ────────────────────────────────────────────────────────────────────────────
+TaintedItems:
+  # Drops from these mobs are tainted with the given chance, per dropped stack.
+  MobDrops:
+    Enabled: true
+    Entities:
+      - ZOMBIE
+      - ZOMBIE_VILLAGER
+      - HUSK
+      - DROWNED
+    Chance: 0.15
+  # Items dropped on death by a player who is currently carrying a
+  # tag-borne disease pass the contamination on. This is the player-to-player
+  # vector; it cannot bootstrap on its own, so keep MobDrops enabled too.
+  InfectedPlayerDrops:
+    Enabled: true
+    Chance: 0.50
 
 Diseases:
   respiratory_infection:

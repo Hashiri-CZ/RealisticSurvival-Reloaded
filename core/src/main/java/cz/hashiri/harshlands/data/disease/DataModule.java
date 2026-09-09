@@ -79,6 +79,14 @@ public class DataModule implements HLDataModule {
         }
     }
 
+    /** Drops any immunity to {@code diseaseId}. Used by {@code /hl disease immune <...> 0}. */
+    public void clearImmunity(String diseaseId) {
+        if (immunity.remove(diseaseId) != null) dirty = true;
+    }
+
+    /** Snapshot of every recorded immunity: disease id to wall-clock expiry in ms. */
+    public Map<String, Long> getImmunities() { return Map.copyOf(immunity); }
+
     /** Call after mutating an infection in place (stage/ticks/incubation) so it is persisted. */
     public void markDirty() { dirty = true; }
 

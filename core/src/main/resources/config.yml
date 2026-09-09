@@ -97,6 +97,14 @@ Fear:
     world: true
     world_nether: true
     world_the_end: true
+# Staged illnesses contracted from the environment, food, injuries and water.
+# Disease definitions, triggers and cures live in Settings/disease.yml.
+Disease:
+  Enabled: true
+  Worlds:
+    world: true
+    world_nether: true
+    world_the_end: true
 FoodExpansion:
   Enabled: true
   Worlds:

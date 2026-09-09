@@ -77,3 +77,18 @@ Hints:
   FIRST_CABIN_FEVER:
     Enabled: true
     Sound: "AMBIENT_CAVE"
+  # Disease module. These fire from the progression task, independently of the
+  # Notifications toggles in Settings/disease.yml — those repeat every time, these
+  # teach once.
+  FIRST_SICKNESS_ONSET:
+    Enabled: true
+    Sound: "UI_TOAST_IN"
+  FIRST_SICKNESS_WORSENED:
+    Enabled: true
+    Sound: "ENTITY_PLAYER_HURT"
+  FIRST_SICKNESS_TERMINAL:
+    Enabled: true
+    Sound: "ENTITY_WITHER_SPAWN"
+  FIRST_SICKNESS_CURED:
+    Enabled: true
+    Sound: "ENTITY_PLAYER_LEVELUP"

@@ -193,6 +193,12 @@ permissions:
   harshlands.command.baubles.others:
     description: Allows viewing another player's bauble bag (read-only)
     default: op
+  harshlands.command.disease:
+    description: Allows inspecting disease state with /hl disease list|status
+    default: op
+  harshlands.command.disease.admin:
+    description: Allows infecting, staging, curing and tainting via /hl disease
+    default: op
   harshlands.command.*:
     description: Wildcard permission
     default: op
@@ -224,4 +230,6 @@ permissions:
       harshlands.command.guide.reset: true
       harshlands.command.baubles: true
       harshlands.command.baubles.others: true
+      harshlands.command.disease: true
+      harshlands.command.disease.admin: true
 

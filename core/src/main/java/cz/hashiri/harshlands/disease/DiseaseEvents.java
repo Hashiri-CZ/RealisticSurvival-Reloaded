@@ -33,7 +33,13 @@ import org.bukkit.inventory.ItemStack;
 
 public final class DiseaseEvents implements Listener {
 
-    public static final String DIAGNOSTIC_ITEM_ID = "medical_kit";
+    /**
+     * Must not collide with any other module's item id: {@code HLItem.itemMap} is a single
+     * global namespace keyed by this string, and {@code HLItem.getNameFromItem} resolves the
+     * {@code hlitem} NBT tag the same way for every module. Sharing an id with FirstAid's
+     * {@code medical_kit} made one right-click both diagnose AND full-heal every limb.
+     */
+    public static final String DIAGNOSTIC_ITEM_ID = "diagnostic_kit";
 
     private final DiseaseModule module;
     private final DiseaseRegistry registry;

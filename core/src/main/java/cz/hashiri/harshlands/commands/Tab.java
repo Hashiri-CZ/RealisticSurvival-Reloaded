@@ -83,7 +83,7 @@ public class Tab implements TabCompleter {
             List<String> result = new ArrayList<>(); // create an empty string list which will store the tab completer texts
 
             if (firstArgs.isEmpty()) {
-                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide", "baubles"));
+                firstArgs.addAll(Set.of("reload", "give", "spawnitem", "summon", "thirst", "temperature", "resetitem", "updateitem", "fear", "setfear", "comfort", "help", "version", "debug", "nutrition", "hints", "obtain", "guide", "baubles", "disease"));
             }
 
             if (mobs.isEmpty()) {
@@ -251,6 +251,16 @@ public class Tab implements TabCompleter {
                             result.add(p.getName());
                         }
                     }
+                    case "disease" -> {
+                        if (!sender.hasPermission("harshlands.command.disease")) break;
+                        boolean admin = sender.hasPermission("harshlands.command.disease.admin");
+                        String prefix = args[1].toLowerCase();
+                        for (String sub : DiseaseCommand.SUBCOMMANDS) {
+                            boolean readOnly = sub.equals("list") || sub.equals("status");
+                            if (!readOnly && !admin) continue;
+                            if (sub.startsWith(prefix)) result.add(sub);
+                        }
+                    }
                     case "obtain" -> {
                         String prefix = args[1].toLowerCase();
                         Set<String> obtainKeys =
@@ -318,12 +328,47 @@ public class Tab implements TabCompleter {
                                 .collect(java.util.stream.Collectors.toList());
                         }
                     }
+                    case "disease" -> {
+                        if (!sender.hasPermission("harshlands.command.disease")) break;
+                        if (!DiseaseCommand.PLAYER_ARG_SUBCOMMANDS.contains(args[1].toLowerCase())) break;
+                        String prefix = args[2].toLowerCase();
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            if (online.getName().toLowerCase().startsWith(prefix)) {
+                                result.add(online.getName());
+                            }
+                        }
+                    }
                 }
 
                 return result;
             }
             // if more than 3 arguments were typed
             else if (args.length > 3) {
+                if (args.length == 4 && args[0].equalsIgnoreCase("disease")
+                        && sender.hasPermission("harshlands.command.disease.admin")
+                        && DiseaseCommand.DISEASE_ARG_SUBCOMMANDS.contains(args[1].toLowerCase())) {
+                    String prefix = args[3].toLowerCase();
+                    // "cure all" is the one place a non-disease word is accepted here.
+                    if (args[1].equalsIgnoreCase("cure") && "all".startsWith(prefix)) result.add("all");
+                    for (String id : DiseaseCommand.loadedDiseaseIds()) {
+                        if (id.startsWith(prefix)) result.add(id);
+                    }
+                    return result;
+                }
+                if (args.length == 5 && args[0].equalsIgnoreCase("disease")
+                        && sender.hasPermission("harshlands.command.disease.admin")) {
+                    String prefix = args[4].toLowerCase();
+                    if (args[1].equalsIgnoreCase("infect") || args[1].equalsIgnoreCase("stage")) {
+                        for (String stage : List.of("0", "1", "2", "3")) {
+                            if (stage.startsWith(prefix)) result.add(stage);
+                        }
+                    } else if (args[1].equalsIgnoreCase("immune")) {
+                        for (String ticks : List.of("0", "1200", "6000", "24000")) {
+                            if (ticks.startsWith(prefix)) result.add(ticks);
+                        }
+                    }
+                    return result;
+                }
                 if (args.length == 6) {
                     if (args[0].equalsIgnoreCase("spawnitem") || args[0].equalsIgnoreCase("summon")) {
                         for (String a : worlds) {
