@@ -92,11 +92,30 @@
             <artifactId>harshlands-spigot_impl_26_1_R1</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cz.hashiri.harshlands</groupId>
-            <artifactId>harshlands-spigot_impl_26_2_R1</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
     </dependencies>
+
+    <profiles>
+        <!--
+          Matches the mc26_2 profile in the parent pom: the 26.2 impl is only a
+          dependency of the shaded jar when that module is actually in the reactor.
+          Activate with `mvn -Pmc26_2 ...`. See the parent pom for the full rationale
+          and for how to make 26.2 a default-built version later.
+
+          The corresponding <include> in the shade plugin's <artifactSet> above is
+          left unconditional: shade include patterns that match no dependency are
+          simply ignored, so it is harmless when this profile is inactive and there
+          is no second copy of the plugin config to keep in sync.
+        -->
+        <profile>
+            <id>mc26_2</id>
+            <dependencies>
+                <dependency>
+                    <groupId>cz.hashiri.harshlands</groupId>
+                    <artifactId>harshlands-spigot_impl_26_2_R1</artifactId>
+                    <version>${project.parent.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
