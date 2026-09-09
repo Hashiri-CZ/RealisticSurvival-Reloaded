@@ -24,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -94,8 +95,15 @@ public final class InfectedItemTrigger implements DiseaseTrigger, Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
+        // Interact/use is only a Wasting-Blight-style vector (handling a contaminated item);
+        // material-list triggers such as Septicemia infect only by actually eating the item,
+        // via onConsume. Merely right-clicking while holding spoiled food must not roll a check.
+        if (!requireNbtTag) return;
         if (event.getAction() != Action.RIGHT_CLICK_AIR
             && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        // PlayerInteractEvent fires once per hand; only count the main hand so a single
+        // player action marks at most one exposure (mirrors DiseaseEvents.onRightClick).
+        if (event.getHand() != EquipmentSlot.HAND) return;
         considerItem(event.getPlayer(), event.getItem());
     }
 
