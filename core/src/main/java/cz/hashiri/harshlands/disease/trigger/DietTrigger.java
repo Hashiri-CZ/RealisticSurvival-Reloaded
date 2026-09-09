@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.disease.trigger;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
 import cz.hashiri.harshlands.foodexpansion.NutrientTier;
 import org.bukkit.entity.Player;
 
@@ -36,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>{@code NutrientTier} ordinals are not severity-ordered, so "malnourished" is a configured
  * set of tiers, never an ordinal comparison.
  */
-public final class DietTrigger implements DiseaseTrigger {
+public final class DietTrigger implements DiseaseTrigger, PlayerStateCleanup {
 
     private final String diseaseId;
     private final Set<NutrientTier> malnourishedTiers;
@@ -94,5 +95,11 @@ public final class DietTrigger implements DiseaseTrigger {
     @Override
     public double chance(Player player) {
         return chanceFor(player.getUniqueId(), reader.tier(player));
+    }
+
+    /** Drop this player's consecutive-malnourished counter (quit cleanup — see {@link PlayerStateCleanup}). */
+    @Override
+    public void clearPlayer(UUID uuid) {
+        consecutive.remove(uuid);
     }
 }

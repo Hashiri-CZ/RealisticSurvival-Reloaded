@@ -55,6 +55,7 @@ import cz.hashiri.harshlands.disease.trigger.LimbStateReader;
 import cz.hashiri.harshlands.disease.trigger.NutrientTierReader;
 import cz.hashiri.harshlands.disease.trigger.NutritionTierReader;
 import cz.hashiri.harshlands.disease.trigger.PapiLimbStateReader;
+import cz.hashiri.harshlands.disease.trigger.PlayerQuitCleanupListener;
 import cz.hashiri.harshlands.disease.trigger.RadiationTrigger;
 import cz.hashiri.harshlands.disease.trigger.RustySourceTrigger;
 import cz.hashiri.harshlands.disease.trigger.UnpurifiedWaterTrigger;
@@ -303,6 +304,17 @@ public final class DiseaseModule extends HLModule {
         specialListeners.add(blockRegen);
         specialListeners.add(blockEating);
         specialListeners.add(maxHealthReduction);
+
+        // Uniform quit-cleanup path: every trigger/tracker holding per-player state opts in by
+        // implementing PlayerStateCleanup, so a future stateful trigger is covered automatically
+        // instead of requiring someone to remember to edit a growing list here.
+        List<PlayerStateCleanup> cleanupTargets = new ArrayList<>();
+        for (DiseaseTrigger t : triggers) {
+            if (t instanceof PlayerStateCleanup cleanup) cleanupTargets.add(cleanup);
+        }
+        cleanupTargets.add(symptomTracker);
+        specialListeners.add(new PlayerQuitCleanupListener(cleanupTargets));
+
         for (Listener l : specialListeners) {
             Bukkit.getPluginManager().registerEvents(l, plugin);
         }
@@ -329,6 +341,9 @@ public final class DiseaseModule extends HLModule {
         specialListeners.clear();
         triggers.clear();
         mitigations.clear();
+        // symptomTracker is final and survives a shutdown/initialize cycle (plugin reload);
+        // its entries would otherwise linger until their TTL against a fresh module instance.
+        symptomTracker.clearAll();
     }
 
     public List<DiseaseTrigger> getTriggers() { return triggers; }

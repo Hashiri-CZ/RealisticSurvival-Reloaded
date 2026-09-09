@@ -28,4 +28,16 @@ class UnpurifiedWaterTriggerTest {
     @Test void disease_id_reported() {
         assertEquals("dysentery", trigger().diseaseId());
     }
+
+    // --- quit cleanup (PlayerStateCleanup): a departing player's pending exposure must not
+    // linger in the map forever ---
+    @Test void clear_player_drops_pending_exposure() {
+        UnpurifiedWaterTrigger t = trigger();
+        UUID p = UUID.randomUUID();
+        t.markPending(p, System.currentTimeMillis() + 100_000L);
+
+        t.clearPlayer(p);
+
+        assertFalse(t.takePending(p, System.currentTimeMillis()));
+    }
 }

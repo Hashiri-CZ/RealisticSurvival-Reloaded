@@ -77,8 +77,9 @@ public final class ItemUseFailureHandler implements SymptomHandler, Listener {
     }
 
     private void feedback(Player player) {
+        String text = cz.hashiri.harshlands.locale.Messages.get("disease.symptom.item_use_failure.action_bar");
         ((net.kyori.adventure.audience.Audience) player).sendActionBar(
             net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection()
-                .deserialize("§5Your hands won't cooperate..."));
+                .deserialize(text));
     }
 }

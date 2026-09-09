@@ -59,7 +59,7 @@ All of this is modular — every system below can be turned off, tuned, or left 
 
 | Requirement | Version |
 |-------------|---------|
-| Minecraft   | `1.21.11`, `26.1.2` |
+| Minecraft   | `1.21.11`, `26.1.2`, `26.2` |
 | Server      | Spigot, Paper, or Purpur |
 | Java        | 21+ |
 
@@ -70,7 +70,7 @@ All of this is modular — every system below can be turned off, tuned, or left 
 5. `/hl reload`.
 
 > [!NOTE]
-> One jar covers both `1.21.11` and `26.1.2`. The plugin picks the right implementation at startup.
+> One jar covers all three of `1.21.11`, `26.1.2` and `26.2`. The plugin picks the right implementation at startup.
 
 ---
 
@@ -114,7 +114,7 @@ Non-ASCII scripts (Chinese, Cyrillic, Greek, Arabic, etc.) render through Minecr
 
 ## 🗺️ Roadmap
 
-- [x] Multi-version support (1.21.11 and 26.1.2)
+- [x] Multi-version support (1.21.11, 26.1.2 and 26.2)
 - [x] Food expansion with macronutrients
 - [x] First Aid body-parts damage
 - [x] Comfort system
@@ -135,6 +135,65 @@ Bug reports, ideas, code, translations — all welcome.
 2. Branch: `git checkout -b feature/whatever`.
 3. Commit and push.
 4. Open a PR.
+
+### Building from source
+
+Harshlands ships one jar that carries a separate NMS implementation module per supported
+Minecraft version. Spigot jars are not published to any public Maven repository — every
+developer installs them locally with BuildTools:
+
+```bash
+mkdir -p ~/buildtools && cd ~/buildtools
+curl -sSLO https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+
+java -jar BuildTools.jar --rev 1.21.11 --remapped
+java -jar BuildTools.jar --rev 26.1.2  --remapped
+
+# only needed for the optional mc26_2 profile, see below
+java -jar BuildTools.jar --rev 26.2    --remapped
+```
+
+Check what landed in your local repo — the exact version labels are what the module POMs must
+reference:
+
+```bash
+ls ~/.m2/repository/org/spigotmc/spigot/
+ls ~/.m2/repository/org/spigotmc/minecraft-server/
+```
+
+You also need a **JDK 25 or newer** installed alongside your normal JDK 21: `core`,
+`harshlands-api`, `spigot_impl_1_21_R11` and `dist` compile at release 21, while
+`spigot_impl_26_1_R1` and `spigot_impl_26_2_R1` compile at release 25. Maven forks those two
+modules onto a JDK 25+ toolchain automatically via `maven-toolchains-plugin`'s JDK
+auto-discovery — no `~/.m2/toolchains.xml` entry and no hardcoded path is needed. To see which
+JDKs discovery finds:
+
+```bash
+mvn org.apache.maven.plugins:maven-toolchains-plugin:3.2.0:display-discovered-jdk-toolchains
+```
+
+Then build:
+
+```bash
+mvn clean package -pl core,dist -am
+# -> target/harshlands-<version>.jar
+```
+
+That default build covers `1.21.11` and `26.1.2`, and needs only those two Spigot artifacts.
+To additionally build and shade the Minecraft 26.2 implementation, activate the `mc26_2`
+profile — which also requires the 26.2 artifact from BuildTools:
+
+```bash
+mvn -Pmc26_2 clean package -pl core,dist -am
+```
+
+> [!NOTE]
+> `spigot_impl_26_2_R1` is complete and fully wired, but is kept behind the `mc26_2` profile
+> and has **not** yet been compiled against a real Spigot 26.2 artifact — none exists locally
+> yet. Its Spigot coordinate is an unconfirmed guess; see the comments at the top of
+> `spigot_impl_26_2_R1/pom.xml` for the exact value to reconcile against BuildTools output,
+> and the `mc26_2` profile in the root `pom.xml` for how to promote 26.2 to a default-built
+> version once its artifacts are standard.
 
 ---
 

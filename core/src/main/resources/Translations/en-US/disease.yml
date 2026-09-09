@@ -1,0 +1,18 @@
+disease:
+  messages:
+    no_infection: "&7Nothing happens — you don't have %disease%."
+    too_advanced: "&7The %disease% is too advanced — the treatment can't cure it now."
+    dose_on_cooldown: "&7The treatment hasn't taken hold yet — wait before the next dose."
+    treated: "&aYou treated your %disease%."
+    fully_recovered: "&aYou have fully recovered from %disease%."
+    regressed_stage: "&aThe regimen pushes your %disease% back a stage."
+  diagnosis:
+    healthy: "&7You appear to be in good health."
+    header: "&6Diagnosis:"
+    incubating: "&7- %disease% &8(incubating)"
+    active: "&c- %disease% &7(stage %stage%)"
+  symptom:
+    item_use_failure:
+      action_bar: "&5Your hands won't cooperate..."
+    block_eating:
+      action_bar: "&eYour jaw locks up — you can't eat."

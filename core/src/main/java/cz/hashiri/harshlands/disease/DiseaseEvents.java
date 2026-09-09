@@ -22,6 +22,7 @@ import cz.hashiri.harshlands.data.disease.DataModule;
 import cz.hashiri.harshlands.disease.engine.DoseMath;
 import cz.hashiri.harshlands.disease.model.CureMode;
 import cz.hashiri.harshlands.disease.model.Disease;
+import cz.hashiri.harshlands.locale.Messages;
 import cz.hashiri.harshlands.utils.HLItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,7 +71,7 @@ public final class DiseaseEvents implements Listener {
         DataModule dm = hlPlayer != null ? hlPlayer.getDiseaseDataModule() : null;
         if (dm == null || !dm.hasInfection(cured.id())) {
             // Don't cancel — let normal block interaction through when there's nothing to cure.
-            player.sendMessage("§7Nothing happens — you don't have " + cured.displayName() + ".");
+            Messages.of("disease.messages.no_infection").with("disease", cured.displayName()).send(player);
             return;
         }
         event.setCancelled(true);
@@ -82,7 +83,7 @@ public final class DiseaseEvents implements Listener {
             ActiveInfection inf = dm.getInfection(cured.id());
             int stage = inf != null ? inf.getStage() : 0;
             if (!DoseMath.clearableBeforeTerminal(stage, cured.maxStage())) {
-                player.sendMessage("§7The " + cured.displayName() + " is too advanced — the treatment can't cure it now.");
+                Messages.of("disease.messages.too_advanced").with("disease", cured.displayName()).send(player);
                 return; // event already cancelled; do not consume the item
             }
             // else fall through to the CLEAR path below
@@ -95,7 +96,7 @@ public final class DiseaseEvents implements Listener {
             dm.grantImmunity(cured.id(), System.currentTimeMillis() + cured.immunityDurationTicks() * 50L);
         }
         consumeOne(player, item);
-        player.sendMessage("§aYou treated your " + cured.displayName() + ".");
+        Messages.of("disease.messages.treated").with("disease", cured.displayName()).send(player);
     }
 
     /** REGRESS_ONE_STAGE cure: each off-cooldown dose drops the infection one stage. */
@@ -107,7 +108,7 @@ public final class DiseaseEvents implements Listener {
         DoseMath.DoseOutcome outcome =
             DoseMath.applyDose(inf.getStage(), dm.getLastDoseMs(disease.id()), cooldownMs, now);
         if (outcome.onCooldown()) {
-            player.sendMessage("§7The treatment hasn't taken hold yet — wait before the next dose.");
+            Messages.of("disease.messages.dose_on_cooldown").send(player);
             return;
         }
         module.clearAllSymptoms(player, disease);
@@ -118,12 +119,12 @@ public final class DiseaseEvents implements Listener {
             if (disease.immunityDurationTicks() > 0) {
                 dm.grantImmunity(disease.id(), now + disease.immunityDurationTicks() * 50L);
             }
-            player.sendMessage("§aYou have fully recovered from " + disease.displayName() + ".");
+            Messages.of("disease.messages.fully_recovered").with("disease", disease.displayName()).send(player);
         } else {
             inf.setStage(outcome.newStage());
             inf.setTicksInStage(0L);
             dm.markDirty();
-            player.sendMessage("§aThe regimen pushes your " + disease.displayName() + " back a stage.");
+            Messages.of("disease.messages.regressed_stage").with("disease", disease.displayName()).send(player);
         }
     }
 

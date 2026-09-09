@@ -16,14 +16,17 @@
  */
 package cz.hashiri.harshlands.disease.trigger;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -38,9 +41,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * a one-shot pending exposure (with a TTL that self-heals a missed read), and
  * {@link #chance(Player)} consumes it on the next progression check — which keeps the
  * immunity check and immune-suppression multiplier in
- * {@code DiseaseProgressionTask.totalChance} in the loop.
+ * {@code DiseaseProgressionTask.contractionChance} in the loop.
  */
-public final class InfectedItemTrigger implements DiseaseTrigger, Listener {
+public final class InfectedItemTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 
     public static final String DISEASED_NBT_KEY = "hldiseased";
 
@@ -87,15 +90,29 @@ public final class InfectedItemTrigger implements DiseaseTrigger, Listener {
         return takePending(player.getUniqueId(), System.currentTimeMillis()) ? chancePerCheck : 0.0;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    /**
+     * MONITOR so the exposure is only recorded once the item was actually eaten. At NORMAL this
+     * ran before {@code BlockEatingHandler} (Tetanus "locked jaw") cancelled the consume, so a
+     * blocked bite still infected the player — the same "caught it without eating" defect this
+     * trigger's interact gating fixes. With MONITOR + ignoreCancelled, a cancelled consume is
+     * skipped entirely. Observation only: nothing here mutates the event.
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onConsume(PlayerItemConsumeEvent event) {
         considerItem(event.getPlayer(), event.getItem());
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
+        // Interact/use is only a Wasting-Blight-style vector (handling a contaminated item);
+        // material-list triggers such as Septicemia infect only by actually eating the item,
+        // via onConsume. Merely right-clicking while holding spoiled food must not roll a check.
+        if (!requireNbtTag) return;
         if (event.getAction() != Action.RIGHT_CLICK_AIR
             && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        // PlayerInteractEvent fires once per hand; only count the main hand so a single
+        // player action marks at most one exposure (mirrors DiseaseEvents.onRightClick).
+        if (event.getHand() != EquipmentSlot.HAND) return;
         considerItem(event.getPlayer(), event.getItem());
     }
 
@@ -105,5 +122,11 @@ public final class InfectedItemTrigger implements DiseaseTrigger, Listener {
         if (infectious(item.getType(), tagged, infectedMaterials, requireNbtTag)) {
             markPending(player.getUniqueId(), System.currentTimeMillis() + ttlMs);
         }
+    }
+
+    /** Drop this player's pending exposure (quit cleanup — see {@link PlayerStateCleanup}). */
+    @Override
+    public void clearPlayer(UUID uuid) {
+        pending.remove(uuid);
     }
 }

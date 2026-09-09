@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.disease.trigger;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
 import cz.hashiri.harshlands.tan.RawWaterDrinkEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,10 +30,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * Dysentery: contraction from drinking raw/unpurified water. Listens for TAN's
  * {@link RawWaterDrinkEvent} and marks a one-shot pending exposure (with a TTL that self-heals
  * a missed read) that {@link #chance(Player)} consumes on the next progression check — keeping
- * the immunity check + immune-suppression multiplier in {@code DiseaseProgressionTask.totalChance}
- * in the loop. Mirrors {@code InfectedItemTrigger}.
+ * the immunity check + immune-suppression multiplier in
+ * {@code DiseaseProgressionTask.contractionChance} in the loop. Mirrors {@code InfectedItemTrigger}.
  */
-public final class UnpurifiedWaterTrigger implements DiseaseTrigger, Listener {
+public final class UnpurifiedWaterTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 
     private final String diseaseId;
     private final double chancePerCheck;
@@ -71,5 +72,11 @@ public final class UnpurifiedWaterTrigger implements DiseaseTrigger, Listener {
         if (player != null) {
             markPending(player.getUniqueId(), System.currentTimeMillis() + ttlMs);
         }
+    }
+
+    /** Drop this player's pending exposure (quit cleanup — see {@link PlayerStateCleanup}). */
+    @Override
+    public void clearPlayer(UUID uuid) {
+        pending.remove(uuid);
     }
 }
