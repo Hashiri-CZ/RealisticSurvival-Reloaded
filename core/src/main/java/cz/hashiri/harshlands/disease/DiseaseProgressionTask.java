@@ -30,6 +30,7 @@ import cz.hashiri.harshlands.disease.trigger.DiseaseTrigger;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public final class DiseaseProgressionTask implements Runnable {
@@ -69,8 +70,14 @@ public final class DiseaseProgressionTask implements Runnable {
         ActiveInfection inf = dm.getInfection(disease.id());
 
         if (inf == null) {
-            if (dm.isImmune(disease.id(), now)) return;
-            double chance = totalChance(p, dm, disease.id(), now);
+            // Triggers are polled even while immune, on purpose: several of them are event-driven
+            // and hold a short-lived one-shot "pending exposure" that chance() CONSUMES on read.
+            // Returning early on immunity would leave such an exposure sitting in its TTL, ready to
+            // be picked up by the first check after immunity lapses — attributing an exposure that
+            // happened during immunity to a later moment. contractionChance() drains those reads and
+            // still returns 0 while immune, so an immune player can never contract the disease.
+            double chance = contractionChance(module.getTriggers(), disease.id(), p,
+                dm.isImmune(disease.id(), now), dm.getContractionMultiplier(now));
             if (chance > 0 && random.nextDouble() < chance) {
                 dm.contract(disease.id(), disease.incubationTicks(), now);
                 dm.incrementContractionCount();
@@ -97,7 +104,8 @@ public final class DiseaseProgressionTask implements Runnable {
         boolean mitigating = module.mitigationActive(disease, p);
         DiseaseProgression.StageResult r = DiseaseProgression.progressStage(
             inf.getStage(), inf.getTicksInStage(), ticksPerCheck,
-            stageDef.durationTicks(), disease.maxStage(), mitigating);
+            stageDef.durationTicks(), prevStageDuration(disease, inf.getStage()),
+            disease.maxStage(), mitigating);
 
         if (r.cured()) {
             clearSymptoms(p, disease, inf.getStage());
@@ -119,14 +127,36 @@ public final class DiseaseProgressionTask implements Runnable {
         applySymptoms(p, disease, inf.getStage());
     }
 
-    private double totalChance(Player p, DataModule dm, String diseaseId, long now) {
+    /**
+     * Duration of the stage one below {@code stage} — the stage a mitigated regression enters.
+     * 0 when there is none (stage 1 regresses to a cure, not to a stage).
+     */
+    private static long prevStageDuration(Disease disease, int stage) {
+        DiseaseStage prev = disease.stage(stage - 1);
+        return prev != null ? prev.durationTicks() : 0L;
+    }
+
+    /**
+     * Contraction chance for a player with no active infection of {@code diseaseId}.
+     *
+     * <p>Every matching trigger is polled exactly once, immune or not. {@code chance()} is a
+     * side-effecting read for the event-driven triggers (it consumes a one-shot pending exposure),
+     * so polling while immune is what DRAINS an exposure recorded during immunity instead of letting
+     * it survive its TTL into the first post-immunity check. An immune player always gets 0.0 back
+     * and therefore can never contract the disease.
+     *
+     * <p>Package-private and static so it can be unit-tested with fake triggers and no Bukkit.
+     */
+    static double contractionChance(List<DiseaseTrigger> triggers, String diseaseId,
+                                    Player p, boolean immune, double contractionMultiplier) {
         double sum = 0.0;
-        for (DiseaseTrigger trigger : module.getTriggers()) {
+        for (DiseaseTrigger trigger : triggers) {
             if (trigger.diseaseId().equals(diseaseId)) {
                 sum += Math.max(0.0, trigger.chance(p));
             }
         }
-        double multiplied = sum * dm.getContractionMultiplier(now);
+        if (immune) return 0.0; // drained above, but immunity blocks contraction outright
+        double multiplied = sum * contractionMultiplier;
         return cz.hashiri.harshlands.disease.symptom.special.ContractionMath.clampChance(multiplied);
     }
 

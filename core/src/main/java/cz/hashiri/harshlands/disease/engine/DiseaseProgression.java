@@ -46,16 +46,23 @@ public final class DiseaseProgression {
     /**
      * Advance or regress one active stage by a single check interval.
      *
-     * @param stage              current stage (>= 1)
-     * @param ticksInStage       ticks accumulated in this stage
-     * @param ticksPerCheck      ticks between progression checks
-     * @param stageDurationTicks ticks the current stage must accumulate to advance
-     * @param maxStage           highest (terminal) stage index
-     * @param mitigationActive   true if the player meets the disease's behavioral mitigation
+     * <p>Regression re-enters {@code stage - 1} with that stage's OWN duration, so the player must
+     * mitigate for the full length of the stage they fall back into before regressing further.
+     * Carrying the current stage's duration instead would let the terminal stage — whose configured
+     * duration is 0 in every shipped disease — cascade straight through the intermediate stages.
+     *
+     * @param stage                  current stage (>= 1)
+     * @param ticksInStage           ticks accumulated in this stage
+     * @param ticksPerCheck          ticks between progression checks
+     * @param stageDurationTicks     ticks the current stage must accumulate to advance
+     * @param prevStageDurationTicks duration of {@code stage - 1}, i.e. the stage regression enters;
+     *                               ignored when {@code stage == 1} (regressing there cures instead)
+     * @param maxStage               highest (terminal) stage index
+     * @param mitigationActive       true if the player meets the disease's behavioral mitigation
      */
     public static StageResult progressStage(int stage, long ticksInStage, long ticksPerCheck,
-                                            long stageDurationTicks, int maxStage,
-                                            boolean mitigationActive) {
+                                            long stageDurationTicks, long prevStageDurationTicks,
+                                            int maxStage, boolean mitigationActive) {
         if (stage < 1) {
             throw new IllegalArgumentException("progressStage requires stage >= 1, got " + stage);
         }
@@ -66,7 +73,8 @@ public final class DiseaseProgression {
             if (stage <= 1) {
                 return new StageResult(0, 0L, true); // recovered
             }
-            return new StageResult(stage - 1, stageDurationTicks, false);
+            // Enter the previous stage "full": its own duration must be burned down next.
+            return new StageResult(stage - 1, Math.max(0L, prevStageDurationTicks), false);
         }
 
         if (!mitigationActive && t >= stageDurationTicks) {
