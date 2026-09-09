@@ -44,4 +44,20 @@ class DietTriggerTest {
         assertEquals("malnutrition",
             new DietTrigger("malnutrition", BAD, 3, 0.05, p -> NutrientTier.NORMAL).diseaseId());
     }
+
+    // --- quit cleanup (PlayerStateCleanup): a departing player's consecutive-malnourished
+    // counter must not linger in the map forever ---
+    @Test void clear_player_drops_consecutive_counter() {
+        DietTrigger t = new DietTrigger("malnutrition", BAD, 3, 0.05, p -> NutrientTier.NORMAL);
+        UUID u = UUID.randomUUID();
+        t.chanceFor(u, NutrientTier.MALNOURISHED); // 1
+        t.chanceFor(u, NutrientTier.MALNOURISHED); // 2
+
+        t.clearPlayer(u);
+
+        // Counter reset to 0, not just "2" retained: two more checks must not yet reach the
+        // sustain threshold of 3.
+        assertEquals(0.0, t.chanceFor(u, NutrientTier.MALNOURISHED), 1e-9); // back to 1
+        assertEquals(0.0, t.chanceFor(u, NutrientTier.MALNOURISHED), 1e-9); // back to 2
+    }
 }

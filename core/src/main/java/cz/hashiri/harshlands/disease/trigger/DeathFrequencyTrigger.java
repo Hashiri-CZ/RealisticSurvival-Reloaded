@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.disease.trigger;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * read: it prunes only expired timestamps, never the current ones, so pairing this trigger with the
  * {@code NO_EXPOSURE} mitigation is safe (deaths age out → chance drops to 0 → disease regresses).
  */
-public final class DeathFrequencyTrigger implements DiseaseTrigger, Listener {
+public final class DeathFrequencyTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 
     private final String diseaseId;
     private final int deathThreshold;
@@ -89,5 +90,11 @@ public final class DeathFrequencyTrigger implements DiseaseTrigger, Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         recordDeath(event.getEntity().getUniqueId(), System.currentTimeMillis());
+    }
+
+    /** Drop this player's death history entirely (quit cleanup — see {@link PlayerStateCleanup}). */
+    @Override
+    public void clearPlayer(UUID uuid) {
+        deaths.remove(uuid);
     }
 }

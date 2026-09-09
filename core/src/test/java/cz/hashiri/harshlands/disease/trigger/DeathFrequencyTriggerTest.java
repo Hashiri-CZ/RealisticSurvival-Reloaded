@@ -39,4 +39,19 @@ class DeathFrequencyTriggerTest {
     @Test void disease_id_reported() {
         assertEquals("battle_trauma", trigger().diseaseId());
     }
+
+    // --- quit cleanup (PlayerStateCleanup): a departing player's death history must not
+    // linger in the map forever ---
+    @Test void clear_player_drops_death_history() {
+        DeathFrequencyTrigger t = trigger();
+        UUID p = UUID.randomUUID();
+        t.recordDeath(p, 0L);
+        t.recordDeath(p, 100L);
+        t.recordDeath(p, 200L);
+        assertEquals(0.5, t.chanceFor(p, 250L), 1e-9); // sanity: threshold reached
+
+        t.clearPlayer(p);
+
+        assertEquals(0.0, t.chanceFor(p, 250L), 1e-9); // history gone, not just aged out
+    }
 }

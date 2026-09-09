@@ -16,6 +16,7 @@
  */
 package cz.hashiri.harshlands.disease.trigger;
 
+import cz.hashiri.harshlands.disease.PlayerStateCleanup;
 import cz.hashiri.harshlands.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * immunity check and immune-suppression multiplier in
  * {@code DiseaseProgressionTask.totalChance} in the loop.
  */
-public final class InfectedItemTrigger implements DiseaseTrigger, Listener {
+public final class InfectedItemTrigger implements DiseaseTrigger, Listener, PlayerStateCleanup {
 
     public static final String DISEASED_NBT_KEY = "hldiseased";
 
@@ -113,5 +114,11 @@ public final class InfectedItemTrigger implements DiseaseTrigger, Listener {
         if (infectious(item.getType(), tagged, infectedMaterials, requireNbtTag)) {
             markPending(player.getUniqueId(), System.currentTimeMillis() + ttlMs);
         }
+    }
+
+    /** Drop this player's pending exposure (quit cleanup — see {@link PlayerStateCleanup}). */
+    @Override
+    public void clearPlayer(UUID uuid) {
+        pending.remove(uuid);
     }
 }
